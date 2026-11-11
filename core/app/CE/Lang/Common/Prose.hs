@@ -14,23 +14,31 @@ tombstone =
   \  'never', 'false', 'off', 'disabled', 'empty', 'void', 'unset', 'missing', 'absent', '无',\n\
   \  '非', '否', '空',\n\
   \]\n\
-  \# Reserved words of the six judged languages, sorted, lower-cased: a\n\
-  \# name made of these alone is syntax, not a name.\n\
+  \# Reserved words of the judged code languages (Python, TypeScript, Rust, Go,\n\
+  \# Haskell, C / C++, Java, Lua, R), sorted, lower-cased: a name made of\n\
+  \# these alone is syntax, not a name.\n\
   \keywords = [\n\
-  \  'abstract', 'and', 'any', 'assert', 'async', 'await', 'become', 'boolean', 'box',\n\
-  \  'break', 'case', 'catch', 'chan', 'class', 'const', 'constructor', 'continue', 'crate',\n\
-  \  'data', 'debugger', 'declare', 'def', 'default', 'defer', 'del', 'delete', 'deriving',\n\
-  \  'do', 'dyn', 'elif', 'else', 'enum', 'except', 'export', 'extends', 'extern',\n\
-  \  'fallthrough', 'finally', 'fn', 'for', 'forall', 'foreign', 'from', 'func', 'function',\n\
-  \  'get', 'global', 'go', 'goto', 'hiding', 'if', 'impl', 'implements', 'import', 'in',\n\
-  \  'infix', 'infixl', 'infixr', 'instance', 'instanceof', 'interface', 'iota', 'is',\n\
-  \  'keyof', 'lambda', 'let', 'loop', 'macro', 'map', 'match', 'mod', 'module', 'move',\n\
-  \  'mut', 'namespace', 'new', 'newtype', 'nonlocal', 'number', 'object', 'of', 'or',\n\
+  \  'abstract', 'alignas', 'alignof', 'and', 'any', 'asm', 'assert', 'async', 'auto',\n\
+  \  'await', 'become', 'bitand', 'bitor', 'bool', 'boolean', 'box', 'break', 'byte', 'case',\n\
+  \  'catch', 'chan', 'char', 'class', 'compl', 'concept', 'const', 'consteval', 'constexpr',\n\
+  \  'constinit', 'constructor', 'continue', 'crate', 'data', 'debugger', 'declare',\n\
+  \  'decltype', 'def', 'default', 'defer', 'del', 'delete', 'deriving', 'do', 'double',\n\
+  \  'dyn', 'elif', 'else', 'elseif', 'end', 'enum', 'except', 'explicit', 'export',\n\
+  \  'extends', 'extern', 'fallthrough', 'final', 'finally', 'float', 'fn', 'for', 'forall',\n\
+  \  'foreign', 'friend', 'from', 'func', 'function', 'get', 'global', 'go', 'goto',\n\
+  \  'hiding', 'if', 'impl', 'implements', 'import', 'in', 'inf', 'infix', 'infixl',\n\
+  \  'infixr', 'inline', 'instance', 'instanceof', 'int', 'interface', 'iota', 'is', 'keyof',\n\
+  \  'lambda', 'let', 'local', 'long', 'loop', 'macro', 'map', 'match', 'mod', 'module',\n\
+  \  'move', 'mut', 'mutable', 'na', 'namespace', 'native', 'new', 'newtype', 'next',\n\
+  \  'noexcept', 'nonlocal', 'nullptr', 'number', 'object', 'of', 'operator', 'or',\n\
   \  'package', 'pass', 'private', 'protected', 'pub', 'public', 'qualified', 'raise',\n\
-  \  'range', 'readonly', 'ref', 'require', 'return', 'select', 'self', 'set', 'static',\n\
-  \  'string', 'struct', 'super', 'switch', 'symbol', 'then', 'this', 'throw', 'trait',\n\
-  \  'true', 'try', 'type', 'typeof', 'undefined', 'union', 'unique', 'unknown', 'unsafe',\n\
-  \  'use', 'var', 'where', 'while', 'with', 'yield',\n\
+  \  'range', 'readonly', 'ref', 'register', 'repeat', 'require', 'requires', 'restrict',\n\
+  \  'return', 'select', 'self', 'set', 'short', 'signed', 'sizeof', 'static', 'strictfp',\n\
+  \  'string', 'struct', 'super', 'switch', 'symbol', 'synchronized', 'template', 'then',\n\
+  \  'this', 'throw', 'throws', 'trait', 'transient', 'true', 'try', 'type', 'typedef',\n\
+  \  'typeid', 'typename', 'typeof', 'undefined', 'union', 'unique', 'unknown', 'unsafe',\n\
+  \  'unsigned', 'until', 'use', 'using', 'var', 'virtual', 'volatile', 'where', 'while',\n\
+  \  'with', 'xor', 'yield',\n\
   \]\n\
   \# English absence frames: a prefix binds the words after it, a\n\
   \# suffix the words before it.\n\

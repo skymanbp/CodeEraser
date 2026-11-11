@@ -126,21 +126,25 @@ fn ledger_shape(after: &str) -> bool {
     !sub.is_empty() && indexed * 2 >= sub.len()
 }
 
-/// A heading that indexes a version: `1.6.0` / `v2.3`, an ISO date, or
-/// the Keep-a-Changelog `Unreleased` (and its Chinese surface).
+/// A heading that indexes a version: a word `version` reads — `1.6.0`
+/// / `v2.3`, the reader the segment witness uses — an ISO date, or the
+/// Keep-a-Changelog `Unreleased` (and its Chinese surface). A section
+/// number (`### 4.1`, `§4.2`) or `Python 3.12` is no version (v2.35 V4:
+/// "digits . digits anywhere" read a design booklet's numbered headings
+/// as a ledger and exempted the whole file).
 fn versioned(heading: &str) -> bool {
     let low = heading.to_lowercase();
     low.contains("unreleased")
         || heading.contains("未发布")
-        || has_semver(heading)
+        || ledger_words(heading).any(|w| version(w).is_some())
         || has_iso_date(heading)
 }
 
-/// `digits . digits` anywhere.
-fn has_semver(s: &str) -> bool {
-    let b = s.as_bytes();
-    (1..b.len().saturating_sub(1))
-        .any(|i| b[i] == b'.' && b[i - 1].is_ascii_digit() && b[i + 1].is_ascii_digit())
+/// The ASCII words a ledger reader splits a text into — the one split
+/// `versioned` and `ledger_tokens` share.
+fn ledger_words(text: &str) -> impl Iterator<Item = &str> {
+    text.split(|c: char| !(c.is_ascii_alphanumeric() || c == '.' || c == '-'))
+        .map(|word| word.trim_matches(['.', '-']))
 }
 
 /// `dddd-dd-dd` anywhere.
@@ -246,9 +250,7 @@ fn section(rows: &[Row], at: usize) -> (usize, usize) {
 /// of these. ASCII-word shaped: a CJK sentence contributes only what
 /// it spells in ASCII.
 pub fn ledger_tokens(text: &str) -> usize {
-    let mut seen: Vec<String> = text
-        .split(|c: char| !(c.is_ascii_alphanumeric() || c == '.' || c == '-'))
-        .map(|word| word.trim_matches(['.', '-']))
+    let mut seen: Vec<String> = ledger_words(text)
         .filter_map(|w| match version(w) {
             Some(v) => Some(v),
             None if (w.len() == 10 && has_iso_date(w)) || commit(w) => Some(w),

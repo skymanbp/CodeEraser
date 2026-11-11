@@ -108,7 +108,9 @@ The **name floor** admits a spelling that has a letter, is at least `min_ascii_n
 characters (`min_wide_name` for a CJK one — `ab` is a preposition, not a name), has no word
 of the instrument's own vocabulary among its words (a frame, an absence word, a function
 word, a word of a retrospective mark) nor of the repository's own `[tombstone] terms`, and is
-not made of reserved words alone — `user_data` is a name, `data` is not
+not made of reserved words alone — `user_data` is a name, `data` is not; the reserved words
+are every judged code language's, C / C++, Java, Lua and R included since `TOMBSTONE_REV` 2
+(v2.35), so `final`, `local` or `typedef` alone is syntax
 ([names.rs:83-98](../../../cli/src/tombstone/names.rs#L83),
 [Prose.hs:80-85](../../../core/app/CE/Lang/Common/Prose.hs#L80),
 [vocab.rs:34-46](../../../cli/src/tombstone/vocab.rs#L34)). A text that is an absence word
@@ -190,7 +192,7 @@ message, which is a surface and no file ([candidates.rs:113-144](../../../cli/sr
 |---|---|---|---|
 | **declared** | `[tombstone] ledger`, the exclude list's dialect, compiled once per run | the file, whatever its language | `declared` ([policy.rs:1-6](../../../cli/src/tombstone/policy.rs#L1), [policy.rs:37-42](../../../cli/src/tombstone/policy.rs#L37)) |
 | **path** | the stem (`changelog`, `news`, `history`, `migration`, `upgrading`, …, `adr-*`) or a directory on the path (`adr`, `decisions`, `releases`, …) | the file | `path` ([role.rs:47-102](../../../cli/src/tombstone/role.rs#L47)) |
-| **ledger** | the SHAPE: at least three headings, at least half of the level-2/3 ones version-indexed — a `d.d` semver, an ISO date, `Unreleased` / `未发布` | the file | `ledger` ([role.rs:104-137](../../../cli/src/tombstone/role.rs#L104)) |
+| **ledger** | the SHAPE: at least three headings, at least half of the level-2/3 ones version-indexed — a word the segment witness's reader takes for a version (exactly three numeric parts, or two behind `v`), an ISO date, `Unreleased` / `未发布`; since `TOMBSTONE_REV` 2 a section number (`### 4.1`) is none, where "digits . digits anywhere" had read a numbered design booklet as a ledger | the file | `ledger` ([role.rs:104-148](../../../cli/src/tombstone/role.rs#L104)) |
 | **segment** | the segment around a candidate row — the `>` quote run when the line is quoted (a banner is one run), else the section body from the nearest heading at or above down to the next heading of any level, its own quoted rows left out (a quote run is a segment by itself and lends the prose around it no tokens) — and its distinct ledger tokens | that segment only, counted once per segment | `segment` ([role.rs:173-198](../../../cli/src/tombstone/role.rs#L173), [candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)) |
 
 The third witness exists because a file-level answer had to get one of two things wrong: the
@@ -378,7 +380,7 @@ changeset, parent blob before and child blob after, the same `measure` the hooks
 `tombstone/1` judgment over one core link — and prints every seated site with the name it bound
 and an excerpt, for arbitration
 ([tombstone_replay.rs:1-12](../../../cli/tests/it/tombstone_replay.rs#L1)). Two corpora: the
-last 400 commits of `requests` and this repository's whole history. Nine rounds, each fixing
+last 400 commits of `requests` and this repository's whole history. Ten rounds, each fixing
 one class of DEFINITION defect and re-running in full — never a threshold: the prose surface
 read only added lines (round 1: 123 → 68 hit commits on self), the framed window admitted on
 neither side (round 2, which also emptied requests: 1 → 0 hit commits), inline code spans
@@ -393,13 +395,19 @@ on 537 events, the six true positives plus two more in the codex batch's own pro
 comment and this booklet narrating what the erased `added_lines` helper did; both reworded
 in the next commit) and the ledger's first surviving false positive — a `///` sentence that
 now spans lines, `used to` on one and the common noun `docs` on the next, bound to a local
-variable `docs` that commit erased (the single-word-name cost the ruling accepted). The gate
+variable `docs` that commit erased (the single-word-name cost the ruling accepted) — and the
+keyword table and strict ledger versions (`TOMBSTONE_REV` 2, v2.35) re-run as round 10 on a
+history grown to 852 events: 10 / 13, the same six true positives and one false positive, plus
+one true positive and three false positives in the newer history, each a common noun (`subject`,
+and two Chinese ones) that happened to spell an identifier the commit erased. The gate
 is ≤ 1 % of events: requests 0 / 400 from round 3 on; self 3 / 530 = 0.57 % at round 6 under
 the ruling's reading (provenance narrative counts as residue, the in-between sites are
 counted as false), 7 / 530 = 1.32 % if the true positives are counted against it too — stated
 in the ledger as such; rounds 7 and 8: 0 strict, 4 / 531 and 4 / 536 = 0.75 % conservative;
 round 9: 1 / 537 = 0.19 % strict, 6 / 537 = 1.12 % conservative — the conservative reading
-is over the line by one commit, and the ledger says so rather than moving the line. The
+is over the line by one commit, and the ledger says so rather than moving the line; round 10:
+4 / 852 = 0.47 % strict, 10 / 852 = 1.17 % conservative, over the line again and stated so; the
+class stays at its tier. The
 ledger carries the exact 95 % Clopper–Pearson interval of every row (0 / 400 → 0–0.918 %,
 1 / 537 → 0.005–1.033 %, 6 / 537 → 0.411–2.416 %) and calls itself what it is: calibration
 evidence on two corpora, not a bound on the field ([FPR-TOMBSTONE.md:24-34](../../FPR-TOMBSTONE.md#L24),

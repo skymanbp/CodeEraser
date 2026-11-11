@@ -13,8 +13,11 @@
 use crate::tables::Tombstone;
 
 /// The vocabulary revision the feed records (`rev`): a reader of the
-/// FPR ledger must know which tables produced a row.
-pub const TOMBSTONE_REV: i64 = 1;
+/// FPR ledger must know which tables produced a row. 2 (v2.35 V4): the
+/// reserved words of C / C++, Java, Lua and R joined the keyword table,
+/// and the changelog role's ledger witness reads a heading's version
+/// the way the segment witness does (role.rs `versioned`).
+pub const TOMBSTONE_REV: i64 = 2;
 
 /// The vocabulary (`tombstone` in the package).
 pub fn v() -> &'static Tombstone {
