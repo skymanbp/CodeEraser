@@ -459,8 +459,8 @@ proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its
 the node kind column it always received ([Graph.hs:150-152](../../../core/app/CE/Graph.hs#L150),
 `granFile` at [Cost.hs:107-116](../../../core/app/CE/Graph/Cost.hs#L107)), and carries the additive
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
-contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
-arriving in `dead` refuses as wire skew, never a directory erase
+contract, because `ce erase` builds its dead-file rows from the failing table (rows, not deletions —
+book 12 §2, `reachable_by_name`): an aggregate arriving in `dead` refuses as wire skew, never a directory row
 ([deadcode.rs:495-502](../../../cli/src/graph/deadcode.rs#L495)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
 core away, so the client's old fallback conjunction was unreachable and was retired (L round

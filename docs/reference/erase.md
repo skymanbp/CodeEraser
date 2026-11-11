@@ -29,7 +29,9 @@ README's permanent stance applies: a class acts only with its own
 measured record, and the two file-deleting classes have none — the
 precision docs measure where a reference site lands, not whether an
 unreferenced file is unused. The plan says what it will not touch and
-why.
+why. The blind audit that asked the second question of the dead files
+of twelve corpora and this repository is recorded in
+[EVAL-SET-DEADFILE.md](../EVAL-SET-DEADFILE.md).
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable

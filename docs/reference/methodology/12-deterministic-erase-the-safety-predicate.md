@@ -53,7 +53,7 @@ written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 
 Since 9.1.0 (lane v235_licence) only class 1 has an eraseable outcome.
-Classes 2 and 3 delete a whole file, and their evidence is the graph's
+Classes 2 and 3 would delete a whole file, and their evidence is the graph's
 dead verdict, which answers whether any reference site of the corpus
 lands on the file. A file is also used with no such site — run by its
 name, found by a tool's convention, served or read by its path — so a
