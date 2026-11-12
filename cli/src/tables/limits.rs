@@ -41,7 +41,9 @@ leaked! {
     WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
                merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
                arch_refs: usize, bags_items: usize, line_bytes: usize, erase_rows: usize,
-               trend_rows: usize }
+               trend_rows: usize,
+               // plan v2.35 C6: the bytes one bags ask is planned under
+               bags_bytes: usize }
     /// The graph family's cycle floor and the `unmentioned` table's
     /// soft cap (CE.Graph.Cost `sccFloor` / `unmentionedCap`).
     GraphLimits { scc_floor: u32, unmentioned_cap: usize }

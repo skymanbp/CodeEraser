@@ -3,11 +3,14 @@
 //! unit rows go to the core together — one bags/1 ask per batch, where
 //! each file inside its own transaction asked before (750 asks on a cold
 //! index of this repository). A batch is asked when the next file would
-//! take it past either ceiling the core states (`limits.caps`: the
-//! family's item ceiling, counted as its contract counts, and the
-//! protocol's line in bytes), and when the walk ends; a file larger than
-//! a ceiling goes alone and meets the core's named refusal. The ask
-//! happens before any of the batch's transactions begins, and each file
+//! take it past a ceiling the core states (`limits.caps`: the family's
+//! item ceiling, counted as its contract counts, the bytes one ask is
+//! planned under — plan v2.35 C6, about two seconds of the core's work —
+//! and the protocol's line in bytes), and when the walk ends; a file
+//! larger than a ceiling goes alone (past the item ceiling or the line it
+//! meets the core's named refusal; past the planning bytes it is
+//! answered). The ask happens before any of the batch's transactions
+//! begins, and each file
 //! is then written whole in walk order (Index::write_file: the old bags
 //! retired before the unitsig rows are replaced, the new ones seated
 //! after, only net-nonzero terms moving `df`, store.rs) — so a failed ask
@@ -45,8 +48,9 @@ struct Waiting {
 pub struct Batch {
     p: Params,
     ask: Ask,
-    /// The family's item ceiling and the protocol's line in bytes.
-    caps: (usize, usize),
+    /// The family's item ceiling, the bytes one ask is planned under and
+    /// the protocol's line in bytes.
+    caps: (usize, usize, usize),
     waiting: Vec<Waiting>,
     units: Vec<Value>,
     /// The waiting units' items and bytes, and the source bytes held.
@@ -59,11 +63,11 @@ impl Batch {
     pub fn new(p: Params) -> Batch {
         let caps = &crate::tables::get().limits.caps;
         let ask: Ask = Box::new(|units| super::bags::ask(units, &[]).map(|(terms, _)| terms));
-        Batch::asking(p, (caps.bags_items, caps.line_bytes), ask)
+        Batch::asking(p, (caps.bags_items, caps.bags_bytes, caps.line_bytes), ask)
     }
 
-    /// A batch asking through `ask`, by `caps` (items, bytes).
-    pub fn asking(p: Params, caps: (usize, usize), ask: Ask) -> Batch {
+    /// A batch asking through `ask`, by `caps` (items, ask bytes, line).
+    pub fn asking(p: Params, caps: (usize, usize, usize), ask: Ask) -> Batch {
         Batch {
             p,
             ask,
@@ -90,8 +94,8 @@ impl Batch {
         };
         let size = rows.iter().map(|(_, row)| cost(row)).fold((0, 0), add);
         let (items, bytes) = add(self.spent, size);
-        let line = self.caps.1;
-        let over = items > self.caps.0 || bytes + ENVELOPE > line || self.held + src.len() > line;
+        let (ask, line) = (self.caps.1.min(self.caps.2), self.caps.2);
+        let over = items > self.caps.0 || bytes + ENVELOPE > ask || self.held + src.len() > line;
         if over && !self.waiting.is_empty() {
             self.finish(idx)?;
         }

@@ -4,7 +4,7 @@
 
 -- | The bags.request contract (plan v2.33 W6): the request record, its
 -- one cap and the first offence by name. The handler is CE.Similar.Bags.
-module CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsCap, overCap, offence) where
+module CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsAskBytes, bagsCap, overCap, offence) where
 
 import CE.Wire (label, u64)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
@@ -33,6 +33,18 @@ instance FromJSON BagsReq where
 -- against one cap (review C15's stance — every request dimension counts).
 bagsCap :: Int
 bagsCap = 1048576
+
+-- | The bytes of one bags ask the measuring side plans its batches under
+-- (plan v2.35 C6): a planning ceiling, not a refusal — the core answers
+-- any request under the item cap and the protocol's line, so a file
+-- whose rows alone pass it still goes alone and is answered.
+-- Calibrated like the clone work ceiling: the core's CPU per request byte
+-- on the fourteen whole-refresh asks of the twelve comparison corpora and
+-- both roots (2026-11-12, AMD Ryzen 7 7700, under load) ran from 4.3e-7
+-- to 9.8e-7 s; at the worst, 2 s is about 2.0e6 bytes, the nearest power
+-- of two 2^21 (2.1 s at the worst slope, 0.9 s at the best).
+bagsAskBytes :: Int
+bagsAskBytes = 2097152
 
 overCap :: BagsReq -> Bool
 overCap = (> bagsCap) . itemsOf

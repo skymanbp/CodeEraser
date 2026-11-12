@@ -23,9 +23,9 @@
 -- Reply: bags (one per unit) and texts (one per text), each [[term,
 -- channel, tf]] ascending by term; chars [[alnum, numeric, lower, upper,
 -- [lowercase]]] per inspected code point; counts units / texts / terms.
-module CE.Similar.Bags (BagsReq (..), bagsCap, overCap, respond) where
+module CE.Similar.Bags (BagsReq (..), bagsAskBytes, bagsCap, overCap, respond) where
 
-import CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsCap, offence, overCap)
+import CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsAskBytes, bagsCap, offence, overCap)
 import CE.Similar.Terms
 import CE.Text (utf8)
 import CE.Wire (Respond, tabled)

@@ -108,6 +108,8 @@ caps =
     , "arch_files" .= Arch.fileCap
     , "arch_refs" .= Arch.refCap
     , "bags_items" .= Bags.bagsCap
+    -- plan v2.35 C6: the bytes one bags ask is planned under
+    , "bags_bytes" .= Bags.bagsAskBytes
     , "line_bytes" .= maxLineBytes
     , "erase_rows" .= Erase.eraseRowCap
     , "trend_rows" .= Trend.trendRowCap
