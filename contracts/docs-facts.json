@@ -446,7 +446,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "27"
+      "value": "28"
     },
     {
       "id": "ver:mention_rev#digits",
