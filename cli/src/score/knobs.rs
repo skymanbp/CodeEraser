@@ -22,21 +22,35 @@ pub const AXES: [&str; 7] = [
     "cycle",
 ];
 
-/// Reply echo keys, index = wire code, one list per knob table.
-/// Codes 2..4 are the v0.6 zone knobs (plan v2.6): the hard line H,
-/// P_max, and the soft-line exponent k.
-pub const CEILING_KEYS: [&str; 5] = ["sizeCeil", "cocCeil", "sizeHard", "sizePMax", "softLineK"];
-pub const THRESHOLD_KEYS: [&str; 8] = [
-    "deadIndegCeil",
-    "rewriteNum",
-    "rewriteDen",
-    "cochangeFloor",
-    "violCost",
-    "defaultWeight",
-    "scoreScale",
-    "cycleFloor",
+/// Reply echo keys, index = wire code, one list per knob table; a
+/// `None` slot is a code retired with the density law (10.0.0) — ceiling
+/// code 3 (P_max) and threshold code 0 (deadIndegCeil): never sent, the
+/// core refuses both by name, and their place keeps every later code
+/// its number. Codes 2 and 4 are the hard line H and the soft-line
+/// exponent k (plan v2.6).
+pub const CEILING_KEYS: [Option<&str>; 5] = [
+    Some("sizeCeil"),
+    Some("cocCeil"),
+    Some("sizeHard"),
+    None,
+    Some("softLineK"),
 ];
-pub const TOLERANCE_KEYS: [&str; 4] = ["tolNum", "tolDen", "tolAbs", "tolAbsCoc"];
+pub const THRESHOLD_KEYS: [Option<&str>; 8] = [
+    None,
+    Some("rewriteNum"),
+    Some("rewriteDen"),
+    Some("cochangeFloor"),
+    Some("violCost"),
+    Some("defaultWeight"),
+    Some("scoreScale"),
+    Some("cycleFloor"),
+];
+pub const TOLERANCE_KEYS: [Option<&str>; 4] = [
+    Some("tolNum"),
+    Some("tolDen"),
+    Some("tolAbs"),
+    Some("tolAbsCoc"),
+];
 
 /// The core's cycle floor when none is declared
 /// (`CE.Graph.Cost.sccFloor`, the package's `limits.graph.scc_floor`):
@@ -56,10 +70,7 @@ pub fn core_defaults() -> ScoreCfg {
     let d = &crate::tables::get().limits.score_defaults;
     let knob = |name: &str| d.get(name).copied();
     ScoreCfg {
-        weights: Default::default(),
-        size_penalty_max: knob("sizePMax"),
         soft_line_k: knob("softLineK"),
-        dead_indeg_ceil: knob("deadIndegCeil"),
         rewrite_num: knob("rewriteNum"),
         rewrite_den: knob("rewriteDen"),
         cochange_floor: knob("cochangeFloor"),
@@ -70,6 +81,9 @@ pub fn core_defaults() -> ScoreCfg {
         tol_den: knob("tolDen"),
         tol_abs: knob("tolAbs"),
         tol_abs_coc: knob("tolAbsCoc"),
+        // the weights, and the two keys retired with the density law
+        // (size_penalty_max, dead_indeg_ceil), have no default to mirror
+        ..ScoreCfg::default()
     }
 }
 
@@ -77,16 +91,14 @@ pub fn core_defaults() -> ScoreCfg {
 /// config defaults — the 27b9bc2 road), code 2 = the hard line H
 /// whenever one is declared (`file_lines_fail == 0` means "no hard
 /// line" per the scan grade contract, and the core refuses a
-/// ceiling below 1 — so the curve then scales on the core's default
-/// 750), codes 3/4 only when ce.toml declares them (the trend
-/// pattern: absent = the core default judges).
+/// ceiling below 1 — so the core's default 750 then bounds the
+/// derived soft line), code 4 only when ce.toml declares it (the
+/// trend pattern: absent = the core default judges); code 3 retired
+/// at 10.0.0.
 pub fn ceiling_rows(t: &Thresholds, s: &ScoreCfg) -> Vec<[i64; 2]> {
     let mut out = vec![[0, t.file_lines_warn as i64], [1, t.cognitive_warn as i64]];
     if t.file_lines_fail >= 1 {
         out.push([2, t.file_lines_fail as i64]);
-    }
-    if let Some(p) = s.size_penalty_max {
-        out.push([3, p as i64]);
     }
     if let Some(k) = s.soft_line_k {
         out.push([4, k as i64]);
@@ -144,7 +156,7 @@ fn rows(values: &[Option<u32>]) -> Vec<[i64; 2]> {
 /// read ONE floor, and the floor lives where the graph is configured.
 pub fn threshold_rows(s: &ScoreCfg, scc_floor: Option<u32>) -> Vec<[i64; 2]> {
     rows(&[
-        s.dead_indeg_ceil,
+        None, // code 0, deadIndegCeil: retired at 10.0.0
         s.rewrite_num,
         s.rewrite_den,
         s.cochange_floor,

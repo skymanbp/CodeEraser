@@ -68,8 +68,8 @@
 
 ## P2 标定实录（2026-08-20，as-built）
 
-镜像验证：外部精确复算（Fraction 有理算术）与核 `CE.Verdict.Soft`
-对同一多重集逐值相等（self 多重集直喂核 = 303 = 镜像值）。
+镜像验证：外部精确复算（Fraction 有理算术）与核 `CE.Verdict.Soft`（软线
+推导，今仍在此）对同一多重集逐值相等（self 多重集直喂核 = 303 = 镜像值）。
 五语料 S 值（产品自身 walk 的判决集，k∈{1,2,3}）：
 
 | 语料 | 判决文件数 | median | k=1 | k=2 | k=3 |
@@ -93,8 +93,8 @@
 ## P4 实现实录（2026-08-20，as-built）
 
 - **定价范围**（v1 两腿，v0.7 补齐四腿全额——wire 2.15.0）：
-  benefit = 软区间罚回收（与 verdict 同一曲线权威
-  `CE.Verdict.Soft`）；cost = 跨缝**提及边**×roiRefMilli(250) +
+  benefit = 软区间罚回收（拆分建议自己的压力模型 `CE.Structure.Zone`；
+  10.0.0 之前与 verdict 尺寸轴同一曲线，此后评分改读软线以外的行数）；cost = 跨缝**提及边**×roiRefMilli(250) +
   **切穿克隆块**×roiCloneMilli(500) + 跨缝**共变对**×
   roiChurnMilli(150) + roiPhiMilli(500)，标定实录见下节。
 - **共引代理**：真·文件内符号共引不存在于任何缓存（v0.6 映射实证）；

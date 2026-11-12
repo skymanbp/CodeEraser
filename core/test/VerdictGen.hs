@@ -1,15 +1,12 @@
 -- | The seeded inputs behind VerdictEquivProps (plan v2.32 step 7):
--- two hundred fact sets under perturbed score knobs, two hundred
--- ratchet cases, two hundred LOC distributions, two hundred wire
+-- two hundred ratchet cases, two hundred LOC distributions, two hundred wire
 -- requests, and the exhaustive leg family of the join lattice. The
 -- LCG is ReferenceFlowGen's; nothing here judges.
-module VerdictGen (WireCase, factCases, joinFamily, locCases, ratchetCases, wireCases) where
+module VerdictGen (WireCase, joinFamily, locCases, ratchetCases, wireCases) where
 
 import CE.Verdict.Join (Legs (..), Pos (..))
-import CE.Verdict.Score (ScoreKnobs (..), scoreBound)
 import Data.List (sort)
 import ReferenceFlowGen (G, S (..), rand, runG)
-import ReferenceScore (Inputs (..))
 
 seeded :: Int -> G a -> [a]
 seeded salt g = [runG g (S (n * 9973 + salt) 0 0 0) | n <- [1 .. 200]]
@@ -23,36 +20,6 @@ listOf n g = rand n >>= \k -> mapM (const g) [1 .. k]
 -- | Ascending distinct members of 0..n-1, each kept one time in two.
 subset :: Integer -> G [Integer]
 subset n = concat <$> mapM (\u -> (\r -> [u | r == 0]) <$> rand 2) [0 .. n - 1]
-
--- | Fact sets over a universe of up to eight files, under knobs moved
--- off their defaults one time in two, with a soft line or none. One
--- time in two the set names its docdup universe (9.1.0) and then
--- keeps only the sim rows the contract admits — a clone row between
--- two code files (a pos row outside the doc set), a docdup row
--- between two owners — so the bounds leg reads what the core can
--- judge; the owners are every docdup endpoint and some more files.
-factCases :: [(ScoreKnobs, Maybe Integer, Inputs)]
-factCases = seeded 11 $ do
-  n <- (+ 1) <$> int 8
-  (sim, pos, churn) <- graphTables n
-  cont <- classedRows 18 900
-  docs <- subset n
-  loops <- subset n
-  classes <- classLines 500
-  k <- knobs
-  soft <- (\r s -> if r == 0 then Nothing else Just s) <$> rand 3 <*> ((+ 150) <$> int 400)
-  named <- (== 0) <$> rand 2
-  extra <- subset n
-  let code = [u | (u : _) <- pos, u `notElem` docs]
-      owners = sort (nubSorted (sort (extra <> [x | [u, v, 2, _, _] <- sim, x <- [u, v]])))
-      admitted [u, v, kind, _, _] = if kind == 2 then True else all (`elem` code) [u, v]
-      admitted _ = False
-      sim' = if named then filter admitted sim else sim
-  pure (k, soft, Inputs sim' pos churn cont docs classes loops (if named then Just owners else Nothing))
-
--- | Adjacent duplicates out of a sorted list.
-nubSorted :: [Integer] -> [Integer]
-nubSorted xs = [x | (x, prev) <- zip xs (Nothing : map Just xs), prev /= Just x]
 
 -- | The graph-side tables over n file nodes: candidate pairs u < v
 -- around both similarity bars, positions, churn.
@@ -72,15 +39,6 @@ classedRows keys top = subset keys >>= mapM (\key -> (\v cls -> [key `div` 2, ke
 -- | Every line (codes 0..2) of classes 1 and 2.
 classLines :: Int -> G [[Integer]]
 classLines top = concat <$> mapM (\c -> mapM (\code -> (\v -> [c, code, v]) <$> ((+ 1) <$> int top)) [0, 1, 2]) [1, 2]
-
-knobs :: G ScoreKnobs
-knobs = do
-  moved <- (== 0) <$> rand 2
-  cyc <- (+ 1) <$> int 3
-  ceil' <- (+ 5) <$> int 30
-  dead <- int 2
-  cost <- (+ 5) <$> int 20
-  pure (if moved then scoreBound {sCycleFloor = cyc, sCocCeil = ceil', sDeadIndegCeil = dead, sViolCost = cost} else scoreBound)
 
 -- | LOC multisets of zero to twenty values, zeros included.
 locCases :: [[Integer]]

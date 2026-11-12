@@ -18,13 +18,18 @@ import CE.Document.Contract (DocFamily (..), coreReasons)
 import CE.Lang (pack)
 import CE.Score.Document (failNames)
 import CE.Text (fixed)
+import CE.Verdict.Extent (tenths)
 import Data.Aeson
-import Data.List (nub)
+import qualified Data.Foldable as F (toList)
+import Data.List (isInfixOf, nub)
 import Data.Maybe (fromMaybe)
+import Data.Ratio ((%))
 import DocumentGen (docRequest)
 import DocumentGen4 (requests4)
+import qualified DocumentHarness as H (documentOf)
 import DocumentHarness (at, emptiesHeld, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes)
 import WireHarness (refusedBy, runLegs, setKey)
+import qualified WireHarness as W (field, replyObjWith)
 
 battery :: IO Bool
 battery =
@@ -38,8 +43,30 @@ battery =
     , "the step-4 contracts refuse by name"
     , "the catalogue lists the twenty-two families, the fail names and the reasons; the package holds the site kinds"
     , "the seeded step-4 documents are not vacuous"
+    , "the printed E is the core's: tenths half up (51/20 -> 26), the document carries the row, the console head prints that field"
     ]
-    [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, seeded]
+    [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, seeded, printedExtent]
+
+-- | E = 51/20 sits exactly on x.x5: half up reads 2.6 (a double rounds
+-- 51/20 to 2.5); the verdict side rounds, the document carries the
+-- row [26, 3] as it came, and the console prints the document's field,
+-- in both languages: "findings on 2.6 of 3 lines", "有问题的行 2.6 / 3".
+printedExtent :: Bool
+printedExtent =
+  map tenths [51 % 20, 1 % 20, 49 % 20, 0, 5 % 2] == [26, 1, 25, 0, 25]
+    && fmap (path ["extent", "tenths"]) (H.documentOf req) == Just (Just (Number 26))
+    && and [any (isInfixOf printed . show) (heads lang) | (lang, printed) <- [(0 :: Integer, "findings on 2.6 of 3 lines"), (1, "2.6 / 3")]]
+ where
+  req =
+    docRequest
+      "check"
+      [("files", 0), ("why", 1)]
+      (("extent", [[26, 3]]) : [(t, []) | t <- words "scale floor reason axes candidates joinSeverity added removed over toleranceDrawn failed dropped"])
+      [(k, 0) | k <- words "score fail droppedRode simPairs members collapsed skippedSelf roast"]
+      Nothing
+  heads lang = case W.replyObjWith respond (setKey "lang" (toJSON lang) req) >>= (`W.field` "lines") of
+    Just (Array ls) -> [t | Array l <- F.toList ls, (_ : String t : _) <- [F.toList l]]
+    _ -> []
 
 seven :: [DocFamily]
 seven = familiesNamed (words "check structure join deadcode mentions sites graphscreen")
@@ -52,7 +79,7 @@ judged = judgedBy requests4 seven
 fieldTable :: String
 fieldTable =
   "check schema string\ncheck score number\ncheck scoreScale number?\ncheck axes array\ncheck floor number?\n\
-  \check candidates array\ncheck joinSeverity array\ncheck ratchet object\ncheck counts object\ncheck degraded ref\n\
+  \check candidates array\ncheck joinSeverity array\ncheck ratchet object\ncheck counts object\ncheck degraded ref\ncheck extent object?\n\
   \structure schema string\nstructure score number\nstructure scoreScale number\nstructure entropy array\n\
   \structure axes array\nstructure findings array\nstructure dirs number\nstructure divergence number?\n\
   \structure deviations array\nstructure declaredDirs number\nstructure deep bool\nstructure days number?\n\
@@ -134,6 +161,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
   rowsOf = toJSON
   cases =
     [ rowsSet "failed" (rowsOf [[9]]) (base "check")
+    , rowsSet "extent" (rowsOf [[31, 3]]) (base "check")
     , rowsSet "scale" (rowsOf [[1], [2]]) (base "check")
     , setKey "degraded" (toJSON (0 :: Int)) (base "structure")
     , rowsSet "tree" (rowsOf []) (base "structure")
@@ -147,6 +175,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
   blank = map (\t -> (t, [])) . words
   wanted =
     [ "failed 0: column 0 is not a code 0..6"
+    , "extent: tenths above ten times lines"
     , "scale: more than one row"
     , "degraded: out of range why"
     , "tree: not one row per slot in order"

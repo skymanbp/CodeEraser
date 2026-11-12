@@ -14,6 +14,7 @@ pub mod anchor;
 pub mod baseline;
 pub mod document;
 pub mod knobs;
+pub mod located;
 pub mod model;
 mod pinned;
 mod provenance;
@@ -109,9 +110,9 @@ struct Measured {
     /// the discrete members above and the continuous function rows
     /// size_facts mints both key on them.
     anchors: anchor::Anchors,
-    /// The docdup universe (9.1.0): verdict-universe indices of the
-    /// files owning a live docdup segment, ascending.
-    doc_owners: Vec<i64>,
+    /// The extent law's duplicate spans and reference lines (v2.35).
+    dup_spans: Vec<[i64; 4]>,
+    ref_lines: Vec<[i64; 3]>,
 }
 
 fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
@@ -136,10 +137,21 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // seeds liveness in the graph above and owns no row down here —
     // the graph's measured nodes, then the prose-only arm (universe)
     let fnodes = deadcode::measured_nodes(&w);
-    let files = universe(&fnodes, snap)?;
+    let files = universe(&fnodes, &snap)?;
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let (posmap, loops) = judged_positions(&opts.core, &w, &pos_req)?;
     let idx = row_index(&files);
+    let ref_lines = located::ref_lines(&snap, &idx)?;
+    drop(snap);
+    let dup_spans = located::dup_spans(
+        &located::members(
+            &found.blocks,
+            &t3,
+            &segs,
+            dups.iter().map(|&(a, b, _)| (a, b)),
+        ),
+        &idx,
+    );
     let clones = Similar {
         blocks: &found.blocks,
         t3: &t3,
@@ -149,13 +161,9 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str()));
     let (sim, skipped_self) = sim_table(&clones, dup_pairs, &idx);
     let (members, collapsed) = member_set(&anchors, &found.blocks);
-    // the docdup universe (9.1.0, v2.35 V2): the files owning a live
-    // segment — every kind-2 row's two files are among them
-    let owners: BTreeSet<i64> = (segs.iter())
-        .filter_map(|s| idx.get(s.path.as_str()).copied())
-        .collect();
     Ok(Measured {
-        doc_owners: owners.into_iter().collect(),
+        dup_spans,
+        ref_lines,
         pos: pos_rows(&files, &posmap),
         symbols: crate::graph::symwire::rekeyed(&w, &idx)?,
         self_loops: deadcode::self_loop_rows(&w, &loops),
@@ -187,11 +195,28 @@ pub(crate) fn row_index(files: &[String]) -> HashMap<&str, i64> {
 /// positions: a docdup pair may touch one, the core's docdup axis
 /// counts it as an opportunity, and the code-file count reads the pos
 /// rows outside the doc set rather than `nodes − docFiles`
-/// (Score.hs codeFiles). The snapshot is dropped here, as it was.
-fn universe(fnodes: &[(i64, &str)], snap: dedup::index::Index) -> Result<Vec<String>> {
+/// (Score.hs codeFiles).
+fn universe(fnodes: &[(i64, &str)], snap: &dedup::index::Index) -> Result<Vec<String>> {
     let mut files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();
-    files.extend(crate::docdup::judge::candidates::prose_files(&snap)?);
+    files.extend(crate::docdup::judge::candidates::prose_files(snap)?);
     Ok(files)
+}
+
+/// The baseline the request carries: the committed one, none on an
+/// establishing run, or on the trend road (O34) the request's own
+/// identity under the pinned line — two empty tables and no digest
+/// were a false drift on every non-default commit (pinned.rs).
+fn baseline_of(
+    opts: &Opts,
+    continuous: &[[u64; 4]],
+    members: &[u64],
+    digest: Option<u64>,
+) -> serde_json::Value {
+    match (opts.establish, opts.pinned_soft) {
+        (true, Some(soft)) => pinned::baseline(continuous, members, soft, digest),
+        (true, None) => serde_json::Value::Null,
+        (false, _) => opts.baseline.clone().unwrap_or(serde_json::Value::Null),
+    }
 }
 
 /// Judge the repo against the committed baseline: measure, window
@@ -208,7 +233,8 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         None => (Vec::new(), Vec::new()),
     };
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let (continuous, judged_loc, classed) = size_facts(root, &opts.core, &m.anchors)?;
+    let (continuous, (homes, spans), judged_loc, classed) =
+        size_facts(root, &opts.core, &m.anchors)?;
     // the provenance table (6.4.0, O40): every file entity on disk
     // under the scope that owns no row this run — the core answers
     // which committed rows they explain (`ratchet.dropped`)
@@ -219,14 +245,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         .collect();
     let present = provenance::present(root, &measured)?;
     let digest = cfg.knobs_digest();
-    let baseline = match (opts.establish, opts.pinned_soft) {
-        // the trend road (O34): the request's own identity under the
-        // pinned line — two empty tables and no digest were a false
-        // drift on every non-default commit (pinned.rs)
-        (true, Some(soft)) => pinned::baseline(&continuous, &m.members, soft, digest),
-        (true, None) => serde_json::Value::Null,
-        (false, _) => opts.baseline.clone().unwrap_or(serde_json::Value::Null),
-    };
+    let baseline = baseline_of(&opts, &continuous, &m.members, digest);
     let req = wire::Request {
         sim: m.sim,
         pos: m.pos,
@@ -259,7 +278,12 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         dedup_min_distinct: None,
         judged_loc,
         doc_files: doc_file_indices(&m.files),
-        doc_owners: Some(m.doc_owners),
+        extent: (
+            located::cont_spans(&homes, &spans, &idx),
+            m.dup_spans,
+            m.ref_lines,
+            located::prose_lines(root, &m.files, &homes)?,
+        ),
         files: m.files,
     };
     let (reply, link) = wire::judge(&opts.core, &req)?;
@@ -449,18 +473,16 @@ pub fn continuous_rows(root: &Path, core: &str) -> Result<Vec<[u64; 3]>> {
 /// no scan verdict is consumed here (batch-7 slice 8). Each row's
 /// fourth column is the file's rulepack class (3.1.0: first declared
 /// match, 0 = none), assigned HERE where the path is still known;
-/// the flag says whether any class was declared at all.
+/// the flag says whether any class was declared at all; the second
+/// table is each row's file path and span (the scan's own function
+/// span, (0, 0) on a size row): the extent law's contSpans.
 ///
 /// The walk goes through `scan::settle` rather than `scan::measure`
 /// (6.5.0): a function inside a call cycle carries the recursion
 /// increment, and the ratchet's complexity column must record the
 /// same number `ce scan` reports, or one gate would tighten against
 /// a value the other never shows.
-fn size_facts(
-    root: &Path,
-    core: &str,
-    anchors: &anchor::Anchors,
-) -> Result<(Vec<[u64; 4]>, Vec<u64>, bool)> {
+fn size_facts(root: &Path, core: &str, anchors: &anchor::Anchors) -> Result<SizeFacts> {
     let scan::Settled { config, files, .. } = scan::settle(root, core)?;
     let classes =
         scan::classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
@@ -470,14 +492,25 @@ fn size_facts(
     // run would read every committed row as removed and every
     // measured one as added
     let keys = provenance::Keys::of(root);
-    let mut rows: Vec<[u64; 4]> = Vec::new();
+    let mut rows: Vec<([u64; 4], &str, (i64, i64))> = Vec::new();
     for f in &files {
         let class = classes.class_of(&f.path);
-        for [u, c, v] in baseline::continuous_rows(f, &keys.key(&f.path), anchors)? {
-            rows.push([u, c, v, class]);
+        // continuous_rows: the size row, then one row per function in scan order
+        let spans = std::iter::once((0, 0)).chain(
+            f.functions
+                .iter()
+                .map(|m| (m.start_line as i64, m.end_line as i64)),
+        );
+        for ([u, c, v], span) in baseline::continuous_rows(f, &keys.key(&f.path), anchors)?
+            .into_iter()
+            .zip(spans)
+        {
+            rows.push(([u, c, v, class], f.path.as_str(), span));
         }
     }
     rows.sort_unstable();
+    let homes = rows.iter().map(|(_, p, s)| (p.to_string(), *s)).unzip();
+    let rows: Vec<[u64; 4]> = rows.into_iter().map(|(r, _, _)| r).collect();
     // a fingerprint collision would silently merge two entities —
     // refuse loudly instead (never observed; FNV64 over short paths)
     anyhow::ensure!(
@@ -490,8 +523,16 @@ fn size_facts(
         .map(|f| f.total_lines as u64)
         .collect();
     locs.sort_unstable(); // the wire demands non-descending
-    Ok((rows, locs, classes.declared()))
+    Ok((rows, homes, locs, classes.declared()))
 }
+
+/// size_facts' four tables: rows, each row's file path and span, judged LOC, classed.
+type SizeFacts = (
+    Vec<[u64; 4]>,
+    (Vec<String>, Vec<(i64, i64)>),
+    Vec<u64>,
+    bool,
+);
 
 /// Per-file churn sums over the per-unit ledger plus the co-change
 /// table. Three columns since 3.0.0 (I round D3): the constant added

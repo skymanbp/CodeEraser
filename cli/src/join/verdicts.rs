@@ -9,7 +9,7 @@
 
 use crate::graph::deadcode::{self, GraphWire};
 use crate::join::Pos;
-use crate::score::{self, wire};
+use crate::score::{self, located::prose_lines, wire};
 use anyhow::Result;
 use std::collections::HashMap;
 
@@ -108,12 +108,13 @@ fn request(
         thresholds: score::knobs::threshold_rows(&cfg.score, cfg.graph.scc_floor),
         tolerance: score::knobs::tolerance_rows(&cfg.score),
         dedup: None,
+        // the join reads the verdict table, not the score: every file's
+        // line count rides as one without a size row, nothing is located
+        extent: (vec![], vec![], vec![], prose_lines(root, &files, &[])?),
         dedup_distinct: Vec::new(),
         dedup_min_distinct: None,
         judged_loc: Vec::new(),
         doc_files: score::doc_file_indices(&files),
-        // no docdup row rides this road
-        doc_owners: None,
         files,
     })
 }

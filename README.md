@@ -27,7 +27,7 @@ LLM-assisted codebases drift the same way: the same function written twice, the 
 | duplicate clone blocks left behind | 4 | **0** |
 | duplicated doc segments | 1 | **0** |
 | removals still owed | 1 | **0** |
-| check score | 871 | **979** |
+| check score | 605 | **825** |
 
 One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.
 <!-- scoreboard:end -->
@@ -68,7 +68,7 @@ The full table, both transcripts and the JSON behind them are in [`demo/README.m
 - **Near-miss (T3) clones:** candidates from MinHash/LSH, judged in the core by tree edit distance at TSED ≥ 0.85.
 - **Documentation duplication that survives rewording:** 5-word shingles, Jaccard ≥ 0.80 or a 50-word verbatim run.
 - **Liveness:** per-language resolution ladders feed a reference graph; a four-way verdict comes back with a confidence code.
-- **Gate score:** 0–1000 over seven axes, held by the ADR-006 shrink-only ratchet (growth needs `max(+2 %, +10 lines)` or a named re-establish).
+- **Gate score:** 0–1000, the share of the tree's lines no finding names (seven axes name lines: size, complexity, clone, docdup, dead code, churn, cycles), held by the ADR-006 shrink-only ratchet (growth needs `max(+2 %, +10 lines)` or a named re-establish).
 - **Deterministic:** no model anywhere; text crosses only the local `ce` → `ce-core` pipe, and the core opens no file.
 
 The rest — same-role advice, Datalog queries and rules, intra-function dead code, merge suggestions, architecture, structure axes, tombstone residue, erase — is on [codeeraser.dev/how](https://codeeraser.dev/how/) and in the methodology booklets.
@@ -158,7 +158,7 @@ Every capability reaches the CLI, the GUI and the plugin with its MCP server, or
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->** (edition <!--ce:tool:edition#name-->2024<!--/ce-->): tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> with <!--ce:count:grammars#word-->twelve<!--/ce--> grammars, rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce--> (index schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->27<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->), a per-project daemon.
 - **Haskell (GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->)**: `ce-core`, every judgment family. **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->**: the GUI over the same crate.
-- **One wire:** NDJSON over stdio (proto <!--ce:ver:proto#v-->9.1.0<!--/ce-->, <!--ce:count:families#word-->sixteen<!--/ce--> families); the daemon speaks its own protocol (<!--ce:ver:daemon#v-->2.4.0<!--/ce-->).
+- **One wire:** NDJSON over stdio (proto <!--ce:ver:proto#v-->10.0.0<!--/ce-->, <!--ce:count:families#word-->sixteen<!--/ce--> families); the daemon speaks its own protocol (<!--ce:ver:daemon#v-->2.4.0<!--/ce-->).
 - **Design rules:** ADR-001 … ADR-009 (Rust frontend, parse layer in Rust, lazy daemon, cheap PreToolUse, two clone layers, shrink-only ratchet, pinned distribution, policy as Haskell data, derived documentation facts) in [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md).
 - **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Nothing asks a model anything; hooks fail open and say so; documentation is generated or gated, including the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md), and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree.
 
@@ -168,12 +168,13 @@ PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; 
 
 - **Languages.** AST judgment uses the <!--ce:count:grammars#word-->twelve<!--/ce--> grammars above; Markdown, HTML and `.txt` are judged by the documentation and graph rules; T4 clones are not promised.
 - **Advice, never a verdict.** Symbol-level liveness, `ce similar`, `ce merge` and `ce arch` never fail a gate; a guard class stays `observe` until it has its own false-positive record.
+- **Lines, not findings.** The score counts the lines some finding names, each line once however many findings name it: one long duplicated file weighs more than many short ones, and a second finding on lines already named does not lower it further.
 - **Lines not drawn.** `cognitive_fail` defaults to 0 (complexity only warns), and `ce structure` has no score floor.
 - **What the text names.** Liveness reads the references a file spells. A load whose target is computed (`require(prefix .. name)`, `import("./lib/" + name)`) or a star import whose `__all__` is not all literal draws no edge for what it does not spell: the file stays dead and its language cannot vouch for it. Dead is not a deletion licence either way: a file nothing references may still be run by name or found by a tool's convention (the eight conventions the dead-file exam passed, among them `setup.py`, Sphinx's `conf.py`, `package-info.java` and a Next.js `app/` page, are entries; a convention the product does not list is not), so `ce erase` deletes no whole file and erases only byte-identical documentation spans. Entry points declared in `setup.cfg` or a non-root `pyproject.toml` are not read.
 - **Distribution.** A release builds <!--ce:count:platforms#word-->five<!--/ce--> targets; `ce setup` wires nothing from an elevated account that is not the logged-in user (exit 13); judging this repository needs the `cli/tests` submodule seated.
 - **One wire line.** A request line to the core is at most <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> bytes; larger requests split into batches, and an oversized item is refused by name, never truncated.
 
-Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 and 1.9.2 are comparable with 1.9.0); the reasons are in [CHANGELOG](CHANGELOG.md).
+Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 and 1.9.2 are comparable with 1.9.0), v1.9.x → the next release (the score became the share of lines no finding names); the reasons are in [CHANGELOG](CHANGELOG.md).
 
 ## Documentation
 

@@ -191,26 +191,24 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
 
 <div class="fam">
   <h3 id="f05"><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
-  <p class="job">Folds <!--ce:count:axes#word-->seven<!--/ce--> axes into one 0–1000 score and gates it
-  against a banked baseline that may only tighten.</p>
-  <pre>raw     = sum_i (w_i * p_i * violCost)
-wTotal  = sum_i w_i                            -- derived, never a literal
-score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
-  <pre>p(x) = 0                              if x &lt;= S          -- S read as min S H
-     = pMax                           if H &lt;= S          -- degenerate fallback
-     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
-     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm
-
-m = gmedian(x)                                 -- log-space median: √(x_lo·x_hi) when the count is even
+  <p class="job">Reads the share of the tree's lines that the <!--ce:count:axes#word-->seven<!--/ce--> axes' findings
+  name as one 0–1000 score, and gates it against a banked baseline that may only tighten.</p>
+  <pre>score = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
+L     = sum of every file's lines
+E_f   = min(n, max(T, n - S, churn))                     -- one file of n lines
+E     = sum_j (r_j - r_j+1) * E(axes with w_i/max w &gt;= r_j)   -- weights by layers</pre>
+  <pre>m = gmedian(x)                                 -- log-space median: √(x_lo·x_hi) when the count is even
 r = gmedian( max(x/m, m/x) )                   -- &gt;= 1 by construction
 S = clamp(floor(m * r^k), [softMin, min softMax H])</pre>
   <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
-  <p class="note rule">Axis 0, the only one that is not a count, is a convex penalty on file size
-  in exact <code>Rational</code>, monotone past the hard line; <code>pMax</code> is the value
-  <em>at</em> <code>H</code>, not a ceiling. The soft line <code>S</code> is the repository's own frozen
+  <p class="note rule">A file's <code>T</code> is the union of the lines its findings name — duplicate
+  member spans, every line of a dead file, reference lines inside a cycle, and for a function over
+  its cognitive ceiling <code>C</code> at complexity <code>c</code> its lines times <code>1 − C/c</code> —
+  <code>n − S</code> its lines past the soft line, <code>churn</code> a rewrite-heavy file's excess; a line
+  two findings name counts once. Exact <code>Rational</code>, one floor. The soft line <code>S</code> is the repository's own frozen
   LOC statistic, <code>S = clamp(median + k·MAD, …)</code> rewritten multiplicatively so no logarithm is
   taken, derived at establish and frozen into the baseline. The fail bit is a disjunction of
   <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions, <code>ratchet_over</code>,
@@ -218,7 +216,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <code>knobs_digest</code>, <code>rows_dropped</code>, printed after <code>FAIL</code> in that order.</p><details class="more"><summary>Derivation and constants</summary>
   <p class="note">Since proto 3.1.0 a continuous row may carry its <em>path class</em>, the
   1-based index of the first matching <code>[[rules.class]]</code> (<code>0</code> for none), and is
-  charged against that class's soft line, hard line and CoC ceiling, the global line as fallback.
+  measured against that class's soft line and CoC ceiling, the global line as fallback.
   Beside the ceilings' codes <code>0 / 1 / 2</code>, <code>classKnobs</code> adds <code>3</code>
   (proto 5.1.0), the class's ratchet allowance in lines, and <code>4</code> (proto 6.4.0), its
   cognitive-complexity allowance; declared, either <em>replaces</em> both global legs, so
@@ -229,12 +227,10 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
     <li><b>violCost</b> 10</li>
     <li><b>defaultWeight</b> 1</li>
     <li><b>sizeHard H</b> 750</li>
-    <li><b>sizePMax</b> 10</li>
     <li><b>softLineK</b> 2</li>
     <li><b>[softMin, softMax]</b> [200, 500]</li>
     <li><b>sizeCeil fallback</b> 300</li>
     <li><b>cocCeil</b> 15</li>
-    <li><b>deadIndegCeil</b> 0</li>
     <li><b>rewriteNum/Den</b> 50/100</li>
     <li><b>sccFloor</b> 2</li>
     <li><b>tolNum/tolDen</b> 102/100</li>

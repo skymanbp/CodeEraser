@@ -1,134 +1,26 @@
--- | The verdict family's PURE score/ratchet battery (design §7.4,
--- M5-3i; the wire-driven half — ablation, idempotence, refusals,
--- knob-table probes — lives in VerdictWireProps since the ADR-008 P4
--- split at the 300-line law). The two F16 preconditions come FIRST
--- and void the battery when absent: every axis penalty nonzero on
--- the fixture AND penalties pairwise distinct AND the fixture
--- weights pairwise distinct — equal weights over equal penalties
--- make the weighted mean immune to exactly the perturbations this
--- battery exists to feel.
+-- | The verdict family's PURE battery (design §7.4, M5-3i; the
+-- wire-driven half — ablation, idempotence, refusals, knob-table
+-- probes — lives in VerdictWireProps since the ADR-008 P4 split at the
+-- 300-line law): the ratchet's tolerance inclusion and the soft
+-- line's derivation, then the extent law's battery (VerdictExtentProps) and its
+-- contract refusals (VerdictExtentRefusals). The density law's
+-- fixture and its knob probes retired with that law (10.0.0); the
+-- zone curve went with the split advisory, its one reader (SplitZoneProps).
 module VerdictProps (battery) where
 
 import qualified CE.Verdict.Ratchet as R
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), chargeAt, classKnobsOf, penalties, score, scoreBound)
-import CE.Verdict.Soft (softLine, zonePenalty)
-import Data.List (nub)
-import Data.Ratio ((%))
+import CE.Verdict.Soft (softLine)
 import qualified Data.Set as S
+import VerdictExtentProps (extentLegs)
+import VerdictExtentRefusals (refusalLegs)
 import WireHarness (runChecks)
 
 battery :: IO Bool
-battery = runChecks (preconditions <> knobProbes <> softZone <> universes)
+battery = runChecks (softZone <> extentLegs <> refusalLegs)
  where
-  preconditions =
-    [ ("precondition: every axis penalty nonzero and pairwise distinct", preNonzero)
-    , ("precondition: battery weights pairwise distinct", preWeights)
-    ]
-  knobProbes =
-    [ ("each weight +1 moves the (score, violations) tuple", weightKnobs)
-    , ("each axis threshold knob moves the score", axisKnobs)
-    ]
   softZone =
     [ ("tolerance-over sets shrink as tolAbs grows (inclusion)", overMono)
     , ("the soft line derives by order statistics and clamps both ends", softDerive)
-    , ("the zone curve is hand-exact, monotone past H, degenerate-safe", zoneCurve)
-    ]
-  universes =
-    [ ("docFiles narrows cycle mass and opportunity; absent preserves charge", docFilesCycle)
-    , ("a doc index without a pos row widens the docdup opportunity and no code count", proseUniverse)
-    , ("a kind-1 (t3) sim row is the clone axis's fact as a kind-0 row is, and no docdup fact", nearMissKind)
-    ]
-
--- | The score fixture, refit for the density scoring (M9 batch 6)
--- and again for the file-touched clone/docdup axes (7.0.0, O22): per
--- axis the (mass, opportunity) odds land the seven charges at
--- 685/285/461/470/238/181/562‰ — pairwise distinct, every axis with
--- one row EXACTLY on its threshold so a +1 knob probe has a boundary
--- to flip, and every charge at least 77‰ off the weighted mean 395:
--- a +1 weight bump moves the floored score by about
--- (charge − mean)/29, so a charge parked within the ±29 integer-div
--- granularity of the mean moves NOTHING (the axis-5 461-vs-486
--- failure that forced the first refit — the same mean trap the
--- count-era fixture documented, one representation later). fPos is
--- written node-ascending (16 = the near-dead row only the
--- deadIndegCeil probe counts; 5 dead rows; 9 cycle members; 80 = a
--- referenced doc file, so the doc universe is nine files and the dup
--- axis lands off the complexity axis); the eight dup-pair files are
--- the doc universe the axis-3 odds read, and the six clone-pair files
--- charge against the seven code files (16 nodes minus nine docs).
-facts :: Facts
-facts =
-  Facts
-    { fSim =
-        [ [3, 4, 1, 85, 100] -- clone boundary
-        , [5, 6, 1, 90, 100]
-        , [7, 8, 0, 100, 100]
-        , [9, 10, 2, 80, 100] -- dup boundary
-        , [11, 12, 2, 85, 100]
-        , [13, 14, 2, 90, 100]
-        , [15, 16, 2, 100, 100]
-        ]
-    , fPos =
-        [[16, 1, 0, 16, 1, 0]]
-          <> [[u, 0, 0, u, 1, 0] | u <- [17 .. 21]]
-          <> [[u, 1, 1, 50, 2, 1] | u <- [24 .. 32]]
-          <> [[80, 1, 0, 80, 1, 1]]
-    , fChurn =
-        -- one clearly rewrite-heavy, one exactly at 50/100 (the
-        -- rewriteNum boundary), seven under
-        [[39, 30, 10], [40, 20, 20]]
-          <> [[u, 1, 50] | u <- [41 .. 47]]
-    , -- 510 lines: the graded axis 0 (v0.6 soft zone, fallback
-      -- S=300) masses 10·(210/450)² = 98/45 — inside the zone, and
-      -- far enough in that the charge clears the mean margin
-      fCont = [[0, 0, 510], [1, 1, 20], [2, 1, 30], [3, 1, 5], [4, 1, 5], [5, 1, 5]]
-    , fDocFiles = [9 .. 16] <> [80]
-    , fClassKnobs = classKnobsOf []
-    , fSelfLoops = []
-    , fDocOwners = Nothing
-    }
-
-battWeights :: [[Integer]]
-battWeights = [[c, c + 1] | c <- [0 .. 6]]
-
-pens :: [(Integer, Integer)]
-pens = penalties scoreBound Nothing facts
-
-preNonzero :: Bool
-preNonzero =
-  map fst pens == [0 .. 6]
-    && all ((> 0) . snd) pens
-    && length (nub (map snd pens)) == 7
-
-preWeights :: Bool
-preWeights = length (nub (map (!! 1) battWeights)) == 7
-
-baseTuple :: (Integer, Integer)
-baseTuple = score scoreBound battWeights pens
-
-weightKnobs :: Bool
-weightKnobs = and [score scoreBound (bump c) pens /= baseTuple | c <- [0 .. 6]]
- where
-  bump c = [[c', if c' == c then w + 1 else w] | [c', w] <- battWeights]
-
-axisKnobs :: Bool
-axisKnobs =
-  all
-    (\k -> score k battWeights (penalties k Nothing facts) /= baseTuple)
-    [ scoreBound {sSizeCeil = sSizeCeil scoreBound + 100}
-    , scoreBound {sCocCeil = sCocCeil scoreBound + 5}
-    , scoreBound {sCloneNum = sCloneNum scoreBound + 1}
-    , scoreBound {sDupNum = sDupNum scoreBound + 1}
-    , scoreBound {sDeadIndegCeil = sDeadIndegCeil scoreBound + 1}
-    , scoreBound {sRewriteNum = sRewriteNum scoreBound + 1}
-    , scoreBound {sCycleFloor = sCycleFloor scoreBound + 1}
-    , -- the last scoring literal, now a knob (ADR-008 P4 gap 1)
-      scoreBound {sScoreScale = sScoreScale scoreBound + 100}
-    , -- the v0.6 zone knobs are live levers too (F16): a farther
-      -- hard line flattens the curve (1 -> 0 on the 450 row), a
-      -- doubled P_max steepens it (1 -> 2)
-      scoreBound {sSizeHard = sSizeHard scoreBound + 250}
-    , scoreBound {sSizePMax = sSizePMax scoreBound + 10}
     ]
 
 -- | Monotonicity as SET INCLUSION (never count comparison): growing
@@ -167,86 +59,3 @@ softDerive =
     , softLine 2 200 500 [0, 0] == Nothing
     , softLine 2 200 500 [] == Nothing
     ]
-
--- | p at the edges and past them, exactly: 0 at S, P_max at H, 2.5
--- at midzone; past H the C¹ LINEAR arm (still costing — growth past
--- the wall is never free — but no quadratic outside the contracted
--- (S,H] domain: the batch-6 saturation lesson). 1200 = H + 450
--- prices 10·(1+2) = 30; one step past H adds exactly the slope
--- 2·P_max/(H−S) the quadratic reached AT H (no kink); and the
--- degenerate H<=S falls back to flat P_max instead of dividing by
--- zero. Since 9.0.0 the line is read as min S H: with S = 480 above
--- H = 400 a 450-line file past the wall charges P_max (it charged 0)
--- and one at 400 still charges nothing; H = S prices the same way.
-zoneCurve :: Bool
-zoneCurve =
-  and
-    [ zonePenalty 300 750 10 300 == 0
-    , zonePenalty 300 750 10 525 == 5 % 2
-    , zonePenalty 300 750 10 750 == 10
-    , zonePenalty 300 750 10 1200 == 30
-    , zonePenalty 300 750 10 751 - zonePenalty 300 750 10 750 == 2 * 10 % 450
-    , zonePenalty 300 300 10 400 == 10
-    , zonePenalty 300 200 10 400 == 10
-    , zonePenalty 480 400 10 450 == 10
-    , zonePenalty 480 400 10 400 == 0
-    , zonePenalty 400 400 10 450 == 10
-    , zonePenalty 300 200 10 250 == 10
-    ]
-
-docFilesCycle :: Bool
-docFilesCycle =
-  axis6 (penalties scoreBound Nothing noDocs) == chargeAt scale 2 3
-    && axis6 (penalties scoreBound Nothing oneDoc) == chargeAt scale 1 2
-    && axis6 (penalties scoreBound Nothing noDocs) == axis6 (penalties scoreBound Nothing absent)
- where
-  scale = sScoreScale scoreBound
-  cycleFacts docs =
-    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf []) [] Nothing
-  noDocs = cycleFacts []
-  oneDoc = cycleFacts [0]
-  absent = cycleFacts []
-  axis6 = maybe (-1) id . lookup 6
-
--- | Plan v2.30 step 5b-8: a document that is no graph node — a
--- plain-text file — rides the file universe with no pos row. It
--- widens the docdup opportunity (axis 3: two touched files over two
--- documents) and leaves the code-file count where the tree without
--- it had it (axis 2: two clone files over the two code nodes); the
--- retired `nodes − docFiles` would have read one code file there.
-proseUniverse :: Bool
-proseUniverse =
-  and
-    [ axisOf 2 withText == axisOf 2 without
-    , axisOf 2 without == chargeAt (sScoreScale scoreBound) 2 2
-    , axisOf 3 withText == chargeAt (sScoreScale scoreBound) 2 2
-    , axisOf 3 without == 0
-    ]
- where
-  without = probeTree [2] [[0, 1, 0, 100, 100]]
-  withText = probeTree [2, 3] [[0, 1, 0, 100, 100], [2, 3, 2, 100, 100]]
-
--- | Plan v2.30 step 5b-9: the T3 family's verified pairs enter the sim
--- table live as kind 1. A kind-1 row is the clone axis's fact exactly
--- as a kind-0 row is — the same two touched files over the same code
--- files — and no docdup fact; a kind-2 row over the same two files
--- charges the clone axis nothing.
-nearMissKind :: Bool
-nearMissKind =
-  (axisOf 2 t3, axisOf 3 t3, axisOf 2 dup) == (axisOf 2 t1t2, 0, 0)
-    && axisOf 2 t1t2 == chargeAt (sScoreScale scoreBound) 2 2
- where
-  t1t2 = probeTree [2] [[0, 1, 0, 100, 100]]
-  t3 = probeTree [2] [[0, 1, 1, 100, 100]]
-  dup = probeTree [2] [[0, 1, 2, 100, 100]]
-
--- | The universe legs' probe tree: nodes 0 and 1 (code) and 2 (a
--- doc) hold positions, a node past them holds none; the docs and
--- the sim table are the leg's own.
-probeTree :: [Integer] -> [[Integer]] -> [(Integer, Integer)]
-probeTree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [] Nothing)
- where
-  pos = [[0, 1, 1, 0, 1, 1], [1, 1, 1, 1, 1, 1], [2, 1, 0, 2, 1, 1]]
-
-axisOf :: Integer -> [(Integer, Integer)] -> Integer
-axisOf c = maybe (-1) id . lookup c

@@ -68,9 +68,11 @@ import qualified TrendProps
 import qualified VerdictProps
 import qualified SpecProbes
 import qualified SplitProps
+import qualified SplitZoneProps
 import qualified StackingProps
 import qualified FourClassReferenceProps
 import qualified VerdictKnobProps
+import qualified VerdictLeverProps
 import qualified VerdictWireProps
 import qualified VerdictFenceProps
 import qualified SoftProps
@@ -181,9 +183,11 @@ batteries =
        , VerdictWireProps.battery
        , VerdictFenceProps.battery
        , VerdictKnobProps.battery
+       , VerdictLeverProps.battery
        , SoftProps.battery
        , TextProps.battery
        , SplitProps.battery
+       , SplitZoneProps.battery
        , ClassProps.battery
        , StackingProps.battery
        , FourClassReferenceProps.battery

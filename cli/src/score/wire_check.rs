@@ -48,6 +48,11 @@ pub(crate) fn check_reply(r: &Request, reply: &Reply) -> Result<()> {
     if reply.degraded.is_some() {
         return Ok(());
     }
+    ensure!(
+        reply.extent.is_some(),
+        "{}",
+        crate::corelink::skew("extent")
+    );
     drift_policy(r, &reply.failed)?;
     new_baseline_shape(r, &reply.new_baseline)?;
     knob_echoes(r, reply)
@@ -159,13 +164,19 @@ fn assert_weights(sent: &[[i64; 2]], echoed: &[[i64; 2]], default_w: i64) -> Res
 /// Sent [code, value] rows against the reply's knob echo, names
 /// resolved through the SAME index-is-code registry that assembled
 /// them (score::knobs).
-fn assert_echo(keys: &[&str], sent: &[[i64; 2]], got: &BTreeMap<String, i64>) -> Result<()> {
+fn assert_echo(
+    keys: &[Option<&str>],
+    sent: &[[i64; 2]],
+    got: &BTreeMap<String, i64>,
+) -> Result<()> {
     for &[code, v] in sent {
         let key = keys
             .get(code as usize)
-            .with_context(|| format!("no echo key for knob code {code}"))?;
+            .copied()
+            .flatten()
+            .with_context(|| format!("no echo key for knob code {code} (unknown or retired)"))?;
         let echoed = got
-            .get(*key)
+            .get(key)
             .with_context(|| format!("reply echo missing {key}"))?;
         ensure!(*echoed == v, "core judged with {key}={echoed}, ce sent {v}");
     }

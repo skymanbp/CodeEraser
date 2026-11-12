@@ -1,6 +1,7 @@
 // CodeEraser GUI — the score screen (batch 4): the ce.check-report
 // document as a face — hero score over the effective scale, the
-// seven verdict axes, and the ratchet's registers. Rendering
+// lines the findings are on (E of L, the extent law), each axis's own
+// share per 1000 lines, and the ratchet's registers. Rendering
 // only: the verdict came from the core, the FAIL/pass vocabulary
 // stays machine-English exactly like the CLI's exit-code face.
 "use strict";
@@ -13,7 +14,7 @@ let checkDoc = null;
 })();
 
 function loadCheck() {
-  // `--fail-under`, opt-in on every road — but CI arms 911 while
+  // `--fail-under`, opt-in on every road — but CI arms 917 while
   // this screen could arm nothing, so one tree read pass here and
   // FAIL in the pipeline with nothing on screen to say why.
   const floor = $("check-floor").value.trim();
@@ -29,6 +30,13 @@ function loadCheck() {
     checkDoc = d;
     renderCheck();
   });
+}
+
+// `tenths` (an integer, E times ten) as its decimal: the digits, a point
+// before the last one — string work, no arithmetic on E
+function tenthsText(t) {
+  const s = String(t).padStart(2, "0");
+  return `${s.slice(0, -1)}.${s.slice(-1)}`;
 }
 
 function renderCheck() {
@@ -54,11 +62,15 @@ function renderCheck() {
     `<small class="kind">${esc(tr("scoreCheck"))}</small>` +
     `<span class="pill ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
     `<small class="floor">${esc(floor)}</small>` +
-    `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>`;
+    `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>` +
+    // E as the core printed it (`tenths`: E times ten, rounded half up;
+    // an integer, at most ten times `lines`): the screen divides
+    // nothing, so it reads what the console reads
+    (d.extent ? `<small class="extent">${esc(tr("extentLines", tenthsText(d.extent.tenths), d.extent.lines))}</small>` : "");
   // the CHECK axes are the verdict family's seven (size…cycles), a
   // DIFFERENT vocabulary from structure's screen axes — the first
   // live run shipped "geometry 12" for what was the size axis
-  $("check-axes").innerHTML = d.axes
+  $("check-axes").innerHTML = `<span>${esc(tr("perMilleLines"))}</span>` + d.axes
     .map(
       ([c, p]) =>
         `<span${p === 0 ? ' class="zero"' : ""}>${esc(tr("checkAxisNames")[c] ?? String(c))} <b>${p}</b></span>`,

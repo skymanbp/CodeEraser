@@ -7,6 +7,20 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 7.2.0 止；7.1.0–6.0.0 已于 2026-11-11 逐字节迁入 [VERSIONING-ARCHIVE-6.0-7.1.md](VERSIONING-ARCHIVE-6.0-7.1.md)（守卫车道的 9.1.0 同版加性段落下后正册读 747 行，判决车道的三条同版注记再进来就过 750 行硬线），5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **10.0.0**（破坏性 major，评分改为行数定律，车道 v235_score，2026-11-12；方法学册 05、计划书 v2.35 评分修正案）：`verdict/1` 的分数改读
+> 「被某条发现点名的行占全部行的比例」：score = ⌊scale·(1 − k·E/L)⌋，每文件 E_f = min(行数, max(点名行 T, 行数 − S, 变动超额))。请求必带四张表，缺任何一张按名拒绝
+> （「extent: contSpans, dupSpans, refLines and proseLines ride on every request」）：`contSpans` `[[文件, 起行, 止行]]` 与 `continuous` 逐行对齐（宇宙外的行文件为 −1，非函数行起止为 0）、
+> `dupSpans` `[[文件, 起行, 止行, 种类]]` 每个已核实对的两侧成员（同文件对也算，种类 0 / 1 克隆、2 文档重复）、`refLines` `[[源文件, 目标文件, 行]]` 每条判过的弧（含自弧，
+> 循环地板 ≤ 1 才计）、`proseLines` `[[文件, 行数]]` 纯散文文件的行数（无尺寸项）；各表的范围、升序与「宇宙内每个文件恰有尺寸行或散文行之一」由 `CE.Verdict.ExtentRows` 按名拒绝。
+> 应答加性 `extent` `{tenths, lines}`：`tenths` = E 乘十后四舍五入（half up），一个整数，至多为 `lines` 的十倍，由核在 E 精确的那一处算出；精确的 E 不出核（它的约分分母是各函数 c 与各文件改写行数的最小公倍数，没有 64 位上界），`tenths` > 10·`lines` 的应答测量侧按名拒绝；`axes` 每行改为该轴自己的行占比 ⌊scale·E(该轴)/L⌋（不加权、不乘 k）。
+> 不再读：9.x 的密度定律（各轴 v/(v+n) 与机会表）、`docOwners`（9.1.0 未发布）、2B 的 `trial` 键——三者在请求里出现也被忽略，不判。
+> 旋钮码不改号退役：ceilings 码 3（`sizePMax`）与 thresholds 码 0（`deadIndegCeil`）按名拒绝，其余码保持原号；定义包 `limits.score_defaults` 由 17 键变 15 键（去 `sizePMax` 与 `deadIndegCeil`）。
+> ce.toml 的 `[score] size_penalty_max` 与 `[score] dead_indeg_ceil` 在加载时按名拒绝（「ce.toml [score] <键>: retired with the density law (v2.35); remove the key」）；
+> 拆分建议的 P_max 成为核常量（结构旋钮 14 照旧在线上，与 15–18 同）。文档：`ce.check-report` 0.6.0 加性 `extent` `{tenths, lines}`（请求行 `[tenths, lines]`，
+> 与应答同形；`tenths` > 10·`lines` 按名拒绝），每个读者都读这同一个形。趋势表的可比性键不另加定律标记：戳里本就带 `proto<版本>`，
+> 同一协议版本下定律不会变。golden：全部 request 行随 major 重锚到 10.0.0；`handshake/wire-errors` 第 3 对的 major 偏斜探针改为按 server 的 major 加一派生
+> （今日 11.0.0，应答为错误），不再是字面量——9.x 时字面量 `10.0.0` 到 10.0.0 变成了 server 自己的版本、那一对成了 `fourclass.result`。其余各族逐字节同旧，只动 proto。
+
 > **9.1.0 同版加性**（工具约定入口，车道 v235_licence 第 4A 部分，2026-11-12；方法学册 06 角色表 role 10；9.1.0 未发布，同上不另升版号）：`graph/1` 节点行的角色列加第 10 位——工具约定（测量侧 `ROLE_CONVENTION = 1 << 10`，`cli/src/graph/deadcode/convention.rs` 按定义包读路径），
 > 核 `CE.Graph.Cost.roleBits` 加第十一行 `(10, 1)`，落在入口位；请求不带该位时判决逐字节同前。定义包 `flags` 加 `entry_conventions`（死文件考题第一代过关的八条工具约定与仓根 `init.lua`，每行一个名字与一个位置：`basename` / `under` / `exact`），hello 的 `tablesDigest` 随之变。
 > golden：`tables/golden` 的定义包与各族 hello 的摘要随定义包重生成，别的应答不动。
@@ -445,7 +459,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->9.1.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->10.0.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -592,12 +606,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
-  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->374<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.1.0<!--/ce-->）——它们是"minor 偏斜
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 / 10.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->10.0.0<!--/ce-->**
+  （<!--ce:count:golden_requests#digits-->374<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->10.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
-  request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->9.1.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->10.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
+  server 走 <!--ce:ver:proto#v-->10.0.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -609,5 +623,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->9.1.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->10.0.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.4.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

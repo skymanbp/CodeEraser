@@ -56,12 +56,10 @@ module CE.Verdict.Cost
   , tolAbsCoc
   , sizeCeil
   , sizeHard
-  , sizePMax
   , softLineK
   , softMin
   , softMax
   , cocCeil
-  , deadIndegCeil
   , violCost
   , violCostNeutral
   , zoneWarnPermille
@@ -172,16 +170,6 @@ sizeCeil = 300
 sizeHard :: Integer
 sizeHard = 750
 
--- | P_max: the axis-0 penalty of a file AT the hard line, in the
--- same violation units the other axes count in — one hard-line
--- file weighs like ten old binary violations. Past H the curve
--- continues LINEARLY at the slope it reached (C¹, monotone, no
--- kink — Soft.zonePenalty): P_max is the at-the-line value, not a
--- cap, but the quadratic never leaves its contracted (S,H] domain
--- (the M9 batch-6 saturation lesson).
-sizePMax :: Integer
-sizePMax = 10
-
 -- | k: the multiplicative-MAD exponent in the soft-line derivation
 -- S = clamp(median·r^k, [softMin, softMax]) (plan v2.6 §B).
 -- Calibrated over self + requests + ripgrep (v0.6 P2), where k=2 put
@@ -210,24 +198,11 @@ softMax = 500
 cocCeil :: Integer
 cocCeil = 15
 
--- | Deadcode-axis violation shape: indeg <= this AND reachIn 0.
--- 0 = strictly unreferenced. The wire carries no entry flags (they
--- were consumed by the graph family's own verdicts; reachIn already
--- excludes entries), so this counts structurally orphaned files.
-deadIndegCeil :: Integer
-deadIndegCeil = 0
-
--- | The global strictness dial in the score fold:
--- score = scale - sum(w_i * charge_i * violCost) / (violCostNeutral
--- * wTotal), floored at 0. charge_i is the axis's bounded per-mille
--- density (Score.charge), so at the neutral default the score is
--- the scale minus the FLOOR of the weighted mean of the (already
--- floored) axis charges — at most one point above the exact mean,
--- lenient by less than one — and can never saturate; a repo
--- declaring viol_cost above neutral asks for
--- harsher scores by choice. wTotal is DERIVED from the effective
--- weights, never a literal (the destFloor convention — a hand-typed
--- total is how a weight silently dies).
+-- | The global strictness dial of the extent law: score = floor(scale
+-- · (1 − k·E/L)), k = violCost / violCostNeutral, floored at 0 — at
+-- the neutral default the score is the share of the lines no finding
+-- is about; a repo declaring viol_cost above neutral asks for harsher
+-- scores by choice.
 violCost :: Integer
 violCost = 10
 
@@ -248,10 +223,9 @@ zoneWarnPermille = 250
 zoneAskPermille :: Integer
 zoneAskPermille = 750
 
--- | The value of violCost at which the dial is a no-op — the fixed
--- denominator that makes the default score exactly the weighted
--- mean of the axis charges. A structural constant, deliberately NOT
--- a knob: two dials on one ratio is one dial and a trap.
+-- | The value of violCost at which the dial is a no-op (k = 1). A
+-- structural constant, deliberately NOT a knob: two dials on one
+-- ratio is one dial and a trap.
 violCostNeutral :: Integer
 violCostNeutral = 10
 

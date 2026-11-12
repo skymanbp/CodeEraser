@@ -158,21 +158,14 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> 
 
 <div class="fam formula">
   <h3 id="m-score"><span class="n">05</span>The score</h3>
-  <p class="job">Folds the axes into one 0–1000 score under a convex size penalty; a file's ceiling only shrinks, and growth past max(+2 %, +10) fails.</p>
-  <pre>raw     = sum_i (w_i * p_i * violCost)
-wTotal  = sum_i w_i                            -- derived, never a literal
-score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
-
-p(x) = 0                              if x &lt;= S          -- S read as min S H
-     = pMax                           if H &lt;= S          -- degenerate fallback
-     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
-     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm</pre>
-  <p class="note rule">Axis 0 alone is not a count: a convex size penalty in exact <code>Rational</code>, monotone past the hard line.</p>
+  <p class="job">Reads the share of the tree's lines no finding names as one 0–1000 score; a file's ceiling only shrinks, and growth past max(+2 %, +10) fails.</p>
+  <pre>score = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
+E_f   = min(n, max(T, n - S, churn))                     -- T = the lines a finding names</pre>
+  <p class="note rule">Each line counts once, however many findings name it; exact <code>Rational</code>, one floor.</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
     <li><b>sizeHard H</b> 750</li>
-    <li><b>sizePMax</b> 10</li>
     <li><b>softLineK</b> 2</li>
     <li><b>[softMin, softMax]</b> [200, 500]</li>
   </ul>

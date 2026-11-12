@@ -4,18 +4,21 @@
 
 -- | The rulepack battery (plan v2.13 ①, 3.1.0): the class column on
 -- the continuous rows and the classKnobs table, in two halves. The
--- PURE half drives Score.penalties — C2 a class's own line moves its
--- rows' charge, C4 a missing row falls back to the global line, C9
+-- PURE half drives the extent law's fold (CE.Verdict.ExtentFacts) — C2
+-- a class's own line moves its rows' extent, C4 a missing row falls
+-- back to the global line, C9
 -- the table is a Map (row order never judges). The WIRE half drives
--- the REAL respond — the boundary refusals C5–C7 (mixed arity, a
+-- the REAL respondV — the boundary refusals C5–C7 (mixed arity, a
 -- class at the fence, class 0 in the knob table), the knob-row
 -- grammar, the three-column baseline law, and the echo that rides
 -- exactly when the rows did.
 module ClassProps (battery) where
 
-import CE.Verdict (respond)
+import VerdictTables (respondV)
 import CE.Verdict.Cost (classCap)
-import CE.Verdict.Score (Facts (..), classKnobsOf, penalties, scoreBound)
+import CE.Verdict.Extent (extentOf)
+import CE.Verdict.ExtentFacts (Located (..), units)
+import CE.Verdict.Score (Facts (..), classKnobsOf, scoreBound)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
@@ -30,9 +33,9 @@ battery = do
   pure (pureHalf && wireHalf && fence)
  where
   pureNames =
-    [ "C2: a class's own warn line clears its rows' size charge"
+    [ "C2: a class's own soft line clears its rows' size extent"
     , "C2: a class's own coc ceiling spares its functions"
-    , "C2: a class's own hard line rescales its zone"
+    , "the hard line left the score: a class's own H moves nothing (10.0.0)"
     , "C4: a class without a row falls back to the global line"
     , "C9: the class table is a Map — row order never judges"
     ]
@@ -55,48 +58,50 @@ battery = do
 -- | Size and complexity facts alone: classed rows and the knob rows,
 -- folded the way CE.Verdict folds them.
 contFacts :: [[Integer]] -> [[Integer]] -> Facts
-contFacts rows knobs = Facts [] [] [] rows [] (classKnobsOf knobs) [] Nothing
+contFacts rows knobs = Facts [] [] rows [] (classKnobsOf knobs) []
 
-axis :: Integer -> Facts -> Integer
-axis code f = maybe (-1) id (lookup code (penalties scoreBound Nothing f))
+-- | One axis's extent over rows of file 0 (each row's span beside it:
+-- [file, lo, hi]), the extent law's own fold (CE.Verdict.ExtentFacts).
+axis :: Integer -> [([Integer], [Integer])] -> [[Integer]] -> Rational
+axis code rows knobs = extentOf (== code) (units scoreBound Nothing (contFacts (map fst rows) knobs) loc)
+ where
+  loc = Located (1 + maximum (0 : [u | (_, u : _) <- rows])) (map snd rows) [] [] []
 
--- | One classed row over the global line charges its axis; the same
--- row under its class's own knob charges nothing.
-spares :: Integer -> [Integer] -> [Integer] -> Bool
-spares code row knob =
-  axis code (contFacts [row] [knob]) == 0 && axis code (contFacts [row] []) > 0
+-- | One classed row over the global line counts on its axis; the same
+-- row under its class's own knob counts nothing.
+spares :: Integer -> [([Integer], [Integer])] -> [Integer] -> Bool
+spares code rows knob = axis code rows [knob] == 0 && axis code rows [] > 0
 
--- | 350 lines past the fallback opening edge 300, class line 400.
+-- | 350 lines past the fallback soft line 300, class line 400.
 classLine :: Bool
-classLine = spares 0 [0, 0, 350, 1] [1, 0, 400]
+classLine = spares 0 [([0, 0, 350, 1], [0, 0, 0])] [1, 0, 400]
 
--- | CoC 18 over the global 15, class ceiling 20.
+-- | CoC 18 over the global 15, class ceiling 20 (a ten-line file).
 classCoc :: Bool
-classCoc = spares 1 [0, 1, 18, 1] [1, 1, 20]
+classCoc = spares 1 [([0, 0, 10, 1], [0, 0, 0]), ([1, 1, 18, 1], [0, 1, 10])] [1, 1, 20]
 
--- | A farther hard line flattens the zone: the 600-line file charges
--- less under a class H of 900 than under the global 750.
+-- | The hard line left the score with the zone curve (10.0.0): a
+-- class's own H moves nothing, the lines past S are what count.
 classHard :: Bool
-classHard =
-  axis 0 (contFacts [[0, 0, 600, 1]] [[1, 2, 900]])
-    < axis 0 (contFacts [[0, 0, 600, 1]] [])
+classHard = axis 0 big [[1, 2, 900]] == axis 0 big [] && axis 0 big [] == 300
+ where
+  big = [([0, 0, 600, 1], [0, 0, 0])]
 
 -- | A row for ANOTHER class changes nothing for this one, and a
 -- classed row with no override judges exactly like the legacy
 -- three-column row it shadows.
 fallback :: Bool
 fallback =
-  axis 0 (contFacts [[0, 0, 350, 1]] [[2, 0, 400]]) == unclassed
-    && axis 0 (contFacts [[0, 0, 350, 1]] []) == unclassed
+  axis 0 [([0, 0, 350, 1], [0, 0, 0])] [[2, 0, 400]] == unclassed
+    && axis 0 [([0, 0, 350, 1], [0, 0, 0])] [] == unclassed
  where
-  unclassed = axis 0 (contFacts [[0, 0, 350]] [])
+  unclassed = axis 0 [([0, 0, 350], [0, 0, 0])] []
 
 permutation :: Bool
 permutation =
-  penalties scoreBound Nothing (contFacts rows [[1, 0, 400], [1, 1, 20], [2, 0, 350]])
-    == penalties scoreBound Nothing (contFacts rows [[2, 0, 350], [1, 1, 20], [1, 0, 400]])
+  and [axis c rows [[1, 0, 400], [1, 1, 20], [2, 0, 350]] == axis c rows [[2, 0, 350], [1, 1, 20], [1, 0, 400]] | c <- [0, 1]]
  where
-  rows = [[0, 0, 350, 1], [1, 1, 18, 1], [2, 0, 340, 2]]
+  rows = [([0, 0, 350, 1], [0, 0, 0]), ([1, 1, 18, 1], [0, 1, 300]), ([2, 0, 340, 2], [1, 0, 0])]
 
 base :: Value
 base = wireReq [] [] [] []
@@ -105,7 +110,7 @@ withCont :: [[Integer]] -> Value
 withCont rows = setKey "continuous" (toJSON rows) base
 
 refused :: Value -> String -> Bool
-refused = refusedBy respond
+refused = refusedBy respondV
 
 mixedArity :: Bool
 mixedArity = refused (withCont [[0, 0, 310], [1, 1, 20, 0]]) "mixed arity"

@@ -130,20 +130,17 @@ modFloor = 1
 modMassFloor :: Integer
 modMassFloor = 4
 
--- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own
--- copy of the zone triple — S/H/P_max — because the structure
--- family must price a seam without a verdict/1 request in flight.
--- Rust sends the SAME numbers it sends verdict/1 — the committed
--- softLine, ce.toml's file_lines_fail (left out when 0 = no hard
--- line, so this default judges, as the score's does), and (6.1.0)
--- score's size_penalty_max when one is declared — and (9.0.0) the
--- verdict's own classKnobs rows with each seam file's class, priced
--- through the verdict's one class-line resolver (Soft.classedZone),
--- so the two families read one curve per file. Until 6.1.0 only 12
--- and 13 rode: a repo declaring size_penalty_max got the declared
--- P_max in its score and the default 10 in its advisory; until 9.0.0
--- a classed file was priced on the global curve in its advisory and
--- on its class's in its score — both halves looked right on their own.
+-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the zone triple
+-- S/H/P_max of the advisory's own pressure model (CE.Structure.Zone).
+-- Rust sends the two lines the score reads too — the committed
+-- softLine (12) and ce.toml's file_lines_fail (13, left out when 0 =
+-- no hard line, so this default judges) — and (9.0.0) the verdict's
+-- classKnobs rows with each seam file's class, so a classed file's
+-- advice opens and walls at its class's lines. P_max is the advisory's
+-- exchange rate against its four prices (15..18), and like them it is
+-- this constant: no ce.toml key reaches it since `[score]
+-- size_penalty_max` retired (v2.35); knob 14 stays on the wire as
+-- 15..18 do.
 seamSoft :: Integer
 seamSoft = 300
 

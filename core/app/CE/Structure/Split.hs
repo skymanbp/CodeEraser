@@ -1,8 +1,8 @@
 -- | The split-ROI advisory (plan v2.6 §C): given a candidate file's
 -- top-level unit spans and its intra-file mention edges, enumerate
 -- every seam (the gap after each unit), price it — benefit = the
--- soft-zone penalty the split recovers (the SAME curve the verdict
--- family judges with, CE.Verdict.Soft), cost = crossing references
+-- zone pressure the split takes off (the advisory's own model,
+-- CE.Structure.Zone), cost = crossing references
 -- × roiRefMilli + the flat roiPhiMilli per new file — and answer
 -- either the best viable seam (ROI >= 1) or an exemption row whose
 -- numbers let the Rust side write the why. Everything is exact
@@ -22,7 +22,7 @@ module CE.Structure.Split
 
 import CE.Structure.Axes (Knobs (..))
 import CE.Verdict.Cost (classIdPastFence)
-import CE.Verdict.Soft (classedZone)
+import CE.Structure.Zone (classedZone)
 import CE.Wire (label, tableOffence)
 import Data.Foldable (asum)
 import Data.List (maximumBy)
@@ -171,7 +171,7 @@ unitCounts files units =
 -- pair reverses once: the old `cands <> [row]` re-walked the answer
 -- built so far on every file, F² over the files the cap admits. A
 -- file's class (third column, 9.0.0) picks its curve from the class
--- rows the verdict reads (Soft.classedZone, one resolver).
+-- rows the verdict reads (Zone.classedZone).
 splitRows :: Knobs -> M.Map (Integer, Integer) Integer -> [[Integer]] -> SeamTables -> ([[Integer]], [[Integer]])
 splitRows k classes files (units, refs, clones, churn) = (reverse cands, reverse exempts)
  where

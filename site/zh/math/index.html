@@ -158,21 +158,14 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> 
 
 <div class="fam formula">
   <h3 id="m-score"><span class="n">05</span>分数</h3>
-  <p class="job">各判轴在凸的尺寸罚分下折成一个 0–1000 分；文件上限只缩不涨，增长超过 max(+2 %, +10) 即判负。</p>
-  <pre>raw     = sum_i (w_i * p_i * violCost)
-wTotal  = sum_i w_i                            -- 推导而来，从不写死
-score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
-
-p(x) = 0                              if x &lt;= S          -- S 读作 min S H
-     = pMax                           if H &lt;= S          -- 退化时的兜底
-     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
-     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ 线性臂</pre>
-  <p class="note rule">判轴 0 是唯一不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，越过硬线仍单调。</p>
+  <p class="job">把没有发现点名的行占全树行数的比例读成一个 0–1000 分；文件上限只缩不涨，增长超过 max(+2 %, +10) 即判负。</p>
+  <pre>score = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
+E_f   = min(n, max(T, n - S, churn))                     -- T = 发现点名的行</pre>
+  <p class="note rule">一行无论被几条发现点名都只算一次；精确 <code>Rational</code>，只取一次整。</p>
   <ul class="consts">
     <li><b>scoreScale</b> 1000</li>
     <li><b>violCost</b> 10</li>
     <li><b>sizeHard H</b> 750</li>
-    <li><b>sizePMax</b> 10</li>
     <li><b>softLineK</b> 2</li>
     <li><b>[softMin, softMax]</b> [200, 500]</li>
   </ul>

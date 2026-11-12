@@ -10,12 +10,13 @@ module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 9.1.0 = lane v235_pyimport (additive): `resolve/1` reads `py.names`,
--- the names each Python `from M import …` site imports, and answers
--- `also` — a Python site's ancestor packages, imported submodules and,
--- for a relative import, the importer's own package chain
--- (CE.Resolve.PyAlso); the site table's `names` source rides tables/1.
--- Every `results` row and every other family answers as before.
+-- 10.0.0 = lane v235_score (breaking): verdict/1 judges the score by the
+-- extent law (plan v2.35) — the request's four tables contSpans /
+-- dupSpans / refLines / proseLines are required, thresholds code 0
+-- (deadIndegCeil) and ceilings code 3 (sizePMax) are refused by name,
+-- the 9.1.0 docOwners table is no longer read, the reply's `axes` are
+-- each axis's own share and `extent` carries E and L. Every other
+-- family answers as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -23,7 +24,7 @@ module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "9.1.0"
+proto = "10.0.0"
 
 -- | The request line's byte ceiling, checked by "CE.Protocol" before any
 -- JSON parse, so a hostile oversized line is never decoded. It is a

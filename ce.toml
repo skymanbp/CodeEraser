@@ -739,4 +739,13 @@ forbid = [
 # c7ca2e69 tree: that row gone, none new (EraseProps.hs's own
 # truth-table / mixed-request row moved 46-52 / 99-107 -> 49-55 /
 # 105-113, the same block).
-budget = 29
+# 29 -> 28 (v2.35 score lane, phase 2C): one row left with the density
+# law's knobs, none bought. CE.Structure.Axes's record rhymed with
+# CE.Verdict.Score's ScoreKnobs twice (68 tokens, Axes.hs 53-75
+# against Score.hs 73-89; 103 tokens, Axes.hs 59-91 against Score.hs
+# 74-100) until ScoreKnobs lost the six fields the extent law does not
+# read (sSizePMax, sCloneNum, sCloneDen, sDupNum, sDupDen,
+# sDeadIndegCeil); one row stands, the record against the shorter one
+# (85 tokens, Axes.hs 65-92 against Score.hs 29-50). Row set diffed
+# against the 705f0633 tree (tests at fad2672): that row gone, none new.
+budget = 28

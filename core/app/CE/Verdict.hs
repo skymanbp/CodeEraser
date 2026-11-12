@@ -20,7 +20,8 @@ import CE.Verdict.Join (severities)
 import CE.Verdict.Knobs (defaultsEcho, effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
 import CE.Verdict.Ratchet (Baseline (..), ratchet)
 import CE.Verdict.Cost (classCocTolCode, classTolCode)
-import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, penalties, score, scoreBound)
+import CE.Verdict.ExtentFacts (located, scored)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, scoreBound)
 import CE.Verdict.Soft (softLine)
 import CE.Verdict.Baseline (parseBaseline)
 import CE.Verdict.Faces (digestKey, failConditions, newBaselineObj, ratchetObj)
@@ -80,8 +81,7 @@ rowTotal req =
     , -- the 6.4.0 tables: provenance (O40) and the self-loop set (O59)
       maybe 0 length (reqPresent req)
     , maybe 0 length (reqSelfLoops req)
-    , -- the docdup universe (9.1.0, v2.35 V2)
-      maybe 0 length (reqDocOwners req)
+    , let (a, b, c, d) = reqExtent req in sum (map (maybe 0 length) [a, b, c, d])
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -124,14 +124,14 @@ judged parsed req =
       -- the class rows echo exactly when they rode (3.1.0): the
       -- client asserts the round trip; a legacy reply keeps its bytes
       <> ["classKnobs" .= reqClassKnobs req | not (null (reqClassKnobs req))]
+      <> extentKey
  where
   k = effectiveKnobs (reqCeilings req) (reqThresholds req)
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
   -- the class rows fold into ONE Map here, once per judgment (3.1.0)
-  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) knobs (maybe [] id (reqSelfLoops req)) (reqDocOwners req)
-  pens = penalties k effSoft facts
-  (perMille, _viol) = score k (reqWeights req) pens
+  facts = Facts (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) knobs (maybe [] id (reqSelfLoops req))
+  (perMille, pens, extentKey) = scored k effSoft (reqWeights req) facts (located req)
   base = either (const Nothing) id parsed
   -- the soft line judging THIS run: the committed one, or (only at
   -- establish) the fresh derivation — which is also what the new
@@ -139,8 +139,7 @@ judged parsed req =
   -- judge with the same S. The derivation's upper fence is the
   -- effective hard line when it sits below softMax (9.0.0): a
   -- committed S is never above H, so the relative line widens the
-  -- comfort zone and never reaches past the wall (zonePenalty also
-  -- prices against min S H, for baselines committed before)
+  -- comfort zone and never reaches past the wall
   effSoft = case base of
     Nothing -> softLine (sSoftK k) softMin (min softMax (sSizeHard k)) (reqJudgedLoc req)
     Just b -> bSoft b

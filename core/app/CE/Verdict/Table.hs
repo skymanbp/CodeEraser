@@ -109,6 +109,7 @@ ceilingsOffence :: [[Integer]] -> Maybe String
 ceilingsOffence = axisTable "ceilings" 4 "unknown ceiling axis" judgeC
  where
   judgeC code v
+    | code == 3 = Just "ceiling code 3 (sizePMax) retired with the density law at 10.0.0: the score reads the lines past the soft line"
     | v < 1 = Just "ceiling below 1"
     | code == 4 && v > softKMax = Just ("soft-line exponent above " <> show softKMax)
     | otherwise = Nothing
@@ -127,15 +128,17 @@ softKMax = 1024
 -- vacuity from the other side (9.0.0): a rewrite numerator (1) of 0
 -- marks every churned entity rewrite-heavy, a co-change floor (3) of
 -- 0 makes every pair hot, and a violation cost (4) of 0 pins the
--- score at the scale so no floor can ever fail. Only code 0 keeps 0
--- legal: it is the default ("dead at indegree 0").
+-- score at the scale so no floor can ever fail. Code 0 (the dead
+-- in-degree ceiling) and ceilings code 3 (P_max) retired at 10.0.0 and
+-- are refused by name.
 thresholdsOffence :: [[Integer]] -> Maybe String
 thresholdsOffence = axisTable "thresholds" 7 "unknown threshold knob" judgeT
  where
   judgeT code v
+    | code == 0 = Just "threshold code 0 (deadIndegCeil) retired with the density law at 10.0.0: the dead term reads every unreachable file"
     | v < 0 = Just "negative field"
     | code == 2 && v < 1 = Just "zero denominator"
-    | code /= 0 && v < 1 = Just "knob below 1"
+    | v < 1 = Just "knob below 1"
     | otherwise = Nothing
 
 -- | Tolerance rows [leg, value]: 0 tolNum / 1 tolDen / 2 tolAbs /

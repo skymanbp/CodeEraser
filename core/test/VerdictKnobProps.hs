@@ -27,13 +27,11 @@ battery =
     ]
 
 -- | ADR-008 first step, driven through the REAL respond: a size row
--- at 550 charges the v0.6 zone floor(10·(250/450)²)=3 under the
--- default soft fallback 300 and floor(10·(150/350)²)=1 under a
--- requested 400 — the score must move — and the reply echoes the
--- EFFECTIVE knobs both times (the round trip the Rust client
--- asserts; an absent ceilings table echoes the defaults). The old
--- 310 probe died with the binary axis: its graded penalty rounds
--- to zero on both sides.
+-- at 550 names 250 lines past the default soft fallback 300 and 150
+-- past a requested 400 (the extent law's size term, 10.0.0) — the score
+-- must move — and the reply echoes the EFFECTIVE knobs both times (the
+-- round trip the Rust client asserts; an absent ceilings table echoes
+-- the defaults).
 ceilingKnob :: Bool
 ceilingKnob = case (run Nothing, run (Just [[0, 400]])) of
   (Just (s0, k0), Just (s1, k1)) ->
@@ -151,10 +149,9 @@ dedupBudget =
 
 -- | plan v2.6 §B through the REAL respond: at establish the
 -- judgedLoc multiset {240,300,375} derives softLine 468 (the
--- VerdictProps hand computation) and a 550-line file charges
--- floor(10·(82/282)²)=0 under S=468 vs 3 under the fallback 300;
--- feeding the newBaseline back WITHOUT judgedLoc keeps S=468 — the
--- carry, not a re-derivation.
+-- VerdictProps hand computation) and a 550-line file names 82 lines
+-- past S=468 against 250 past the fallback 300; feeding the newBaseline
+-- back WITHOUT judgedLoc keeps S=468 — the carry, not a re-derivation.
 softLineWire :: Bool
 softLineWire = case (bare, established) of
   (Just (s0, Null), Just (s1, Number 468)) ->

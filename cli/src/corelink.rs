@@ -21,13 +21,12 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 9.1.0 = lane v235_pyimport (additive): the edge sweep sends the
-/// names each Python `from M import …` site imports (`py.names`) and the
-/// core answers `also` — the ancestor packages, imported submodules and
-/// relative importer's package chain CPython executes beside the site's
-/// answer (graph/resolve/, CE.Resolve.PyAlso); the site table's names
-/// source rides tables/1, so `tablesDigest` moves. Every `results` row
-/// and every other family's bytes stand.
+/// §1). 10.0.0 = lane v235_score (breaking): verdict/1 judges the score
+/// by the extent law (plan v2.35) — every verdict request carries the
+/// four tables contSpans / dupSpans / refLines / proseLines
+/// (score::located), the retired knob codes (thresholds 0, ceilings 3)
+/// are refused, the reply's axes are own shares and `extent` carries E
+/// and L. Every other family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -39,7 +38,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "9.1.0";
+pub const PROTO: &str = "10.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

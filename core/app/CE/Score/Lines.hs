@@ -1,5 +1,7 @@
 -- | The `ce check` (and `ce baseline`) console lines (plan v2.32 step
--- 5), transcribed from cli/src/score/report.rs: the score line, the
+-- 5), transcribed from cli/src/score/report.rs: the score line (since
+-- the extent law: the lines the findings are on, E of L with E to one
+-- decimal, and each axis's own share per 1000 lines), the
 -- ratchet line with the conditions that held, the collapse note when
 -- something collapsed, the degraded line, and under `--roast` (the
 -- `roast` fact) one line by score band against the effective scale.
@@ -13,7 +15,7 @@ import Data.List (intercalate)
 lines' :: Say -> Value -> DocReq -> [Line]
 lines' say doc req =
   map (line 0) $
-    [ say "head" [N (fact req "score"), N scale, W axes, N (count (arr "candidates" doc))]
+    [ say "head" ([N (fact req "score"), N scale] <> extent <> [N (shareOf c) | c <- [0 .. 6]] <> [N (count (arr "candidates" doc))])
     , say "ratchet" (map (N . count . (`arr` ratchet)) (words "added removed over toleranceDrawn") <> [P verdict])
     ]
       <> [say "note" [N (fact req "collapsed"), N (fact req "skippedSelf")] | fact req "collapsed" > 0 || fact req "skippedSelf" > 0]
@@ -25,7 +27,14 @@ lines' say doc req =
   scale = case key "scoreScale" doc of
     Number n -> round n
     _ -> 1000
-  axes = unwords [show c <> ":" <> show p | [c, p] <- rows req "axes"]
+  -- the seven own shares by axis code, 0 where no row rode (a degraded run)
+  shareOf c = maybe 0 id (lookup c [(c', p) | [c', p] <- rows req "axes"])
+  -- E and L, two holes, as the document states them (`extent.tenths`,
+  -- the core's one rounding, CE.Verdict.Extent.tenths); "-" in both
+  -- when no extent rode
+  extent = case (key "tenths" (key "extent" doc), key "lines" (key "extent" doc)) of
+    (Number t, Number len) -> let t' = round t :: Integer in [W (show (t' `quot` 10) <> "." <> show (t' `rem` 10)), N (round len)]
+    _ -> [W "-", W "-"]
   failed = [n | v <- arr "failed" ratchet, Success n <- [fromJSON v]] :: [String]
   verdict
     | flag req "fail" = say "fail" [P (if null failed then plain "" else say "failed" [W (intercalate ", " failed)])]

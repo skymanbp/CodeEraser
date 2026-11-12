@@ -24,7 +24,7 @@ baseline is committed every other file at exactly the line the hook uses.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:227-234](../../../core/app/CE/Structure.hs#L227).
+[Structure.hs:228-235](../../../core/app/CE/Structure.hs#L228).
 
 ### Seam enumeration and best-seam selection
 
@@ -50,10 +50,12 @@ knob rule, so the ratio is always defined
 
 ### Benefit: soft-zone penalty recovered
 
-Benefit is the graded-zone penalty the split gives back, computed on the **same curve the
-verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, reached through the verdict's one
-class-line resolver `Soft.classedZone` rather than re-derived
-[Split.hs:2-5,25,186](../../../core/app/CE/Structure/Split.hs#L2), [Soft.hs:134-137](../../../core/app/CE/Verdict/Soft.hs#L134):
+Benefit is the zone pressure the split takes off, priced on the advisory's own pressure model —
+`CE.Structure.Zone.zonePenalty`, reached for a classed file through `Zone.classedZone`
+[Split.hs:2-5,25,186](../../../core/app/CE/Structure/Split.hs#L2), [Zone.hs:1-10](../../../core/app/CE/Structure/Zone.hs#L1).
+The curve was the verdict family's size charge too until proto 10.0.0, when the score became the
+extent law, which reads the lines past `S` and no curve (booklet 05); the advisory is its one
+reader since:
 
 ```
 p(x) = 0                              if x <= S     -- S read as min S H (proto 9.0.0)
@@ -61,15 +63,14 @@ p(x) = P_max · ((x − S)/(H − S))²      if S < x <= H
 p(x) = P_max · (1 + 2(x − H)/(H − S))  if x > H     -- C¹ linear arm (proto 2.17.0)
 ```
 
-[Soft.hs:119-126](../../../core/app/CE/Verdict/Soft.hs#L119). The curve is convex on the zone, exact
-`Rational`, and keeps charging past `H` — since proto 2.17.0 linearly, at exactly the slope the
-quadratic reached at the wall (monotone, no kink; the deny at `H` is the guard's job, and a
-score that stopped charging past the wall would reward growth — but the quadratic never leaves
-its contracted `(S,H]` domain: the M9 batch-6 saturation lesson)
-[Soft.hs:97-111](../../../core/app/CE/Verdict/Soft.hs#L97). For seam pricing this means the size
-benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. A degenerate
-`H <= S` (only `H == S` since the curve opens at `min S H`) falls back to the pre-v0.6 binary `p = P_max` flat
-[Soft.hs:121](../../../core/app/CE/Verdict/Soft.hs#L121).
+[Zone.hs:37-45](../../../core/app/CE/Structure/Zone.hs#L37). The curve is convex on the zone, exact
+`Rational`, and past `H` linear at exactly the slope the quadratic reached at the wall: a seam in
+a file far past the wall is still worth more than one in a file at it, by that slope and no
+more, and the square does not run on outside the zone it was drawn for; the deny at `H` is the
+guard's job [Zone.hs:19-36](../../../core/app/CE/Structure/Zone.hs#L19). For seam pricing this means
+the size benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. A
+degenerate `H <= S` (only `H == S` since the curve opens at `min S H`) falls back to the pre-v0.6
+binary `p = P_max` flat [Zone.hs:40](../../../core/app/CE/Structure/Zone.hs#L40).
 
 ```
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
@@ -82,27 +83,25 @@ is superadditive, so the bracket is non-negative for any well-formed zone triple
 `max 0` clamp is what keeps the degenerate `H <= S` fallback (where `p(total) − 2·P_max < 0`)
 from producing a negative benefit.
 
-The zone triple is the advisory's own copy of `S/H/P_max`, so the structure family can price
-a seam without a `verdict/1` request in flight; Rust sends the same numbers it sends
-`verdict/1`: knobs 12, 13 and 14 ride once, tree-wide, off the committed soft line, the global
-`file_lines_fail` (left out when it is `0` = no hard line, so the core's `750` judges, as the
-score's does) and — since 6.1.0 — `score.size_penalty_max` when one is declared. Since proto
-9.0.0 the request also carries the verdict's own `classKnobs` rows and each seam file's class,
-and a classed file is priced on its class's opening edge and hard line through the one resolver
-the score's size axis reads (`Soft.classedZone`); until then the advisory was class-blind, while
-`verdict/1` (since 3.1.0) measured a classed row against its `[[rules.class]]` lines. Both gaps
-had the same shape — before 6.1.0 only 12 and 13 rode, so a repo declaring `size_penalty_max`
-got the declared curve in its score and the core's built-in `P_max = 10` in its advisory — with
-both halves internally consistent and nothing anywhere disagreeing out loud
-([judge.rs:189-198](../../../cli/src/structure/judge.rs#L189),
-[Cost.hs:133-142](../../../core/app/CE/Structure/Cost.hs#L133),
-counterfactual at [structure_knobs.rs:77-88](../../../cli/tests/it/structure_knobs.rs#L77)):
+The zone triple is the advisory's own `S/H/P_max`. Rust sends the two lines the score reads too:
+knobs 12 and 13 ride once, tree-wide, off the committed soft line and the global
+`file_lines_fail` (left out when it is `0` = no hard line, so the core's `750` judges). Since
+proto 9.0.0 the request also carries the verdict's own `classKnobs` rows and each seam file's
+class, and a classed file is priced on its class's opening edge and hard line
+(`Zone.classedZone`); until then the advisory was class-blind while `verdict/1` (since 3.1.0)
+measured a classed row against its `[[rules.class]]` lines. `P_max` is the advisory's exchange
+rate against its four prices (codes 15..18) and, like them, a constant of the core: no ce.toml
+key reaches it since `[score] size_penalty_max` retired with the density law (v2.35) and is
+refused by name at load; knob 14 stays on the wire as 15..18 do
+([judge.rs:170-193](../../../cli/src/structure/judge.rs#L170),
+[Cost.hs:133-143](../../../core/app/CE/Structure/Cost.hs#L133),
+the declared lines' leg at [structure_knobs.rs:57-69](../../../cli/tests/it/structure_knobs.rs#L57)):
 
 | knob | code | default | source |
 |---|---|---|---|
-| `seamSoft` (S) | 12 | `300` | [Cost.hs:147-148](../../../core/app/CE/Structure/Cost.hs#L147) |
-| `seamHard` (H) | 13 | `750` | [Cost.hs:150-151](../../../core/app/CE/Structure/Cost.hs#L150) |
-| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:153-154](../../../core/app/CE/Structure/Cost.hs#L153) |
+| `seamSoft` (S) | 12 | `300`, sent as the committed soft line | [Cost.hs:144-145](../../../core/app/CE/Structure/Cost.hs#L144) |
+| `seamHard` (H) | 13 | `750`, sent as `file_lines_fail` when declared | [Cost.hs:147-148](../../../core/app/CE/Structure/Cost.hs#L147) |
+| `seamPMax` (P_max) | 14 | `10`, a constant: no ce.toml key | [Cost.hs:150-151](../../../core/app/CE/Structure/Cost.hs#L150) |
 
 ### Cost: the four priced legs
 
@@ -125,10 +124,10 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:162-163](../../../core/app/CE/Structure/Cost.hs#L162) | word-bounded mention edges [seams.rs:249-270](../../../cli/src/structure/seams.rs#L249) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:174-175](../../../core/app/CE/Structure/Cost.hs#L174) | T1/T2 dedup block spans [seams.rs:105-133](../../../cli/src/structure/seams.rs#L105) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:177-178](../../../core/app/CE/Structure/Cost.hs#L177) | 14-day commit ledger [seams.rs:141-170](../../../cli/src/structure/seams.rs#L141) |
-| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:165-166](../../../core/app/CE/Structure/Cost.hs#L165) | flat, no measurement |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:159-160](../../../core/app/CE/Structure/Cost.hs#L159) | word-bounded mention edges [seams.rs:249-270](../../../cli/src/structure/seams.rs#L249) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:171-172](../../../core/app/CE/Structure/Cost.hs#L171) | T1/T2 dedup block spans [seams.rs:105-133](../../../cli/src/structure/seams.rs#L105) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:174-175](../../../core/app/CE/Structure/Cost.hs#L174) | 14-day commit ledger [seams.rs:141-170](../../../cli/src/structure/seams.rs#L141) |
+| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:162-163](../../../core/app/CE/Structure/Cost.hs#L162) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
 [Axes.hs:71-80](../../../core/app/CE/Structure/Axes.hs#L71) and are bound to the `Cost.hs` defaults
@@ -158,7 +157,7 @@ counts as one, since no symbol table stands behind it; the advisory face is non-
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
 through a `BTreeSet` [seams.rs:115-131](../../../cli/src/structure/seams.rs#L115). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
-reference [Cost.hs:168-173](../../../core/app/CE/Structure/Cost.hs#L168).
+reference [Cost.hs:165-170](../../../core/app/CE/Structure/Cost.hs#L165).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent`, merges
@@ -173,9 +172,9 @@ anchor, and deliberately a **measurement constant, not a wire knob** (the prices
 [size-advisory.md:129](../size-advisory.md#L129).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
-booklet names φ [Cost.hs:156-166](../../../core/app/CE/Structure/Cost.hs#L156). Defaults were sized so
+booklet names φ [Cost.hs:153-163](../../../core/app/CE/Structure/Cost.hs#L153). Defaults were sized so
 a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing references does not
-[Cost.hs:159-161](../../../core/app/CE/Structure/Cost.hs#L159).
+[Cost.hs:156-158](../../../core/app/CE/Structure/Cost.hs#L156).
 
 ### Price calibration (as-built)
 

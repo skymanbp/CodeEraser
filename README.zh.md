@@ -27,7 +27,7 @@ LLM 协作的代码库都往同一个方向漂：同一个函数写两遍、同�
 | 残留的克隆块 | 4 | **0** |
 | 重复文档段 | 1 | **0** |
 | 仍欠的删除 | 1 | **0** |
-| 检查分数 | 871 | **979** |
+| 检查分数 | 605 | **825** |
 
 同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。
 <!-- scoreboard:end -->
@@ -68,7 +68,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **近似（T3）克隆：** MinHash/LSH 出候选，核以树编辑距离判定，TSED ≥ 0.85。
 - **改过措辞也逃不掉的文档重复：** 5 词 shingle，Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **存活性：** 逐语言的解析阶梯喂出引用图，四态判决带置信码返回。
-- **门分数：** 七轴上的 0–1000，由 ADR-006 只收紧的棘轮守住（增长要在 `max(+2 %, +10 行)` 内，否则具名重立）。
+- **门分数：** 0–1000，即树里没有任何发现点名的行所占的比例（七个轴点名行：尺寸、复杂度、克隆、文档重复、死代码、变动、循环），由 ADR-006 只收紧的棘轮守住（增长要在 `max(+2 %, +10 行)` 内，否则具名重立）。
 - **确定性：** 全程无模型；文本只经本机 `ce` → `ce-core` 管道过线，核不开任何文件。
 
 其余——同角色建议、Datalog 查询与规则、函数内死代码、合并建议、架构、结构轴、墓碑残留、擦除——见 [codeeraser.dev/zh/how](https://codeeraser.dev/zh/how/) 与方法学各册。
@@ -158,7 +158,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（索引 schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->27<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->）、逐项目 daemon。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->）**：`ce-core`，每个判决家族。**Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->**：同一 crate 之上的 GUI。
-- **一条 wire：** stdio 上的 NDJSON（proto <!--ce:ver:proto#v-->9.1.0<!--/ce-->，<!--ce:count:families#word-->十六<!--/ce-->个家族）；daemon 讲自己的协议（<!--ce:ver:daemon#v-->2.4.0<!--/ce-->）。
+- **一条 wire：** stdio 上的 NDJSON（proto <!--ce:ver:proto#v-->10.0.0<!--/ce-->，<!--ce:count:families#word-->十六<!--/ce-->个家族）；daemon 讲自己的协议（<!--ce:ver:daemon#v-->2.4.0<!--/ce-->）。
 - **设计规则：** ADR-001 … ADR-009（Rust 前端、解析层归 Rust、懒启动 daemon、廉价 PreToolUse、两层克隆、只收紧的棘轮、钉扎分发、策略即 Haskell 数据、文档事实派生）见 [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
 - **哲学。** 在 Rust 里度量，在 Haskell 里裁决并成文，在其余一切面上印出。不问模型任何事；钩子失败开放并明说；文档要么生成要么门控，包括<!--ce:count:booklets#word-->十九<!--/ce-->册[方法学](docs/reference/methodology.md)；每次 push 都在这棵树上跑<!--ce:count:gates#word-->七<!--/ce-->道产品门。
 
@@ -168,12 +168,13 @@ PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计�
 
 - **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown、HTML 与 `.txt` 由文档与图规则判决；不承诺 T4 克隆。
 - **只当顾问，永不是判决。** 符号层存活性、`ce similar`、`ce merge` 与 `ce arch` 从不让门变红；守卫类拿出自己的误报记录之前一律停在 `observe`。
+- **数的是行，不是发现。** 分数数的是被某条发现点名的行，一行无论被几条发现点名都只算一次：一个长的重复文件比许多短文件分量重，已被点名的行上再多一条发现，分数不再往下走。
 - **不替你画的线。** `cognitive_fail` 默认 0（复杂度只 warn），`ce structure` 不设分数地板。
 - **只认文本写出的引用。** 存活性只读文件写出的引用。目标靠计算得出的加载（`require(prefix .. name)`、`import("./lib/" + name)`），或 `__all__` 不全是字面量的星号导入，没写出的那部分不连边：文件仍判死，它的语言不能为它作保。判死也不是删除许可：没有引用指向的文件仍可能被按名字运行、被工具按约定找到（死文件考题过关的八条工具约定是入口，如 `setup.py`、Sphinx 的 `conf.py`、`package-info.java`、Next.js `app/` 下的页面；产品没有列出的约定不是），所以 `ce erase` 不删任何整文件，只擦逐字节相同的文档段。`setup.cfg` 与非根目录 `pyproject.toml` 声明的入口不读。
 - **分发。** 一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标；提权账户不是登录用户时 `ce setup` 什么都不接（退出码 13）；判决本仓需要 `cli/tests` submodule 就位。
 - **协议一行。** 送核的一行请求至多 <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> 字节；更大的请求分批送，单独超线的一项按名拒绝，从不截断。
 
-跨 `[[rules.class]]` 开关、跨一次挪动 `softLine` 的具名重立、跨这些版本的分数都不可比：v0.7.3 → v1.0.0、v1.2.0 → v1.3.0、v1.3.x → v1.4.0、v1.6.0 → v1.7.0、v1.7.4 → v1.8.0、v1.8.0 → v1.9.0（1.9.1、1.9.2 与 1.9.0 可比）；原因见 [CHANGELOG](CHANGELOG.md)。
+跨 `[[rules.class]]` 开关、跨一次挪动 `softLine` 的具名重立、跨这些版本的分数都不可比：v0.7.3 → v1.0.0、v1.2.0 → v1.3.0、v1.3.x → v1.4.0、v1.6.0 → v1.7.0、v1.7.4 → v1.8.0、v1.8.0 → v1.9.0（1.9.1、1.9.2 与 1.9.0 可比）、v1.9.x → 下一版（分数改为没有发现点名的行所占的比例）；原因见 [CHANGELOG](CHANGELOG.md)。
 
 ## 文档
 

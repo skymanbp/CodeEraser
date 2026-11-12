@@ -4,14 +4,14 @@
 
 -- | The verdict family's WIRE-driven battery, split from
 -- VerdictProps at the 300-line law (ADR-008 P4): everything here
--- drives the REAL CE.Verdict.respond — ablation, idempotence,
+-- drives the REAL CE.Verdict.respondV — ablation, idempotence,
 -- refusal-by-name, and the knob-table probes (ceilings from the
 -- first ADR-008 step; thresholds/tolerance from P4). The pure
 -- score/ratchet checks stay in VerdictProps; the scaffold lives in
 -- WireHarness (the P3 tenth-bite repayment).
 module VerdictWireProps (battery, wireReq, wPos, replyObj) where
 
-import CE.Verdict (respond)
+import VerdictTables (respondV)
 import CE.Verdict.Cost (verdictNodeCap, verdictRowCap)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -52,7 +52,7 @@ wChurn = [[4, 30, 10], [5, 30, 10]]
 wCoch = [[4, 5, 3]]
 
 replyObj :: Value -> Maybe Object
-replyObj = replyObjWith respond
+replyObj = replyObjWith respondV
 
 battery :: IO Bool
 battery =
@@ -83,7 +83,8 @@ rowCapCountsSymbols =
     && reasonOf atCap /= Just "verdict_too_large"
  where
   reasonOf r = replyObj r >>= KM.lookup "reason"
-  symbolsOnly n = setKey "symbols" (toJSON (replicate n [0, 0 :: Integer])) (wireReq [] [] [] [])
+  -- the four extent tables ride empty: the at-cap arm stays at the cap
+  symbolsOnly n = foldr (\k -> setKey k (toJSON ([] :: [[Integer]]))) (setKey "symbols" (toJSON (replicate n [0, 0 :: Integer])) (wireReq [] [] [] [])) ["contSpans", "dupSpans", "refLines", "proseLines"]
   over = symbolsOnly (fromInteger verdictRowCap + 1)
   atCap = symbolsOnly (fromInteger verdictRowCap)
 
@@ -240,9 +241,9 @@ refusals = and (map knob knobProbes <> shaped)
       "tier"
       (toJSON ([[0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]] :: [[Integer]]))
       (setKey "pos" (toJSON [[1, 0, 0, 0, 1, 0 :: Integer]]) base)
-  refused = refusedBy respond
+  refused = refusedBy respondV
 
--- | ADR-008 P1 through the REAL respond: one node past the cap
+-- | ADR-008 P1 through the REAL respondV: one node past the cap
 -- degrades to a complete reply whose ratchet.fail is TRUE — a gate
 -- that could not judge must never pass, said by the CORE; the Rust
 -- side relays the bit, never re-derives the rule.

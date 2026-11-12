@@ -40,7 +40,6 @@ effectiveKnobs ceils thrs =
     { sSizeCeil = leg 0 sSizeCeil
     , sCocCeil = leg 1 sCocCeil
     , sSizeHard = leg 2 sSizeHard
-    , sSizePMax = leg 3 sSizePMax
     , sSoftK = leg 4 sSoftK
     }
  where
@@ -49,8 +48,7 @@ effectiveKnobs ceils thrs =
 
 thresholdSetters :: [(Integer, Integer -> ScoreKnobs -> ScoreKnobs)]
 thresholdSetters =
-  [ (0, \v k -> k {sDeadIndegCeil = v})
-  , (1, \v k -> k {sRewriteNum = v})
+  [ (1, \v k -> k {sRewriteNum = v})
   , (2, \v k -> k {sRewriteDen = v})
   , (4, \v k -> k {sViolCost = v})
   , (5, \v k -> k {sDefaultWeight = v})
@@ -95,10 +93,8 @@ knobsEcho k rk jk dedupFloor cycleRode =
   object $
     [ "sizeCeil" .= sSizeCeil k
     , "sizeHard" .= sSizeHard k
-    , "sizePMax" .= sSizePMax k
     , "softLineK" .= sSoftK k
     , "cocCeil" .= sCocCeil k
-    , "deadIndegCeil" .= sDeadIndegCeil k
     , "rewriteNum" .= sRewriteNum k
     , "rewriteDen" .= sRewriteDen k
     , "cochangeFloor" .= kCochangeFloor jk

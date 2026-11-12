@@ -176,23 +176,18 @@ fn assemble(
 /// seams.rs gated on committed_soft — with this repo's frozen 304 the
 /// two disagreed on every file in 301..=304, and on a
 /// wide-distribution corpus (S clamped to 500) the ROI inflated ~2.8x.
-/// Code 14, P_max, rides whenever ce.toml declares one: sending 12 and
-/// 13 alone was the same defect one knob further along — the advisory
-/// priced at the core's built-in 10 while `verdict/1` got the declared
-/// value through score::knobs::ceiling_rows code 3, so a repo setting
-/// `[score] size_penalty_max` had its two families disagree about the
-/// SAME curve, silently, since both answers are internally consistent.
 /// Code 13 rides only when a hard line is declared: `file_lines_fail
 /// = 0` means "no hard line" (the scan grade contract) and the core
 /// refuses any structure knob below 1 — the same reading as
 /// score::knobs::ceiling_rows code 2, so the core's 750 then judges.
+/// P_max (code 14) is the advisory's exchange rate against its four
+/// prices (codes 15..18) and, like them, the core's constant: no
+/// ce.toml key reaches it since `[score] size_penalty_max` retired
+/// (v2.35).
 fn seam_knobs(root: &Path, cfg: &crate::config::Config) -> Vec<[u64; 2]> {
     let mut k = vec![[12, committed_soft(root)]];
     if cfg.thresholds.file_lines_fail >= 1 {
         k.push([13, cfg.thresholds.file_lines_fail as u64]);
-    }
-    if let Some(p) = cfg.score.size_penalty_max {
-        k.push([14, u64::from(p)]);
     }
     k
 }

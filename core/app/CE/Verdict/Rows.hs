@@ -10,12 +10,10 @@ module CE.Verdict.Rows
   , contRow
   , discEntry
   , docFilesOffence
-  , docOwnersOffence
   , floorOffence
   , judgedLocOffence
   , presentOffence
   , selfLoopsOffence
-  , simSplitOffence
   ) where
 
 import CE.Verdict.Cost (classIdPastFence, metricTop, scoreScale)
@@ -106,29 +104,6 @@ discEntry i x
 
 docFilesOffence :: Integer -> [Integer] -> Maybe String
 docFilesOffence = indexSet "docFiles"
-
-docOwnersOffence :: Integer -> [Integer] -> Maybe String
-docOwnersOffence = indexSet "docOwners"
-
--- | The sim table's split, a contract once the request names the
--- docdup universe (9.1.0, v2.35 V2): a docdup row (kind 2) relates
--- two files that own a live segment, a clone row (kind 0 / 1) two
--- code files — a pos row outside docFiles. Each family's mass is then
--- a subset of its own opportunity (axes 2 and 3, CE.Verdict.Score),
--- so neither charge can pass half the scale. Every row and index set
--- is range-checked by the time this runs (last in the asum).
-simSplitOffence :: [[Integer]] -> [[Integer]] -> [Integer] -> [Integer] -> Maybe String
-simSplitOffence sim pos docs owners = asum (zipWith one [0 :: Int ..] sim)
- where
-  set = IS.fromList . map fromInteger
-  code = set [u | (u : _) <- pos] `IS.difference` set docs
-  owned = set owners
-  inside s u v = IS.member (fromInteger u) s && IS.member (fromInteger v) s
-  one i row = case row of
-    (u : v : kind : _)
-      | kind == 2 && not (inside owned u v) -> Just (label "sim" i <> "docdup endpoint owns no segment")
-      | kind <= 1 && not (inside code u v) -> Just (label "sim" i <> "clone endpoint is not a code file")
-    _ -> Nothing
 
 -- | An ascending SET of file-universe indices under one label:
 -- docFiles (2.27.0) and cycleSelfLoops (6.4.0) are one shape.

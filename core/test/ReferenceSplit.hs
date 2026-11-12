@@ -5,11 +5,12 @@
 -- s ≤ line < e — where the shipped pricer folds difference maps and
 -- running sums; the best seam is the one no other seam out-earns by
 -- cross-multiplied ROI, the LAST of equals (the shipped
--- maximumBy's tie). Benefit rides ReferenceScore's own zone curve.
-module ReferenceSplit (splitAnswer) where
+-- maximumBy's tie). Benefit rides the zone curve read as one fraction
+-- (refZone, the second implementation of CE.Structure.Zone).
+module ReferenceSplit (refZone, splitAnswer) where
 
 import Data.Aeson (Value, toJSON)
-import ReferenceScore (refZone)
+import Data.Ratio ((%))
 
 -- | splitCandidates and sizeExempt, present exactly when seamFiles
 -- rode: one row per file in file order.
@@ -55,3 +56,17 @@ priceFile (s, h, pMax) (refP, phiP, cloneP, churnP) (units, refs, clones, churn)
     ]
   gain (_, b, _) = b
   price (_, _, c) = c
+
+-- | p(x) on the zone (s, h] as one fraction: pMax·(x−s)²/(h−s)²
+-- inside, pMax·((h−s) + 2(x−h))/(h−s) past the wall, 0 at or under
+-- s, a flat pMax when the wall does not stand above the line. The
+-- line is never read above the wall (9.0.0): s past h prices as h.
+refZone :: Integer -> Integer -> Integer -> Integer -> Rational
+refZone line h pMax x
+  | x <= s = 0
+  | d <= 0 = fromInteger pMax
+  | x > h = (pMax * (d + 2 * (x - h))) % d
+  | otherwise = (pMax * (x - s) * (x - s)) % (d * d)
+ where
+  s = if line > h then h else line
+  d = h - s

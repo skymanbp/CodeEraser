@@ -251,6 +251,9 @@ jobs:
       # The algorithm track (v2.33) moved code into the core and left the
       # self score at 925 (step 11b, 2026-10-13): fourteen over the floor,
       # which stays.
+      # The extent law (v2.35, protocol 10.0.0) re-priced the self score
+      # to 932; the floor re-anchors at 917, the margin it had on main
+      # before the law (926 over 911).
       # Also the deadcode zero-dead
       # gate and the docdup zero-report gate (audit D6/D9: the
       # "全处置" acceptance rows were discipline-only before), and the
@@ -274,7 +277,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan .. --core "$CORE_BIN"
           cargo run --locked -- dedup .. --check --core "$CORE_BIN"
-          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 911
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 917
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
@@ -292,7 +295,9 @@ jobs:
       # 5b-9), floor 949 — then routine test additions read 948 twice
       # (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point
       # over a floor meant to fire on collapse; re-anchored at 945, five
-      # under 950, the main tree's bite (2026-10-13).
+      # under 950, the main tree's bite (2026-10-13). The extent law
+      # (v2.35) reads 961; the floor re-anchors at 961, the margin it had
+      # on main before the law (945 over 945).
       - name: Dogfood the test suite (its own ce.toml + baseline)
         shell: bash
         working-directory: cli
@@ -300,7 +305,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 945
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 961
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
@@ -484,7 +489,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan .. --core "$CORE_BIN"
           cargo run --locked -- dedup .. --check --core "$CORE_BIN"
-          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 911
+          cargo run --locked -- check .. --core "$CORE_BIN" --fail-under 917
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
@@ -502,7 +507,9 @@ jobs:
       # 5b-9), floor 949 — then routine test additions read 948 twice
       # (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point
       # over a floor meant to fire on collapse; re-anchored at 945, five
-      # under 950, the main tree's bite (2026-10-13).
+      # under 950, the main tree's bite (2026-10-13). The extent law
+      # (v2.35) reads 961; the floor re-anchors at 961, the margin it had
+      # on main before the law (945 over 945).
       - name: Dogfood the test suite (macOS coverage)
         shell: bash
         working-directory: cli
@@ -510,7 +517,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 945
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 961
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check

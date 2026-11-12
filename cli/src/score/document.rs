@@ -13,7 +13,7 @@ use crate::score::model::Outcome;
 use anyhow::{Context, Result};
 
 /// The tables a check request carries.
-const TABLES: [&str; 12] = [
+const TABLES: [&str; 13] = [
     "scale",
     "floor",
     "reason",
@@ -26,6 +26,7 @@ const TABLES: [&str; 12] = [
     "toleranceDrawn",
     "failed",
     "dropped",
+    "extent",
 ];
 
 /// The check document over one outcome, laid out by the core at
@@ -71,6 +72,9 @@ fn request(o: &Outcome) -> Result<Request> {
         .rows("over", &r.over)
         .rows("toleranceDrawn", &r.tolerance_drawn)
         .rows("failed", failed)
+        // the extent law's E (tenths, as the verdict reply carries it) and
+        // L, one row; none on a degraded judgment
+        .rows("extent", r.extent.iter().copied().collect::<Vec<_>>())
         .single("scale", r.knobs.get("scoreScale"))
         .single("floor", o.floor);
     if let Some(reason) = &r.degraded {

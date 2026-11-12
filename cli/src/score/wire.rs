@@ -101,14 +101,9 @@ pub struct Request {
     /// singleton cycles. Rides exactly when `[graph] scc_floor = 1`
     /// — the core requires it at cycleFloor 1 and refuses it elsewhere.
     pub cycle_self_loops: Option<Vec<i64>>,
-    /// The docdup universe (9.1.0, v2.35 V2): verdict-universe indices
-    /// of the files owning a live docdup segment — the files that
-    /// family judges. Some on the check road, an empty table included:
-    /// it is axis 3's opportunity, and its presence makes the sim
-    /// table's split a contract (a docdup endpoint owns a segment, a
-    /// clone endpoint is a code file). None on the dedup and join
-    /// roads, which send no docdup rows.
-    pub doc_owners: Option<Vec<i64>>,
+    /// The extent law's four tables (v2.35; score::located), on every
+    /// road: contSpans, dupSpans, refLines, proseLines.
+    pub extent: crate::score::located::Tables,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -154,6 +149,10 @@ pub struct Reply {
     /// is its fail name.
     pub dropped: Option<Vec<[u64; 3]>>,
     pub degraded: Option<String>,
+    /// The extent the score was judged on (v2.35): [tenths, L lines],
+    /// tenths = E times ten rounded half up (the exact E stays in the
+    /// core); None only on a degraded reply.
+    pub extent: Option<[u64; 2]>,
 }
 
 impl Request {
@@ -186,7 +185,7 @@ impl Request {
             dedup_min_distinct: floor,
             judged_loc: Vec::new(),
             doc_files: Vec::new(),
-            doc_owners: None,
+            extent: Default::default(),
         }
     }
 }
@@ -245,25 +244,27 @@ pub fn body(r: &Request) -> Value {
             "cycleSelfLoops",
             r.cycle_self_loops.as_ref().map(|l| json!(l)),
         ),
-        // an option for the same reason: an empty universe is a fact
-        // (no docdup opportunity, every kind-2 row refused) on the
-        // check road, and an absent one is a road with no docdup rows
-        ("docOwners", r.doc_owners.as_ref().map(|o| json!(o))),
     ];
     for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
         o[key] = value;
     }
-    // the four knob tables ride unconditionally, so they keep their
-    // own loop rather than pretending to be optional
+    // the four knob tables, judgedLoc and the four extent tables
+    // (10.0.0) ride unconditionally, so they keep their own loop
+    // rather than pretending to be optional
+    let (spans, dups, refs, prose) = &r.extent;
     for (key, rows) in [
-        ("ceilings", &r.ceilings),
-        ("weights", &r.weights),
-        ("thresholds", &r.thresholds),
-        ("tolerance", &r.tolerance),
+        ("ceilings", json!(r.ceilings)),
+        ("weights", json!(r.weights)),
+        ("thresholds", json!(r.thresholds)),
+        ("tolerance", json!(r.tolerance)),
+        ("judgedLoc", json!(r.judged_loc)),
+        ("contSpans", json!(spans)),
+        ("dupSpans", json!(dups)),
+        ("refLines", json!(refs)),
+        ("proseLines", json!(prose)),
     ] {
-        o[key] = json!(rows);
+        o[key] = rows;
     }
-    o["judgedLoc"] = json!(r.judged_loc);
     o
 }
 
@@ -342,7 +343,33 @@ fn parse(v: &Value) -> Result<Reply> {
         },
         dedup_blocks: v["dedupBlocks"].as_u64(),
         degraded: degraded_of(v),
+        extent: extent_of(v)?,
     })
+}
+
+/// The `extent` key: `{tenths, lines}`, two counts, tenths at most ten
+/// times lines (E <= L is the law's own bound); anything else is not
+/// this law's reply and is refused by name — the 10.0.0 draft's exact
+/// `{num, den, lines}` among them.
+fn extent_of(v: &Value) -> Result<Option<[u64; 2]>> {
+    let e = &v["extent"];
+    if e.is_null() {
+        return Ok(None);
+    }
+    anyhow::ensure!(
+        e.get("num").is_none() && e.get("den").is_none(),
+        "extent: an exact {{num, den}} reply (the 10.0.0 draft), not {{tenths, lines}}"
+    );
+    let at = |k: &str| {
+        e[k].as_u64()
+            .with_context(|| format!("extent.{k}: missing or not a count"))
+    };
+    let (tenths, lines) = (at("tenths")?, at("lines")?);
+    anyhow::ensure!(
+        u128::from(tenths) <= 10 * u128::from(lines),
+        "extent: tenths {tenths} above ten times lines {lines}"
+    );
+    Ok(Some([tenths, lines]))
 }
 
 /// The AUTHORITATIVE degraded bit, with reason as its label (review

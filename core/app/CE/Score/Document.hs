@@ -20,7 +20,7 @@ import CE.Document.Contract
 import CE.Verdict (degradedCondition)
 import CE.Verdict.Faces (failConditions)
 import CE.Verdict.Ratchet (Ratcheted (..))
-import Data.Aeson (Value, object, (.=))
+import Data.Aeson (Value (Null), object, (.=))
 import Data.Foldable (asum)
 
 -- | The catalogue lists the fail-condition names and the degraded
@@ -30,14 +30,16 @@ doc :: DocFamily
 doc = docFamily "check" schemaId statement checked assemble ["failed" .= failNames, "reasons" .= coreReasons]
 
 schemaId :: String
-schemaId = "ce.check-report/0.5.0"
+schemaId = "ce.check-report/0.6.0"
 
 -- | The request: `files` the verdict universe (the candidates'
 -- columns), the scale / floor / reason tables at most one row each
 -- (null when empty), `failed` the held conditions by code, `dropped`
 -- the provenance rows — present in the document exactly when
--- `droppedRode` is 1; `roast` the console's `--roast` (step 5,
--- CE.Score.Lines).
+-- `droppedRode` is 1; `extent` the lines the score was judged on (one
+-- row [tenths, L]: E times ten, rounded half up, as the verdict reply
+-- carries it, and the lines; none on a degraded judgment; 0.6.0, the
+-- extent law); `roast` the console's `--roast` (step 5, CE.Score.Lines).
 statement :: String
 statement =
   "range files\nrange why\n\
@@ -47,7 +49,7 @@ statement =
   \rows axes 2 judged - -\nrows candidates 6 judged files files - - - -\n\
   \rows joinSeverity 2 judged - -\nrows added 1 judged -\nrows removed 1 judged -\n\
   \rows over 4 judged - - - -\nrows toleranceDrawn 3 judged - - -\n\
-  \rows failed 1 judged -\nrows dropped 3 judged - - -\n\
+  \rows failed 1 judged -\nrows dropped 3 judged - - -\nrows extent 2 judged - -\n\
   \ref why why\n"
 
 -- | The ratchet's fail conditions by code: the six the verdict face
@@ -63,7 +65,8 @@ failNames = map fst (failConditions (Ratcheted [] [] [] [] [] [] []) False False
 checked :: DocReq -> Maybe String
 checked req =
   asum
-    [ asum [single req t | t <- ["scale", "floor", "reason"]]
+    [ asum [single req t | t <- ["scale", "floor", "reason", "extent"]]
+    , asum [Just "extent: tenths above ten times lines" | [t, len] <- rows req "extent", t > 10 * len]
     , codes req "reason" 0 0 (toInteger (length coreReasons) - 1)
     , codes req "failed" 0 0 (toInteger (length failNames) - 1)
     , bits req ["fail", "droppedRode"]
@@ -76,6 +79,9 @@ assemble req =
     [ "score" .= fact req "score"
     , "scoreScale" .= optional req "scale"
     , "axes" .= rows req "axes"
+    , "extent" .= case rows req "extent" of
+        [[t, len]] -> object ["tenths" .= t, "lines" .= len]
+        _ -> Null
     , "floor" .= optional req "floor"
     , "candidates" .= rows req "candidates"
     , "joinSeverity" .= rows req "joinSeverity"

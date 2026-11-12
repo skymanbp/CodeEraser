@@ -58,8 +58,10 @@ check = do
   dropped <- if rode == 1 then some 2 [[x, 0, 12] | x <- wide] else pure []
   counts <- (:) <$> num 1001 <*> replicateM 5 (num 40)
   roast <- num 2
+  -- the extent law's E as tenths and L (0.6.0): one row or none
+  extent <- some 2 [[185, 120]]
   let tables = [("scale", scale), ("floor", floor'), ("reason", reason), ("axes", axes), ("candidates", cands), ("joinSeverity", [[1, 2], [2, 3], [3, 1]])]
-        <> [("added", added), ("removed", removed), ("over", over), ("toleranceDrawn", drawn), ("failed", failed), ("dropped", dropped)]
+        <> [("added", added), ("removed", removed), ("over", over), ("toleranceDrawn", drawn), ("failed", failed), ("dropped", dropped), ("extent", extent)]
       facts = zip (words "score fail simPairs members collapsed skippedSelf") counts <> [("droppedRode", rode), ("roast", roast)]
       (ts, fs', why) = judgedOr degraded tables (map bit facts)
       bit (k, v) = if k == "fail" then (k, v `mod` 2) else (k, v)

@@ -22,7 +22,7 @@ module CE.Structure (respond) where
 import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap, structViolCostNeutral)
 import qualified CE.Structure.Modularity as Mod
-import CE.Verdict.Score (chargeAt, classKnobsOf)
+import CE.Verdict.Score (classKnobsOf)
 import CE.Verdict.Table (classKnobsOffence)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
@@ -37,6 +37,7 @@ import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
 import Data.Maybe (fromMaybe)
+import Data.Ratio ((%))
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: Respond
@@ -235,7 +236,7 @@ reply proto req k degraded =
   -- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):
   -- every axis penalty is a flagged-directory count, so each pairs
   -- with the SAME opportunity — the directory total — and maps
-  -- through the verdict family's charge law. The raw-mass fold this
+  -- through the density charge law (chargeAt, below). The raw-mass fold this
   -- replaces is the exact shape the batch-6 field test retired
   -- there: mean flagged count ~100 pinned the score at 0 and grew
   -- linearly with repo size. Axis rows now carry CHARGES (‰ of
@@ -244,3 +245,12 @@ reply proto req k degraded =
   nDirs = toInteger (length (fNodes facts))
   raw = sum [p * kViolCost k | (_, p) <- pens]
   score = max 0 (kScale k - raw `div` (structViolCostNeutral * toInteger (length pens)))
+
+-- | floor(scale · v/(v+n)): the structure score's density law, the
+-- odds→probability map (n = 0 means no opportunity: no evidence
+-- charges nothing). The verdict family read it too until its score
+-- became the extent law (10.0.0); this family is its one reader now.
+chargeAt :: Integer -> Rational -> Integer -> Integer
+chargeAt scale v n
+  | n <= 0 || v <= 0 = 0
+  | otherwise = floor ((scale % 1) * v / (v + n % 1))

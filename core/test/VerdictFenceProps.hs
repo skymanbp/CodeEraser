@@ -9,7 +9,7 @@
 -- request scaffold and the reply reader are VerdictWireProps' own.
 module VerdictFenceProps (battery) where
 
-import CE.Verdict (respond)
+import VerdictTables (neutral, respondV)
 import CE.Verdict.Cost (verdictNodeCap)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -51,7 +51,7 @@ presentDropped =
         wireReq [] [] [] []
   present us = setKey "present" (toJSON (us :: [Integer])) committed
   overCap = setKey "tier" (toJSON [[u, 0] | u <- [0 .. verdictNodeCap]]) (wireReq [] [] [] [])
-  refused = refusedBy respond
+  refused = refusedBy respondV
 
 -- | One key of the reply's ratchet object.
 ratchetOf :: Value -> String -> Maybe Value
@@ -65,8 +65,9 @@ ratchetOf req k = case replyObj req of
 -- when it rode; at floor 1 the self-loop table is required (refused
 -- absent) and elsewhere refused present; an index outside the file
 -- universe refuses; and a singleton SCC with a self-arc is charged on
--- the cycle axis at floor 1 while the same request without the loop
--- is not — the graph's cycle table and this axis read ONE floor.
+-- the cycle axis at floor 1 (its self-reference line, 10.0.0) while the
+-- same request without the loop is not — the graph's cycle table and
+-- this axis read ONE floor.
 cycleFloorRoad :: Bool
 cycleFloorRoad =
   knob (floorOne (loops [0])) "cycleFloor" == Just (toJSON (1 :: Integer))
@@ -80,8 +81,8 @@ cycleFloorRoad =
  where
   base = wireReq [] wPos [] []
   floorOne = setKey "thresholds" (toJSON ([[7, 1]] :: [[Integer]]))
-  loops us = setKey "cycleSelfLoops" (toJSON (us :: [Integer])) base
-  refused = refusedBy respond
+  loops us = setKey "refLines" (toJSON ([[0, 0, 1]] :: [[Integer]])) (neutral (setKey "cycleSelfLoops" (toJSON (us :: [Integer])) base))
+  refused = refusedBy respondV
   knob req k = case replyObj req of
     Just o -> case KM.lookup "knobs" o of
       Just (Object ks) -> KM.lookup (Key.fromString k) ks

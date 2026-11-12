@@ -24,7 +24,7 @@ session over: 7 of 7 writes landed
 nothing refuses anything: the turn ends here
 the tree, measured (the CI face):
 $ ce check .
-check score 871/1000 | axes 0:0 1:0 2:307 3:400 4:200 5:0 6:0 | 3 candidates
+check score 605/1000 | findings on 150.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231 docdup 42 dead 263 churn 0 cycle 0 | 3 candidates
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
 note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table
 $ ce dedup . --check

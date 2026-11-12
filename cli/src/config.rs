@@ -53,12 +53,15 @@ pub(crate) use graph::GraphCfg;
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ScoreCfg {
-    /// v0.6 soft-zone curve (plan v2.6 §A): the axis-0 penalty of a
-    /// file AT the hard line; absent = the core's default 10.
+    /// Retired with the density law (v2.35): the score has no curve, and
+    /// the split advisory's P_max is a constant beside its four prices
+    /// (CE.Structure.Cost). Declared, it is refused by name at load.
     pub size_penalty_max: Option<u32>,
     /// v0.6 relative soft line (§B): the multiplicative-MAD exponent
     /// k in S = clamp(median·r^k, [200,500]); absent = default 2.
     pub soft_line_k: Option<u32>,
+    /// Retired with the density law (v2.35): the dead term reads every
+    /// unreachable file. Declared, it is refused by name at load.
     pub dead_indeg_ceil: Option<u32>,
     pub rewrite_num: Option<u32>,
     pub rewrite_den: Option<u32>,
@@ -82,12 +85,23 @@ pub struct ScoreCfg {
 }
 
 impl ScoreCfg {
-    /// The three threshold numerators the core refuses below 1 (9.0.0,
+    /// The two keys retired with the density law (v2.35), refused by
+    /// name whatever their value; then the three threshold numerators
+    /// the core refuses below 1 (9.0.0,
     /// `CE.Verdict.Table.thresholdsOffence` codes 1 / 3 / 4), named at
     /// the load throat so every face refuses before a request is built:
     /// at 0 each one makes its predicate vacuous (every churned entity
     /// rewrite-heavy, every pair hot, the score pinned at the scale).
     fn fault(&self) -> Option<String> {
+        let retired = [
+            ("size_penalty_max", self.size_penalty_max),
+            ("dead_indeg_ceil", self.dead_indeg_ceil),
+        ];
+        if let Some((key, _)) = retired.into_iter().find(|(_, v)| v.is_some()) {
+            return Some(format!(
+                "ce.toml [score] {key}: retired with the density law (v2.35); remove the key"
+            ));
+        }
         [
             ("rewrite_num", self.rewrite_num),
             ("cochange_floor", self.cochange_floor),
@@ -186,7 +200,7 @@ impl Config {
     /// fingerprinted `[[rules.class]]` alone, and an adversarial
     /// review found the scope wrong within the hour: two lines of
     /// `[score]` — `viol_cost = 0` — pin the score at the scale, so
-    /// `ce check --fail-under 911` can never fail again, and
+    /// `ce check --fail-under 917` can never fail again, and
     /// `tol_abs = 100000` erases the ratchet's own tolerance. Both
     /// move the same gates a glob edit moves, neither touched the
     /// class table, and neither asked anyone to name a floor. Picking
