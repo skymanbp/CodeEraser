@@ -171,7 +171,7 @@ measuring side promised one token run ([Contract.hs:66](../../../core/app/CE/Mer
 trees are aligned by an optimal tree-edit mapping. `CE.Clone.Ted` gives it back beside the
 distance: `tedMapping` reads the same cell recurrence as `ted` and only re-walks it, so its
 distance is `ted`'s by construction ([Ted.hs:14-18](../../../core/app/CE/Clone/Ted.hs#L14),
-[Ted.hs:56](../../../core/app/CE/Clone/Ted.hs#L56)). The Tai mapping is then narrowed top-down: a
+[Ted.hs:60](../../../core/app/CE/Clone/Ted.hs#L60)). The Tai mapping is then narrowed top-down: a
 mapped pair is kept only when its parents are a kept pair, starting from the two roots; roots not
 mapped to each other leave no skeleton and the whole pair is one hole
 ([Mapped.hs:37](../../../core/app/CE/Merge/Mapped.hs#L37)). A kept pair whose keys differ is a relabel

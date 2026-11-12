@@ -727,50 +727,67 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|2c7efb3bdae7207e|0": {
     "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 114,
-    "end": 133,
+    "line": 124,
+    "end": 143,
     "text": "/// The generation the table must carry to be read; any other empties"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|5281b7c48da08e78|0": {
-    "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 208,
-    "end": 238,
-    "text": "/// Remember the fresh outcomes and sweep the held rows whose trees"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|67c9f24c63beed6f|0": {
     "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 65,
-    "end": 76,
+    "line": 75,
+    "end": 86,
     "text": "/// A tree's identity: fnv1a over its postorder kind codes and lld"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|8f547be4f3032f6a|0": {
     "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 94,
-    "end": 106,
+    "line": 104,
+    "end": 116,
     "text": "/// The slot a pair of built units reads, whether the pair reads it"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|9b1c06ef44dc407d|0": {
     "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 159,
-    "end": 182,
+    "line": 169,
+    "end": 192,
     "text": "/// Partition the sendable pairs: the ones the table answers become"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|aa50a2353b4da842|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 242,
+    "end": 257,
+    "text": "/// Sweep the held rows whose trees left the tree — once, at the end of"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|cf5a86dabfa03a28|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 34,
+    "end": 43,
+    "text": "/// Bump when a row's meaning changes (the key, the slot order, the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|da03c295af3e2e18|0": {
     "target": "../../../cli/src/dedup/t3/cache.rs",
-    "line": 38,
-    "end": 47,
+    "line": 45,
+    "end": 56,
     "text": "/// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one wipe"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|f3d2efdcc3a0d889|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 218,
+    "end": 240,
+    "text": "/// Remember one answered request's outcomes (plan v2.35 C4: called per"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/judge.rs|125b92ec5807b71e|0": {
+    "target": "../../../cli/src/dedup/t3/judge.rs",
+    "line": 40,
+    "text": "let chunks = lockstep::by_work(&fam, &send, limits().work_cap, |p| size(p.a) * size(p.b));"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/judge.rs|6755a8540f521d7e|0": {
     "target": "../../../cli/src/dedup/t3/judge.rs",
-    "line": 54,
-    "end": 65,
+    "line": 58,
+    "end": 69,
     "text": "/// Every replayed row's cached bit against the core's own decision."
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/judge.rs|c21f13d4e2c5b5b6|0": {
     "target": "../../../cli/src/dedup/t3/judge.rs",
-    "line": 55,
-    "end": 62,
+    "line": 59,
+    "end": 66,
     "text": "fn decided(link: &mut crate::corelink::Link, rows: &Scored) -> Result<()> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|017eeafded01816c|0": {
@@ -881,11 +898,6 @@
     "end": 39,
     "text": "pub fn request_body(trees: &[&UnitTree], pairs: &[[usize; 2]]) -> Value {"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|83a1fa0349ee0593|0": {
-    "target": "../../../cli/src/dedup/t3/wire.rs",
-    "line": 66,
-    "text": "crate::lockstep::Family::new(core, CAP, \"clone\", limits().pair_cap)"
-  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|8a2b53d92072c42f|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
     "line": 1,
@@ -903,6 +915,12 @@
     "line": 50,
     "end": 57,
     "text": "// the T3 family off the same snapshot (plan v2.30 step 5b-9): its"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/lockstep.rs|b465266495a3ab47|0": {
+    "target": "../../../cli/src/lockstep.rs",
+    "line": 62,
+    "end": 81,
+    "text": "pub fn by_work<'p, P>("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
@@ -1067,148 +1085,161 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|05f0b6d67debe7e3|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 64,
-    "end": 68,
+    "line": 71,
+    "end": 76,
     "text": ", famOverCap = \\req ->"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|08e7a0898e53e736|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 129,
-    "end": 138,
+    "line": 150,
+    "end": 159,
     "text": "pairRow :: Int -> Int -> [Int] -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|17dccaf044384732|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 100,
-    "end": 123,
+    "line": 121,
+    "end": 144,
     "text": "treeShape :: Int -> WireTree -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|476cc87c555360a1|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 162,
+    "line": 189,
+    "end": 190,
     "text": "| provablyBelowH (tSize a, tHisto a) (tSize b, tHisto b) = (rows, judged, pre + 1)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|552d4dca9984b4fa|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 91,
+    "line": 112,
     "text": ", tableOffence \"pair\" id (pairRow (length ts)) ps"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|811d41a47e825323|0": {
+    "target": "../../../core/app/CE/Clone.hs",
+    "line": 192,
+    "end": 198,
+    "text": "( ( [fromIntegral i, fromIntegral j, d, size a, size b]"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|811eec624aae15ad|0": {
+    "target": "../../../core/app/CE/Clone.hs",
+    "line": 188,
+    "end": 202,
+    "text": "step [i, j] (rows, judged, pre)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|837cfe7c37c2cbe3|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 189,
+    "line": 218,
     "text": ", \"knobs\" .= object [\"tsedNum\" .= tsedNum, \"tsedDen\" .= tsedDen, \"minUnitNodes\" .= minUnitNodes]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|86f00026b50bf754|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 195,
-    "end": 196,
+    "line": 224,
+    "end": 225,
     "text": ", \"judged\" .= judged"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|8c14c9a8372670b0|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 198,
+    "line": 227,
     "text": "(tooLarge F.clone degraded)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|8d82583bd147715c|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 141,
-    "end": 144,
+    "line": 162,
+    "end": 165,
     "text": "-- | One replayed row's shape: [ted,n1,n2], a distance and two"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|91de165928b9083f|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 191,
-    "end": 194,
+    "line": 220,
+    "end": 223,
     "text": "<> maybe [] (\\ds -> [\"decided\" .= if degraded then [] else map decided ds]) (reqDecide req)"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|b9355382eb6d53ba|0": {
+    "target": "../../../core/app/CE/Clone.hs",
+    "line": 14,
+    "end": 17,
+    "text": "-- (C7a). Raw ted and sizes cross"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|c27989dcb52ac94f|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 133,
-    "end": 135,
+    "line": 154,
+    "end": 156,
     "text": "-- a unit is not a clone of itself (review C11: [0,0] passed and"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|c5342721867ecdd1|0": {
-    "target": "../../../core/app/CE/Clone.hs",
-    "line": 152,
-    "end": 169,
-    "text": "-- | Judge every pair: the admissible prefilter proves \"below"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|d16a8e60833eb4b3|0": {
-    "target": "../../../core/app/CE/Clone.hs",
-    "line": 11,
-    "end": 15,
-    "text": "-- first, Zhang-Shasha TED for the rest. Raw ted and sizes cross the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|d91d8895c9edbc0b|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 187,
-    "end": 188,
+    "line": 216,
+    "end": 217,
     "text": "( [ \"scores\" .= map fst scored"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|f869e08b3c6de2ea|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|fd3cb1c831966263|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 163,
-    "end": 168,
-    "text": "| otherwise =\n( ( [fromIntegral i, fromIntegral j, d, size a, size b]"
+    "line": 173,
+    "end": 204,
+    "text": "-- | Judge every pair: three admissible bounds prove \"not a clone\""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|1a9b8682691beeeb|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 36,
-    "end": 40,
+    "line": 30,
+    "end": 34,
     "text": "-- | Per-tree node ceiling. Sizing anchor (design §4.4, F5):"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|4492967bbf9dbd94|0": {
+    "target": "../../../core/app/CE/Clone/Cost.hs",
+    "line": 47,
+    "end": 60,
+    "text": "-- | Per-request work ceiling (plan v2.35 C3): the sum of n1·n2 over a"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|463d21004f617d2e|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 18,
-    "end": 20,
+    "line": 12,
+    "end": 14,
     "text": "-- floats tie-break differently across platforms). The candidate"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|5cad32f8a4cc001c|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 33,
-    "end": 34,
+    "line": 27,
+    "end": 28,
     "text": "minUnitNodes :: Integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|70b2deb2b00e82b7|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 50,
-    "end": 51,
+    "line": 44,
+    "end": 45,
     "text": "pairCap :: Integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|763d1b0659763aec|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 13,
-    "end": 20,
+    "line": 7,
+    "end": 14,
     "text": "-- | The clone threshold as an integer ratio (0.85). Defined in-repo"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|922beb6f20696b96|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 16,
-    "end": 18,
+    "line": 10,
+    "end": 12,
     "text": "-- definition — clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max, integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|b18f7b768522c4e7|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 44,
-    "end": 51,
+    "line": 38,
+    "end": 45,
     "text": "-- | Per-request pair ceiling, applied AFTER the two admissible"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|cb76114f7ae35e91|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 41,
-    "end": 42,
+    "line": 35,
+    "end": 36,
     "text": "unitNodeCap :: Integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|ce368eb9f276e285|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 63,
-    "end": 66,
+    "line": 72,
+    "end": 75,
     "text": "cloneDecidesWith :: (Integer, Integer) -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|ceefbce58bdc7feb|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 21,
-    "end": 25,
+    "line": 15,
+    "end": 19,
     "text": "tsedNum :: Integer"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Document.hs|86fccee3895e299e|0": {
@@ -1242,8 +1273,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Prefilter.hs|664e0f551671286d|0": {
     "target": "../../../core/app/CE/Clone/Prefilter.hs",
-    "line": 55,
-    "end": 64,
+    "line": 69,
+    "end": 78,
     "text": "-- | The decision over the two sizes and the label intersection I; I is"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Prefilter.hs|ce9bc6565b7e42b3|0": {
@@ -1251,6 +1282,30 @@
     "line": 30,
     "end": 32,
     "text": "-- | I = Σ_label min(c1,c2) over two label lists."
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Prefilter.hs|f83ecf883027c1b9|0": {
+    "target": "../../../core/app/CE/Clone/Prefilter.hs",
+    "line": 55,
+    "end": 67,
+    "text": "-- | The largest distance a clone may have against the larger size mx"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Sequence.hs|0f72ce39663bb89a|0": {
+    "target": "../../../core/app/CE/Clone/Sequence.hs",
+    "line": 18,
+    "end": 25,
+    "text": "-- A pair whose sequence distance exceeds the clone ceiling"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Sequence.hs|7046309779ce17bf|0": {
+    "target": "../../../core/app/CE/Clone/Sequence.hs",
+    "line": 35,
+    "end": 38,
+    "text": "-- | True ⇔ the pair provably is not within distance k: the postorder"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Sequence.hs|d3cac72963a3c0db|0": {
+    "target": "../../../core/app/CE/Clone/Sequence.hs",
+    "line": 1,
+    "end": 16,
+    "text": "-- | The third admissible bound before the tree edit distance (plan"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|0a1b8903b7c17785|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
@@ -1266,29 +1321,29 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|4bd86b2662f64380|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 73,
-    "end": 74,
+    "line": 77,
+    "end": 78,
     "text": "rootCell :: Tree -> Tree -> Int"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|504caa6c32e8a687|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 48,
+    "line": 52,
     "text": "| tSize a == 0 || tSize b == 0 = fromIntegral (max (tSize a) (tSize b))"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|57e64a83435be5c9|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 112,
-    "end": 126,
+    "line": 116,
+    "end": 130,
     "text": "-- | One forest pass: fills the forest-distance table for the span"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|603cc5d4817f9f06|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 140,
+    "line": 144,
     "text": "ins <- (+ 1) <$> readArray fd (fkey sp di (dj - 1))"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|787d49eb51260906|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 139,
+    "line": 143,
     "text": "del <- (+ 1) <$> readArray fd (fkey sp (di - 1) dj)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|8b12f9aa1ad98346|0": {
@@ -1299,30 +1354,36 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|c3a763fded18372c|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 143,
+    "line": 147,
     "text": "then (+ fromEnum (tLab a ! i /= tLab b ! j)) <$> readArray fd (fkey sp (di - 1) (dj - 1))"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|d561645d801e6fbb|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 125,
+    "line": 129,
     "text": "when (aligned sp i j) $ writeArray td (i * tSize b + j) v"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|dcdea016f368387b|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 144,
+    "line": 148,
     "text": "else (+) <$> readArray fd (fkey sp (tLld a ! i - sL1 sp) (tLld b ! j - sL2 sp)) <*> readArray td (i * tSize b + j)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|ebfe333ae4eb588f|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 84,
-    "end": 92,
+    "line": 88,
+    "end": 96,
     "text": "-- | Keyroots: for every distinct lld value, the highest postorder"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|f619cbd82e41940c|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 141,
-    "end": 143,
+    "line": 145,
+    "end": 147,
     "text": "third <-\nif aligned sp i j"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Within.hs|da400c49bf4c148a|0": {
+    "target": "../../../core/app/CE/Clone/Within.hs",
+    "line": 1,
+    "end": 40,
+    "text": "-- | The tree edit distance of a pair, computed only inside the band the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Dedup/Cost.hs|6882db0f3a5ad364|0": {
     "target": "../../../core/app/CE/Dedup/Cost.hs",
@@ -1349,19 +1410,19 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|17669273100e771c|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 43,
-    "end": 44,
+    "line": 46,
+    "end": 47,
     "text": "d <- check \"metric: identity and symmetry\" (identitySym fam)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|3c2092bb5602132b|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 50,
+    "line": 53,
     "text": "g <- check \"prefilter: provablyBelow implies not-a-clone under real ted\" (all pruneOk teds)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|4082f4551c03b026|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 55,
-    "end": 61,
+    "line": 58,
+    "end": 64,
     "text": "h <-\ncheck\n\"verdict boundary: ted 15/16 at max 100, and 86/100 flips it\""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|4fb4daa101d56b11|0": {
@@ -1372,31 +1433,31 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|5699bc221547c091|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 139,
-    "end": 146,
+    "line": 164,
+    "end": 171,
     "text": "knobAlive :: [(Integer, T, T)] -> IO Bool"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|7088ca56d48cb265|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 37,
+    "line": 40,
     "text": "a <- check \"zhang-shasha ≡ mapping brute force (whole family)\" (null bad)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|d5022f6c77a818d3|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 31,
-    "end": 32,
+    "line": 34,
+    "end": 35,
     "text": "deep <- lookupEnv \"CE_DEEP_TED\""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|ea28ac7965d8131f|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 88,
-    "end": 90,
+    "line": 113,
+    "end": 115,
     "text": "pruneOk :: (Integer, T, T) -> Bool"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|f0f7872713137115|0": {
     "target": "../../../core/test/CloneProps.hs",
-    "line": 107,
-    "end": 113,
+    "line": 132,
+    "end": 138,
     "text": "triangle :: [T] -> Bool"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/ReferenceExtent.hs|07ea41552073b868|0": {
@@ -1688,8 +1749,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|4fb1b2f9592a313e|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 142,
-    "end": 161,
+    "line": 151,
+    "end": 170,
     "text": "/// One scored row as wire::parse_result decodes it: the pair and"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/wire.rs|19628fdc52e90f12|0": {
@@ -1889,20 +1950,21 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|4203ffe931ae724a|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 101,
-    "end": 118,
+    "line": 140,
+    "end": 157,
     "text": "pub(crate) fn within_line<P>("
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|57c80cc52bb5ab95|0": {
+    "target": "../../../cli/src/lockstep.rs",
+    "line": 53,
+    "end": 55,
+    "text": "pub fn by_count<'p, P>(fam: &Family<'_>, pairs: &'p [P]) -> Vec<&'p [P]> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|b4dfe2c431316fca|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 180,
-    "end": 191,
+    "line": 219,
+    "end": 230,
     "text": "/// One chunk's request-local layout over the shared sorted-rank throat:"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|d0ed92deaf34ad50|0": {
-    "target": "../../../cli/src/lockstep.rs",
-    "line": 87,
-    "text": "for c in pairs.chunks(fam.chunk) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|689c8fc33de77ed4|0": {
     "target": "../../../cli/src/scan/lang.rs",
@@ -5493,18 +5555,18 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|5cad32f8a4cc001c|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 33,
-    "end": 34,
+    "line": 27,
+    "end": 28,
     "text": "minUnitNodes :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|626115d91a368b79|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 22,
+    "line": 16,
     "text": "tsedNum = 85\n\ntsedDen :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|b8f2e1fc9541c160|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
-    "line": 25,
+    "line": 19,
     "text": "tsedDen = 100\n\n-- | Admission floor for a T3 unit: below this many AST nodes a"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
@@ -6713,8 +6775,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../contracts/VERSIONING.md|6d7aafec469cebbb|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 482,
-    "end": 483,
+    "line": 490,
+    "end": 491,
     "text": "0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
@@ -11672,7 +11734,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Clone/Ted.hs|78aff2e7f2d42b07|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 56,
+    "line": 60,
     "text": "tedMapping :: Tree -> Tree -> (Integer, [(Int, Int)])"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Lang/C.hs|4e74fa873bd94024|0": {
@@ -12192,8 +12254,8 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|13f0dcd12f24bb27|0": {
     "target": "../../../core/app/CE/Limits.hs",
-    "line": 90,
-    "end": 103,
+    "line": 99,
+    "end": 114,
     "text": "-- | The request ceilings the families are planned by."
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Structure/Tree.hs|f767f36e6267bad9|0": {

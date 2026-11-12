@@ -55,7 +55,7 @@ pairCap = 4096
 -- 2026-11-11, AMD Ryzen 7 7700, the machine itself at 100 % CPU)
 -- run 2.6e-7 to 7.3e-7 s; at the worst, 2 s is 2.7·10⁶ and the nearest
 -- power of two is 2^21: 1.5 s of distance per request at the worst
--- slope, about 40x under the 60 s reply deadline (CE_CORE_DEADLINE_SECS).
+-- slope, far inside the core link's 600 CPU-s budget (corelink/watch.rs).
 workCap :: Integer
 workCap = 2097152
 

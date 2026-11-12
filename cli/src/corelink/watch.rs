@@ -5,8 +5,9 @@
 //! the link killed any core whose reply took 60 s of wall time, on the
 //! grounds that every judgment answered in single-digit seconds: on a
 //! loaded machine that killed a core in the middle of an honest request
-//! (koreader `ce join`, a `candidates` request that had used 4.71 CPU-s
-//! in its 78 s), and the request's own write was never watched at all.
+//! (koreader `ce join`, 2026-11-11, the machine at 100 % with the owner's
+//! game running: a `candidates` request that had used 4.71 CPU-s in its
+//! 78 s), and the request's own write was never watched at all.
 //!
 //! An exchange is open from the request's first byte until the reply line
 //! arrives, and three signals say it moves: request bytes handed to the

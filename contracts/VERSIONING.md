@@ -21,6 +21,14 @@
 > 同一协议版本下定律不会变。golden：全部 request 行随 major 重锚到 10.0.0；`handshake/wire-errors` 第 3 对的 major 偏斜探针改为按 server 的 major 加一派生
 > （今日 11.0.0，应答为错误），不再是字面量——9.x 时字面量 `10.0.0` 到 10.0.0 变成了 server 自己的版本、那一对成了 `fourclass.result`。其余各族逐字节同旧，只动 proto。
 
+> **10.0.0 同版加性**（T3 冷路径，车道 v235_coldpath，2026-11-12；方法学册 02 T3 段；10.0.0 未发布，同版加性不另升版号）：线上只多两样——定义包 `limits` 的两键，与 clone 应答两个计数的读法；`bags/1` 的请求与应答形状不变（测量侧按新键把一次刷新切成几次问）。两键——
+> `clone.work_cap`（2,097,152 = 2^21，`CE.Clone.Cost.workCap`）：一条 clone 请求里各对 n1·n2 之和的上限，过了答一份完整的降级应答（与 `pair_cap` 同路）；测量侧 `lockstep::by_work` 按它与 `pair_cap` 顺序切块，一对单独过它就单独成块（一对至多 `unitNodeCap`² = 65,536，按构造在线内）。
+> `caps.bags_bytes`（2,097,152 = 2^21，`CE.Similar.Bags.Contract.bagsAskBytes`）：一次 `bags/1` 请求按它计划的字节数——计划线不是拒绝线，单个文件过它照样单独成一次请求、照样被回答。
+> 限值对象 `clone` 改成两半写（`cloneJudgment` 判决所依：TSED 两数与 `min_unit_nodes`；`clonePlan` 一条请求的计划线：`unit_node_cap`、`pair_cap`、`work_cap`），键与字节不变。
+> clone 应答两个计数改义，形状不变：判决前多一道下界（标签序列编辑距离，`CE.Clone.Sequence`，后序与先序两种标签序列），过了三道下界的对只在克隆带内求距离（`CE.Clone.Within`，带宽 k = 较大一棵树的克隆上限 `cloneCeiling`）；
+> 距离过 k 的对不出分数行。所以 `prefiltered` = 三道下界之一判定、或带内距离过上限的对，`judged` = 出分数行的对，分数行全是克隆（十二个对拍语料上 `judged` 等于克隆对数）。哪些对是克隆不变，同十二个语料与两个仓根上 `ce check` 与 `ce join` 的文档逐字节同前。
+> hello 的 `tablesDigest` 随两键变。golden：`tables/golden` 与各族 hello 的摘要重生成；`clone/golden` 第 8 对（chain3 对 fork3，ted 2、上限 0）改答 prefiltered（judged 0、`scores` 空）。
+
 > **9.1.0 同版加性**（工具约定入口，车道 v235_licence 第 4A 部分，2026-11-12；方法学册 06 角色表 role 10；9.1.0 未发布，同上不另升版号）：`graph/1` 节点行的角色列加第 10 位——工具约定（测量侧 `ROLE_CONVENTION = 1 << 10`，`cli/src/graph/deadcode/convention.rs` 按定义包读路径），
 > 核 `CE.Graph.Cost.roleBits` 加第十一行 `(10, 1)`，落在入口位；请求不带该位时判决逐字节同前。定义包 `flags` 加 `entry_conventions`（死文件考题第一代过关的八条工具约定与仓根 `init.lua`，每行一个名字与一个位置：`basename` / `under` / `exact`），hello 的 `tablesDigest` 随之变。
 > golden：`tables/golden` 的定义包与各族 hello 的摘要随定义包重生成，别的应答不动。

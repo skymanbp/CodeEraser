@@ -6,7 +6,7 @@ Every block below is the binary's own `--help` output (English face; `--lang zh`
 
 A `[ROOT]` names the analysis SCOPE; the project's state (`ce.toml`, `ce-baseline.json`, `.ce/`) belongs to the nearest ancestor holding a `ce.toml` or a `.git`. A scope below that project keeps its own index at `.ce/scope/<scope>/index.db` and its report paths stay relative to the scope; the project's shared `.ce/index.db`, the one the hooks read, is written only by a run rooted at the project. Every path git answers is read relative to the root, so a `ce.toml` project below git's toplevel sees its own history.
 
-A core that sends no reply line within `CE_CORE_DEADLINE_SECS` seconds (default 60) is killed; the command fails naming the request it waited on (its kind and its line's bytes).
+A core is killed after `CE_CORE_DEADLINE_SECS` s (default 60) without progress (request bytes taken or CPU spent) or past `CE_CORE_CPU_BUDGET_SECS` CPU s (default 600) on one request; the command fails naming the request (kind, line bytes), the bytes written and the core's CPU.
 
 ## ce
 

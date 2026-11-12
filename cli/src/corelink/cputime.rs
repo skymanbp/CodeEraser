@@ -1,19 +1,23 @@
-//! A child's CPU clock, user plus kernel time: the witness watch.rs reads
-//! to tell a core that works from a core that is wedged. None when the
-//! platform has no reader here or the reading fails; the rule then counts
-//! the request's bytes alone (watch.rs).
+//! A child's CPU clock, user plus kernel time of the whole process, every
+//! thread: the witness watch.rs reads to tell a core that works from a
+//! core that is wedged. None when the platform has no reader here or the
+//! reading fails; the rule then counts the request's bytes alone
+//! (watch.rs).
 //! - Windows: `GetProcessTimes`, kernel + user in 100 ns units.
-//! - Linux: `/proc/<pid>/schedstat`'s first field (nanoseconds on the
-//!   CPU), else `/proc/<pid>/stat` fields 14 + 15 (utime, stime) in clock
-//!   ticks of `sysconf(_SC_CLK_TCK)` (proc(5)).
+//! - Linux: `/proc/<pid>/stat` fields 14 + 15 (utime, stime), the thread
+//!   group's, in clock ticks of `sysconf(_SC_CLK_TCK)` (proc(5)).
+//!   `/proc/<pid>/schedstat` is not read: it is one task's scheduler
+//!   record, the thread-group leader's, not the process's.
 //! - macOS: `proc_pid_rusage` (`RUSAGE_INFO_V2`). `ri_user_time` and
 //!   `ri_system_time` carry no unit in the `libc` crate's declaration
 //!   (libc 0.2.189, src/unix/bsd/apple/mod.rs, `rusage_info_v2`), and
 //!   Apple's headers were not readable from this machine: they are read as
 //!   mach absolute-time units and scaled by `mach_timebase_info`, whose
-//!   ratio is not one on Apple silicon (not read on a Mac here). The physical leg
-//!   (tests/unit/corelink/cputime.rs: about one CPU-second must read
-//!   between 0.5 s and 5 s) is what holds the unit, on each CI platform.
+//!   ratio is not one on Apple silicon (not read on a Mac here). The
+//!   physical leg (tests/unit/corelink/cputime.rs: a child that burns on a
+//!   thread of its own until its own process clock has advanced one second
+//!   must read between 0.8 s and 1.5 s) is what holds the unit and the
+//!   whole process, on each CI platform.
 
 use std::process::Child;
 use std::time::Duration;
@@ -63,16 +67,6 @@ mod imp {
 
     pub(super) fn cpu_time(child: &Child) -> Option<Duration> {
         let pid = child.id();
-        schedstat(pid).or_else(|| stat(pid))
-    }
-
-    fn schedstat(pid: u32) -> Option<Duration> {
-        let text = std::fs::read_to_string(format!("/proc/{pid}/schedstat")).ok()?;
-        let ns = text.split_whitespace().next()?.parse().ok()?;
-        Some(Duration::from_nanos(ns))
-    }
-
-    fn stat(pid: u32) -> Option<Duration> {
         let text = std::fs::read_to_string(format!("/proc/{pid}/stat")).ok()?;
         // the command name (field 2) may hold spaces and parentheses: the
         // fields are read after its last ')', where field 3 comes first
