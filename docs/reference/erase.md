@@ -22,7 +22,7 @@ non-deterministic output, and an eraser that guesses would forfeit it.
 | class | source verdict | the erase | why |
 |---|---|---|---|
 | verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss whoever reads the file; the survivor is chosen deterministically, never judged "better" |
-| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) | **none** — an advisory row with its reason | the graph verdict answers "does any reference site of the corpus land on this file?", and a file is also used with no such site: run by its name (a script, a command in a Makefile, a CI file or a package script), found by a tool's convention (`setup.py`, `docs/conf.py`, `package-info.java`, a test runner's data directory), served or opened by its path. So the row is refused by name in this order: the PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — as `public_surface` (6.1.0, RG10: a library's exported API is unreferenced in-corpus by construction); an unvouched language (the graph family's confidence 0) as `language_unresolved`; every other row as `reachable_by_name` (9.1.0) — a `[vouched]` dead file is one whose language has every reference site answered (in-corpus or External), a statement about sites, not about use |
+| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) | **none** — an advisory row with its reason | the graph verdict answers "does any reference site of the corpus land on this file?", and a file is also used with no such site: run by its name (a script, a command in a Makefile, a CI file or a package script), found by a tool's convention the product does not list (a test runner's data directory; the eight the dead-file exam passed, among them `setup.py`, `docs/conf.py` and `package-info.java`, are entries, booklet 06 role 10), served or opened by its path. So the row is refused by name in this order: the PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — as `public_surface` (6.1.0, RG10: a library's exported API is unreferenced in-corpus by construction); an unvouched language (the graph family's confidence 0) as `language_unresolved`; every other row as `reachable_by_name` (9.1.0) — a `[vouched]` dead file is one whose language has every reference site answered (in-corpus or External), a statement about sites, not about use |
 | whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical, and whose copy's file is graph-dead (the row carries the copy's dead verdict code, proto 7.0.0) | **none** — an advisory row with its reason | the copy is a whole file, so the dead file's question stands: refused as `unit_not_covered`, `bytes_differ`, `copy_not_dead`, `public_surface`, `language_unresolved` or, past all of them, `reachable_by_name` — the first that holds |
 
 README's permanent stance applies: a class acts only with its own
@@ -32,6 +32,11 @@ unreferenced file is unused. The plan says what it will not touch and
 why. The blind audit that asked the second question of the dead files
 of twelve corpora and this repository is recorded in
 [EVAL-SET-DEADFILE.md](../EVAL-SET-DEADFILE.md).
+Its second generation replays first-parent history and asks what
+became of each file that turned dead; its bars and design are
+[deadfile-gen2-bars-v1.md](../../contracts/eval/deadfile-gen2-bars-v1.md)
+and [deadfile-gen2-design-v1.md](../../contracts/eval/deadfile-gen2-design-v1.md),
+and it has not yet run on a real corpus.
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable
