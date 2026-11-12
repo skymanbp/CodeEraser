@@ -5,8 +5,8 @@
     "repo": "skymanbp/CodeEraser"
   },
   "generated_from": {
-    "ce": "1.8.0",
-    "commit": "004553f87aed0ba3146677ce6183b25af2f603f8",
+    "ce": "1.9.2",
+    "commit": "0a95383237fb7c85733983308f4b39636dc2beef",
     "dirty": false
   },
   "reading": {
@@ -361,7 +361,7 @@
       [
         "docs",
         "docs/reference/methodology",
-        2,
+        3,
         true
       ],
       [
