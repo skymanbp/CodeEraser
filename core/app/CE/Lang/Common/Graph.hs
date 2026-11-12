@@ -152,8 +152,11 @@ flags =
   \    'lsp/', 'after/',\n\
   \  ]],\n\
   \  ['r', ['inst/', 'vignettes/', 'data-raw/', 'exec/', 'demo/']],\n\
-  \]\n\
-  \# Files a tool finds by where it sits, which nothing references: the\n\
+  \]\n"
+
+flags2 :: String
+flags2 =
+  "# Files a tool finds by where it sits, which nothing references: the\n\
   \# eight conventions generation 1 of the dead-file exam passed (BARS\n\
   \# section 3, docs/EVAL-SET-DEADFILE.md), each exactly as its tool's\n\
   \# documentation states it (contracts/eval/deadfile-convention-docs-v1.json,\n\
