@@ -33,7 +33,7 @@ dynamic` — the
 definition package's `store` table since plan v2.32 step 4
 ([Graph.hs:17-20](../../../core/app/CE/Lang/Common/Graph.hs#L17), read at
 [store.rs:223-225](../../../cli/src/graph/store.rs#L223)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:178](../../../cli/src/graph/store.rs#L178), currently <!--ce:ver:graph_rev#digits-->`27`<!--/ce-->); `export_star` (a TS
+`GRAPH_REV` bump ([store.rs:183](../../../cli/src/graph/store.rs#L183), currently <!--ce:ver:graph_rev#digits-->`27`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -118,7 +118,7 @@ Numeric details that are policy, not taste:
   name that misses is an attribute and an absent `__init__.py` a namespace package, both quiet
   ([PyAlso.hs:1-24](../../../core/app/CE/Resolve/PyAlso.hs#L1)). They are edges every graph reader follows,
   stored with `edges.also` = 1 so the unresolved count still reads each site's own answer alone
-  ([load.rs:74-82](../../../cli/src/graph/load.rs#L74)). A star import (`from pkg import *`, no names of its
+  ([load.rs:60-69](../../../cli/src/graph/load.rs#L60)). A star import (`from pkg import *`, no names of its
   own) whose answer is a package `__init__.py` draws each name that file's literal `__all__` bindings and
   edits list, as `from pkg import n` would — the walk reads the list (`py.all`,
   [py_all.rs:1-7](../../../cli/src/graph/ladder/py_all.rs#L1)); when any binding or edit of `__all__` there is one
@@ -222,8 +222,8 @@ Two transformations happen on the way to the wire:
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
 never saw ([load.rs:115-121](../../../cli/src/graph/load.rs#L115)). `unresolved_sites` is the count of sites
-with no edge row, plus one for each star-import site whose `__all__` is opaque (`sites.ledger` bit 1,
-rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:146-151](../../../cli/src/graph/load.rs#L146)) and travels with the report so
+whose own answer drew no edge and was not External (`sites.ledger` bit 0, rev 27), plus one for each star-import site whose `__all__` is opaque (`sites.ledger` bit 1,
+rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:146-150](../../../cli/src/graph/load.rs#L146)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 
@@ -487,7 +487,7 @@ which is a statement about sites, not about use: a file run by its name or found
 convention leaves no site, so a vouched dead file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
-([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151](../../../cli/src/graph/load.rs#L151), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 
