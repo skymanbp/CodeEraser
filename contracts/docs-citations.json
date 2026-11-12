@@ -3848,8 +3848,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|314b9bab069679ed|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 222,
-    "end": 226,
+    "line": 223,
+    "end": 227,
     "text": "// The sentinel is never walked, and the scan-only arm"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -4025,16 +4025,16 @@
     "end": 55,
     "text": "/// A fixed specifier the node carries as a keyword, not a field:"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|25287c32961461db|0": {
-    "target": "../../../cli/src/graph/store.rs",
-    "line": 183,
-    "text": "pub const GRAPH_REV: i64 = 27;"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|a830951c191a8896|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 223,
-    "end": 225,
+    "line": 229,
+    "end": 231,
     "text": "fn kinds() -> &'static [&'static str] {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|ffdfb2b0f24069ef|0": {
+    "target": "../../../cli/src/graph/store.rs",
+    "line": 189,
+    "text": "pub const GRAPH_REV: i64 = 28;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
     "target": "../../../cli/src/graph/symwire.rs",
@@ -4641,13 +4641,25 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve.hs|238ecb23ced633ef|0": {
     "target": "../../../core/app/CE/Resolve.hs",
     "line": 1,
-    "end": 21,
+    "end": 24,
     "text": "{-# LANGUAGE OverloadedStrings #-}"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve.hs|87667a80ea4b86f4|0": {
+    "target": "../../../core/app/CE/Resolve.hs",
+    "line": 160,
+    "end": 173,
+    "text": "-- | The `also` rows (proto 9.1.0): each site's other references beside"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve.hs|e3b5943bf92944e0|0": {
     "target": "../../../core/app/CE/Resolve.hs",
-    "line": 133,
+    "line": 135,
     "text": "-- argument is no literal (`dynamic`) names no target: the reserved"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Answer.hs|cbdf4f18df0523d8|0": {
+    "target": "../../../core/app/CE/Resolve/Answer.hs",
+    "line": 65,
+    "end": 74,
+    "text": "-- | A site whose answer is a confirmed section of ANOTHER file also"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|1661918a733fb5bd|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
@@ -6773,11 +6785,11 @@
     "end": 99,
     "text": "fn novel_matches(root: &Path, env: &Envelope, content: &str) -> Option<Vec<serde_json::Value>> {"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../contracts/VERSIONING.md|6d7aafec469cebbb|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../contracts/VERSIONING.md|2e236521e0fe086e|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 490,
-    "end": 491,
-    "text": "0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major"
+    "line": 496,
+    "end": 497,
+    "text": "\"candidates/1\",\"rank/1\",\"docpairs/1\",\"moves/1\",\"bags/1\",\"relocate/1\"]`；fourclass/2 ="
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -11132,7 +11144,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 119,
+    "line": 120,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
@@ -11425,7 +11437,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 120,
+    "line": 121,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
