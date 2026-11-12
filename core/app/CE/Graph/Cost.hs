@@ -106,8 +106,8 @@ sccFloor = 2
 
 -- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:
 -- aggregates are not code entities — a package or section verdict
--- is informational `reported`, never a failing `dead` row and never
--- an erase licence). The kind vocabulary is the wire node row
+-- is informational `reported`, never a failing `dead` row; only a
+-- file verdict fails). The kind vocabulary is the wire node row
 -- [lang, kind, flags]: 0 file / 1 package / 2 section
 -- (cli/src/graph/wire.rs GRAN_*). This split lived as an unnamed
 -- Rust branch before; a policy the core cannot see is a policy no

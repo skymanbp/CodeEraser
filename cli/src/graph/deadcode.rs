@@ -493,9 +493,9 @@ fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<Vec<i64>>> {
         };
         let node = verdict_node(nodes, idx, verdict)?;
         // The RG9 split is the CORE's since 2.18.0; here it survives
-        // as a boundary contract, because erase's class-0 licence is
-        // minted from this list — an aggregate in the failing table
-        // is wire skew and must refuse, never license a directory.
+        // as a boundary contract: this list is what `--check` fails on
+        // and what erase builds its advisory dead-file rows from, so an
+        // aggregate in it is wire skew — a directory is never a verdict.
         ensure!(
             node.kind == super::wire::GRAN_FILE,
             "core dead row {idx} is not file-granularity — wire skew"

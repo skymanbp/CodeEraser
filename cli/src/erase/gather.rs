@@ -4,7 +4,7 @@
 //! decides safety; every fact row goes to the core's erase/1
 //! predicate. Byte equality is measured on the raw line slices —
 //! the families' masked/normalized equivalences are how candidates
-//! are FOUND, byte identity is what licenses deletion.
+//! are FOUND; byte identity licenses only a doc span's erasure.
 
 use crate::erase::model::Candidate;
 use crate::graph::deadcode::{self, Advisory};
@@ -27,8 +27,8 @@ pub struct Gathered {
 /// measurement four times, once per leg plus its own index open).
 pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gathered> {
     let (found, idx, db_path) = crate::dedup::snapshot(root, db)?;
-    // dead files license erase rows; the symbol advisory licenses
-    // nothing here (W4-F2), so the wire is built without it
+    // dead files become advisory erase rows (none eraseable since 9.1.0);
+    // the symbol advisory feeds nothing here (W4-F2): no advisory wire
     let w = deadcode::wire_of(root, &idx, &db_path, Advisory::No)?;
     let dead = deadcode_leg(root, core, &w)?;
     let lang_unres = lang_unresolved(&idx)?;
