@@ -169,7 +169,7 @@ PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计�
 - **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown、HTML 与 `.txt` 由文档与图规则判决；不承诺 T4 克隆。
 - **只当顾问，永不是判决。** 符号层存活性、`ce similar`、`ce merge` 与 `ce arch` 从不让门变红；守卫类拿出自己的误报记录之前一律停在 `observe`。
 - **不替你画的线。** `cognitive_fail` 默认 0（复杂度只 warn），`ce structure` 不设分数地板。
-- **只认文本写出的引用。** 存活性只读文件写出的引用。目标靠计算得出的加载（`require(prefix .. name)`、`import("./lib/" + name)`），或 `__all__` 不全是字面量的星号导入，没写出的那部分不连边：文件仍判死，它的语言不能为它作保。判死也不是删除许可：没有引用指向的文件仍可能被按名字运行、被工具按约定找到，所以 `ce erase` 不删任何整文件，只擦逐字节相同的文档段。`setup.cfg` 与非根目录 `pyproject.toml` 声明的入口不读。
+- **只认文本写出的引用。** 存活性只读文件写出的引用。目标靠计算得出的加载（`require(prefix .. name)`、`import("./lib/" + name)`），或 `__all__` 不全是字面量的星号导入，没写出的那部分不连边：文件仍判死，它的语言不能为它作保。判死也不是删除许可：没有引用指向的文件仍可能被按名字运行、被工具按约定找到（死文件考题过关的八条工具约定是入口，如 `setup.py`、Sphinx 的 `conf.py`、`package-info.java`、Next.js `app/` 下的页面；别的约定不是），所以 `ce erase` 不删任何整文件，只擦逐字节相同的文档段。`setup.cfg` 与非根目录 `pyproject.toml` 声明的入口不读。
 - **分发。** 一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标；提权账户不是登录用户时 `ce setup` 什么都不接（退出码 13）；判决本仓需要 `cli/tests` submodule 就位。
 - **协议一行。** 送核的一行请求至多 <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> 字节；更大的请求分批送，单独超线的一项按名拒绝，从不截断。
 

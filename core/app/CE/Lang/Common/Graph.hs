@@ -127,9 +127,7 @@ flags =
   \# reads from an app directory (`app.R`, or `ui.R` and `server.R`, and\n\
   \# `global.R`), and the pages a web server serves by name — a\n\
   \# directory's `index.html`, the not-found page `404.html` (plan v2.30\n\
-  \# step 5). Neovim's `init.lua` is one only at the root, where a\n\
-  \# config keeps it: anywhere else the name is a module's own file\n\
-  \# (`require \"a\"` reads `a/init.lua`), which the graph reaches.\n\
+  \# step 5).\n\
   \entry_names = [\n\
   \  'main.rs', 'build.rs', 'main.go', '__main__.py', 'Main.hs', 'main.c', 'main.cc',\n\
   \  'main.cpp', 'Main.java', 'main.lua', 'conf.lua', 'app.R', 'ui.R', 'server.R',\n\
@@ -154,6 +152,48 @@ flags =
   \    'lsp/', 'after/',\n\
   \  ]],\n\
   \  ['r', ['inst/', 'vignettes/', 'data-raw/', 'exec/', 'demo/']],\n\
+  \]\n\
+  \# Files a tool finds by where it sits, which nothing references: the\n\
+  \# eight conventions generation 1 of the dead-file exam passed (BARS\n\
+  \# section 3, docs/EVAL-SET-DEADFILE.md), each exactly as its tool's\n\
+  \# documentation states it (contracts/eval/deadfile-convention-docs-v1.json,\n\
+  \# nothing wider), and Neovim's `init.lua`, a config's own file only at\n\
+  \# the root (anywhere else the name is a module's, `require \"a\"` reads\n\
+  \# `a/init.lua`, which the graph reaches). A row is a name and a\n\
+  \# position of one of three kinds: `basename` (the file's own name, at\n\
+  \# any depth), `under` (the name below the FIRST directory segment named\n\
+  \# `segment`, no later segment beginning with `no_later_prefix`) and\n\
+  \# `exact` (root-relative paths; `nocase` compares them without ASCII\n\
+  \# case). Names are literal; nothing in a row is a pattern.\n\
+  \entry_conventions = [\n\
+  \  # https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html\n\
+  \  {name = 'package-info.java', position = {kind = 'basename', names = ['package-info.java']}},\n\
+  \  # https://vitest.dev/config/\n\
+  \  {name = 'vitest.config', position = {kind = 'basename', names = [\n\
+  \    'vitest.config.ts', 'vitest.config.mts', 'vitest.config.cts', 'vitest.config.js',\n\
+  \    'vitest.config.mjs', 'vitest.config.cjs',\n\
+  \  ]}},\n\
+  \  # https://nextjs.org/docs/app/getting-started/project-structure\n\
+  \  {name = 'next-app-entry', position = {kind = 'under', segment = 'app',\n\
+  \    no_later_prefix = '_', names = ['page.tsx', 'layout.tsx', 'route.ts']}},\n\
+  \  # https://pip.pypa.io/en/stable/cli/pip_install/\n\
+  \  {name = 'setup.py', position = {kind = 'basename', names = ['setup.py']}},\n\
+  \  # https://www.sphinx-doc.org/en/master/man/sphinx-build.html\n\
+  \  {name = 'sphinx-conf.py', position = {kind = 'basename', names = ['conf.py']}},\n\
+  \  # https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors\n\
+  \  {name = 'CONTRIBUTING.md', position = {kind = 'exact', nocase = true, paths = [\n\
+  \    'CONTRIBUTING.md', 'docs/CONTRIBUTING.md', '.github/CONTRIBUTING.md',\n\
+  \  ]}},\n\
+  \  # https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file\n\
+  \  {name = 'SECURITY.md', position = {kind = 'exact', paths = [\n\
+  \    'SECURITY.md', 'docs/SECURITY.md', '.github/SECURITY.md',\n\
+  \  ]}},\n\
+  \  # https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project\n\
+  \  {name = 'CODE_OF_CONDUCT.md', position = {kind = 'exact', paths = [\n\
+  \    'CODE_OF_CONDUCT.md', 'docs/CODE_OF_CONDUCT.md', '.github/CODE_OF_CONDUCT.md',\n\
+  \  ]}},\n\
+  \  # https://neovim.io/doc/user/starting.html#init.lua\n\
+  \  {name = 'init.lua', position = {kind = 'exact', paths = ['init.lua']}},\n\
   \]\n"
 
 compdb :: String

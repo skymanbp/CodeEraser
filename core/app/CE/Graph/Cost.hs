@@ -147,9 +147,13 @@ assetKind = 3
 -- stylesheet, a script, an image. The references the graph cannot
 -- read (a stylesheet's url(), a script's fetch, a manifest's icons)
 -- are exactly what bit 4 stands for, so it lands there alone: alive
--- by references the ladder does not read, never a candidate.
+-- by references the ladder does not read, never a candidate. Role 10
+-- (9.1.0, lane v235_licence) is a tool convention — a file a tool
+-- finds by where it sits (the definition package's
+-- `flags.entry_conventions`) — and lands on the entry bit as a
+-- declared target does.
 roleBits :: [(Integer, Integer)]
-roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2), (8, 1), (9, 4)]
+roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2), (8, 1), (9, 4), (10, 1)]
 -- | The dead-row confidence (H3, 2.32.0): how far the dead node's
 -- OWN language can vouch for its verdict, judged from the request's
 -- per-language site ledger [[lang, unresolvedSites, totalSites]].

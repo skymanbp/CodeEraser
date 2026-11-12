@@ -51,7 +51,8 @@ owned!(
     crate::flow::spec::FlowSpec,
     crate::merge::slot::SlotSpec,
     crate::graph::spec::Specifier,
-    crate::scan::spec::NameStyle
+    crate::scan::spec::NameStyle,
+    crate::graph::deadcode::Position
 );
 
 leaked! {
@@ -92,8 +93,10 @@ leaked! {
              doc_line_cap: usize }
     /// The resolver configuration names and the TypeScript twins.
     Keys { config_names: Names, twin_exts: Rows }
-    /// The entry-file names and directories.
-    Flags { entry_names: Names, entry_dirs: Rows }
+    /// One tool convention: its name and where its file sits.
+    Convention { name: Text, position: crate::graph::deadcode::Position }
+    /// The entry-file names and directories, and the tool conventions.
+    Flags { entry_names: Names, entry_dirs: Rows, entry_conventions: &'static [Convention] }
     /// The tombstone reading's vocabularies and numbers, and the site
     /// kinds' names by wire code.
     Tombstone { negations: Names, keywords: Names, en_prefix: Names, en_suffix: Names,

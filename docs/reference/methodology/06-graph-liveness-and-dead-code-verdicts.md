@@ -304,8 +304,7 @@ wrong-width row now refuses by row index rather than as a mixed table. The Rust 
 ```
 role 0  base ∈ {main.rs, build.rs, main.go, __main__.py, Main.hs, main.c,
         main.cc, main.cpp, Main.java, main.lua, conf.lua, app.R, ui.R,
-        server.R, global.R, index.html, 404.html}, or init.lua at the
-        root                                                        [flags.rs:66-81, 88-90]
+        server.R, global.R, index.html, 404.html}                   [flags.rs:71-84, 91-93]
 role 1  path starts with an entry directory: src/bin/ examples/ benches/
         cmd/ (every language); Neovim's plugin/ ftplugin/ indent/ syntax/
         colors/ compiler/ ftdetect/ lsp/ after/ (Lua); an R package's
@@ -333,11 +332,21 @@ role 9  a walked asset: a file the index holds no parse of, named
         by a page's src / href / link (a stylesheet, a script, an
         image) — the node table marks it by construction and it is
         sent ALONE, no other role measured on it                  [nodes.rs:20-29, 69-77; flags.rs:42-49; deadcode.rs:326-328, 347-348]
+role 10 a tool convention: a file a tool finds by where it sits, one
+        row per convention in the core's flags.entry_conventions, as
+        its tool's documentation states it — basename package-info.java,
+        vitest.config.{ts,mts,cts,js,mjs,cjs}, setup.py, conf.py
+        (Sphinx); under the FIRST app/ segment with no later _ segment,
+        page.tsx / layout.tsx / route.ts (Next.js); exact paths
+        {,docs/,.github/}CONTRIBUTING.md (without case),
+        SECURITY.md and CODE_OF_CONDUCT.md; and Neovim's init.lua at
+        the root (part 4A: the eight conventions generation 1 of the
+        dead-file exam passed, docs/EVAL-SET-DEADFILE.md §3)         [flags.rs:50-53, 94-96; convention.rs:11-75; Graph.hs entry_conventions]
 ```
 
 ([flags.rs:24-49](../../../cli/src/graph/deadcode/flags.rs#L24),
 [flags.rs:83-116](../../../cli/src/graph/deadcode/flags.rs#L83)). The role→bit landing is the
-core's data: roles 0, 1, 6 and 8 (7.2.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, role 7
+core's data: roles 0, 1, 6, 8 (7.2.0) and 10 (9.1.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has — and role 9 (7.2.0,
 plan v2.30 step 5) alone on bit 4, the dyn-referenced bit, which had no producer before: the

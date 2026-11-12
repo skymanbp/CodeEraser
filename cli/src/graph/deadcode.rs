@@ -29,11 +29,13 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod advisory;
+mod convention;
 mod document;
 mod flags;
 mod targets;
 
 pub use advisory::{Advised, Named};
+pub use convention::Position;
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;

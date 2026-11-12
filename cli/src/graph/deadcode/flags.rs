@@ -47,10 +47,14 @@ const ROLE_UNIT: i64 = 1 << 8;
 /// cannot read — a stylesheet's `url()`, a script's fetch, a
 /// manifest's icons — keep it alive, so it is never a candidate.
 pub(super) const ROLE_ASSET: i64 = 1 << 9;
+/// A tool convention's file (lane v235_licence, part 4A): a file a tool
+/// finds by where it sits (convention.rs, the core's rows). The core
+/// lands it on the entry bit (roleBits row 10, 9.1.0).
+const ROLE_CONVENTION: i64 = 1 << 10;
 /// Each role's name, by bit position (ROLE_ENTRY_NAMED bit 0 …
-/// ROLE_ASSET bit 9) — the word the query family labels a node's role
-/// with (query::legend).
-pub(crate) const ROLE_NAMES: [&str; 10] = [
+/// ROLE_CONVENTION bit 10) — the word the query family labels a node's
+/// role with (query::legend), so every face names one reason.
+pub(crate) const ROLE_NAMES: [&str; 11] = [
     "entry_named",
     "entry_dir",
     "test",
@@ -61,6 +65,7 @@ pub(crate) const ROLE_NAMES: [&str; 10] = [
     "foreign",
     "unit",
     "asset",
+    "convention",
 ];
 
 /// Files a runtime or a build starts by their own name, which nothing
@@ -71,10 +76,8 @@ pub(crate) const ROLE_NAMES: [&str; 10] = [
 /// reads from an app directory (`app.R`, or `ui.R` and `server.R`, and
 /// `global.R`), and the pages a web server serves by name — a
 /// directory's `index.html`, the not-found page `404.html` (plan v2.30
-/// step 5). Neovim's `init.lua` is one only at the root, where a
-/// config keeps it: anywhere else the name is a module's own file
-/// (`require "a"` reads `a/init.lua`), which the graph reaches.
-/// The names are the core's since plan v2.32 step 2 (CE.Lang.Common.Graph
+/// step 5). Neovim's root `init.lua` is a tool convention since part 4A
+/// (convention.rs). The names are the core's since plan v2.32 step 2 (CE.Lang.Common.Graph
 /// `flags.entry_names`, read off `tables/1`).
 fn entry_names() -> &'static [&'static str] {
     crate::tables::get().flags.entry_names
@@ -85,8 +88,11 @@ fn entry_names() -> &'static [&'static str] {
 pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: &Declared) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut r = 0i64;
-    if listed(entry_names(), base) || path == "init.lua" {
+    if listed(entry_names(), base) {
         r |= ROLE_ENTRY_NAMED;
+    }
+    if super::convention::conventional(path) {
+        r |= ROLE_CONVENTION;
     }
     // one table with the compile database's coverage (compdb_find.rs)
     if crate::graph::compdb_find::is_unit(base) {

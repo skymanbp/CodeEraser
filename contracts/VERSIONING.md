@@ -7,6 +7,10 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 7.2.0 止；7.1.0–6.0.0 已于 2026-11-11 逐字节迁入 [VERSIONING-ARCHIVE-6.0-7.1.md](VERSIONING-ARCHIVE-6.0-7.1.md)（守卫车道的 9.1.0 同版加性段落下后正册读 747 行，判决车道的三条同版注记再进来就过 750 行硬线），5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **9.1.0 同版加性**（工具约定入口，车道 v235_licence 第 4A 部分，2026-11-12；方法学册 06 角色表 role 10；9.1.0 未发布，同上不另升版号）：`graph/1` 节点行的角色列加第 10 位——工具约定（测量侧 `ROLE_CONVENTION = 1 << 10`，`cli/src/graph/deadcode/convention.rs` 按定义包读路径），
+> 核 `CE.Graph.Cost.roleBits` 加第十一行 `(10, 1)`，落在入口位；请求不带该位时判决逐字节同前。定义包 `flags` 加 `entry_conventions`（死文件考题第一代过关的八条工具约定与仓根 `init.lua`，每行一个名字与一个位置：`basename` / `under` / `exact`），hello 的 `tablesDigest` 随之变。
+> golden：`tables/golden` 的定义包与各族 hello 的摘要随定义包重生成，别的应答不动。
+
 > **9.1.0 同版加性**（重复写入类的搬移工序，v2.35 守卫车道，2026-11-10；方法学册 11 重复写入段；9.1.0 未发布，同上不另升版号）：新能力 `relocate/1`——
 > 不是新家族，是重复写入类的一道工序（与 `candidates/1` 等前段同列，不计进家族数）。请求 `rows` `[[occHead, occNow]]`：探针的每条匹配一行，钩子在 HEAD 与写入留下的那棵树里
 > 数出那段 token 的出现次数（`occNow` 含这次写入自己的一份，为 0 按名拒绝；负数按名拒绝；行数上限 `CE.Relocate.Cost.relocateRowCap` 4,096，超了答一份完整的降级应答、一行都不信用）；

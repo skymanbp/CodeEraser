@@ -74,7 +74,7 @@ agg      := ('count' | 'min' | 'max' | 'sum') '(' Var (',' Var)* ':' body ')'
 | `node(N, K)` `file(F)` | node, sym | 图结点表 + 散文文件；K = `file` / `pkg` / `section` / `asset` / `prose`，`file` 是 kind `file` 的视图 |
 | `in_dir(N, D)` `dir(D)` `parent(D, P)` `dir_name(D, "name")` | node, dir, sym | 目录树；`parent(0, _)` 无行 |
 | `lang(F, L)` | node, sym | 文件形结点的 `Lang::name`，无语言认领 = `unknown` |
-| `role(N, R)` | node, sym | 角色位每位一行：`entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` |
+| `role(N, R)` | node, sym | 角色位每位一行：`entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` / `convention` |
 | `lines(F, N)` | node, int | 文件行数（引用到才读） |
 | `ref(N, M, K, R)` `unresolved(F, N)` | node, node, sym, int | 解出的引用边（import / doc_link / doc_ref / asset / contain / refdef，rung）；External / Unresolved 无边，`unresolved` 按文件计未解析站点数 |
 | `unit(U, F)` `unit_kind(U, K)` `unit_lines(U, N)` `unit_at(U, L)` | unit, node, sym, int | 单元表（请求内稠密 id，序 = 文件、起行、末行、键、nth）；kind = `fn` / `named` / `impl` / `section` |
