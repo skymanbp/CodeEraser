@@ -16,7 +16,7 @@
 -- because both read one cell recurrence (`candidates` + `choose`),
 -- and the traceback only re-walks it (MergeProps holds the mapping a
 -- valid Tai mapping whose cost is the distance).
-module CE.Clone.Ted (Tree (..), ted, tedMapping) where
+module CE.Clone.Ted (Tree (..), Span (..), keyroots, spanOf, ted, tedMapping) where
 
 import Control.Monad (forM_, when)
 import Control.Monad.ST (ST, runST)

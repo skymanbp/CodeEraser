@@ -36,13 +36,17 @@ use std::collections::{BTreeSet, HashMap, HashSet};
 /// 2 (plan v2.35 C1): the core's label-sequence bound decides most
 /// non-clones without a distance, so a pair the previous form stored
 /// with a distance is a NULL row now; the old rows are emptied by name,
-/// never read under the new meaning.
-const CACHE_REV: i64 = 2;
+/// never read under the new meaning. 3 (plan v2.35 C7a): the core
+/// computes a surviving pair's distance only inside the clone band, so
+/// a pair whose distance passes the ceiling has no score row either; a
+/// row generation 2 stored with a distance and bit 0 is a NULL row now.
+const CACHE_REV: i64 = 3;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one wipe
-/// lifecycle). `ted` NULL = one of the core's admissible bounds (size,
-/// label, label sequence) proved the pair not a clone: no score row and
-/// no bit, remembered as such.
+/// lifecycle). `ted` NULL = the core proved the pair not a clone without
+/// a distance — one of its admissible bounds (size, label, label
+/// sequence) or the banded distance passing the ceiling: no score row
+/// and no bit, remembered as such.
 pub const T3TED_SCHEMA: &str = "
 CREATE TABLE t3ted (
   ka INTEGER NOT NULL, kb INTEGER NOT NULL,
@@ -54,7 +58,8 @@ CREATE TABLE t3ted (
 /// One remembered outcome in the slot's (ka, kb) order.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Row {
-    /// One of the core's admissible bounds proved the pair not a clone.
+    /// The core proved the pair not a clone without a distance (a bound,
+    /// or the banded distance passing the ceiling).
     Below { na: i64, nb: i64 },
     /// The core scored it: ted, the two sizes, its verdict bit.
     Scored {

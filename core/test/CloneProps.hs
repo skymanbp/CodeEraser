@@ -19,6 +19,7 @@ import CE.Clone.Prefilter (histo, provablyBelow)
 import CE.Clone.Sequence (preorder)
 import CE.Clone.Ted (Tree (..), ted)
 import qualified CloneSeqProps
+import qualified CloneWithinProps
 import Data.Aeson (Value, decodeStrict, encode, object, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
 import Data.Array.Unboxed (listArray)
@@ -64,8 +65,9 @@ battery = do
   i <- decideLegs teds
   j <- CloneSeqProps.battery toTree fam
   k <- workLegs
+  l <- CloneWithinProps.battery toTree fam
   putStrLn ("     clone family: maxN " <> show maxN <> ", trees " <> show (length fam))
-  pure (a && b && c && d && e && f && g && h && i && j && k)
+  pure (a && b && c && d && e && f && g && h && i && j && k && l)
 
 -- | The work ceiling (plan v2.35 C3): seventeen 128-node chains, so a
 -- pair weighs 128² = 16,384 and workCap / 16,384 pairs sit exactly on

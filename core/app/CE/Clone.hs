@@ -10,7 +10,8 @@
 -- (lab/lld lengths, lld range, postorder reconstructibility,
 -- non-negative labels, in-range strictly ascending pairs) — then
 -- judge: the three admissible bounds first (size, label, label
--- sequence), Zhang-Shasha TED for the rest. Raw ted and sizes cross
+-- sequence), Zhang-Shasha TED inside the clone band for the rest
+-- (C7a). Raw ted and sizes cross
 -- the wire, never a ratio, and since ADR-008 P1 each score row
 -- carries the OWNER's verdict bit (Cost.cloneDecides): the reported
 -- set is the core's decision, relayed by Rust, never re-derived there.
@@ -29,7 +30,8 @@ module CE.Clone (WireTree (..), decodeTree, respond, treeShape) where
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap, workCap)
 import CE.Clone.Prefilter (cloneCeiling, histo, provablyBelowH)
 import CE.Clone.Sequence (preorder, sequenceOver)
-import CE.Clone.Ted (Tree (..), ted)
+import CE.Clone.Ted (Tree (..))
+import CE.Clone.Within (tedWithin)
 import CE.Wire (Family (..), Respond, label, respondWith, resultLine, rowCheck, tableOffence, tooLarge)
 import qualified CE.Wire.Families as F
 import Data.Aeson
@@ -173,18 +175,20 @@ decideRow = rowCheck "decide" "malformed row (need [ted,n1,n2])" 3 checks
 -- (CE.Clone.Prefilter), then the label-sequence bound
 -- (CE.Clone.Sequence, plan v2.35 C1: the sequence distance exceeds the
 -- clone ceiling) — so such a pair has no row and no bit and is counted
--- prefiltered; the rest get exact Zhang-Shasha. Score rows carry raw
--- ted and sizes, each paired with the owner's verdict (ADR-008 P1).
--- Since C1 a non-clone carries a distance only when no bound decided
--- it; every clone keeps its exact distance.
+-- prefiltered; the rest get Zhang-Shasha inside the band the ceiling
+-- allows (CE.Clone.Within, C7a), and a pair whose distance passes the
+-- ceiling is prefiltered too. Score rows carry raw ted and sizes, each
+-- paired with the owner's verdict (ADR-008 P1). Since C7a a score row
+-- is a pair with an exact distance at most the ceiling; every clone
+-- keeps its exact distance.
 judge :: [Tree] -> [[Int]] -> ([([Integer], Bool)], Int, Int)
 judge trees ps = foldr step ([], 0, 0) ps
  where
   arr = IM.fromList (zip [0 ..] trees)
   step [i, j] (rows, judged, pre)
     | provablyBelowH (tSize a, tHisto a) (tSize b, tHisto b) = (rows, judged, pre + 1)
-    | sequenceOver (cloneCeiling (max (tSize a) (tSize b))) a b = (rows, judged, pre + 1)
-    | otherwise =
+    | sequenceOver k a b = (rows, judged, pre + 1)
+    | Just d <- tedWithin k a b =
         ( ( [fromIntegral i, fromIntegral j, d, size a, size b]
           , cloneDecides d (size a) (size b)
           )
@@ -192,9 +196,10 @@ judge trees ps = foldr step ([], 0, 0) ps
         , judged + 1
         , pre
         )
+    | otherwise = (rows, judged, pre + 1)
    where
     (a, b) = (arr IM.! i, arr IM.! j)
-    d = ted a b
+    k = cloneCeiling (max (tSize a) (tSize b))
     size = fromIntegral . tSize
   step _ acc = acc -- unreachable: pair shape validated upstream
 
