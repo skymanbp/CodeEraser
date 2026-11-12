@@ -452,6 +452,7 @@ dependencies = [
  "globset",
  "ignore",
  "interprocess",
+ "libc",
  "rusqlite",
  "serde",
  "serde_json",

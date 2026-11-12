@@ -21,10 +21,14 @@ pub(super) const RETRY_DELAY: Duration = Duration::from_millis(100);
 /// reply together. DAEMON.md recorded the asymmetry in so many words
 /// — the daemon bounds its peers and its core, and the CLIENT alone
 /// read forever, so a wedged daemon parked a PreToolUse hook
-/// indefinitely. Default 75 s = the daemon's own 60 s core deadline
-/// plus margin: the slowest legitimate reply is a four_class batch
-/// waiting on ce-core, and a client deadline under the server's
-/// would convert healthy slow judgments into false hangs.
+/// indefinitely. The 75 s is the client's own bound, wall time on
+/// purpose: it answers how long a tool call may wait on the daemon,
+/// not whether the daemon's core is wedged. That question the daemon's
+/// core link answers by the core's progress (corelink/watch.rs), so a
+/// starved core that works may outlast this bound; the hook then takes
+/// its degraded road and the Stop audit judges the change later. 75
+/// was chosen as the old 60 s core reply deadline plus margin, which
+/// is how long a hook has been allowed to wait since.
 const CLIENT_DEADLINE: Duration = Duration::from_secs(75);
 
 fn deadline_from_env() -> Duration {

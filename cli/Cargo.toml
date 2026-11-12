@@ -91,4 +91,12 @@ strip = true
 proptest = "1.11.0"
 
 [target."cfg(windows)".dependencies]
-windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_IO"] }
+# Win32_System_Threading: GetProcessTimes, the core's CPU clock
+# (corelink/cputime.rs)
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_IO", "Win32_System_Threading"] }
+
+# the core's CPU clock on Linux (sysconf's tick rate) and macOS
+# (proc_pid_rusage), corelink/cputime.rs — already in both lockfiles
+# transitively, so no new build node
+[target.'cfg(any(target_os = "linux", target_os = "macos"))'.dependencies]
+libc = "0.2.189"

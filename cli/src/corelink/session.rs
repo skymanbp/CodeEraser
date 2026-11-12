@@ -7,15 +7,30 @@
 //! request's id, or the id-less `too_large` of a line the core would not
 //! read) leaves it whole, the core being stateless per request.
 
-use super::{Hello, HelloReply, PROTO, pipe};
+use super::watch::{self, Sample, Verdict, Watch};
+use super::{Hello, HelloReply, PROTO, cputime, pipe};
 use serde_json::Value;
 use std::io::Write;
-use std::process::Child;
+use std::process::{Child, ChildStdin};
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::mpsc::{Receiver, RecvTimeoutError, channel};
+use std::time::{Duration, Instant};
+
+/// How often an open exchange is read by the rule (watch.rs). A reply or
+/// the writer's end wakes the wait at once; the tick only bounds how late
+/// a stall or an overspend is seen.
+const TICK: Duration = Duration::from_millis(250);
+
+/// Request bytes per write, each counted once it is handed to the pipe:
+/// a core that drains a large request shows progress while it reads.
+const CHUNK: usize = 64 * 1024;
 
 pub(super) struct Session {
     child: Child,
-    replies: std::sync::mpsc::Receiver<std::io::Result<String>>,
-    deadline: std::time::Duration,
+    replies: Receiver<std::io::Result<String>>,
+    /// The rule's S and B (watch.rs), read once per session.
+    stall: Duration,
+    budget: Duration,
     /// The hello the core answered: its capabilities and its own proto
     /// (what a verdict replayed from a cache was judged under,
     /// dedup/t3/cache.rs), handed to every link that takes the session.
@@ -34,7 +49,8 @@ impl Session {
         let mut session = Session {
             child,
             replies,
-            deadline: pipe::deadline(),
+            stall: watch::stall(),
+            budget: watch::budget(),
             hello: HelloReply::default(),
             key,
             broken: false,
@@ -97,12 +113,58 @@ impl Session {
     }
 
     /// One line out and one line back; a failure either way breaks the
-    /// session. `waiting` names the line for the deadline's message.
+    /// session. `waiting` names the line for the rule's message.
     fn exchange(&mut self, line: &str, waiting: &str) -> Result<String, String> {
-        let got = self
-            .send(line)
-            .and_then(|()| pipe::next_line(&self.replies, self.deadline, &mut self.child, waiting));
+        let got = self.watched(line, waiting);
         self.broken |= got.is_err();
+        got
+    }
+
+    /// The line is written on a scoped writer thread, chunk by chunk,
+    /// while this thread waits for the reply and then for the writer's
+    /// end, reading the rule (watch.rs) every tick over both. Every way
+    /// out but a reply kills the core (reaped, so a wedge holds neither
+    /// the exe nor a process): its pipe closes, the writer's blocked
+    /// write fails and the scope joins it. A core that answers before it
+    /// read the whole line is watched by the same rule until it does.
+    fn watched(&mut self, line: &str, waiting: &str) -> Result<String, String> {
+        let mut stdin = self.child.stdin.take().ok_or("no stdin pipe")?;
+        let written = AtomicU64::new(0);
+        let total = line.len() as u64 + 1;
+        let (done_tx, done) = channel();
+        let Session {
+            child,
+            replies,
+            stall,
+            budget,
+            ..
+        } = self;
+        let first = Sample {
+            at: Duration::ZERO,
+            bytes: 0,
+            cpu: cputime::cpu_time(child),
+        };
+        let mut open = Open {
+            child,
+            watch: Watch::new(*stall, *budget, first),
+            start: Instant::now(),
+            written: &written,
+            total,
+            waiting,
+        };
+        let (pipe_in, count) = (&mut stdin, &written);
+        let got = std::thread::scope(|scope| {
+            // the sender moves in, so the writer's end hangs the channel up
+            scope.spawn(move || done_tx.send(write_counted(pipe_in, line, count)));
+            let got = open
+                .until(|| reply(replies, &done))
+                .and_then(|line| open.until(|| written_out(&done)).map(|()| line));
+            if got.is_err() {
+                open.kill();
+            }
+            got
+        });
+        self.child.stdin = Some(stdin);
         got
     }
 
@@ -111,12 +173,87 @@ impl Session {
     pub(super) fn pid(&self) -> u32 {
         self.child.id()
     }
+}
 
-    fn send(&mut self, line: &str) -> Result<(), String> {
-        let stdin = self.child.stdin.as_mut().ok_or("no stdin pipe")?;
-        writeln!(stdin, "{line}").map_err(|e| format!("write: {e}"))?;
-        stdin.flush().map_err(|e| format!("flush: {e}"))
+/// One exchange in flight: the core, the rule over it and what it reads.
+struct Open<'a> {
+    child: &'a mut Child,
+    watch: Watch,
+    start: Instant,
+    written: &'a AtomicU64,
+    total: u64,
+    waiting: &'a str,
+}
+
+impl Open<'_> {
+    /// Poll until `poll` answers, reading the rule after every tick it
+    /// does not; a verdict that is not `Wait` kills the core and names
+    /// its clause.
+    fn until<T>(
+        &mut self,
+        mut poll: impl FnMut() -> Option<Result<T, String>>,
+    ) -> Result<T, String> {
+        loop {
+            if let Some(got) = poll() {
+                return got;
+            }
+            let now = Sample {
+                at: self.start.elapsed(),
+                bytes: self.written.load(Ordering::Relaxed),
+                cpu: cputime::cpu_time(self.child),
+            };
+            match self.watch.step(now) {
+                Verdict::Wait => {}
+                verdict => {
+                    self.kill();
+                    return Err(self.watch.explain(verdict, self.total, self.waiting));
+                }
+            }
+        }
     }
+
+    fn kill(&mut self) {
+        let _ = self.child.kill();
+        let _ = self.child.wait();
+    }
+}
+
+/// The reply, within one tick: a line, a read error, the core gone, or a
+/// write that failed first (the writer's end, read without waiting).
+fn reply(
+    replies: &Receiver<std::io::Result<String>>,
+    done: &Receiver<Result<(), String>>,
+) -> Option<Result<String, String>> {
+    match replies.recv_timeout(TICK) {
+        Ok(Ok(line)) => Some(Ok(line)),
+        Ok(Err(e)) => Some(Err(format!("read: {e}"))),
+        Err(RecvTimeoutError::Disconnected) => Some(Err("core closed the pipe".into())),
+        Err(RecvTimeoutError::Timeout) => match done.try_recv() {
+            Ok(Err(e)) => Some(Err(e)),
+            _ => None,
+        },
+    }
+}
+
+/// The writer's end, within one tick; a writer whose end was already
+/// read in `reply` has hung up, which is its end too.
+fn written_out(done: &Receiver<Result<(), String>>) -> Option<Result<(), String>> {
+    match done.recv_timeout(TICK) {
+        Ok(end) => Some(end),
+        Err(RecvTimeoutError::Disconnected) => Some(Ok(())),
+        Err(RecvTimeoutError::Timeout) => None,
+    }
+}
+
+/// The line and its newline, `CHUNK` bytes per write, each counted once
+/// the pipe took it.
+fn write_counted(stdin: &mut ChildStdin, line: &str, written: &AtomicU64) -> Result<(), String> {
+    let newline: &[u8] = b"\n";
+    for chunk in line.as_bytes().chunks(CHUNK).chain([newline]) {
+        stdin.write_all(chunk).map_err(|e| format!("write: {e}"))?;
+        written.fetch_add(chunk.len() as u64, Ordering::Relaxed);
+    }
+    stdin.flush().map_err(|e| format!("flush: {e}"))
 }
 
 impl Drop for Session {

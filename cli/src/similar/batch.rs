@@ -10,11 +10,11 @@
 //! larger than a ceiling goes alone (past the item ceiling or the line it
 //! meets the core's named refusal; past the planning bytes it is
 //! answered). The ask happens before any of the batch's transactions
-//! begins, and each file
-//! is then written whole in walk order (Index::write_file: the old bags
-//! retired before the unitsig rows are replaced, the new ones seated
-//! after, only net-nonzero terms moving `df`, store.rs) — so a failed ask
-//! writes none of its batch, and no file is committed without its bags.
+//! begins, and each file is then written whole in walk order
+//! (Index::write_file: the old bags retired before the unitsig rows are
+//! replaced, the new ones seated after, only net-nonzero terms moving
+//! `df`, store.rs) — so a failed ask writes none of its batch, and no
+//! file is committed without its bags.
 //! A file with no units (a grammarless language, a foreign file) asks
 //! nothing but still waits its turn: the files are written in walk order
 //! exactly as before, so every row id comes out as it did. A batch also

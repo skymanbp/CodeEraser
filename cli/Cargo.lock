@@ -185,6 +185,7 @@ dependencies = [
  "globset",
  "ignore",
  "interprocess",
+ "libc",
  "proptest",
  "rusqlite",
  "serde",

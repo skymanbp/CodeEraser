@@ -75,9 +75,16 @@
   - **每连接静默期限**：hello 前 **5 s**、hello 后 **60 s**
     （`server/idle.rs`）。与 §1 的 4 KiB 未认证行长上限是同一道门的
     两个量纲：字节管一行多长，秒管一行多久不来。
-  - **daemon → ce-core 应答期限**：默认 **60 s**，可由
-    `CE_CORE_DEADLINE_SECS` 覆盖；超时**杀掉**该 core 进程而非等它
-    （`corelink/pipe.rs`）。core 单行应答上限 **256 MiB**（协议一行的两倍，2026-10-13 起；此前 64 MiB），超限按同一条
+  - **daemon → ce-core 一次往返的活性规则**（v2.35 阶段 D，`corelink/watch.rs`）：一次往返从请求的
+    第一个字节开到应答行到达，写与读同受一条规则看管，进展信号三个——已交给管道的请求字节数、
+    核进程的 CPU 时间（`corelink/cputime.rs`）、应答本身。**停滞**：连续 S 秒墙钟里字节数与 CPU
+    时间都没动，杀；S 默认 **60 s**，`CE_CORE_DEADLINE_SECS` 覆盖。**超支**：核在这一次往返上花了
+    超过 B CPU 秒，杀；B 默认 **600 s**，`CE_CORE_CPU_BUDGET_SECS` 覆盖——这是给空转的核设的兜底，
+    不是性能线（取值依据见源码注释：2026-11-12 实测最大一条请求 4.5 CPU 秒）。其余一律等：
+    在算的核哪怕机器满载、墙钟走多久都不杀；读不到 CPU 时钟时只认字节数，错误文本点名这一点。
+    此前是「应答行 60 s 墙钟期限」，满载机器上杀过正在算的核，且请求的写入不受看管（写不进去的
+    核会把写方永远挂住）。被杀时报错点名条款、读数与对应变量；核进程被收割而非等它。
+    core 单行应答上限 **256 MiB**（协议一行的两倍，2026-10-13 起；此前 64 MiB），超限按同一条
     降级路处理——这是**客户端自己的帧上限**，与核各族的 `*_too_large`
     是两回事：后者是核判自己算不动，前者是客户端拒绝读下去。
   - **core 重启预算（7.0.0，O63）**：开链失败或帧丢了（写读失败、超时、
@@ -88,10 +95,11 @@
     恢复后的首份 classify 报告带 `recovered: <失败次数>`（feed 0.10.0 的
     `fourclass` 加性键）。退避窗口内该状态经报文的 `degraded` 字段可见；
     那条 stderr 提示在懒启动的 daemon 上写进空句柄，不是可依赖的通道。
-  - **客户端 → daemon 整场对话期限**：默认 **75 s**（daemon 自己的
-    60 s core 期限加余量——最慢的合法应答是等核的 four_class 批，客户端
-    期限短于服务端会把健康的慢判决误读成挂死），`CE_CLIENT_DEADLINE_SECS`
-    覆盖。K 步 10 兑现审计 #85 的「1.0 后再议」：此前三边只有这一边
+  - **客户端 → daemon 整场对话期限**：默认 **75 s**，`CE_CLIENT_DEADLINE_SECS`
+    覆盖。这是客户端自己的界，故意用墙钟：它回答的是「一次工具调用最多等多久」，
+    不是「核卡死没有」——后者由上面的活性规则按核的进展回答，所以在算的核在
+    满载机器上可以比这个界活得久，钩子此时走降级路、由 Stop 审计稍后判同一次改动。
+    75 当初取自旧的 60 s 核应答期限加余量，此后一直是钩子能等的时长。K 步 10 兑现审计 #85 的「1.0 后再议」：此前三边只有这一边
     没期限，卡死的 daemon 把 PreToolUse 钩子无限期挂住。实现是工人线程
     持连接、主线程限时收（interprocess <!--ce:tool:interprocess#v-->2.4.3<!--/ce-->——`cli/Cargo.toml` 的要求，两份锁文件今解析为 2.4.4，两版间上游只改文档——对命名管道无读超时 API，
     仅有弃用的 PIPE_NOWAIT 轮询）。超时后主线程**拆除**工人（L 轮步 #14
@@ -168,6 +176,6 @@ cd cli && cargo test --test it daemon_proto::        # 形状漂移门
 cd cli && cargo test --test it daemon_e2e::          # 生命周期+凭证门+界读（daemon_auth 已并入）
 cd cli && cargo test --release --lib -- daemon::     # 凭证落盘/staleness/常数时间 单元层
 cd cli && cargo test --test it concurrent_writers::  # v1.7 收敛契约
-cd cli && cargo test --test corelink_deadline        # §2 core 应答期限：不应答的核被收割（独占二进制：改进程 env）
+cd cli && cargo test --test corelink_deadline        # §2 活性规则：不应答 / 不读请求的核被收割、空转的核超支被杀、在算的核被等（独占二进制：改进程 env）
 cd cli && cargo test --test daemon_conn_deadline     # §2 每连接静默期限 + 连接槽上限（独占二进制：64 静默 peer 须同窗）
 ```

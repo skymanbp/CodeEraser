@@ -1,33 +1,25 @@
 //! The core link's READ side: a reader thread feeds a channel so the
-//! reply wait can carry a deadline. `read_line` on the child's stdout
-//! was unbounded — a wedged core held the daemon (and every hook
-//! queued behind its serial accept loop) forever, and the idle
-//! watchdog could not help because activity is stamped BEFORE
-//! dispatch (2026-08-19 review, finding 20). The write side stays
-//! direct: request lines are far below the pipe buffer, so a blocked
-//! write needs a core that stopped draining mid-handshake — the read
-//! deadline reaps exactly that core one reply later.
+//! reply wait can be watched. `read_line` on the child's stdout was
+//! unbounded — a wedged core held the daemon (and every hook queued
+//! behind its serial accept loop) forever, and the idle watchdog could
+//! not help because activity is stamped BEFORE dispatch (2026-08-19
+//! review, finding 20). The write side is watched too: a request line
+//! can be far larger than the pipe buffer (18,052,044 B measured, plan
+//! v2.35 phase D), so a core that stops draining holds the writer, and
+//! session.rs writes from its own thread under the same rule (watch.rs).
 
 use std::io::{BufRead, BufReader, Read};
-use std::process::{Child, ChildStdout};
-use std::sync::mpsc::{Receiver, RecvTimeoutError, channel};
-use std::time::Duration;
-
-/// Hard ceiling for ONE reply line, not a budget: every measured
-/// judgment answers in single-digit seconds even cold (PERF-BUDGET),
-/// so anything past this is a wedge, never work.
-pub(super) fn deadline() -> Duration {
-    crate::config::env_secs("CE_CORE_DEADLINE_SECS", 60)
-}
+use std::process::ChildStdout;
+use std::sync::mpsc::{Receiver, channel};
 
 /// Byte ceiling for ONE reply line — a MEMORY bound, deliberately
 /// twice the protocol's line (core/app/CE/Protocol/Version.hs::maxLineBytes,
 /// the `limits.caps.line_bytes` the core states), so no in-contract reply
 /// is ever cut short; a unit leg reads the tables golden and holds the
-/// two together. The deadline alone did not bound the pump: a
+/// two together. The liveness rule alone did not bound the pump: a
 /// core emitting an endless newline-free line grew the String for the
-/// whole deadline window, unbounded, while `next_line` sat waiting
-/// for a message that could not arrive (2026-08-20 protocol review).
+/// whole wait, unbounded, while the waiter sat waiting for a message
+/// that could not arrive (2026-08-20 protocol review).
 const MAX_REPLY_BYTES: u64 = 256 * 1024 * 1024;
 
 /// Pump the child's stdout into a channel, line by line. EOF ends the
@@ -74,33 +66,6 @@ fn pump<R: Read + Send + 'static>(src: R, cap: u64) -> Receiver<std::io::Result<
         }
     });
     rx
-}
-
-/// One reply line within the deadline. On timeout the core is REAPED
-/// here — kill then wait, so a wedge cannot hold the exe (Windows
-/// file lock) or leak a process — and the caller sees an Err, which
-/// every family already treats as its degraded path (A9f). `waiting`
-/// names what was asked (the request kind and its line's bytes, plan
-/// v2.35 C5), so a deadline on one oversized request reads as that,
-/// not as a wedge; the variable that sets the wait is named beside it.
-pub(super) fn next_line(
-    rx: &Receiver<std::io::Result<String>>,
-    deadline: Duration,
-    child: &mut Child,
-    waiting: &str,
-) -> Result<String, String> {
-    match rx.recv_timeout(deadline) {
-        Ok(Ok(line)) => Ok(line),
-        Ok(Err(e)) => Err(format!("read: {e}")),
-        Err(RecvTimeoutError::Disconnected) => Err("core closed the pipe".into()),
-        Err(RecvTimeoutError::Timeout) => {
-            let _ = child.kill();
-            let _ = child.wait();
-            Err(format!(
-                "core reply deadline exceeded ({deadline:?}) waiting on {waiting} — core killed (CE_CORE_DEADLINE_SECS sets the wait)"
-            ))
-        }
-    }
 }
 
 #[cfg(test)]

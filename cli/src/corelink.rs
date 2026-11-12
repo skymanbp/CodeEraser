@@ -8,10 +8,12 @@
 //! it back, hello and all — every family a command judges with rides
 //! one core process.
 
+mod cputime;
 pub mod judged;
 mod pipe;
 mod session;
 mod shared;
+mod watch;
 
 pub use shared::{locate, release};
 
@@ -72,9 +74,10 @@ pub struct HelloReply {
 }
 
 /// A handle on one core session (session.rs) past its accepted hello.
-/// Replies arrive via pipe::reader's channel so every wait carries a
-/// deadline — an unbounded read_line let a wedged core hold the daemon
-/// and every hook behind it forever. Dropped, a link parks a healthy
+/// Replies arrive via pipe::reader's channel so every exchange is watched
+/// (watch.rs: a core that makes no progress, or spends past its CPU
+/// budget, is killed) — an unbounded read_line let a wedged core hold the
+/// daemon and every hook behind it forever. Dropped, a link parks a healthy
 /// session for the process's next `open` (shared.rs) unless it was
 /// opened `own`; a broken session ends.
 pub struct Link {
@@ -149,7 +152,7 @@ impl Link {
     }
 
     /// Whether the last failed `request` lost the session's framing (a
-    /// write or read that failed, a deadline, a reply that does not
+    /// write or read that failed, a stall or an overspend, a reply that does not
     /// parse, a desync) rather than meeting the core's refusal: the
     /// error text is the same either way, so a reader that keys a retry
     /// budget or a link's life on the failure asks here after an `Err`.
