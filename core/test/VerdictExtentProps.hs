@@ -92,7 +92,7 @@ bounded (i, t) = maybe False (\r -> rTenths r >= 0 && rTenths r <= 10 * rL r) (v
 
 -- | One file of nineteen one-line functions at the primes 17 .. 97
 -- over a ceiling of 15: E = sum (1 - 15 / p), its reduced denominator
--- the product of the primes (about 2^94). No churn rides.
+-- the product of the primes (106 bits). No churn rides.
 wide :: Bool
 wide = numerator e > 2 ^ (64 :: Int) && agrees (0, t)
  where

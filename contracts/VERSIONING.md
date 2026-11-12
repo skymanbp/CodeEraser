@@ -7,7 +7,7 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 7.2.0 止；7.1.0–6.0.0 已于 2026-11-11 逐字节迁入 [VERSIONING-ARCHIVE-6.0-7.1.md](VERSIONING-ARCHIVE-6.0-7.1.md)（守卫车道的 9.1.0 同版加性段落下后正册读 747 行，判决车道的三条同版注记再进来就过 750 行硬线），5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
-> **10.0.0**（破坏性 major，评分改为行数定律，车道 v235_score，2026-11-12；方法学册 05、计划书 v2.35 评分修正案）：`verdict/1` 的分数改读
+> **10.0.0**（破坏性 major，评分改为范围律，车道 v235_score，2026-11-12；方法学册 05、计划书 v2.35 评分修正案）：`verdict/1` 的分数改读
 > 「被某条发现点名的行占全部行的比例」：score = ⌊scale·(1 − k·E/L)⌋，每文件 E_f = min(行数, max(点名行 T, 行数 − S, 变动超额))。请求必带四张表，缺任何一张按名拒绝
 > （「extent: contSpans, dupSpans, refLines and proseLines ride on every request」）：`contSpans` `[[文件, 起行, 止行]]` 与 `continuous` 逐行对齐（宇宙外的行文件为 −1，非函数行起止为 0）、
 > `dupSpans` `[[文件, 起行, 止行, 种类]]` 每个已核实对的两侧成员（同文件对也算，种类 0 / 1 克隆、2 文档重复）、`refLines` `[[源文件, 目标文件, 行]]` 每条判过的弧（含自弧，
