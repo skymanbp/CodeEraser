@@ -139,7 +139,7 @@ Every source funnels through one walk that canonicalizes and gates ([Sources.hs:
 
 ### Caps and the degraded reply
 
-Three ceilings, owned by `CE.Clone.Cost`; since plan v2.33 W3 the measuring side reads both off the definition package (`limits.clone`, [wire.rs:1-6](../../../cli/src/dedup/t3/wire.rs#L1)) instead of keeping a mirror:
+Three ceilings, owned by `CE.Clone.Cost`; since plan v2.33 W3 the measuring side reads them off the definition package (`limits.clone`, [wire.rs:1-6](../../../cli/src/dedup/t3/wire.rs#L1)) instead of keeping a mirror:
 
 | constant | value | owner |
 |---|---|---|
