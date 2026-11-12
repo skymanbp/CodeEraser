@@ -216,7 +216,7 @@ category word has none of the exempt bits 0..10 (bit 11, a Rust `cfg` naming no 
 is rendered but never exempts) — the mask reads the
 visibility word, the exemptions read the category word, and the two never cross
 ([Advisory.hs:62-71](../../../core/app/CE/Graph/Advisory.hs#L62),
-[Cost.hs:207-208](../../../core/app/CE/Graph/Cost.hs#L207), [Cost.hs:221-222](../../../core/app/CE/Graph/Cost.hs#L221)).
+[Cost.hs:211-212](../../../core/app/CE/Graph/Cost.hs#L211), [Cost.hs:225-226](../../../core/app/CE/Graph/Cost.hs#L225)).
 The code is a frozen total order `1 > 2 > 3 > 0`: **1 private** when the file has at
 least one mount, every mount is a private `mod` and no façade re-exports it, or the
 package keeps it private; **2 restricted** on visibility bit 2; **3 reexported** on mounts
@@ -239,8 +239,8 @@ the same with or without them ([VERSIONING-ARCHIVE-6.0-7.1.md:115-117](../../../
 Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the advisory; the
 seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
 `merge`, `query`) pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:84-87](../../../cli/src/graph/deadcode.rs#L84),
-[deadcode.rs:257-263](../../../cli/src/graph/deadcode.rs#L257)). The reply is consumed once:
+([deadcode.rs:86-89](../../../cli/src/graph/deadcode.rs#L86),
+[deadcode.rs:259-265](../../../cli/src/graph/deadcode.rs#L259)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1871 (2130 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 222 signed) | haskell | 7681 (1737) | 1183 (2) | 15.4 % | 198 / 1183 = 16.7 % | 198 / 6498 |
-| | | rust | 3559 (1950) | 339 (5) | 9.5 % | 2 / 339 = 0.6 % | 2 / 3188 |
+| self @ this commit | 1886 (2146 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 223 signed) | haskell | 7681 (1737) | 1183 (2) | 15.4 % | 198 / 1183 = 16.7 % | 198 / 6498 |
+| | | rust | 3565 (1953) | 339 (5) | 9.5 % | 2 / 339 = 0.6 % | 2 / 3194 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

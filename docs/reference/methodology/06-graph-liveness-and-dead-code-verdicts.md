@@ -185,7 +185,7 @@ are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
 reference definition's in-scope target, which resolves and travels as an edge while the core
 excludes it from liveness beside the asset kind
-([wire.rs:27-36](../../../cli/src/graph/wire.rs#L27), [Cost.hs:170-177](../../../core/app/CE/Graph/Cost.hs#L170)); granularity
+([wire.rs:27-36](../../../cli/src/graph/wire.rs#L27), [Cost.hs:174-181](../../../core/app/CE/Graph/Cost.hs#L174)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
 ([wire.rs:44-47](../../../cli/src/graph/wire.rs#L44)).
 
@@ -204,11 +204,11 @@ Two transformations happen on the way to the wire:
    must not keep its target alive (user decision D3); since 2.20.0 every edge kind travels and the
    exclusion is the core's own rule — `assetKind`
    ([Cost.hs:118-126](../../../core/app/CE/Graph/Cost.hs#L118)) since 2.20.0, `refdefKind`
-   ([Cost.hs:170-177](../../../core/app/CE/Graph/Cost.hs#L170)) since 2.29.0 — the two riding one
+   ([Cost.hs:174-181](../../../core/app/CE/Graph/Cost.hs#L174)) since 2.29.0 — the two riding one
    inert list into the same comprehension as the rung filter
    ([Graph.hs:133](../../../core/app/CE/Graph.hs#L133), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
-   ([deadcode.rs:292-303](../../../cli/src/graph/deadcode.rs#L292)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:296-299,310](../../../cli/src/graph/deadcode.rs#L296)).
+   ([deadcode.rs:294-305](../../../cli/src/graph/deadcode.rs#L294)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:298-301,310](../../../cli/src/graph/deadcode.rs#L298)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory — or, for a package whose code its manifest declares (an R package's `DESCRIPTION`,
    plan v2.30 step 4: the `Collate` files, else the files directly in `R/`), to that code alone,
@@ -254,7 +254,7 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:59-79](../../../core/app/CE/Graph.hs#L59)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:521-535](../../../cli/src/graph/deadcode.rs#L521)) and `ce deadcode --check` relays the
+([deadcode.rs:523-537](../../../cli/src/graph/deadcode.rs#L523)) and `ce deadcode --check` relays the
 core's fail bit ([Lines.hs:60-61](../../../core/app/CE/Graph/Lines.hs#L60), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
 
 ### 5. Kept arcs and liveness
@@ -290,11 +290,11 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 ([Cost.hs:93-96](../../../core/app/CE/Graph/Cost.hs#L93)).
 
 Only file nodes carry entry facts; section and package rows get `0`
-([deadcode.rs:322-355](../../../cli/src/graph/deadcode.rs#L322)). Since proto **2.28.0**
+([deadcode.rs:324-357](../../../cli/src/graph/deadcode.rs#L324)). Since proto **2.28.0**
 (batch-7 slice 3 main body) the node row's last column carries **role facts** — the third and
-last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:354](../../../cli/src/graph/deadcode.rs#L354)) — and the
+last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:356](../../../cli/src/graph/deadcode.rs#L356)) — and the
 category membership Rust used to fuse into the flags column is decided by the core's
-**role table** `roleBits` ([Graph/Cost.hs:151-152](../../../core/app/CE/Graph/Cost.hs#L151)):
+**role table** `roleBits` ([Graph/Cost.hs:155-156](../../../core/app/CE/Graph/Cost.hs#L155)):
 the row's entry bits derive through `deriveFlags`
 ([Dead.hs:76-78](../../../core/app/CE/Graph/Dead.hs#L76), applied at
 [Graph.hs:156-158](../../../core/app/CE/Graph.hs#L156)). Until 5.0.0 a legacy flags
@@ -345,14 +345,14 @@ role 10 a tool convention: a file a tool finds by where it sits, one
 ```
 
 ([flags.rs:24-49](../../../cli/src/graph/deadcode/flags.rs#L24),
-[flags.rs:83-116](../../../cli/src/graph/deadcode/flags.rs#L83)). The role→bit landing is the
+[flags.rs:86-119](../../../cli/src/graph/deadcode/flags.rs#L86)). The role→bit landing is the
 core's data: roles 0, 1, 6, 8 (7.2.0) and 10 (9.1.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has — and role 9 (7.2.0,
 plan v2.30 step 5) alone on bit 4, the dyn-referenced bit, which had no producer before: the
 references the graph cannot read (a stylesheet's `url()`, a script's fetch, a manifest's icons)
 keep an asset alive, so it is never a candidate and never a measured node
-([deadcode.rs:195-197](../../../cli/src/graph/deadcode.rs#L195)). **Role 6 closes
+([deadcode.rs:197-199](../../../cli/src/graph/deadcode.rs#L197)). **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — and, since lane v235_graphtrust, so is every file a manifest
 names as what a runtime or a tool starts: a package.json's `main` / `module` / `types` / `bin` and its
@@ -423,7 +423,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:14-32](../../../core/app/CE/Graph/Position.hs#L14)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:371-374](../../../cli/src/graph/deadcode.rs#L371)).
+([deadcode.rs:373-376](../../../cli/src/graph/deadcode.rs#L373)).
 
 ### 7. The four-way verdict
 
@@ -456,7 +456,7 @@ The names are the core's too since plan v2.32 step 4: the deadcode document
 (`CE.Graph.Document`, laid out over `document/1`) spells a verdict by position — `verdictNames`
 read at `code - 1` ([Document.hs:49-54](../../../core/app/CE/Graph/Document.hs#L49)) — and the
 Rust side, which sends the judgment's rows back as codes, refuses a code past the four as
-wire-version skew, not a panic ([deadcode.rs:447-453](../../../cli/src/graph/deadcode.rs#L447)).
+wire-version skew, not a panic ([deadcode.rs:449-455](../../../cli/src/graph/deadcode.rs#L449)).
 The `why` string is a two-way split on the same axis: codes 1–2 read *"no kept in-edge and no
 entry flag"*, codes 3–4 read *"referenced only from dead code; no entry flag"*
 ([Document.hs:56-59](../../../core/app/CE/Graph/Document.hs#L56), placed at
@@ -470,10 +470,10 @@ the node kind column it always received ([Graph.hs:150-152](../../../core/app/CE
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because `ce erase` builds its dead-file rows from the failing table (rows, not deletions —
 book 12 §2, `reachable_by_name`): an aggregate arriving in `dead` refuses as wire skew, never a directory row
-([deadcode.rs:495-502](../../../cli/src/graph/deadcode.rs#L495)); an absent `fail` bit or
+([deadcode.rs:497-504](../../../cli/src/graph/deadcode.rs#L497)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
-step #15, O62; [deadcode.rs:469-472](../../../cli/src/graph/deadcode.rs#L469)). Both lists, the counts, and
+step #15, O62; [deadcode.rs:471-474](../../../cli/src/graph/deadcode.rs#L471)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document the core lays out
 ([Document.hs:88-104](../../../core/app/CE/Graph/Document.hs#L88)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
@@ -496,7 +496,7 @@ which is a statement about sites, not about use: a file run by its name or found
 convention leaves no site, so a vouched dead file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
-([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:157-172](../../../core/app/CE/Graph/Cost.hs#L157)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:271,277-290](../../../cli/src/graph/deadcode.rs#L271)), fences every returned index and bounds the column ([deadcode.rs:491-508](../../../cli/src/graph/deadcode.rs#L491)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 
