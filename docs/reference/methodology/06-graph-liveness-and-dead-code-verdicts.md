@@ -208,7 +208,7 @@ Two transformations happen on the way to the wire:
    inert list into the same comprehension as the rung filter
    ([Graph.hs:133](../../../core/app/CE/Graph.hs#L133), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
    ([deadcode.rs:294-305](../../../cli/src/graph/deadcode.rs#L294)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:298-301,310](../../../cli/src/graph/deadcode.rs#L298)).
+   is a *named error*, never a panic ([deadcode.rs:298-301,312](../../../cli/src/graph/deadcode.rs#L298)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory — or, for a package whose code its manifest declares (an R package's `DESCRIPTION`,
    plan v2.30 step 4: the `Collate` files, else the files directly in `R/`), to that code alone,
@@ -308,17 +308,17 @@ role 0  base ∈ {main.rs, build.rs, main.go, __main__.py, Main.hs, main.c,
 role 1  path starts with an entry directory: src/bin/ examples/ benches/
         cmd/ (every language); Neovim's plugin/ ftplugin/ indent/ syntax/
         colors/ compiler/ ftdetect/ lsp/ after/ (Lua); an R package's
-        inst/ vignettes/ data-raw/ exec/ demo/ (R)                  [flags.rs:118-143]
+        inst/ vignettes/ data-raw/ exec/ demo/ (R)                  [flags.rs:124-149]
 role 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs, or a
         runner's own test name (the C family's _test, Surefire's .java
         forms, busted's _spec.lua / _test.lua, testthat's test[-_]*.[Rr]), or
-        path starts tests/ or contains /tests/ | /__tests__/        [flags.rs:155-170; name.rs:35-59]
+        path starts tests/ or contains /tests/ | /__tests__/        [flags.rs:161-176; name.rs:35-59]
 role 3  ce.toml [graph] entry_globs hit through the ONE ce.toml glob
         dialect (exclude / class / entry share it): exact path, bare
         basename, dir/ (= dir/**), *.ext, and every pattern as written [globs.rs:33-89]
-role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:104-108]
+role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:110-114]
 role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
-        claims nothing — the docdup exemption discipline)           [flags.rs:145-153]
+        claims nothing — the docdup exemption discipline)           [flags.rs:151-159]
 role 6  a manifest-declared target: Cargo [lib]/[[bin]]/[[example]]/
         [[test]]/[[bench]] paths and conventional targets via
         crate_roots, cabal main-is through each stanza's source
@@ -326,12 +326,12 @@ role 6  a manifest-declared target: Cargo [lib]/[[bin]]/[[example]]/
         pyproject's scripts / gui-scripts / entry-points           [targets.rs:44-80; Cabal.hs:72-84; cabal_find.rs:10-26; Entries.hs:3-27]
 role 7  a declared submodule's node (index `files.owner` = 1; a
         package or section under a foreign file's path), sent ALONE
-        — no other role is measured on a reader                     [flags.rs:31-35; deadcode.rs:323-325, 345-346; nodes.rs:32-93]
-role 8  a C-family compilation unit (.c / .cc / .cpp / .cxx)        [flags.rs:36-41, 91-96]
+        — no other role is measured on a reader                     [flags.rs:31-35; deadcode.rs:325-327, 347-348; nodes.rs:32-93]
+role 8  a C-family compilation unit (.c / .cc / .cpp / .cxx)        [flags.rs:36-41, 97-100]
 role 9  a walked asset: a file the index holds no parse of, named
         by a page's src / href / link (a stylesheet, a script, an
         image) — the node table marks it by construction and it is
-        sent ALONE, no other role measured on it                  [nodes.rs:20-29, 69-77; flags.rs:42-49; deadcode.rs:326-328, 347-348]
+        sent ALONE, no other role measured on it                  [nodes.rs:20-29, 69-77; flags.rs:42-49; deadcode.rs:328-330, 349-350]
 role 10 a tool convention: a file a tool finds by where it sits, one
         row per convention in the core's flags.entry_conventions, as
         its tool's documentation states it — basename package-info.java,
@@ -341,11 +341,11 @@ role 10 a tool convention: a file a tool finds by where it sits, one
         {,docs/,.github/}CONTRIBUTING.md (without case),
         SECURITY.md and CODE_OF_CONDUCT.md; and Neovim's init.lua at
         the root (part 4A: the eight conventions generation 1 of the
-        dead-file exam passed, docs/EVAL-SET-DEADFILE.md §3)         [flags.rs:50-53, 94-96; convention.rs:11-75; Graph.hs entry_conventions]
+        dead-file exam passed, docs/EVAL-SET-DEADFILE.md §3)         [flags.rs:50-53, 94-96; convention.rs:11-76; Graph.hs entry_conventions]
 ```
 
-([flags.rs:24-49](../../../cli/src/graph/deadcode/flags.rs#L24),
-[flags.rs:86-119](../../../cli/src/graph/deadcode/flags.rs#L86)). The role→bit landing is the
+([flags.rs:24-53](../../../cli/src/graph/deadcode/flags.rs#L24),
+[flags.rs:86-122](../../../cli/src/graph/deadcode/flags.rs#L86)). The role→bit landing is the
 core's data: roles 0, 1, 6, 8 (7.2.0) and 10 (9.1.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has — and role 9 (7.2.0,
@@ -496,7 +496,7 @@ which is a statement about sites, not about use: a file run by its name or found
 convention leaves no site, so a vouched dead file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
-([Cost.hs:157-172](../../../core/app/CE/Graph/Cost.hs#L157)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:271,277-290](../../../cli/src/graph/deadcode.rs#L271)), fences every returned index and bounds the column ([deadcode.rs:491-508](../../../cli/src/graph/deadcode.rs#L491)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:157-172](../../../core/app/CE/Graph/Cost.hs#L157)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:271,279-292](../../../cli/src/graph/deadcode.rs#L271)), fences every returned index and bounds the column ([deadcode.rs:491-508](../../../cli/src/graph/deadcode.rs#L491)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 
