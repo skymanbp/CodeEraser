@@ -29,8 +29,8 @@
 -- fd[lld i − l1][lld j − l2] + td[i][j]; every cost is non-negative, so
 -- each operand of the attaining option is itself at most k, hence in
 -- the band by (1) and equal to its banded value by the induction
--- hypothesis (the td operand was written by an earlier pass or an
--- earlier cell of this one); the other options are at least
+-- hypothesis (the td operand, read only on a non-aligned cell, was
+-- written by an earlier pass); the other options are at least
 -- min (their true values, k + 1) by (2). The same holds for td, which
 -- is read off aligned cells. So the root entry is the true distance
 -- when that is at most k, and k + 1 otherwise. ∎
@@ -58,12 +58,12 @@ tedWithin k a b
  where
   cut d = if d <= k then Just (toInteger d) else Nothing
 
--- | Every keyroot pass, banded; the root entry, clamped to k + 1. The
--- tree-distance table is not initialised: an entry is read only when its
--- two subtrees' sizes are within k (`subtree`), and such an entry was
--- written — its own pass runs earlier (the keyroot order `ted` relies on)
--- and its aligned cell, whose widths are those two sizes, lies in that
--- pass's band. The root entry is in band by the guard above.
+-- | Every keyroot pass, banded; the root entry, clamped to k + 1. No
+-- tree-distance entry's initial value is relied on: an entry is read
+-- only when its two subtrees' sizes are within k (`subtree`), and such an
+-- entry was written — its own pass runs earlier (the keyroot order `ted`
+-- relies on) and its aligned cell, whose widths are those two sizes, lies
+-- in that pass's band. The root entry is in band by the guard above.
 banded :: Int -> Tree -> Tree -> ST s Int
 banded k a b = do
   td <- table (tSize a * tSize b)
@@ -77,11 +77,12 @@ data Band s = Band !Int !Span !(STUArray s Int Int)
 
 -- | One forest pass over the band of its rectangle. The forest table
 -- holds a row's band only — 2k + 1 cells, or the whole row when that is
--- narrower; it is not initialised either: every cell a read reaches is in
--- the band (reads outside it answer k + 1 without touching the table), and
--- every in-band cell is written before it is read — the borders up to k
--- first, then the rows in order, each row left to right, and every operand
--- of a cell lies in an earlier row or earlier in the same row.
+-- narrower; no cell's initial value is relied on either: every cell a
+-- read reaches is in the band (reads outside it answer k + 1 without
+-- touching the table), and every in-band cell is written before it is
+-- read — the borders up to k first, then the rows in order, each row left
+-- to right, and every operand of a cell lies in an earlier row or earlier
+-- in the same row.
 bandPass :: Band s -> ST s ()
 bandPass bd@(Band k sp td) = do
   let (w1, w2, n2) = (sW1 sp, sW2 sp, tSize (sB sp))
@@ -149,8 +150,8 @@ layout k w2 = if 2 * k + 1 >= w2 + 1 then (w2 + 1, True) else (2 * k + 1, False)
 at :: (Int, Bool) -> Int -> Int -> Int
 at (width, full) di dj = di * width + (if full then dj else dj - di + (width - 1) `div` 2)
 
--- | An uninitialised table of n cells (also pins the element type
--- `newArray_` alone leaves open); see `banded` and `bandPass` for why no
--- cell is read before it is written.
+-- | A table of n cells whose initial values nothing reads (also pins the
+-- element type `newArray_` alone leaves open); see `banded` and
+-- `bandPass` for why no cell is read before it is written.
 table :: Int -> ST s (STUArray s Int Int)
 table n = newArray_ (0, max 0 (n - 1))
