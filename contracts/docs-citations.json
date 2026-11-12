@@ -4004,6 +4004,7 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|0d4b0b0be629773b|0": {
     "target": "../../../cli/src/graph/load.rs",
     "line": 151,
+    "end": 161,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|21167c49dd173eee|0": {
@@ -4012,16 +4013,10 @@
     "end": 121,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|351ae244131a18de|0": {
-    "target": "../../../cli/src/graph/load.rs",
-    "line": 74,
-    "end": 82,
-    "text": "/// Every path owning at least one unresolved site — the erase"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|a5fe474ab9784b27|0": {
     "target": "../../../cli/src/graph/load.rs",
     "line": 146,
-    "end": 151,
+    "end": 150,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|f7f14ec895bc2f04|0": {
@@ -4031,6 +4026,12 @@
     "text": "/// A site's unresolved ledger rows: one when its OWN answer drew no edge"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|f7f14ec895bc2f04|1": {
+    "target": "../../../cli/src/graph/load.rs",
+    "line": 60,
+    "end": 69,
+    "text": "/// A site's unresolved ledger rows: one when its OWN answer drew no edge"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|f7f14ec895bc2f04|2": {
     "target": "../../../cli/src/graph/load.rs",
     "line": 60,
     "end": 69,
@@ -4138,10 +4139,10 @@
     "end": 55,
     "text": "/// A fixed specifier the node carries as a keyword, not a field:"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|5e7050b33c8c775e|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|25287c32961461db|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 178,
-    "text": "/// `srcset`, `action`, `link_asset`) append to the kinds for files the"
+    "line": 183,
+    "text": "pub const GRAPH_REV: i64 = 27;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|a830951c191a8896|0": {
     "target": "../../../cli/src/graph/store.rs",
@@ -8191,6 +8192,12 @@
     "end": 98,
     "text": "let mut cache = crate::erase::gather::TextCache::new(root);"
   },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|1508de1cc800ade5|0": {
+    "target": "../../../cli/src/erase/apply.rs",
+    "line": 38,
+    "end": 43,
+    "text": "for chunk in per_file(&targets) {"
+  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|3893a7cb095d8018|0": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 102,
@@ -8209,22 +8216,16 @@
     "end": 87,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|444adb2ff5c19379|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|d233d59356805583|0": {
     "target": "../../../cli/src/erase/apply.rs",
-    "line": 16,
-    "end": 35,
-    "text": "use anyhow::{Context, Result, ensure};"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|63dfaddfd6783920|0": {
-    "target": "../../../cli/src/erase/apply.rs",
-    "line": 53,
+    "line": 55,
     "end": 67,
-    "text": "fn preconditions(root: &Path, targets: &[&Row]) -> Result<()> {"
+    "text": "let top = git(&[\"rev-parse\", \"--show-toplevel\"]).context(\"git\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|e180d3a745326c7b|0": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 19,
-    "end": 38,
+    "end": 32,
     "text": "/// Preconditions + writes + audit log. Returns the applied count."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|03b69f6290794c98|0": {
@@ -8413,13 +8414,13 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 95,
-    "end": 101,
+    "end": 98,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 95,
-    "end": 101,
+    "end": 96,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|3": {
@@ -8427,6 +8428,16 @@
     "line": 95,
     "end": 101,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|215b4a8c4d7f725b|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 111,
+    "text": "| conf == 0 = (False, 1)"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|2ef49de7477632d5|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 101,
+    "text": "| otherwise = (False, 7)\n-- a public surface is refused BEFORE the trust fact is weighed: no"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|318f342a0b5d4722|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -8439,6 +8450,11 @@
     "line": 19,
     "end": 21,
     "text": "--                  language-trust fact stays the local count: a twin"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|48f44e6b5c3dc81c|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 100,
+    "text": "| langUnresolved /= 0 = (False, 1)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|4b1f4cc1ca211b65|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -8481,12 +8497,6 @@
     "end": 93,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|98fc97d92b653fca|2": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 92,
-    "end": 93,
-    "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ad3fe900cfbb9e59|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 5,
@@ -8514,7 +8524,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 91,
-    "end": 108,
+    "end": 94,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|2": {
@@ -8524,6 +8534,12 @@
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|3": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 91,
+    "end": 97,
+    "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 91,
     "end": 97,
@@ -8550,11 +8566,6 @@
     "line": 113,
     "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ed64fa1cc784f706|1": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 113,
-    "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 81,
@@ -8564,7 +8575,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 109,
-    "end": 112,
+    "end": 111,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|1": {
@@ -8576,18 +8587,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|fd15edd515b6de47|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 96,
-    "end": 102,
-    "text": "| unitCovered /= 1 = (False, 5)"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|fd15edd515b6de47|1": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 96,
-    "end": 113,
-    "text": "| unitCovered /= 1 = (False, 5)"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|fd15edd515b6de47|2": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 96,
+    "end": 101,
     "text": "| unitCovered /= 1 = (False, 5)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Wire/Retired.hs|e4ae39564b71902b|0": {
