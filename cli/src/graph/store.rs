@@ -139,7 +139,13 @@ pub use crate::graph::owed::{Resolved, each};
 /// ledger (graph/load.rs) counts a site without an edge as unresolved
 /// only when it is not External — every edge re-resolved once so each
 /// site's word is written.
-/// 26 = a star import of a package whose `__all__` is a literal list
+/// 28 = a link to a part of a file is a link to the file (lane
+/// v235_licence, part 4C): a Markdown or HTML site whose answer is a
+/// confirmed section of ANOTHER file draws one `also` edge to that file
+/// beside its section edge (the core's CE.Resolve.Answer `holderOf`) —
+/// stored edges of Markdown and HTML sources change, every edge
+/// re-resolved once.
+/// 26 =a star import of a package whose `__all__` is a literal list
 /// imports the submodules it names (`also` edges; the walk reads each
 /// `__init__.py`'s `__all__` into the request and the resolve key), and
 /// one whose `__all__` no literal reads carries one more unresolved
@@ -180,7 +186,7 @@ pub use crate::graph::owed::{Resolved, each};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 27;
+pub const GRAPH_REV: i64 = 28;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

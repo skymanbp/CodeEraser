@@ -181,7 +181,7 @@ test-suite ce-core-test
                       CE.Resolve.Cargo, CE.Resolve.RsTree, CE.Resolve.RsSurface, CE.Resolve.Rs,
                       CE.Resolve.Lower, CE.Resolve.Url, CE.Resolve.Md,
                       CE.Resolve.HtmlHead, CE.Resolve.Html,
-                      ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ReferenceHtml, ReferenceHtmlGen, ResolveProps, ResolvePyAlsoProps,
+                      ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ReferenceHtml, ReferenceHtmlGen, ResolveProps, ResolvePyAlsoProps, ResolveHolderProps,
                       Reference, ReferenceGraph, ReferenceQuery, ReferenceQueryGen, QueryReferenceProps, QueryProps, ReferencePack, PackProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps, FlowLiveProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps, ReferenceMergeGen, ReferenceMerge, MergeReferenceProps,

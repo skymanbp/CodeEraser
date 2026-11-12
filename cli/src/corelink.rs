@@ -28,7 +28,10 @@ use std::process::{Child, Stdio};
 /// four tables contSpans / dupSpans / refLines / proseLines
 /// (score::located), the retired knob codes (thresholds 0, ceilings 3)
 /// are refused, the reply's axes are own shares and `extent` carries E
-/// and L. Every other family's bytes stand.
+/// and L. Same version, lane v235_licence part 4C: resolve/1's `also`
+/// also names, for a Markdown or HTML site whose answer is a confirmed
+/// section of another file, that file (CE.Resolve.Answer `holderOf`).
+/// Every other family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted

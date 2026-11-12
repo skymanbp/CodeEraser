@@ -15,8 +15,11 @@ module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 -- dupSpans / refLines / proseLines are required, thresholds code 0
 -- (deadIndegCeil) and ceilings code 3 (sizePMax) are refused by name,
 -- the 9.1.0 docOwners table is no longer read, the reply's `axes` are
--- each axis's own share and `extent` carries E and L. Every other
--- family answers as before.
+-- each axis's own share and `extent` carries E and L. Same version,
+-- lane v235_licence part 4C: resolve/1's `also` also names, for a
+-- Markdown or HTML site whose answer is a confirmed section of another
+-- file, that file (CE.Resolve.Answer `holderOf`). Every other family
+-- answers as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the

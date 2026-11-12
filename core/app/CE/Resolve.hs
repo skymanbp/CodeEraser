@@ -16,10 +16,12 @@
 -- External classification. A reply row per site, `[rung, outcome,
 -- target, reason]`, is exactly what the measuring side's outcome
 -- carried, a Markdown section's slug (null: an anchor not confirmed)
--- beside it in `sections` as `[row, slug]`, a Python site's other
--- references (its ancestor packages, its imported submodules,
--- CE.Resolve.PyAlso; proto 9.1.0) in `also` as `[row, target, rung]`
--- from the names `py.names` carries; the C family's forced
+-- beside it in `sections` as `[row, slug]`, a site's other references
+-- in `also` as `[row, target, rung]` (proto 9.1.0) — a Python site's
+-- ancestor packages and imported submodules (CE.Resolve.PyAlso, from the
+-- names `py.names` carries), a Markdown or HTML site's file holding the
+-- confirmed section of another file its answer names (CE.Resolve.Answer
+-- `holderOf`); the C family's forced
 -- includes (`-include x.h`) ride beside them as `[unit, header]` path
 -- pairs. A response file the expansion
 -- names and the request did not carry is `wanted` (the measuring side
@@ -155,18 +157,20 @@ siteOf (w, rq) (py, descs, cabals) (env, ix) (ts, rs) = one
    where
     from = pathOf w (sFrom s)
 
--- | The `also` rows (proto 9.1.0): each Python site's other references
--- beside its answer, `[row, target, rung]` in (row, target) order, read
--- with the names `py.names` gives it — or, for a star import, the
--- literal names its package's `__all__` lists (`py.all`, `starNames`);
--- none while the answers wait.
+-- | The `also` rows (proto 9.1.0): each site's other references beside
+-- its answer, `[row, target, rung]` in (row, target) order, each site read
+-- once — a Python site's with the names `py.names` gives it, or, for a
+-- star import, the literal names its package's `__all__` lists (`py.all`,
+-- `starNames`); any other site's the file holding the confirmed section
+-- its answer names (`holderOf`, part 4C); none while the answers wait.
 alsoTable :: World -> Maybe PyProject -> (ResolveReq, PyMaps) -> [Answer] -> [(Int, String, Int)]
 alsoTable w py (rq, (named, alls)) answers =
-  [ (i, t, r)
-  | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers
-  , sLang s == langPy && sKind s /= kindDynamic
-  , (t, r) <- alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault (fst (star alls s a)) i named) a
-  ]
+  [(i, t, r) | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers, (t, r) <- alsoOf i s a]
+ where
+  alsoOf i s a
+    | sLang s /= langPy = holderOf (pathOf w (sFrom s)) a
+    | sKind s == kindDynamic = []
+    | otherwise = alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault (fst (star alls s a)) i named) a
 
 -- | A request's `py.names` by site and `py.all` by path, built once.
 type PyMaps = (M.Map Int [String], M.Map String ([String], Bool))

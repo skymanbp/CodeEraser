@@ -1,16 +1,20 @@
 //! The reply's per-site extras of resolve/1 (proto 9.1.0, lane
-//! v235_graphtrust): the `also` rows a Python site draws beside its
-//! answer and the `opaque` star-import sites, each read strictly and
-//! refused by name when absent or out of shape (moved out of mod.rs at
-//! the E01 300-line line).
+//! v235_graphtrust): the `also` rows a site draws beside its answer — a
+//! Python site's ancestor packages and imported submodules, a Markdown or
+//! HTML site's file holding the confirmed section of another file its
+//! answer names (lane v235_licence, part 4C) — and the `opaque`
+//! star-import sites, each read strictly and refused by name when absent
+//! or out of shape (moved out of mod.rs at the E01 300-line line).
 
 use crate::corelink::judged;
 use crate::graph::ladder::{Also, Outcome, Rung};
 use serde_json::Value;
 
 /// The reply's `also` table (proto 9.1.0) by site: `[site, target,
-/// rung]` strictly ascending by (site, target), never the site's own
-/// answer. An absent table is a core that predates it — refused by name,
+/// rung]` strictly ascending by (site, target), never a file answer's own
+/// path (a section answer's holder row names its file: the section is
+/// the answer, the file one more reference). An absent table is a core
+/// that predates it — refused by name,
 /// since reading it as empty would quietly drop the edges it carries.
 pub(super) fn also_rows(reply: &Value, out: &[Outcome]) -> Result<Vec<Also>, String> {
     if reply.get("also").is_none() {

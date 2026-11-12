@@ -17,6 +17,7 @@ module CE.Resolve.Answer (
   oneOf,
   firstOf,
   answerRow,
+  holderOf,
 ) where
 
 import CE.Resolve.Cost
@@ -60,6 +61,17 @@ firstOf :: [Maybe Answer] -> Answer -> Answer
 firstOf rungs fallback = case [a | Just a <- rungs] of
   (a : _) -> a
   [] -> fallback
+
+-- | A site whose answer is a confirmed section of ANOTHER file also
+-- references that file (lane v235_licence, part 4C): one `also` row
+-- `(target, rung)` at the answer's rung, the answer itself untouched. None
+-- for a section of the linking file `from` itself (a page pointing into
+-- itself is referenced by nothing), none for an unconfirmed fragment (its
+-- answer is already the file), none for an inert answer.
+holderOf :: String -> Answer -> [(String, Int)]
+holderOf from a = case a of
+  ASection target (Just _) r | target /= from -> [(target, r)]
+  _ -> []
 
 answerRow :: Answer -> Value
 answerRow a = toJSON $ case a of

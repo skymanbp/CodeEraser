@@ -159,8 +159,9 @@ pub struct Site<'a> {
 }
 
 /// A site's other references beside its answer — the core's `also` rows
-/// (`(target, rung)` in target order; CE.Resolve.PyAlso, proto 9.1.0) —
-/// and whether the core holds one more unresolved ledger row against
+/// (`(target, rung)` in target order, proto 9.1.0: a Python site's from
+/// CE.Resolve.PyAlso, a Markdown or HTML site's section holder from
+/// CE.Resolve.Answer `holderOf`) — and whether the core holds one more unresolved ledger row against
 /// the site (`opaque`: a star import of a package whose `__all__` no
 /// literal reads, lane v235_graphtrust).
 #[derive(Clone, Debug, Default, PartialEq)]

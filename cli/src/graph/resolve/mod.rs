@@ -12,8 +12,10 @@
 //! document, a Rust file's syntax tree), and maps each reply row back to
 //! the ladder's `Outcome`, so the edge store, deadcode, `ce graph
 //! --sites` and the precision documents read the answers they always
-//! read — a Python site's `also` rows (its ancestor packages and imported
-//! submodules, proto 9.1.0) ride beside its answer as more edges; a
+//! read — a site's `also` rows (proto 9.1.0: a Python site's ancestor
+//! packages and imported submodules, a Markdown or HTML site's file
+//! holding the confirmed section of another file its answer names) ride
+//! beside its answer as more edges; a
 //! batch with Markdown or HTML sites carries what this side read of the
 //! documents up front (markdown.rs: anchor sets, reference tables,
 //! the walked assets, each page's head facts and id set), so it asks no
