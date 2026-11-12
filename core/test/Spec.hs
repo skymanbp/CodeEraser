@@ -204,11 +204,18 @@ batteries =
        , DocumentProps4.battery
        , DocumentProps5.battery
        , DocumentProps6.battery
-       , ResolveProps.battery
-       , ResolvePyAlsoProps.battery
-       , ResolveHolderProps.battery
-       , SpellProps.battery
        ]
+    <> resolveBatteries
+
+-- | The resolve family's batteries and the last one, in the order they
+-- ran inside `batteries` (split off under the 75-line function line).
+resolveBatteries :: [IO Bool]
+resolveBatteries =
+  [ ResolveProps.battery
+  , ResolvePyAlsoProps.battery
+  , ResolveHolderProps.battery
+  , SpellProps.battery
+  ]
 
 -- | One named check through the shared runner.
 check :: String -> Bool -> IO Bool
