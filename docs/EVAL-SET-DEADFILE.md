@@ -341,8 +341,8 @@ Same under all readings?
 
 The agreed outcomes (an outcome ships only when `k1` / `k1_strict` and population A / B agree):
 
-- code: owner question: the readings differ (ships: false)
-- document: FAILING (ships: true)
+- code: owner question: the readings differ (readings agree: false)
+- document: FAILING (readings agree: true)
 
 ## Outcome
 
