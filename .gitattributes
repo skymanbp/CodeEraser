@@ -96,3 +96,7 @@ contracts/eval/deadfile-answers-v1/** -text
 contracts/eval/deadfile-answers2-v1/** -text
 contracts/eval/deadfile-settlement-v1.json -text
 contracts/eval/deadfile-convention-docs-v1.json -text
+# Generation 2's record (part 4B): the bars and the design they measure,
+# the main session's bytes, pinned by sha256 in it/eval_deadfile_gen2.rs.
+contracts/eval/deadfile-gen2-bars-v1.md -text
+contracts/eval/deadfile-gen2-design-v1.md -text
