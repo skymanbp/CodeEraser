@@ -44,21 +44,13 @@ import qualified CE.Trend.Cost as Trend
 import qualified CE.Verdict.Cost as Verdict
 import CE.Verdict.Knobs (defaultsEcho)
 import Data.Aeson (Value, object, (.=))
+import Data.Aeson.Types (Pair)
 import Data.Ratio (denominator, numerator)
 
 limits :: Value
 limits =
   object
-    [ "clone"
-        .= object
-          [ "tsed_num" .= Clone.tsedNum
-          , "tsed_den" .= Clone.tsedDen
-          , "min_unit_nodes" .= Clone.minUnitNodes
-          , "unit_node_cap" .= Clone.unitNodeCap
-          , "pair_cap" .= Clone.pairCap
-          -- plan v2.35 C3: the per-request work ceiling, Σ n1·n2 over a request's pairs
-          , "work_cap" .= (Clone.workCap :: Integer)
-          ]
+    [ "clone" .= object (cloneJudgment <> clonePlan)
     , "candidates"
         .= object
           [ "unit_cap" .= Candidates.candidateUnitCap
@@ -88,6 +80,21 @@ limits =
     ]
  where
   (perms, bands, rows) = Candidates.lshShape
+
+-- | The clone object, in its two halves. What the T3 judgment decides by:
+-- the similarity threshold as a ratio and the smallest unit it judges —
+-- the same three a clone reply's verdicts follow from.
+cloneJudgment :: [Pair]
+cloneJudgment =
+  ["tsed_num" .= Clone.tsedNum, "tsed_den" .= Clone.tsedDen, "min_unit_nodes" .= Clone.minUnitNodes]
+
+-- | What one clone request is planned under: the largest tree it may carry,
+-- its pair count and its work, Σ n1·n2 over its pairs (plan v2.35 C3) — a
+-- request over any of them is answered degraded, so the measuring side
+-- cuts its requests below all three.
+clonePlan :: [Pair]
+clonePlan =
+  ["unit_node_cap" .= Clone.unitNodeCap, "pair_cap" .= Clone.pairCap, "work_cap" .= Clone.workCap]
 
 -- | The request ceilings the families are planned by.
 caps :: Value
