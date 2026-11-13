@@ -14,7 +14,8 @@
 -- from the request and the document; the core's `{:.1}` is Rust's on
 -- the halfway cases; the golden speaks both languages; and a request
 -- that leaves out a family's optional facts and tables assembles the
--- same document.
+-- same document, but for the keys the dead-file grouping adds (plan
+-- v2.35, 5A: its optional tables add keys and move no other byte).
 module DocumentProps5 (battery) where
 
 import CE.Document (families, respond)
@@ -169,15 +170,38 @@ formatted =
     && [fixed 1 (-1) 1000, fixed 1 1 0, fixed 1 (-1) 0, fixed 1 0 0, fixed 0 5 2, fixed 2 1 3] == ["-0.0", "inf", "-inf", "NaN", "2", "0.33"]
 
 -- | The request without its family's optional facts and tables (the
--- console's alone) is accepted and assembles the same document.
+-- console's alone) is accepted and assembles the same document, the
+-- grouping's added keys taken off the full one.
 idle :: Value -> Bool
-idle r = null names || (isJust (documentOf r') && documentOf r' == documentOf r)
+idle r = null names || (isJust (documentOf r') && documentOf r' == fmap ungrouped (documentOf r))
  where
   names = maybe [] (spOptional . dfSpec) (familyOf r)
   r' = foldr without r ["facts", "rows"]
   without t v = case at v t of
     Just (Object o) -> setKey t (Object (foldr (KM.delete . Key.fromString) o names)) v
     _ -> v
+
+-- | A deadcode document without the keys its grouping adds: `root`
+-- and `under` on the rows, `roots` and `dependents` in the counts,
+-- `under_dropped` at the top.
+ungrouped :: Value -> Value
+ungrouped v = case v of
+  Object o -> Object (KM.mapWithKey field' (KM.delete "under_dropped" o))
+  _ -> v
+ where
+  field' k x
+    | k == "counts" = counts x
+    | k == "dead" = rows x
+    | otherwise = x
+  counts c = case c of
+    Object m -> Object (KM.delete "roots" (KM.delete "dependents" m))
+    _ -> c
+  rows d = case d of
+    Array xs -> Array (fmap row xs)
+    _ -> d
+  row x = case x of
+    Object m -> Object (KM.delete "root" (KM.delete "under" m))
+    _ -> x
 
 optionals :: Value -> Bool
 optionals r = maybe False (not . null . spOptional . dfSpec) (familyOf r)

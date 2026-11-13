@@ -24,7 +24,7 @@ const COUNTS = {
   blocks: ["dedup", /(\d+) clone blocks/],
   near: ["clone", /(\d+) near-miss/],
   docs: ["docdup", /(\d+) duplicate pair/],
-  dead: ["deadcode", /(\d+) dead/],
+  dead: ["deadcode", /(\d+) unreferenced/],
   erase: ["erase", /(\d+) eraseable/],
   applied: ["applied", /erase applied: (\d+) row/],
 };

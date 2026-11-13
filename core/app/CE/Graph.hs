@@ -14,10 +14,11 @@ module CE.Graph (graphTooLarge, respond) where
 import qualified CE.Graph.Advisory as Advisory
 import CE.Graph.Build (Built (..), build, reachFrom)
 import CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation)
-import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategories, exportVisBit, granFile, minRung, mountCap, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap, unmentionedCap, unmentionedHardCap, unmentionedVisMask)
+import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategories, exportVisBit, granFile, minRung, mountCap, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap, underCap, rootStates, unmentionedCap, unmentionedHardCap, unmentionedVisMask)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
+import qualified CE.Graph.Roots as Roots
 import CE.Wire (Family (..), Respond, respondWith, resultLine, tooLarge, tooLargeOf)
 import qualified CE.Wire.Families as F
 import Data.Aeson
@@ -75,7 +76,7 @@ answer proto degraded req =
  where
   none = [] :: [Value]
   (fields, kept)
-    | degraded = (["dead" .= none, "reported" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
+    | degraded = (["dead" .= none, "reported" .= none, "roots" .= none, "under" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
     | otherwise = (judged, bKept b)
   judged =
     [ -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
@@ -103,6 +104,7 @@ answer proto degraded req =
       -- unmentioned/mounts precedent, legacy bytes untouched
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
       <> advisoryKeys req
+      <> groupKeys (Roots.group underCap b reach (map fst deadRows))
   (b, reach, deadRows, reportedRows) = liveness req
   -- the confidence column (2.32.0) on every dead row: the ledger it
   -- reads is required since 9.0.0
@@ -124,6 +126,21 @@ advisoryKeys req = case reqUnmentioned req of
         ["exportUnmentioned" .= ([] :: [Value]), "unmentionedDropped" .= True]
     | otherwise ->
         ["exportUnmentioned" .= Advisory.judge unmentionedVisMask exemptCategories (mountRows req) rows]
+
+-- | The dead files grouped (plan v2.35, the dead-file amendment):
+-- `roots` [node, state] ascending, every state untold until a
+-- comparison point rides (5B; the codes are Cost.rootStates), and
+-- `under` [dependent, root] ascending -- or, past `underCap`, empty
+-- beside `underDropped`, the `unmentionedDropped` shape. The roots
+-- are never dropped.
+groupKeys :: Roots.Grouping -> [Pair]
+groupKeys g =
+  ["roots" .= [[toInteger r, untold] | r <- Roots.gRoots g]]
+    <> case Roots.gUnder g of
+      Just ps -> ["under" .= [[toInteger d, toInteger r] | (d, r) <- ps]]
+      Nothing -> ["under" .= ([] :: [Value]), "underDropped" .= True]
+ where
+  untold = toInteger (length (takeWhile (/= "untold") rootStates))
 
 -- | One build, one reach, the verdicts split by tier: the graph, its
 -- reach set, the file-tier dead rows and the reported aggregates.

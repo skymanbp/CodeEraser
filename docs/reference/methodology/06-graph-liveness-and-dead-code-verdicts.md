@@ -472,11 +472,11 @@ The names are the core's too since plan v2.32 step 4: the deadcode document
 (`CE.Graph.Document`, laid out over `document/1`) spells a verdict by position — `verdictNames`
 read at `code - 1` ([Document.hs:49-54](../../../core/app/CE/Graph/Document.hs#L49)) — and the
 Rust side, which sends the judgment's rows back as codes, refuses a code past the four as
-wire-version skew, not a panic ([deadcode.rs:437-443](../../../cli/src/graph/deadcode.rs#L437)).
+wire-version skew, not a panic ([reply.rs:59-65](../../../cli/src/graph/deadcode/reply.rs#L59)).
 The `why` string is a two-way split on the same axis: codes 1–2 read *"no kept in-edge and no
 entry flag"*, codes 3–4 read *"referenced only from dead code; no entry flag"*
 ([Document.hs:56-59](../../../core/app/CE/Graph/Document.hs#L56), placed at
-[Document.hs:114-119](../../../core/app/CE/Graph/Document.hs#L114)).
+[Document.hs:162-167](../../../core/app/CE/Graph/Document.hs#L162)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
@@ -486,10 +486,10 @@ the node kind column it always received ([Graph.hs:150-152](../../../core/app/CE
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because `ce erase` builds its dead-file rows from the failing table (rows, not deletions —
 book 12 §2, `reachable_by_name`): an aggregate arriving in `dead` refuses as wire skew, never a directory row
-([deadcode.rs:485-492](../../../cli/src/graph/deadcode.rs#L485)); an absent `fail` bit or
+([reply.rs:79-86](../../../cli/src/graph/deadcode/reply.rs#L79)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
-step #15, O62; [deadcode.rs:459-462](../../../cli/src/graph/deadcode.rs#L459)). Both lists, the counts, and
+step #15, O62; [reply.rs:39-42](../../../cli/src/graph/deadcode/reply.rs#L39)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document the core lays out
 ([Document.hs:88-104](../../../core/app/CE/Graph/Document.hs#L88)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
@@ -512,7 +512,7 @@ which is a statement about sites, not about use: a file run by its name or found
 convention leaves no site, so a vouched dead file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
-([Cost.hs:157-172](../../../core/app/CE/Graph/Cost.hs#L157)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:273](../../../cli/src/graph/deadcode.rs#L273), [deadcode.rs:281-294](../../../cli/src/graph/deadcode.rs#L281)), fences every returned index and bounds the column ([deadcode.rs:479-496](../../../cli/src/graph/deadcode.rs#L479)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:157-172](../../../core/app/CE/Graph/Cost.hs#L157)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:273](../../../cli/src/graph/deadcode.rs#L273), [deadcode.rs:281-294](../../../cli/src/graph/deadcode.rs#L281)), fences every returned index and bounds the column ([reply.rs:73-90](../../../cli/src/graph/deadcode/reply.rs#L73)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 
@@ -546,7 +546,7 @@ the resolver cannot choose its own denominator
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
-([Lines.hs:21](../../../core/app/CE/Graph/Lines.hs#L21), [Deadcode.hs:30](../../../core/app/CE/Text/Deadcode.hs#L30)).
+([Lines.hs:21](../../../core/app/CE/Graph/Lines.hs#L21), [Deadcode.hs:35](../../../core/app/CE/Text/Deadcode.hs#L35)).
 
 The six languages plan v2.30 added sit the same exam, each against a blind audit frozen before any
 scoring and registered in [EVAL-SET-LANGS.md](../../EVAL-SET-LANGS.md): the sample is frozen first,

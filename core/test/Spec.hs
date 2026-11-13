@@ -39,6 +39,7 @@ import qualified FlowProps
 import qualified FlowLiveProps
 import qualified GraphWireProps
 import qualified GraphProps
+import qualified GraphRootsProps
 import qualified JoinProps
 import qualified LangProps
 import qualified MergeProps
@@ -197,6 +198,7 @@ judgments =
   , ReferenceJaccard.equivalence
   -- the families' batteries, graph to arch
   , GraphProps.battery
+  , GraphRootsProps.battery
   , GraphWireProps.battery
   , AdvisoryProps.battery
   , CloneProps.battery

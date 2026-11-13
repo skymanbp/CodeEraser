@@ -35,6 +35,10 @@ pub struct Report {
     pub unmentioned_dropped: bool,
     #[serde(default)]
     pub unmentioned_cut: bool,
+    /// The core dropped the dead rows' root pairs over its cap (plan
+    /// v2.35): the roots stand, the dependents carry no roots.
+    #[serde(default)]
+    pub under_dropped: bool,
     /// The core's gate bit (2.18.0).
     #[serde(skip)]
     pub fail: bool,
@@ -55,6 +59,12 @@ pub struct DeadRow {
     pub why_code: usize,
     #[serde(rename = "confidence")]
     pub conf: Option<i64>,
+    /// Under the grouping (plan v2.35): whether the core called it a
+    /// root, and a dependent's roots by name; None when not grouped.
+    #[serde(default)]
+    pub root: Option<bool>,
+    #[serde(default)]
+    pub under: Option<Vec<String>>,
     #[serde(skip)]
     pub code: i64,
 }
@@ -70,6 +80,10 @@ pub struct Reported {
 pub struct Counts {
     pub nodes: usize,
     pub kept_edges: u64,
+    #[serde(default)]
+    pub roots: Option<usize>,
+    #[serde(default)]
+    pub dependents: Option<usize>,
 }
 
 /// One advisory row as the document names it, and the judgment's code

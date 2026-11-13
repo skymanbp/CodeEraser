@@ -45,11 +45,11 @@ docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 
 dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1
 docdup check: 1 reported duplication(s) — resolve or exempt them
 $ ce deadcode . --check
-dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
-dead: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched]
-dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
-deadcode: 12 nodes, 16 kept edges, 3 dead, 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
-deadcode check: 3 dead file(s) — disposition or entry_globs them
+unreferenced: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
+unreferenced: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
+unreferenced: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
+deadcode: 12 nodes, 16 kept edges, 3 unreferenced (3 root(s)), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
+deadcode check: 3 unreferenced file(s) — disposition or entry_globs them
 $ ce erase . --check
 @@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36
 erase plan: 1 eraseable, 4 advisory (dry-run; --apply to act)

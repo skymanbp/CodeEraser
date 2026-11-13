@@ -11,7 +11,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, mountCap, unmentionedCap, unmentionedHardCap, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits, exportVisBit, publicFlagBit, unmentionedVisMask, exemptCategories, restrictedVisBit, reexportMountBit, pkgPrivateMountBit) where
+module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, mountCap, unmentionedCap, unmentionedHardCap, underCap, rootStates, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits, exportVisBit, publicFlagBit, unmentionedVisMask, exemptCategories, restrictedVisBit, reexportMountBit, pkgPrivateMountBit) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -73,6 +73,23 @@ unmentionedCap = 131072
 -- well-formed request never does. Past it => graph_too_large.
 unmentionedHardCap :: Integer
 unmentionedHardCap = 524288
+
+-- | The cap of the dependent -> root pairs (plan v2.35, the dead-file
+-- amendment; CE.Graph.Roots): the work the pairs may cost, counted as
+-- root ids copied along condensation arcs plus pairs written. Past it
+-- the core still answers every root and DROPS the pairs whole
+-- (`underDropped`), as `unmentionedCap` drops its table: the size that
+-- cap has, one row per node of the node cap, and its own literal (one
+-- constant, one ablation target).
+underCap :: Integer
+underCap = 131072
+
+-- | A root's state on the wire's `roots` rows, by code: 0 untold (no
+-- comparison point), 1 standing, 2 orphaned, 3 born (plan v2.35 banner,
+-- the dead-file amendment). Phase 5A answers 0 on every row; the
+-- comparison point that tells the other three arrives with 5B.
+rootStates :: [String]
+rootStates = words "untold standing orphaned born"
 
 -- | Which rungs count as references: an edge resolved at rung
 -- <= minRung is a reference claim. The ladder (resolve/1) never guesses

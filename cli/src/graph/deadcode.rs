@@ -33,6 +33,7 @@ mod convention;
 pub mod cycles;
 mod document;
 mod flags;
+mod reply;
 mod targets;
 
 pub use advisory::{Advised, Named};
@@ -41,13 +42,15 @@ pub use cycles::self_loop_nodes;
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;
+pub use reply::Grouping;
+use reply::consume;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
 use crate::config::Config;
 use crate::dedup;
 use crate::document::Answer;
-use anyhow::{Context, Result, bail, ensure};
+use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -74,6 +77,8 @@ pub struct Judged {
     /// The symbol-level advisory (6.2.0): None when the wire was built
     /// without it (`Advisory::No`); an advisory, never a verdict.
     pub advisory: Option<Advised>,
+    /// The core's roots and dependents of the dead rows (plan v2.35).
+    pub grouping: Grouping,
 }
 
 /// Whether the wire carries the two advisory tables (6.2.0). ONE
@@ -118,7 +123,7 @@ pub fn answer(root: &Path, db: Option<PathBuf>, core: &str, check: bool) -> Resu
 /// The judgment, then its document and lines over the judgment's link.
 fn said(root: &Path, core: &str, w: &GraphWire, check: bool) -> Result<(Answer, Judged)> {
     let (j, _, held) = judged(root, core, w, &[])?;
-    let req = document::request(("deadcode", check), w, &j)?;
+    let req = reply::on_request(document::request(("deadcode", check), w, &j)?, &j.grouping);
     Ok((crate::document::assemble_over(core, held, req)?, j))
 }
 
@@ -429,83 +434,6 @@ pub fn self_loop_rows(w: &GraphWire, loops: &[i64]) -> Vec<i64> {
         .filter(|(_, (n, _))| loops.contains(n))
         .map(|(u, _)| u as i64)
         .collect()
-}
-
-/// One core verdict row's node, the verdict inside the four codes
-/// (CE.Graph.Dead) — shared by the dead and reported tables. A verdict
-/// past them is a wire-version skew, not a panic.
-fn verdict_node(nodes: &[Node], idx: i64, verdict: i64) -> Result<&Node> {
-    let node = usize::try_from(idx)
-        .ok()
-        .and_then(|i| nodes.get(i))
-        .context("index out of range")?;
-    ensure!((1..=4).contains(&verdict), "verdict {verdict} out of range");
-    Ok(node)
-}
-
-/// The reply's rows held at the boundary. `names` is the wire's own
-/// advisory table (None = the road was not asked), read by
-/// advisory::consume.
-fn consume(
-    reply: &Value,
-    nodes: &[Node],
-    names: Option<&crate::mention::Unmentioned>,
-) -> Result<Judged> {
-    // The wire's degraded BIT is authoritative (the C9 read-the-
-    // real-boolean discipline, contracts/VERSIONING.md); reason
-    // is its text, not its signal.
-    let degraded = (reply["degraded"].as_bool() == Some(true))
-        .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
-    // the fail bit is the core's (2.18.0): a missing bit is skew,
-    // refused by name like every other absent key
-    let Some(fail) = reply["fail"].as_bool() else {
-        bail!("{}", crate::corelink::skew("graph/1 `fail`"))
-    };
-    Ok(Judged {
-        advisory: advisory::consume(reply, nodes, names)?,
-        dead: dead_rows(reply, nodes)?,
-        reported: reported_rows(reply, nodes)?,
-        kept: reply["counts"]["kept"].as_i64(),
-        degraded,
-        fail,
-    })
-}
-
-/// The failing table: three columns, the ledger's trust beside each
-/// verdict (2.32.0; request_body always sends `unres`, so the core
-/// always answers the third) — every row fenced to the four codes,
-/// file granularity and 0..2 trust.
-fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<Vec<i64>>> {
-    let rows: Vec<Vec<i64>> = serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
-    for row in &rows {
-        let [idx, verdict, conf] = row[..] else {
-            bail!("dead row of arity {} — wire skew", row.len());
-        };
-        let node = verdict_node(nodes, idx, verdict)?;
-        // The RG9 split is the CORE's since 2.18.0; here it survives
-        // as a boundary contract: this list is what `--check` fails on
-        // and what erase builds its advisory dead-file rows from, so an
-        // aggregate in it is wire skew — a directory is never a verdict.
-        ensure!(
-            node.kind == super::wire::GRAN_FILE,
-            "core dead row {idx} is not file-granularity — wire skew"
-        );
-        ensure!(
-            (0..=2).contains(&conf),
-            "confidence {conf} outside 0..2 — wire skew"
-        );
-    }
-    Ok(rows)
-}
-
-/// The informational table: a mandatory key, its absence skew.
-fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
-    let rows: Vec<[i64; 2]> = serde_json::from_value(reply["reported"].clone())
-        .with_context(|| crate::corelink::skew("graph/1 `reported`"))?;
-    for &[idx, verdict] in &rows {
-        verdict_node(nodes, idx, verdict)?;
-    }
-    Ok(rows)
 }
 
 /// A degraded judgment is a visible event (A9f): one observe-feed
