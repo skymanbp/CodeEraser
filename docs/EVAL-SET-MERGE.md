@@ -351,6 +351,44 @@ Four of the seven moved onto the tool's second-generation reason (`0015619b6dc1`
 `004b88c1e095`, `00768018a7fc`); three moved away from it (`0110f0ec9a0f`, `01172e8d5d80`, `00da78204f7c`) and
 are among the eight reason disagreements above.
 
+## Generation 3
+
+The clone blocks the groups come from changed twice (v2.35 imports lane): the T1/T2 stream gives the import family
+no token (`TOKENIZER_REV` 5: import and load statements, the package clause and the Haskell module header with its
+export list, the module mount, the re-export), and which verified runs are reported is the core's coverage rule
+(`cover/1`). Nothing in the merge family moved; the set was measured again on the same five trees and the sample
+drawn again by the same rule (`eval_merge_parts::GENERATIONS` gains generation 3; the batches take the domain
+`merge-batches-v3`; the reading rules are generation 2's, `"readings": 2`).
+
+- **The frozen set** (`contracts/eval/merge-suggestions-v3.json`):
+
+| corpus | suggestions v2 -> v3 | feasible v2 -> v3 | ok | position | type | spans_statements | too_many_params | no_savings |
+|---|---|---|---|---|---|---|---|---|
+| zod | 22985 -> 22361 | 7030 -> 6837 | 6837 | 2142 | 11660 | 203 | 200 | 1319 |
+| ripgrep | 6385 -> 5374 | 1564 -> 1124 | 1124 | 2131 | 1600 | 136 | 220 | 163 |
+| cobra | 1593 -> 1335 | 596 -> 367 | 367 | 858 | 9 | 26 | 45 | 30 |
+| requests | 138 -> 132 | 71 -> 69 | 69 | 42 | 0 | 11 | 5 | 5 |
+| codeeraser | 576 -> 558 | 60 -> 57 | 57 | 203 | 105 | 68 | 25 | 100 |
+| all | 31677 -> 29760 | 9321 -> 8454 | 8454 | 5376 | 13374 | 444 | 495 | 1617 |
+
+  Member sets in one generation only (v2 / v3): zod 1074 / 450, ripgrep 1307 / 296, cobra 320 / 62, requests
+  12 / 6, codeeraser 22 / 4.
+- **Both rule changes on the self tree, apart** (the CLI road, `ce merge` on the pinned `f2a7a2b4` tree, one
+  build per step, the two middle ones the lane's phase-3A builds; the instrument's road removes `.gitmodules` and reads 576 / 558): main's build 571 rows; with
+  the import family (imports, loads, the module mount and the re-export, not yet the module header) 567 (9 rows
+  only before, 5 only after); with the coverage rule as well 560 (9 / 2: the five periodic `Knobs.hs` rows,
+  `score/wire.rs` / `structure/wire.rs` re-aligned five- and three-member rows into two-member ones,
+  `Axes.hs` / `Score.hs`); with the module header 553 (7 / 0, every one a group whose members began at a
+  module's header or the `LANGUAGE` pragma above it: `Docdup.hs` / `Similar.hs`, three `Cost.hs` groups over
+  their export lists, `FourClass.hs` / `Verdict.hs`, the `AuditProps` / `SplitProps` / `TrendProps` triplet);
+  main to the end, 22 / 4, no row changed in place. No feasible row has savings of zero or less on any of the
+  four builds.
+- **The sample** (`contracts/eval/merge-sample-v3.json`): 100 rows, zod 78, ripgrep 17, cobra 4, codeeraser 1;
+  t3 92, t1t2 8, fragments 8; 94 of its ids are in the second sample.
+- **The blind review and the precision doc** of this generation are owed: they need independent judges
+  (`merge-review-v3.json`, `merge-precision-v3.json`), and until they are filed the gate
+  `eval_merge_review::the_review_scores_when_filed` names them as not filed.
+
 ## Provenance
 
 - The review doc's `generated_from` is the tree it was assembled on: ce 1.8.0, commit `63041c544060b0e599309e73c8a7e347e9c308e2`,
