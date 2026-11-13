@@ -3693,6 +3693,12 @@
     "end": 11,
     "text": "{-# LANGUAGE OverloadedStrings #-}"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|07bfccd0bf37790c|0": {
+    "target": "../../DEVELOPMENT_PLAN.md",
+    "line": 210,
+    "end": 211,
+    "text": "- **离散型违规**（clone 实例；无引用文件的根——只在项目声明了 `[deadcode] block` 时，见横幅 v2.35 死文件修正案）：基线是**违规集合**（指纹标识）；"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|639b01d00d76978c|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 71,
@@ -3703,12 +3709,6 @@
     "line": 204,
     "end": 211,
     "text": "排除：后缀数组（构建不增量）、全仓 pairwise 树编辑、全仓 embedding。"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|a7ab3ad73d6bafe4|0": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 210,
-    "end": 211,
-    "text": "- **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|c751b1ddddd4c7b9|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
