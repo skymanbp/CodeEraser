@@ -21,7 +21,7 @@ pub type KnobTable = Vec<[i64; 2]>;
 pub struct Request {
     pub files: Vec<String>,
     pub sim: Vec<[i64; 5]>,
-    pub pos: Vec<[i64; 6]>,
+    pub pos: Vec<[i64; 5]>,
     pub churn: Vec<[i64; 3]>,
     pub cochange: Vec<[i64; 3]>,
     /// [entity, code, value, classId] — the class column rides the

@@ -15,7 +15,7 @@ import qualified Data.Map.Strict as M
 -- and a classed four-column row take the same patterns.
 data Facts = Facts
   { fPos :: [[Integer]]
-  -- ^ [u,indeg,outdeg,sccId,sccSize,reachIn]
+  -- ^ [u,indeg,sccId,sccSize,reachIn] (10.0.0: graph/1's outdegree is not sent)
   , fChurn :: [[Integer]]
   -- ^ [u,rewrite,append] (3.0.0: the constant added / unmeasured survived left)
   , fCont :: [[Integer]]

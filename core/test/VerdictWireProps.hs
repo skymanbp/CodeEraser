@@ -41,12 +41,12 @@ wireReq sim pos churn coch =
 wSim, wPos, wChurn, wCoch :: [[Integer]]
 wSim = [[0, 1, 1, 90, 100], [2, 3, 1, 90, 100], [4, 5, 2, 85, 100]]
 wPos =
-  [ [0, 1, 0, 0, 1, 1]
-  , [1, 2, 0, 1, 1, 1]
-  , [2, 0, 0, 2, 1, 0]
-  , [3, 1, 0, 3, 1, 1]
-  , [4, 1, 0, 4, 1, 1]
-  , [5, 1, 0, 4, 1, 1]
+  [ [0, 1, 0, 1, 1]
+  , [1, 2, 1, 1, 1]
+  , [2, 0, 2, 1, 0]
+  , [3, 1, 3, 1, 1]
+  , [4, 1, 4, 1, 1]
+  , [5, 1, 4, 1, 1]
   ]
 wChurn = [[4, 30, 10], [5, 30, 10]]
 wCoch = [[4, 5, 3]]
@@ -195,6 +195,11 @@ refusals = and (map knob knobProbes <> shaped)
     [ refused (setKey "discrete" (toJSON [9, 7 :: Integer]) base) "not strictly ascending"
     , refused (setKey "tier" (toJSON [[1, 0 :: Integer]]) base) "index mismatch"
     , refused posReq "unit-tier node"
+    , -- the pos row is five numbers since 10.0.0 (graph/1's outdegree
+      -- is not sent): a six-number row is wire skew, refused by name,
+      -- and a five-number row is judged
+      refused (setKey "pos" (toJSON [[0, 1, 0, 0, 1, 1 :: Integer]]) base) "malformed row (need 5 fields)"
+    , not (refused (setKey "pos" (toJSON [[0, 1, 0, 1, 1 :: Integer]]) base) "malformed row")
     , refused (setKey "weights" (toJSON [[c, 0] | c <- [0 .. 6 :: Integer]]) base) "every axis zeroed"
     , -- the sim domain pair (M5-close review): an out-of-enum kind
       -- and a zero denominator each refuse by name
@@ -240,7 +245,7 @@ refusals = and (map knob knobProbes <> shaped)
     setKey
       "tier"
       (toJSON ([[0, 0], [1, 1], [2, 0], [3, 0], [4, 0], [5, 0]] :: [[Integer]]))
-      (setKey "pos" (toJSON [[1, 0, 0, 0, 1, 0 :: Integer]]) base)
+      (setKey "pos" (toJSON [[1, 0, 0, 1, 0 :: Integer]]) base)
   refused = refusedBy respondV
 
 -- | ADR-008 P1 through the REAL respondV: one node past the cap

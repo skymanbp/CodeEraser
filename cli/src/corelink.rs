@@ -35,6 +35,9 @@ use std::process::{Child, Stdio};
 /// Same version, lane v235_imports: cover/1 (additive), the T1/T2
 /// coverage rule C_t (dedup/pairs/cover.rs sends the verified runs, the
 /// core classes them; at most `limits.caps.cover_rows` rows a request).
+/// Same version, lane v235_cleanup2: verdict/1's `pos` row is
+/// [u, indeg, sccId, sccSize, reachIn] (score::pos_rows); graph/1's
+/// outdegree was never read by the verdict family and is not sent.
 /// Every other family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger

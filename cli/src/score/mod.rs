@@ -96,7 +96,7 @@ struct Measured {
     files: Vec<String>,
     idx: HashMap<String, i64>,
     sim: Vec<[i64; 5]>,
-    pos: Vec<[i64; 6]>,
+    pos: Vec<[i64; 5]>,
     /// The export surface under this universe (6.1.0) — RG10's fact.
     symbols: Vec<[i64; 2]>,
     /// Verdict-universe indices carrying a self-arc (6.4.0, O59) —
@@ -344,14 +344,17 @@ fn judged_positions(
     ))
 }
 
-pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 6]> {
+/// verdict/1's position rows (10.0.0): [u, indeg, sccId, sccSize,
+/// reachIn] off graph/1's reply. The verdict family never read the
+/// outdegree, so it is not sent; graph/1's own row keeps it.
+pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) -> Vec<[i64; 5]> {
     files
         .iter()
         .enumerate()
         .filter_map(|(u, path)| {
-            posmap.get(path).map(|[indeg, outdeg, scc, size, reach]| {
-                [u as i64, *indeg, *outdeg, *scc, *size, *reach]
-            })
+            posmap
+                .get(path)
+                .map(|[indeg, _outdeg, scc, size, reach]| [u as i64, *indeg, *scc, *size, *reach])
         })
         .collect()
 }

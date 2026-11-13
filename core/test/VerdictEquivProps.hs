@@ -101,7 +101,7 @@ capAndRefusal =
  where
   -- three files with a position each, the pair (0, 1) under the given
   -- sim rows
-  pairs sim = request (sim, [[u, 1, 1, u, 1, 1] | u <- [0 .. 2]], [], [], [], [], [], [], 3)
+  pairs sim = request (sim, [[u, 1, u, 1, 1] | u <- [0 .. 2]], [], [], [], [], [], [], 3)
   big = setKey "discrete" (toJSON [0 .. verdictRowCap]) (request ([], [], [], [], [], [], [], [], 1))
   swapped rows = case rows of
     ((u : v : rest) : more) -> (v : u : rest) : more

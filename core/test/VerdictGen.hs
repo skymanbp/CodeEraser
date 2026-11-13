@@ -27,7 +27,7 @@ graphTables :: Integer -> G ([[Integer]], [[Integer]], [[Integer]])
 graphTables n = do
   pairs <- filter (\p -> p `div` n < p `mod` n) <$> subset (n * n)
   sim <- mapM (\p -> (\kind num -> [p `div` n, p `mod` n, kind, num, 100]) <$> int 3 <*> ((+ 70) <$> int 31)) pairs
-  pos <- subset n >>= mapM (\u -> (\i s r -> [u, i, 0, u, s, r]) <$> int 3 <*> ((+ 1) <$> int 3) <*> int 2)
+  pos <- subset n >>= mapM (\u -> (\i s r -> [u, i, u, s, r]) <$> int 3 <*> ((+ 1) <$> int 3) <*> int 2)
   churn <- subset n >>= mapM (\u -> (\rw ap -> [u, rw, ap]) <$> int 4 <*> int 4)
   pure (sim, pos, churn)
 

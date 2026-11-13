@@ -65,15 +65,15 @@ nodeRow n arity name i row = case row of
 
 posRow :: IS.IntSet -> Integer -> Int -> [Integer] -> Maybe String
 posRow unitTier n i row = case row of
-  [u, indeg, outdeg, sccId, sccSize, reachIn]
-    | any (< 0) [u, indeg, outdeg, sccId, sccSize, reachIn] ->
+  [u, indeg, sccId, sccSize, reachIn]
+    | any (< 0) [u, indeg, sccId, sccSize, reachIn] ->
         Just (label "pos" i <> "negative field")
     | u >= n -> Just (label "pos" i <> "node out of range")
     -- range-checked above and the tier table is dense by the time
     -- this runs, so set membership IS "tier code /= 0"
     | IS.member (fromInteger u) unitTier -> Just (label "pos" i <> "unit-tier node")
     | otherwise -> Nothing
-  _ -> Just (label "pos" i <> "malformed row (need 6 fields)")
+  _ -> Just (label "pos" i <> "malformed row (need 5 fields)")
 
 -- | continuous entities are FINGERPRINTS (u64), not tier indexes:
 -- the ratchet joins current-vs-baseline on (u, code) across runs,

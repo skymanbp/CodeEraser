@@ -39,6 +39,8 @@
 > 过上限是测量侧的计划错误，不是降级判决，故不答降级应答。无旋钮：t 与 d 是这次运行的事实。hello 能力表加 `cover/1`；定义包 `limits.caps` 加 `cover_rows`、各语言 `[scan] import_kinds` / `loads` 表随导入族扩展（Haskell 一行为 `['import', 'header']`：模块头与它的导出表），`tablesDigest` 随之变。
 > golden：新文件 `cover/golden`（四对，含一条拒绝与一对 d = 0）；`tables/golden` 与各族 hello 的摘要随定义包重生成，别的应答不动。
 
+> **10.0.0 同版收窄**（清理车道 v235_cleanup2，2026-11-12；10.0.0 未发布，同版不另升版号）：`verdict/1` 请求的 `pos` 行由六个数 `[u, indeg, outdeg, sccId, sccSize, reachIn]` 改为五个数 `[u, indeg, sccId, sccSize, reachIn]`——判决族从不读出度（候选、循环轴与范围律读别的列），测量侧不再送它（`score::pos_rows`）；六个数的行按名拒绝 `pos <i>: malformed row (need 5 fields)`。`graph/1` 应答的 `pos` 行与 `join/1` 的行不变。golden：`verdict/golden` 两条请求行的 `pos` 去掉第三列，应答由 regen 腿重答。
+
 > **9.1.0 同版加性**（工具约定入口，车道 v235_licence 第 4A 部分，2026-11-12；方法学册 06 角色表 role 10；9.1.0 未发布，同上不另升版号）：`graph/1` 节点行的角色列加第 10 位——工具约定（测量侧 `ROLE_CONVENTION = 1 << 10`，`cli/src/graph/deadcode/convention.rs` 按定义包读路径），
 > 核 `CE.Graph.Cost.roleBits` 加第十一行 `(10, 1)`，落在入口位；请求不带该位时判决逐字节同前。定义包 `flags` 加 `entry_conventions`（死文件考题第一代过关的八条工具约定与仓根 `init.lua`，每行一个名字与一个位置：`basename` / `under` / `exact`），hello 的 `tablesDigest` 随之变。
 > golden：`tables/golden` 的定义包与各族 hello 的摘要随定义包重生成，别的应答不动。

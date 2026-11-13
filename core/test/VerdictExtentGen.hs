@@ -56,7 +56,7 @@ tablesOf t =
   classCol f = [sum [toInteger i | Just c <- [mClass f], (i, c') <- zip [1 :: Int ..] classes, c' == c] | not (null classes)]
   group g = [() | f <- fs, code f, mScc f == Just g]
   indeg u = length (nub [s | (s, d, _) <- tRefs t, toInteger (uOf !! d) == u, s /= d])
-  pos = [[u, toInteger (indeg u), 0, maybe u (+ 100000) (mScc f), maybe 1 (toInteger . length . group) (mScc f), if mDead f then 0 else 1] | (u, f) <- placed, code f]
+  pos = [[u, toInteger (indeg u), maybe u (+ 100000) (mScc f), maybe 1 (toInteger . length . group) (mScc f), if mDead f then 0 else 1] | (u, f) <- placed, code f]
   churn = [[u, rw, ap] | (u, f) <- placed, code f, Just (rw, ap) <- [mChurn f]]
   cont =
     concat

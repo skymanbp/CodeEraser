@@ -19,7 +19,8 @@ module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 -- lane v235_licence part 4C: resolve/1's `also` also names, for a
 -- Markdown or HTML site whose answer is a confirmed section of another
 -- file, that file (CE.Resolve.Answer `holderOf`). Same version, lane
--- v235_imports: the family cover/1 is new (CE.Dedup.Cover). Every other
+-- v235_imports: the family cover/1 is new (CE.Dedup.Cover). Same version,
+-- lane v235_cleanup2: verdict/1 reads one column fewer. Every other
 -- family answers as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only

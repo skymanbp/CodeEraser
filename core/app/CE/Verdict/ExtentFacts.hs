@@ -88,11 +88,11 @@ units k soft f loc = [file u | u <- [0 .. fromInteger (lUniverse loc) - 1]] <> o
 located' :: ScoreKnobs -> Facts -> Located -> (Int -> Integer) -> [(Int, [(Integer, Integer, Integer)])]
 located' k f loc linesOf =
   [(fromInteger u, [(if kind <= 1 then 2 else 3, lo, hi)]) | [u, lo, hi, kind] <- lDups loc]
-    <> [(fromInteger u, [(4, 1, linesOf (fromInteger u))]) | [u, _, _, _, _, 0] <- fPos f]
+    <> [(fromInteger u, [(4, 1, linesOf (fromInteger u))]) | [u, _, _, _, 0] <- fPos f]
     <> [(fromInteger src, [(6, line, line)]) | [src, dst, line] <- lRefs loc, inCycle src dst]
  where
   members = IS.fromList [fromInteger u | (u : _) <- cycleRows k f]
-  scc = IM.fromList [(fromInteger u, s) | [u, _, _, s, _, _] <- fPos f]
+  scc = IM.fromList [(fromInteger u, s) | [u, _, s, _, _] <- fPos f]
   inCycle src dst =
     IS.member (fromInteger src) members
       && IM.lookup (fromInteger dst) scc == IM.lookup (fromInteger src) scc

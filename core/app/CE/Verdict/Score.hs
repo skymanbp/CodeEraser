@@ -66,7 +66,7 @@ churnRows k f = [row | row@[_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDe
 cycleRows :: ScoreKnobs -> Facts -> [[Integer]]
 cycleRows k f =
   [ row
-  | row@[u, _, _, _, size, _] <- fPos f
+  | row@[u, _, _, size, _] <- fPos f
   , size >= sCycleFloor k
   , size > 1 || IS.member (fromInteger u) loops
   , IS.notMember (fromInteger u) docs

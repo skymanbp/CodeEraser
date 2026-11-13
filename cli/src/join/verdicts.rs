@@ -78,7 +78,7 @@ fn request(
     root: &std::path::Path,
     files: Vec<String>,
     sim: Vec<[i64; 5]>,
-    pos: Vec<[i64; 6]>,
+    pos: Vec<[i64; 5]>,
     (symbols, self_loops): (Vec<[i64; 2]>, Vec<i64>),
     (churn, cochange): score::ChurnTables,
 ) -> Result<wire::Request> {

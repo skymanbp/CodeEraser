@@ -52,7 +52,7 @@ candidates jk req =
   posMap =
     M.fromList
       [ (u, Pos indeg reachIn (flagsOf u) sccId)
-      | [u, indeg, _outdeg, sccId, _sccSize, reachIn] <- reqPos req
+      | [u, indeg, sccId, _sccSize, reachIn] <- reqPos req
       ]
   churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]
   cochMap = M.fromList [((u, v), c) | [u, v, c] <- reqCochange req]
