@@ -158,9 +158,9 @@
     {
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "3d9618917a8e0483aa8d2fbc217a0d0ff45f8424c995d16a48047a79c9d321dc",
+      "sha256": "e795e7a342224ebd7d20d3924fdd24674987a761866c9cf18206955ae29a52a8",
       "sites": {
-        "use": 5
+        "use": 6
       }
     },
     {
@@ -770,7 +770,7 @@
     {
       "lang": "rs",
       "path": "cli/tests/it/dedup_pairs.rs",
-      "sha256": "667d43f06cdea144858fffc1d2d895c9e67e7ae8c6e1c1e559670403148d297d",
+      "sha256": "2cca710c8f96da1a8a0d577dcf2887c85d28aedd524acf1f10c9e64293915124",
       "sites": {
         "use": 2
       }
@@ -1184,10 +1184,10 @@
       "py/import": 21,
       "py/import_from": 50,
       "rs/mod_decl": 135,
-      "rs/use": 420,
+      "rs/use": 421,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 706
+    "total_sites": 707
   }
 }

@@ -25,7 +25,7 @@
     "admitted_by_lang": {
       "go": 45,
       "py": 105,
-      "rs": 1242,
+      "rs": 1243,
       "ts": 15
     },
     "cross_lang_dropped": 1258,

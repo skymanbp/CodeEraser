@@ -280,15 +280,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 9
       },
       "live": 4,
       "path": "cli/src/dedup/tokens.rs",
-      "seg_sha256": "1ccc635ed990cc5deaa1e163d58ac976c6304aafc408836515cf6c1762d0dc66",
+      "seg_sha256": "d7f81d985802bc3a337834aed9845d03debdcc8673e9be1c05046c79de2c1138",
       "segs_by": {
         "comment_block": 4
       },
-      "sha256": "3d9618917a8e0483aa8d2fbc217a0d0ff45f8424c995d16a48047a79c9d321dc"
+      "sha256": "e795e7a342224ebd7d20d3924fdd24674987a761866c9cf18206955ae29a52a8"
     },
     {
       "exempt_by": {},
@@ -1240,11 +1240,11 @@
       },
       "live": 1,
       "path": "cli/tests/it/dedup_pairs.rs",
-      "seg_sha256": "1481a5a54349a163db9809737e99170f4fa4553c215295b8f5c7b0ffc5ab35ca",
+      "seg_sha256": "19206d876e888a52e75ac8381081e2dde39763ab7cbaa2538db1fcd69c181b38",
       "segs_by": {
         "comment_block": 1
       },
-      "sha256": "667d43f06cdea144858fffc1d2d895c9e67e7ae8c6e1c1e559670403148d297d"
+      "sha256": "2cca710c8f96da1a8a0d577dcf2887c85d28aedd524acf1f10c9e64293915124"
     },
     {
       "exempt_by": {},
@@ -1952,7 +1952,7 @@
     },
     "files_with_segments": 95,
     "ledger": {
-      "below_floor": 1560,
+      "below_floor": 1562,
       "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,
