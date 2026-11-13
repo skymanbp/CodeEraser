@@ -19,7 +19,7 @@
       "tip": "49943b5a94413a530761350f04e896f76e8d620e",
       "first_parent_commits": 2283,
       "cloned_at": "2026-11-12T06:06:19Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "TypeScript",
@@ -32,7 +32,7 @@
       "tip": "9fed2eb2f3af672da9f7bf694b996df3831fc207",
       "first_parent_commits": 1262,
       "cloned_at": "2026-11-12T06:06:22Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "Rust",
@@ -45,7 +45,7 @@
       "tip": "24d90b28d25438af2a8f2e7f7e46d03d6828da94",
       "first_parent_commits": 1462,
       "cloned_at": "2026-11-12T06:06:25Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "Go",
@@ -58,7 +58,7 @@
       "tip": "528f7416c4b56a4948673984b190bf8713f0c3c4",
       "first_parent_commits": 866,
       "cloned_at": "2026-11-12T06:06:27Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "Java",
@@ -71,20 +71,20 @@
       "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
       "first_parent_commits": 1403,
       "cloned_at": "2026-11-12T06:06:31Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "C",
       "first": "jqlang/jq",
       "replacement": "redis/hiredis",
-      "chosen": "jqlang/jq",
-      "replaced_because": null,
-      "url": "https://github.com/jqlang/jq.git",
+      "chosen": "redis/hiredis",
+      "replaced_because": "the product refuses the first choice's tip (jqlang/jq 5c001b18d7237cce1fdba63608732163f978dd23, 1781 first-parent commits): exit 2: ce deadcode: mentions: submodule vendor/oniguruma is not checked out under . \u2014 `git submodule update --init` first",
+      "url": "https://github.com/redis/hiredis.git",
       "branch": "master",
-      "tip": "5c001b18d7237cce1fdba63608732163f978dd23",
-      "first_parent_commits": 1781,
-      "cloned_at": "2026-11-12T06:06:35Z",
-      "tip_judged_by_product": null
+      "tip": "5bb7f030f6631b243438cf0fdd3be84352b905bb",
+      "first_parent_commits": 788,
+      "cloned_at": "2026-11-13T11:43:03Z",
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "C++",
@@ -97,7 +97,7 @@
       "tip": "6d9805df3f588402b17073dcd13eb569ceda864d",
       "first_parent_commits": 2984,
       "cloned_at": "2026-11-12T06:06:39Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "Lua",
@@ -110,7 +110,7 @@
       "tip": "99b7542a047123bb484510d34ee567bca40b119e",
       "first_parent_commits": 713,
       "cloned_at": "2026-11-12T06:06:42Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "R",
@@ -123,7 +123,7 @@
       "tip": "b213ceab2756e56b8ac8d26b1d0dabec0cbdb77f",
       "first_parent_commits": 1003,
       "cloned_at": "2026-11-12T06:06:46Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     },
     {
       "language": "Haskell",
@@ -136,7 +136,7 @@
       "tip": "1cc1908555ab0ff3570188f70d3eb78cddb86218",
       "first_parent_commits": 4121,
       "cloned_at": "2026-11-12T06:06:50Z",
-      "tip_judged_by_product": null
+      "tip_judged_by_product": "judged"
     }
   ]
 }
