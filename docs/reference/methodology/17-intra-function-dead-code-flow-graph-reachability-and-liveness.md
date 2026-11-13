@@ -184,7 +184,7 @@ three units each (judged bits and dynamic counts included)
 hand-written cases of every kind, forty-three contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:123](../../../core/test/Spec.hs#L123)).
+([Spec.hs:124](../../../core/test/Spec.hs#L124)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

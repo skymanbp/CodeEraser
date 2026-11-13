@@ -302,7 +302,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
   and the rendered pack (§11) alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
   so declaring it moves no baseline ([mod.rs:43](../../../cli/src/query/mod.rs#L43),
-  [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:86-91](../../../cli/src/config/canonical.rs#L86)).
+  [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:87-92](../../../cli/src/config/canonical.rs#L87)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
   `?- F: 1 answer(s)` with its rows, `assert no_dead(F): ok` or `: N violation(s)` with its
   witnesses — every proof node indented under its answer, and one counts line; every sentence
@@ -394,7 +394,7 @@ the token cap like any other ([Cost.hs:89](../../../core/app/CE/Query/Cost.hs#L8
 back as `packText`, and `ce query --prelude` prints it after the prelude, so a reader sees what was
 judged ([face.rs:97](../../../cli/src/query/face.rs#L97)). Like `[rules] file` the table is never a
 knob: the knob fingerprint drops it, so switching a check on touches no baseline
-([canonical.rs:91](../../../cli/src/config/canonical.rs#L91)). No face is new: `ce rules`, the MCP
+([canonical.rs:92](../../../cli/src/config/canonical.rs#L92)). No face is new: `ce rules`, the MCP
 `rules` tool, the GUI's Query screen and `ce query` build the request through the one road of §9,
 and the report rows name the pack's assertions by their `pack_…` heads.
 
@@ -439,7 +439,7 @@ a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair,
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and
 lexed — and a tests-repo leg regenerates them so every request line carries the prelude and its
 program as texts
-([Spec.hs:122](../../../core/test/Spec.hs#L122), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
+([Spec.hs:123](../../../core/test/Spec.hs#L123), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
 [query_golden.rs:148](../../../cli/tests/it/query_golden.rs#L148)).
 
 On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex

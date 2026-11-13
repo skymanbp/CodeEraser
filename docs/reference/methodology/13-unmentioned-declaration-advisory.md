@@ -12,7 +12,7 @@ referenced name read as unmentioned) is the direction every rule is built agains
 the four-way verdicts: it never turns a gate red, never enters `ce erase`, and is
 rendered with that word on every surface
 ([Cost.hs:51-53](../../../core/app/CE/Graph/Cost.hs#L51),
-[Deadcode.hs:25-27](../../../core/app/CE/Text/Deadcode.hs#L25)). The plan calls it ADR-008
+[Deadcode.hs:29-31](../../../core/app/CE/Text/Deadcode.hs#L29)). The plan calls it ADR-008
 step 3b ([DEVELOPMENT_PLAN.md:240](../../DEVELOPMENT_PLAN.md#L240)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
@@ -205,8 +205,8 @@ module whose path carries an underscore-led segment, dunders excepted — bit 1)
 
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
-([Contract.hs:71-72](../../../core/app/CE/Graph/Contract.hs#L71),
-[Contract.hs:125-132](../../../core/app/CE/Graph/Contract.hs#L125)); each row is validated
+([Contract.hs:79-80](../../../core/app/CE/Graph/Contract.hs#L79),
+[Contract.hs:139-146](../../../core/app/CE/Graph/Contract.hs#L139)); each row is validated
 for width, sign, bound and `private ≤ total`
 ([Advisory.hs:29-48](../../../core/app/CE/Graph/Advisory.hs#L29)). The core then emits
 `exportUnmentioned = [[node, vis, conv, code]]` for every row whose visibility carries
@@ -216,7 +216,7 @@ category word has none of the exempt bits 0..10 (bit 11, a Rust `cfg` naming no 
 is rendered but never exempts) — the mask reads the
 visibility word, the exemptions read the category word, and the two never cross
 ([Advisory.hs:62-71](../../../core/app/CE/Graph/Advisory.hs#L62),
-[Cost.hs:228-229](../../../core/app/CE/Graph/Cost.hs#L228), [Cost.hs:242-243](../../../core/app/CE/Graph/Cost.hs#L242)).
+[Cost.hs:234-235](../../../core/app/CE/Graph/Cost.hs#L234), [Cost.hs:248-249](../../../core/app/CE/Graph/Cost.hs#L248)).
 The code is a frozen total order `1 > 2 > 3 > 0`: **1 private** when the file has at
 least one mount, every mount is a private `mod` and no façade re-exports it, or the
 package keeps it private; **2 restricted** on visibility bit 2; **3 reexported** on mounts
@@ -230,7 +230,7 @@ judges the graph but drops the table and says so (`unmentionedDropped`), and the
 producer cuts at the same number so the two can never disagree — and `unmentionedHardCap`
 524,288 is the outer bound only a defective client reaches
 ([Cost.hs:42-75](../../../core/app/CE/Graph/Cost.hs#L42),
-[Graph.hs:123-130](../../../core/app/CE/Graph.hs#L123)). The iron rule is two byte-level
+[Graph.hs:131-138](../../../core/app/CE/Graph.hs#L131)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
 the same with or without them ([VERSIONING-ARCHIVE-6.0-7.1.md:115-117](../../../contracts/VERSIONING-ARCHIVE-6.0-7.1.md#L115)).
 
@@ -239,8 +239,8 @@ the same with or without them ([VERSIONING-ARCHIVE-6.0-7.1.md:115-117](../../../
 Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the advisory; the
 seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
 `merge`, `query`) pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:93-96](../../../cli/src/graph/deadcode.rs#L93),
-[deadcode.rs:266-272](../../../cli/src/graph/deadcode.rs#L266)). The reply is consumed once:
+([deadcode.rs:97-100](../../../cli/src/graph/deadcode.rs#L97),
+[deadcode.rs:297-303](../../../cli/src/graph/deadcode.rs#L297)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -250,9 +250,9 @@ three keys, present only when the road was asked: `unmentioned` rows of five sca
 producer's cut, which the core cannot see — so Rust sends it as a fact beside one request row per
 name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and since plan v2.32 step 4
 the core's deadcode document lays the three keys out, naming each code and its reading
-([Document.hs:130-135](../../../core/app/CE/Graph/Document.hs#L130), [Document.hs:181-188](../../../core/app/CE/Graph/Document.hs#L181)). The console prints one line per row, a
+([Document.hs:184-191](../../../core/app/CE/Graph/Document.hs#L184), [Document.hs:275-287](../../../core/app/CE/Graph/Document.hs#L275)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
-([Lines.hs:62-70](../../../core/app/CE/Graph/Lines.hs#L62)); the MCP `deadcode`
+([Lines.hs:93-104](../../../core/app/CE/Graph/Lines.hs#L93)); the MCP `deadcode`
 tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI
 graph screen receives that document beside the canvas one in a single `ce.graph-screen`
 reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report a second time

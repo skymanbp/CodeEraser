@@ -33,7 +33,7 @@ the two reference tables together, since both become arcs of the one directory g
 ([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30)).
 A request past either is degraded; the measuring side names it `arch_too_large` from the built
 tables' counts and the definition package's `limits.caps`, and the document carries that reason
-([Limits.hs:100-115](../../../core/app/CE/Limits.hs#L100), [wire.rs:180](../../../cli/src/arch/wire.rs#L180));
+([Limits.hs:104-119](../../../core/app/CE/Limits.hs#L104), [wire.rs:180](../../../cli/src/arch/wire.rs#L180));
 a core that cannot be started or answer, or one without the family, is named the same way. The core's contract names the first
 offending row of any table by its index — width, identity, range, order, the one root, a parent
 before its child ([Contract.hs:79](../../../core/app/CE/Arch/Contract.hs#L79)).
@@ -171,7 +171,7 @@ form, one with a focus and one naming a stranger.
 The measuring side's tables.rs, frozen at c2abca5d in the tests subrepo, keeps the unit legs it
 was written with — dense ids and earlier parents, two rungs one pair, the self pair and the section
 fold, the package in and out of the tree, the focus and its stranger
-([tables.rs:91](../../../cli/tests/unit/arch/tables.rs#L91)) — and a differential holds the core's
+([tables.rs:92](../../../cli/tests/unit/arch/tables.rs#L92)) — and a differential holds the core's
 built tables to it over three seeds of 10,000 drawn wires and fourteen real trees
 ([diff_arch.rs:1](../../../cli/tests/unit/structure/diff_arch.rs#L1)). The integration legs seed three
 directories in one cycle, fifteen in one ring and a Go package import, and hold the CLI's JSON to
