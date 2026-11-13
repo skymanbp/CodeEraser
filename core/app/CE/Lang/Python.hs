@@ -92,7 +92,8 @@ scan2 =
   \# clone tokenizer no token, the way a comment gives none. It is the\n\
   \# body-less declarations the reference graph reads as a module\n\
   \# reference or identity — import, include, use, extern crate, the\n\
-  \# package clause, the module mount, the re-export — and the load\n\
+  \# package clause, the module header, the module mount, the\n\
+  \# re-export — and the load\n\
   \# statements. A declaration by kind: '<kind>', or '<kind> <field>'\n\
   \# (the node has a child under that field) or '<kind> !<field>' (it\n\
   \# has none). A load statement by shape — a statement of a statement\n\

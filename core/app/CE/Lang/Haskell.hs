@@ -122,9 +122,11 @@ scan3 =
   \opaque_fields = []\n\
   \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
   \# rule): the named `import` declaration — the keyword of a\n\
-  \# `foreign import` is an unnamed node of the same kind and stays;\n\
-  \# the module header with its export list stays code.\n\
-  \import_kinds = ['import']\n"
+  \# `foreign import` is an unnamed node of the same kind and stays —\n\
+  \# and the module header (`module X (…) where`, its export list with\n\
+  \# it), the module's identity the ladder resolves `import X` against,\n\
+  \# as Go's package clause and Java's package declaration are.\n\
+  \import_kinds = ['import', 'header']\n"
 
 slot :: String
 slot =
