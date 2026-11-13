@@ -738,3 +738,7 @@ Python 导入车道（c93e18b9）给 Python 的 `from pkg import sub` / `from . 
 ## 导入车道之后：十一份精度册第二十一次退役并重生成（2026-11-12）
 
 导入车道（v235_imports）的改动里，语言考题读的路径只有一处被动到：调用站点的读法与它的表从 `cli/src/graph/sites/` 搬到 `cli/src/scan/`（070becc2，`scan/call_site.rs` 与 `scan/call_table.rs`，让克隆 token 流读同一张表认出加载语句），`cli/src/graph/sites.rs` 改读搬过去的模块。门按路径读，`ANSWERED_BY` 共有的 `cli/src/graph/sites*` 让十一份都按名被拒。这次搬移只换位置、不改读法，导入族与覆盖规则只动克隆 token 流与核的覆盖判定、不碰引用图，所以预期十一份只差 `generated_from`。处置与前几次同形：**退役**（本提交）十一份删档、六门考题 `stage` 翻回 `Audited`，册 06 §9 引的十一处 summary 行在本提交上按构造缺目标；**重生成**（下一提交）在本提交的干净树上逐份生成、每份挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，`stage` 翻回 `Scored`。**读数**：十一份在 793d1189 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对：把 `generated_from` 对象换成新的之后逐字节相等，按 JSON 路径比对十一份都只差 `generated_from.commit` 一项（a0f33e7b → 793d1189）；判决、真值、宇宙台账、站点缺口与两段 RG1 处置逐字节同，符合「搬移只换位置」。
+
+## 清理车道第二批之后：十一份精度册第二十二次退役并重生成（2026-11-13）
+
+清理车道第二批（v235_cleanup2）的改动里，语言考题读的路径只有一处被动到：核里十二个没有别的模块导入的导出从导出表拿掉（af842fad），其中三个在考题阶梯共读的 `core/app/CE/Resolve/` 下——`HtmlHead.hs` 的 `servedFrom`、`JavaPick.hs` 的 `sourceRoot`、`Json.hs` 的 `parseJson`。门按路径读，`ANSWERED_BY` 共有的 `core/app/CE/Resolve/` 让十一份都按名被拒。三个绑定都留在原模块、只是不再导出，`-Wall -Werror` 没有点名任何无人读的绑定，判决逐字节不变（`check` / `deadcode` / `dedup` / `structure` / `join` / `docdup` 新旧构建对拍），所以预期十一份只差 `generated_from`。处置与前几次同形：**退役**（本提交）十一份删档、六门考题 `stage` 翻回 `Audited`，册 06 §9 引的十一处 summary 行在本提交上按构造缺目标；**重生成**（下一提交）在本提交的干净树上逐份生成、每份挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，`stage` 翻回 `Scored`。**读数**：〈重生成提交填写〉
