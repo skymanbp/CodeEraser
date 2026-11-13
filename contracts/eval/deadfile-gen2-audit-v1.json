@@ -1,0 +1,152 @@
+{
+ "schema": "ce.eval-deadfile-gen2-audit/1.0.0",
+ "bars": "deadfile-gen2-bars-v1.md, section 3: the audit of the undetermined",
+ "brief": "deadfile-auditor-brief-v1.md",
+ "tree": "each row was read at its corpus's tip (the brief's pinned tip); `commit` is the event's commit, the row's identity",
+ "second_reading": "every fifth row of a state in key order (n % 5 == 0) and every row first answered unsure, by a different auditor who did not see the first answer",
+ "settled_rule": "generation 1's (deadfile-bars-v1.md, section 1): one reading, or two on the same side of in_use / not in_use, stand; two that differ are settled by the evidence",
+ "mechanical_check": "the coordinator read every cited path:line at the tip (git show) and searched every unused row's basename over the tip's tree (git grep -F): every answer holds",
+ "rows": [
+  {
+   "n": 1,
+   "state": "born",
+   "key": "5ef6928b8ad87086e99f05f7adcf56c394115451a1bff59fbf205ecf813b2258",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "2f879b9eea5a3242527ea85764d1d90e58ac3d87",
+   "path": "doc/ReleaseNotes4.9.1.md",
+   "first": {
+    "answer": "in_use",
+    "mechanism": "linked by its repository path from the published project site's home page (Release Notes list, built by `mvn site:site`, which CI runs); also the target of the sibling stub's pointer",
+    "evidence": "src/site/xdoc/index.xml:96 <a href=\"https://github.com/junit-team/junit4/blob/HEAD/doc/ReleaseNotes4.9.1.md\">4.9.1</a>; doc/ReleaseNotes4.9.1.txt:1 Please see ReleaseNotes4.9.1.md; .github/workflows/main.yml:36 runs site:site",
+    "searched": "git grep -F ReleaseNotes / 4.9.1 over the whole tip tree; pom.xml, src/site/site.xml, src/site/xdoc/index.xml, .github/workflows/main.yml, README.md, BUILDING, doc/markdown.sh"
+   },
+   "second": null,
+   "settled": "in_use"
+  },
+  {
+   "n": 2,
+   "state": "born",
+   "key": "7e2c6ab0fd05273f142fd995eaaaa3168e26e02fe5129f5e17ebdef164d18258",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "34a0ecb4ffb3cb8d33b60c222c29145d017f02c9",
+   "path": "doc/ReleaseNotes4.8.1.html",
+   "first": {
+    "answer": "unused",
+    "mechanism": "",
+    "evidence": "",
+    "searched": "git grep -F 'ReleaseNotes4.8.1' and '4.8.1' over the whole tip tree (only the .md/.txt siblings and the file itself); pom.xml (resources include only src/main/resources and LICENSE-junit.txt, pom.xml:109-119; no assembly), src/site/site.xml and src/site/xdoc/index.xml (release-note links go to .md, 4.9 and later only), .github/workflows/main.yml, README.md, BUILDING, doc/building-junit.txt, doc/markdown.sh (names only ReleaseNotes4.8.txt/.html). Nothing names, serves or packages this html."
+   },
+   "second": null,
+   "settled": "unused"
+  },
+  {
+   "n": 3,
+   "state": "born",
+   "key": "94ed09a722de4a35db4ca524d5ddd08c3aa9f37f599b25c9dd01094b90a37711",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "2cd6f108a04f782c3abcf245de85fbe4b7a5316d",
+   "path": "src/site/markdown/cookbook.md",
+   "first": {
+    "answer": "in_use",
+    "mechanism": "Maven site (Doxia) convention: src/site/markdown/*.md renders to <name>.html; the site menu links the rendered page, and CI builds the site",
+    "evidence": "src/site/site.xml:36 <item name=\"Cookbook\" href=\"cookbook.html\"/>; .github/workflows/main.yml:36 ./mvnw verify javadoc:javadoc site:site",
+    "searched": "git grep -F cookbook over the tip tree; src/site/site.xml; pom.xml maven-site-plugin; CI workflow"
+   },
+   "second": null,
+   "settled": "in_use"
+  },
+  {
+   "n": 4,
+   "state": "born",
+   "key": "b68ba7cf8eaec8b61d99b6288da4a764c827bc5b5604abd0e5a084d6af2b51cc",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "4dd14be2eb4e12a8f5c2150a80bdded5f12ad5e7",
+   "path": "epl-v10.html",
+   "first": {
+    "answer": "unused",
+    "mechanism": "",
+    "evidence": "",
+    "searched": "git grep -F 'epl-v10' over the whole tip tree: only pom.xml:20, which is the external URL http://www.eclipse.org/legal/epl-v10.html, not this file; pom.xml resources package only LICENSE-junit.txt from the root (pom.xml:113-117); no assembly descriptor; README.md, CONTRIBUTING.md (names the EPL, not the file), NOTICE.txt, BUILDING, src/site/site.xml, src/site/xdoc/index.xml (License link goes to the generated license.html of the project-info license report), .github/workflows. The licence text the build carries is LICENSE-junit.txt; nothing names, serves or packages epl-v10.html."
+   },
+   "second": null,
+   "settled": "unused"
+  },
+  {
+   "n": 5,
+   "state": "born",
+   "key": "e4175837109ca697e2fdd19147858e3594a8eba9c636a741d124cdad255e2bd4",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "2f879b9eea5a3242527ea85764d1d90e58ac3d87",
+   "path": "doc/ReleaseNotes4.8.1.md",
+   "first": {
+    "answer": "in_use",
+    "mechanism": "the documented target of the sibling release-notes stub, whose only sentence sends the reader to this file by name",
+    "evidence": "doc/ReleaseNotes4.8.1.txt:1 Please see ReleaseNotes4.8.1.md",
+    "searched": "git grep -F 'ReleaseNotes4.8.1' and '4.8.1' over the whole tip tree; pom.xml, src/site/site.xml, src/site/xdoc/index.xml (lists only 4.9 and later), CI workflow, README.md, BUILDING. The stub is the only reference; no build, site or package uses it."
+   },
+   "second": {
+    "answer": "in_use",
+    "mechanism": "documentation sentence: the tracked stub doc/ReleaseNotes4.8.1.txt exists only to redirect readers to this file by name (the same .txt -> .md redirect pattern every release 4.4-4.11 uses); deleting the .md leaves that document pointing at nothing and removes the 4.8.1 release notes from the repo's doc/ record. Not built, packaged or linked from the Maven site (site index lists only 4.9+).",
+    "evidence": "doc/ReleaseNotes4.8.1.txt:1 'Please see ReleaseNotes4.8.1.md'",
+    "searched": "git grep -n -i 'ReleaseNotes' and '4.8.1' over the whole tip (outside src/main): only hits are doc/ReleaseNotes4.8.1.txt:1 (redirect to this file) and doc/ReleaseNotes4.8.1.html:1 (its own HTML twin); src/site/xdoc/index.xml:88-97 links release notes 4.9-4.13.2 only; pom.xml:109-119 resources include only src/main/resources and LICENSE-junit.txt; doc/markdown.sh:1 converts ReleaseNotes4.8.txt only; README.md, CONTRIBUTING.md, BUILDING, doc/building-junit.txt, .github/workflows/main.yml, src/site/site.xml do not name it."
+   },
+   "settled": "in_use"
+  },
+  {
+   "n": 6,
+   "state": "born",
+   "key": "e9cbb55b4502ce8e4830b7bbea4223ebf7089cda282368770536776ea5e3841c",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "bc0ae224fa4be8b719afa29917c975962e6c781c",
+   "path": "doc/ReleaseNotes4.8.2.html",
+   "first": {
+    "answer": "unused",
+    "mechanism": "",
+    "evidence": "",
+    "searched": "git grep -F 'ReleaseNotes4.8.2' and '4.8.2' over the whole tip tree (only the .md/.txt siblings, the file itself, and prose mentions of version 4.8.2 in ReleaseNotes4.9.* and acknowledgements.txt, none naming this file); pom.xml resources (pom.xml:109-119), src/site/site.xml, src/site/xdoc/index.xml, .github/workflows/main.yml, README.md, BUILDING, doc/markdown.sh. Nothing names, serves or packages this html."
+   },
+   "second": null,
+   "settled": "unused"
+  },
+  {
+   "n": 7,
+   "state": "born",
+   "key": "ec3399b40c7698d7845babdaa571dc5c1b961d4e00013f2353538b840a8d345b",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "2f879b9eea5a3242527ea85764d1d90e58ac3d87",
+   "path": "doc/ReleaseNotes4.8.2.md",
+   "first": {
+    "answer": "in_use",
+    "mechanism": "the documented target of the sibling release-notes stub, whose only sentence sends the reader to this file by name",
+    "evidence": "doc/ReleaseNotes4.8.2.txt:1 Please see ReleaseNotes4.8.2.md",
+    "searched": "git grep -F 'ReleaseNotes4.8.2' and '4.8.2' over the whole tip tree; pom.xml, src/site/site.xml, src/site/xdoc/index.xml (lists only 4.9 and later), CI workflow, README.md, BUILDING. The stub is the only reference; no build, site or package uses it."
+   },
+   "second": null,
+   "settled": "in_use"
+  },
+  {
+   "n": 8,
+   "state": "born",
+   "key": "fe2752357321ca1dc23fc1f2254658d0b8d90b5c3a8fdde0c24a28e05d9d5b99",
+   "corpus": "junit4",
+   "tip": "890f3c972647de378f25e7271d8fbbd9d3456b79",
+   "commit": "2f879b9eea5a3242527ea85764d1d90e58ac3d87",
+   "path": "doc/ReleaseNotes4.5.md",
+   "first": {
+    "answer": "in_use",
+    "mechanism": "the documented target of the sibling release-notes stub, whose only sentence sends the reader to this file by name",
+    "evidence": "doc/ReleaseNotes4.5.txt:1 Please see ReleaseNotes4.5.md",
+    "searched": "git grep -F 'ReleaseNotes4.5' over the whole tip tree; pom.xml, src/site/site.xml, src/site/xdoc/index.xml (lists only 4.9 and later), CI workflow, README.md, BUILDING. The stub is the only reference; no build, site or package uses it."
+   },
+   "second": null,
+   "settled": "in_use"
+  }
+ ]
+}

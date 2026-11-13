@@ -36,7 +36,11 @@ Its second generation replays first-parent history and asks what
 became of each file that turned dead; its bars and design are
 [deadfile-gen2-bars-v1.md](../../contracts/eval/deadfile-gen2-bars-v1.md)
 and [deadfile-gen2-design-v1.md](../../contracts/eval/deadfile-gen2-design-v1.md),
-and it has not yet run on a real corpus.
+and its record is [EVAL-SET-DEADFILE-GEN2.md](../EVAL-SET-DEADFILE-GEN2.md):
+on ten fresh repositories neither kind of newly dead file reached the
+100 events the bars ask before it may fail the gate by default, and
+most of those files turned out to be wanted. The gate is unchanged by
+that record.
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable

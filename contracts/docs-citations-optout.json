@@ -17,5 +17,6 @@
   "docs/EVAL-SET-LANGS-REGEN.md": "frozen evaluation record (v2.30 language exams): the four earlier retire-and-regenerate records moved out of EVAL-SET-LANGS.md byte for byte on 2026-10-03 (v2.33 W2a); same standing as EVAL-SET.md",
   "docs/EVAL-SET-MERGE.md": "frozen evaluation record (v2.31 clone-merge audit): same standing as EVAL-SET.md",
   "docs/FIELD-TEST.md": "frozen field-test record: the two real repositories' line numbers are theirs, at their pinned commits",
-  "docs/EVAL-SET-DEADFILE.md": "frozen evaluation record (the dead-file exam, generation 1): same standing as EVAL-SET.md; its tables are rendered from the committed record and checked by it/eval_deadfile_review.rs"
+  "docs/EVAL-SET-DEADFILE.md": "frozen evaluation record (the dead-file exam, generation 1): same standing as EVAL-SET.md; its tables are rendered from the committed record and checked by it/eval_deadfile_review.rs",
+  "docs/EVAL-SET-DEADFILE-GEN2.md": "frozen evaluation record (the dead-file exam, generation 2): same standing as EVAL-SET.md; its tables are rendered from the committed record and checked by it/eval_deadfile_gen2_record.rs"
 }

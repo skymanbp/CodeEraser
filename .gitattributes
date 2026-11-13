@@ -97,6 +97,13 @@ contracts/eval/deadfile-answers2-v1/** -text
 contracts/eval/deadfile-settlement-v1.json -text
 contracts/eval/deadfile-convention-docs-v1.json -text
 # Generation 2's record (part 4B): the bars and the design they measure,
-# the main session's bytes, pinned by sha256 in it/eval_deadfile_gen2.rs.
+# the replay's per-corpus docs, the audit of the undetermined and the
+# coordinator's acceptance, each pinned by its sha256 — the bars and the
+# design in it/eval_deadfile_gen2_parts/mod.rs, the rest in
+# it/eval_deadfile_gen2_record.rs. The run's and the main session's
+# bytes: an EOL rewrite on checkout would fail every pin. Never translate.
 contracts/eval/deadfile-gen2-bars-v1.md -text
 contracts/eval/deadfile-gen2-design-v1.md -text
+contracts/eval/deadfile-gen2-replay-v1.*.json -text
+contracts/eval/deadfile-gen2-audit-v1.json -text
+contracts/eval/deadfile-gen2-acceptance-v1.md -text

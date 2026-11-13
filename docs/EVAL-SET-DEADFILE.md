@@ -349,4 +349,5 @@ The agreed outcomes (an outcome ships only when `k1` / `k1_strict` and populatio
 Generation 1 ships no split of unreferenced files: the code outcome is an owner question (the readings differ) and the document outcome is FAILING under every reading and, failing with an in-share of at least 0.50, an owner question. Eight tool conventions pass BARS section 3: `package-info.java`, `vitest.config`, `next-app-entry`, `setup.py`, `sphinx-conf.py`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`.
 
 The owner was asked how an unreferenced file should be treated by default and answered 「想办法降低误拦」 (find a way
-to lower the false blocks). Generation 2 is designed by the main session and is recorded with its own exam.
+to lower the false blocks). Generation 2 is designed by the main session and is recorded with its own exam:
+[EVAL-SET-DEADFILE-GEN2.md](EVAL-SET-DEADFILE-GEN2.md).
