@@ -239,8 +239,8 @@ the same with or without them ([VERSIONING-ARCHIVE-6.0-7.1.md:115-117](../../../
 Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the advisory; the
 seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
 `merge`, `query`) pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:86-89](../../../cli/src/graph/deadcode.rs#L86),
-[deadcode.rs:259-265](../../../cli/src/graph/deadcode.rs#L259)). The reply is consumed once:
+([deadcode.rs:88-91](../../../cli/src/graph/deadcode.rs#L88),
+[deadcode.rs:261-267](../../../cli/src/graph/deadcode.rs#L261)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1918 (2178 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 223 signed) | haskell | 7963 (1790) | 1232 (4) | 15.5 % | 193 / 1232 = 15.7 % | 193 / 6731 |
-| | | rust | 3600 (1970) | 339 (5) | 9.4 % | 4 / 339 = 1.2 % | 4 / 3228 |
+| self @ this commit | 1931 (2195 − 23 pattern-ignored − 3 oversize − 12 early-NUL − 226 signed) | haskell | 8057 (1807) | 1243 (5) | 15.4 % | 190 / 1243 = 15.3 % | 190 / 6814 |
+| | | rust | 3625 (1985) | 339 (5) | 9.4 % | 4 / 339 = 1.2 % | 4 / 3253 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -324,7 +324,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->4<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1790<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.2<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->5<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1807<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.3<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
