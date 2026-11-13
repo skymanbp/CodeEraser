@@ -385,9 +385,64 @@ drawn again by the same rule (`eval_merge_parts::GENERATIONS` gains generation 3
   four builds.
 - **The sample** (`contracts/eval/merge-sample-v3.json`): 100 rows, zod 78, ripgrep 17, cobra 4, codeeraser 1;
   t3 92, t1t2 8, fragments 8; 94 of its ids are in the second sample.
-- **The blind review and the precision doc** of this generation are owed: they need independent judges
-  (`merge-review-v3.json`, `merge-precision-v3.json`), and until they are filed the gate
-  `eval_merge_review::the_review_scores_when_filed` names them as not filed.
+
+### Generation 3: the blind review
+
+Four new independent judges (general-purpose Opus subagents), one batch of 25 each, answered all 100 rows of the
+third sample. Each made two tool calls, a read of its batch and a write of its answers. The coordinator checked the
+form (batches 4, answers 100, defects 0). Before assembling, the batches were cut again from the sample on the
+assembling commit: they are byte-identical to the ones the judges read except for the batch directory the cutter
+writes into each prompt and into the manifest, and the sample's sha256 is the one the batches were cut from.
+`eval_merge_review::assemble` then filed the answers verbatim (`contracts/eval/merge-review-v3.json`), its form
+check refusing none. The auditor sentence the review doc carries is the second generation's with three
+differences: each judge's two tool calls are named, "no ce and no core was run" replaces "in reach", and the closing clause
+reads "the coordinator dispatched them and checked the form (batches 4, answers 100, defects 0), the lane ran the
+instrument's form check on the manifest and the four files (batches 4, answers 100, refusals 0) and assembled
+verbatim".
+
+The answers: feasible 47, infeasible 53; by reason and by batch:
+
+| batch | ok | position | type | spans_statements | too_many_params | no_savings |
+|---|---|---|---|---|---|---|
+| 1 | 18 | 1 | 5 | 0 | 0 | 1 |
+| 2 | 13 | 2 | 9 | 0 | 0 | 1 |
+| 3 | 7 | 4 | 12 | 0 | 0 | 2 |
+| 4 | 9 | 3 | 12 | 0 | 1 | 0 |
+| all | 47 | 10 | 38 | 0 | 1 | 4 |
+
+The audited parameter counts run from 0 to 11 (0: 7, 1: 14, 2: 16, 3: 18, 4: 27, 5: 7, 6: 5, 8: 3, 10: 2,
+11: 1); of the six rows over six, four answer `type`, one `position` and one `too_many_params`.
+
+### Generation 3: precision
+
+The precision doc (`contracts/eval/merge-precision-v3.json`), agreeing rows / rows, generation 2's beside it:
+
+| corpus | rows | feasible_agree | reason_agree | params_agree | generation 2 (rows: feasible / reason / params) |
+|---|---|---|---|---|---|
+| zod | 78 | 78 / 78 | 76 / 78 | 75 / 78 | 74: 74 / 72 / 71 |
+| ripgrep | 17 | 15 / 17 | 15 / 17 | 13 / 17 | 20: 17 / 16 / 12 |
+| cobra | 4 | 3 / 4 | 3 / 4 | 1 / 4 | 5: 4 / 4 / 3 |
+| codeeraser | 1 | 1 / 1 | 1 / 1 | 0 / 1 | 1: 1 / 0 / 1 |
+| all | 100 | 97 / 100 | 95 / 100 | 89 / 100 | 100: 96 / 92 / 87 |
+
+Read as a classifier of feasibility against the judges: the tool calls 50 rows feasible and the judges 47, every
+one of those 47 among the tool's 50 - precision 47 / 50, recall 47 / 47 (generation 2: 46 / 50, 46 / 46). The
+tool's parameter count is above the judges' on 9 rows and below on 2 (generation 2: 9 and 4). The tool's reason
+(rows) against the audited reason (columns):
+
+| core \ audit | ok | position | type | spans_statements | too_many_params | no_savings | rows |
+|---|---|---|---|---|---|---|---|
+| ok | 47 | 2 | 0 | 0 | 1 | 0 | 50 |
+| position | 0 | 8 | 1 | 0 | 0 | 1 | 10 |
+| type | 0 | 0 | 37 | 0 | 0 | 0 | 37 |
+| no_savings | 0 | 0 | 0 | 0 | 0 | 3 | 3 |
+
+The five disagreements, by the judges' notes: three rows the tool calls feasible - cobra t1t2 (an extra
+`ctx context.Context` parameter in one member's parameter list: `position`), ripgrep t1t2 (two more differing
+arguments, eight parameters: `too_many_params`) and ripgrep t1t2 (`Message::Begin` against `Message::Match` in a
+match-arm pattern: `position`); and two rows both call infeasible for another reason - zod t3 (a type-parameter
+constraint: `type` where the tool says `position`) and zod t1t2 (one-line fragments with no savings: `no_savings`
+where the tool says `position`). They are recorded, not ruled on.
 
 ## Provenance
 
@@ -396,6 +451,8 @@ drawn again by the same rule (`eval_merge_parts::GENERATIONS` gains generation 3
   section 13 item 24 gave the flow reviews.
 - The second generation's review doc was assembled on ce 1.8.0, commit `7b3b43e067538775603cc22d0dfc2025f1dcf5eb`,
   dirty false (the tree the first part of generation 2 landed on), and lands with its precision doc in one commit.
+- The third generation's review doc was assembled on ce 1.9.2, commit `cbbec3382fc4f9839738f90d5d49743c1a12f00a`,
+  dirty false (the imports lane's last commit before the review), and lands with its precision doc in one commit.
 - The precision doc has no `generated_from`: it reads no product, only the three frozen docs it names, so it
   computes the same on any tree, and it lands in the review's commit (section 13 item 36).
 - The suggestion set and the sample landed in steps 6-7's first landing commit; the manifest the batches were
