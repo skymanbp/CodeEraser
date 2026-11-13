@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1939 (2214 − 23 pattern-ignored − 3 oversize − 12 early-NUL − 237 signed) | haskell | 8130 (1800) | 1252 (4) | 15.4 % | 194 / 1252 = 15.5 % | 194 / 6878 |
-| | | rust | 3640 (1992) | 339 (5) | 9.3 % | 4 / 339 = 1.2 % | 4 / 3268 |
+| self @ this commit | 1946 (2221 − 23 pattern-ignored − 3 oversize − 12 early-NUL − 237 signed) | haskell | 8211 (1814) | 1275 (5) | 15.5 % | 198 / 1275 = 15.5 % | 198 / 6936 |
+| | | rust | 3664 (2007) | 343 (5) | 9.4 % | 4 / 343 = 1.2 % | 4 / 3288 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
