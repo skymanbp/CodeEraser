@@ -7,7 +7,7 @@
 //! request's id, or the id-less `too_large` of a line the core would not
 //! read) leaves it whole, the core being stateless per request.
 
-use super::watch::{self, Sample, Verdict, Watch};
+use super::watch::{self, Faults, Sample, Verdict, Watch};
 use super::{Hello, HelloReply, PROTO, cputime, pipe};
 use serde_json::Value;
 use std::io::Write;
@@ -148,6 +148,7 @@ impl Session {
             cpu: cputime::cpu_time(child),
         };
         let mut open = Open {
+            first_faults: cputime::page_faults(child),
             child,
             watch: Watch::new(*stall, *budget, first),
             start: Instant::now(),
@@ -181,6 +182,8 @@ impl Session {
 /// One exchange in flight: the core, the rule over it and what it reads.
 struct Open<'a> {
     child: &'a mut Child,
+    /// The core's page-fault count when the exchange opened (watch::Faults).
+    first_faults: Option<u64>,
     watch: Watch,
     start: Instant,
     written: &'a AtomicU64,
@@ -208,8 +211,14 @@ impl Open<'_> {
             match self.watch.step(now) {
                 Verdict::Wait => {}
                 verdict => {
+                    let faults = Faults {
+                        noun: cputime::FAULTS,
+                        count: cputime::faults_since(self.child, self.first_faults),
+                    };
                     self.kill();
-                    return Err(self.watch.explain(verdict, self.total, self.waiting));
+                    return Err(self
+                        .watch
+                        .explain(verdict, self.total, self.waiting, faults));
                 }
             }
         }

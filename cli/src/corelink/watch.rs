@@ -54,6 +54,16 @@ pub(super) struct Sample {
     pub cpu: Option<Duration>,
 }
 
+/// The core's page faults over an exchange, in the platform's word
+/// (cputime::FAULTS), or None when the count could not be read: read at
+/// the exchange's start and at the kill, never by the rule, so the error
+/// can tell a core that waited on the disk from one that is wedged.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) struct Faults {
+    pub noun: &'static str,
+    pub count: Option<u64>,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum Verdict {
     Wait,
@@ -109,12 +119,28 @@ impl Watch {
 
     /// The error for a verdict that kills: the clause, its readings and
     /// the variable that sets it. `total` is the request line's bytes with
-    /// its newline; `waiting` names the request (kind and bytes, C5).
-    pub(super) fn explain(&self, verdict: Verdict, total: u64, waiting: &str) -> String {
+    /// its newline; `waiting` names the request (kind and bytes, C5);
+    /// `faults` is read by the caller, so this stays a function of its
+    /// arguments.
+    pub(super) fn explain(
+        &self,
+        verdict: Verdict,
+        total: u64,
+        waiting: &str,
+        faults: Faults,
+    ) -> String {
         let written = format!("{} of {total} B written", self.last.bytes);
-        let cpu = match self.spent() {
-            Some(s) => format!("core CPU {:.2} s on it", s.as_secs_f64()),
-            None => "core CPU unreadable, so the bytes written were the only progress read".into(),
+        let noun = faults.noun;
+        let paged = match faults.count {
+            Some(n) => format!("{n} {noun} on it"),
+            None => format!("{noun} unreadable"),
+        };
+        let cpu = match (self.spent(), faults.count) {
+            (Some(s), Some(_)) => format!("core CPU {:.2} s and {paged}", s.as_secs_f64()),
+            (Some(s), None) => format!("core CPU {:.2} s on it, {paged}", s.as_secs_f64()),
+            (None, _) => format!(
+                "core CPU unreadable, so the bytes written were the only progress read; {paged}"
+            ),
         };
         match verdict {
             Verdict::OverBudget => format!(
