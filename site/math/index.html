@@ -56,7 +56,7 @@
   <h3 id="m-winnowing"><span class="n">01</span>Winnowing</h3>
   <p class="job">Decides which normalized-token runs two files share, as fingerprints chosen by each window's minimum.</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
-  <p class="note rule">No-miss bound (Schleimer et al., SIGMOD'03, held as a contract): a common run of at least <code>t</code> tokens holds <code>t - k + 1 = w</code> consecutive k-grams, one whole window, whose minimum both copies select.</p>
+  <p class="note rule">No-miss bound (Schleimer et al., SIGMOD'03, held as a contract): a common run of at least <code>t</code> tokens holds <code>t - k + 1 = w</code> consecutive k-grams, one whole window, whose minimum both copies select. Coverage rule: per file pair, diverse runs first, longest first, a run is reported only with <code>t</code> tokens of its own on some side.</p>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>

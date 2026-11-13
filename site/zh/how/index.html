@@ -73,7 +73,7 @@
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre>
   <p class="note rule">任何至少 <code>t</code> 个归一化 token 的公共段都含
   <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，窗口最小值只依赖窗口内容，两份拷贝必选中同一个：<strong>必然至少共享一个指纹</strong>，这是 Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约。滚动哈希是 Rabin-Karp，
-  <code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。</p><details class="more"><summary>推导与常数</summary>
+  <code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。导入与加载语句和注释一样不出 token，包声明与 Haskell 的模块头也是。哪些已核实的段进报告由核的覆盖规则定：按文件对，多样的段在前、长的在前，一段只有在某一侧有 <code>t</code> 个自己的 token 才保留。</p><details class="more"><summary>推导与常数</summary>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>
@@ -82,7 +82,7 @@
     <li><b>hotCap</b> 64</li>
     <li><b>minDistinct</b> 7</li>
     <li><b>近似带</b> 25 &lt;= len &lt; 50</li>
-    <li><b>TOKENIZER_REV</b> 4</li>
+    <li><b>TOKENIZER_REV</b> 5</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
   </ul></details>
 </div>

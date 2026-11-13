@@ -56,7 +56,7 @@
   <h3 id="m-winnowing"><span class="n">01</span>窗口取指纹</h3>
   <p class="job">判两个文件共享哪些归一化 token 串，指纹取每个窗口的最小值。</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre>
-  <p class="note rule">no-miss 下界（Schleimer 等人 SIGMOD'03，作为正确性契约）：长度至少 <code>t</code> 的公共串含 <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，两份拷贝必选出它的同一个最小值。</p>
+  <p class="note rule">no-miss 下界（Schleimer 等人 SIGMOD'03，作为正确性契约）：长度至少 <code>t</code> 的公共串含 <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，两份拷贝必选出它的同一个最小值。覆盖规则：按文件对，多样的段在前、长的在前，一段只有在某一侧有 <code>t</code> 个自己的 token 才进报告。</p>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>

@@ -45,7 +45,7 @@ Lua's `require` and `load`, R's `source` and `library`, and HTML's `href`, `src`
 `import` label. Rev 25 (lane v235_graphtrust) added `dynamic`: a load call whose target argument is no
 literal — Lua `require` / `dofile`, R `source` / `library`, Python `importlib.import_module` / `__import__`,
 TS `require` / `import()` — opens a `dynamic` site, which the resolve family refuses as `Dynamic` before any
-rung ([call.rs:9-12](../../../cli/src/graph/sites/call.rs#L9), [Resolve.hs:135](../../../core/app/CE/Resolve.hs#L135)), so its
+rung ([call_site.rs:9-12](../../../cli/src/scan/call_site.rs#L9), [Resolve.hs:135](../../../core/app/CE/Resolve.hs#L135)), so its
 language carries an unresolved site and cannot vouch for its dead verdicts; a literal argument opens the
 language's ordinary site (`import` for Python and TS) and walks the ladder. Rev 26 added the site's
 ledger column (`sites.ledger`, §3). Rev 28 (lane v235_licence, part 4C) added no kind: stored edges of

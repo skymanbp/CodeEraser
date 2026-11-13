@@ -30,6 +30,15 @@
 > 距离过 k 的对不出分数行。所以 `prefiltered` = 三道下界之一判定、或带内距离过上限的对，`judged` = 出分数行的对，分数行全是克隆（十二个对拍语料上 `judged` 等于克隆对数）。哪些对是克隆不变，同十二个语料与两个仓根上 `ce check` 与 `ce join` 的文档逐字节同前。
 > hello 的 `tablesDigest` 随两键变。golden：`tables/golden` 与各族 hello 的摘要重生成；`clone/golden` 第 8 对（chain3 对 fork3，ted 2、上限 0）改答 prefiltered（judged 0、`scores` 空）。
 
+> **10.0.0 同版加性**（T1/T2 的选择进核，车道 v235_imports，2026-11-12；方法学册 01 §6；10.0.0 未发布，同版加性不另升版号）：新能力 `cover/1`（类型 `cover`）——哪些已核实的 token 段进报告由核的覆盖规则 C_t 定（`CE.Dedup.Cover`、`CE.Dedup.Cover.Rule`），测量侧的行包含筛（`dominant`）删除。
+> 请求 `minTokens`（t，报告门槛，≥ 1）、`minDistinct`（d，多样性地板，≥ 0，0 = 地板关）与 `runs` `[[fileA, fileB, a0, b0, len, distinct]]`：文件码按路径秩，按 (fileA, fileB, a0, b0) 严格升序，两个 token 偏移、段长与段内互异 token 数。
+> 规则按文件对判：先多样类 D（distinct ≥ d）再低多样类 Lo，类内按 len 降序、a0、b0 升序；每个文件一份已覆盖 token 区间（同文件对共用一份），一段在两侧各自的未覆盖 token 数里取大者 ≥ t 才保留，保留的段两侧都并入覆盖；
+> D 的保留段报告、Lo 的保留段抑制（计数不报告），其余丢弃。应答 `reported` / `suppressed` / `dropped` 三张行下标表（各自严格升序，合起来每行恰一次）、`counts` `{rows, reported, suppressed, dropped}` 与 t、d 的回显，测量侧严格读，任何不符按名拒绝为线上偏斜。
+> 契约拒绝逐条按名：行数过上限、`minTokens` 小于 1、`minDistinct` 为负、行形不是六个整数、负元素、fileA 在 fileB 之后、len 小于 1、distinct 不在 1..len、同文件段自己重叠（a0 + len > b0）、表不严格升序。
+> 上限 `limits.caps.cover_rows` 262,144 = 2^18 行（`CE.Dedup.Cost.coverRowCap`）：文件对之间互相独立，测量侧在对与对之间切请求、答案逐段拼接即精确，一对从不切开，单独一对过上限按名拒绝整次运行而不静默丢弃；量过的最大单次段集（zod，19,134 段）是它的 7 %，一行至多约 60 字节，满额请求约 16 MB，远在协议行内。
+> 过上限是测量侧的计划错误，不是降级判决，故不答降级应答。无旋钮：t 与 d 是这次运行的事实。hello 能力表加 `cover/1`；定义包 `limits.caps` 加 `cover_rows`、各语言 `[scan] import_kinds` / `loads` 表随导入族扩展（Haskell 一行为 `['import', 'header']`：模块头与它的导出表），`tablesDigest` 随之变。
+> golden：新文件 `cover/golden`（四对，含一条拒绝与一对 d = 0）；`tables/golden` 与各族 hello 的摘要随定义包重生成，别的应答不动。
+
 > **9.1.0 同版加性**（工具约定入口，车道 v235_licence 第 4A 部分，2026-11-12；方法学册 06 角色表 role 10；9.1.0 未发布，同上不另升版号）：`graph/1` 节点行的角色列加第 10 位——工具约定（测量侧 `ROLE_CONVENTION = 1 << 10`，`cli/src/graph/deadcode/convention.rs` 按定义包读路径），
 > 核 `CE.Graph.Cost.roleBits` 加第十一行 `(10, 1)`，落在入口位；请求不带该位时判决逐字节同前。定义包 `flags` 加 `entry_conventions`（死文件考题第一代过关的八条工具约定与仓根 `init.lua`，每行一个名字与一个位置：`basename` / `under` / `exact`），hello 的 `tablesDigest` 随之变。
 > golden：`tables/golden` 的定义包与各族 hello 的摘要随定义包重生成，别的应答不动。
@@ -493,12 +502,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
   "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1","resolve/1",
-  "candidates/1","rank/1","docpairs/1","moves/1","bags/1","relocate/1"]`；fourclass/2 =
+  "candidates/1","rank/1","docpairs/1","moves/1","bags/1","relocate/1","cover/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明；relocate/1 = 重复写入类的搬移工序〔不是家族〕，9.1.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明；relocate/1 = 重复写入类的搬移工序〔不是家族〕，9.1.0 同版加性声明；cover/1 = T1/T2 报告的选择〔克隆族的前段，不是家族〕，10.0.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。例外只有一种：`error` 应答

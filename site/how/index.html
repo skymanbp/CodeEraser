@@ -85,7 +85,9 @@
   <code>t - k + 1 = w</code> consecutive k-grams, one complete window, whose minimum depends only on
   its contents, so both copies select it: at least one shared fingerprint, always, the Schleimer et al.
   SIGMOD'03 no-miss bound held as a correctness contract. The rolling hash is Rabin-Karp,
-  <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</p><details class="more"><summary>Derivation and constants</summary>
+  <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes. Import and load statements give no
+  token, like comments; so do a package clause and a Haskell module header. Which verified runs are reported is the core's coverage rule: per file pair, diverse
+  runs first, longest first, each kept only with <code>t</code> tokens of its own on some side.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>
@@ -94,7 +96,7 @@
     <li><b>hotCap</b> 64</li>
     <li><b>minDistinct</b> 7</li>
     <li><b>near-miss band</b> 25 &lt;= len &lt; 50</li>
-    <li><b>TOKENIZER_REV</b> 4</li>
+    <li><b>TOKENIZER_REV</b> 5</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
   </ul></details>
 </div>

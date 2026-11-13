@@ -64,7 +64,7 @@ The full table, both transcripts and the JSON behind them are in [`demo/README.m
 
 <sub>Zoom and pan this diagram at [codeeraser.dev/how/#verdict](https://codeeraser.dev/how/#verdict).</sub>
 
-- **Write-time clone guard:** normalized tokens winnowed at k = 25, w = 26, so any shared run of 50+ tokens is caught; only *novel* duplication is charged ([FPR-REPLAY](docs/FPR-REPLAY.md)).
+- **Write-time clone guard:** normalized tokens winnowed at k = 25, w = 26, so any shared run of 50+ tokens is caught; import and load statements (the package clause and a Haskell module header among them) give no token, and a report keeps a run only with 50 tokens of its own (the core's coverage rule); only *novel* duplication is charged ([FPR-REPLAY](docs/FPR-REPLAY.md)).
 - **Near-miss (T3) clones:** candidates from MinHash/LSH, judged in the core by tree edit distance at TSED ≥ 0.85.
 - **Documentation duplication that survives rewording:** 5-word shingles, Jaccard ≥ 0.80 or a 50-word verbatim run.
 - **Liveness:** per-language resolution ladders feed a reference graph; a four-way verdict comes back with a confidence code.
@@ -169,6 +169,7 @@ PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; 
 - **Languages.** AST judgment uses the <!--ce:count:grammars#word-->twelve<!--/ce--> grammars above; Markdown, HTML and `.txt` are judged by the documentation and graph rules; T4 clones are not promised.
 - **Advice, never a verdict.** Symbol-level liveness, `ce similar`, `ce merge` and `ce arch` never fail a gate; a guard class stays `observe` until it has its own false-positive record.
 - **Lines, not findings.** The score counts the lines some finding names, each line once however many findings name it: one long duplicated file weighs more than many short ones, and a second finding on lines already named does not lower it further.
+- **A span is first token to last.** A clone block's printed span runs from its first token's line to its last, so it can name the comment and import lines between them, which carry no token (a head declaration never starts or ends a span); the score counts those lines like any other line the block names.
 - **Lines not drawn.** `cognitive_fail` defaults to 0 (complexity only warns), and `ce structure` has no score floor.
 - **What the text names.** Liveness reads the references a file spells. A load whose target is computed (`require(prefix .. name)`, `import("./lib/" + name)`) or a star import whose `__all__` is not all literal draws no edge for what it does not spell: the file stays dead and its language cannot vouch for it. Dead is not a deletion licence either way: a file nothing references may still be run by name or found by a tool's convention (the eight conventions the dead-file exam passed, among them `setup.py`, Sphinx's `conf.py`, `package-info.java` and a Next.js `app/` page, are entries; a convention the product does not list is not), so `ce erase` deletes no whole file and erases only byte-identical documentation spans. Entry points declared in `setup.cfg` or a non-root `pyproject.toml` are not read.
 - **Distribution.** A release builds <!--ce:count:platforms#word-->five<!--/ce--> targets; `ce setup` wires nothing from an elevated account that is not the logged-in user (exit 13); judging this repository needs the `cli/tests` submodule seated.
