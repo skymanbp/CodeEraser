@@ -4,7 +4,7 @@
   "design": "deadfile-gen2-design-v1.md",
   "note": "BARS-GEN2 section 1 and section 6 step 2: the ten primary corpora and their tips, committed before any replay prints a count. A first choice is replaced only for fewer than 500 first-parent commits (read here: none) or the product refusing the tip's tree (read with the product build, recorded in tip_judged_by_product).",
   "product": {
-    "commit": null,
+    "commit": "5a3f959380b339031f06b7cd01c452b3e1244729",
     "built_from": "the licence lane's tip after part 4A has landed (the eight tool conventions are entries)"
   },
   "corpora": [
