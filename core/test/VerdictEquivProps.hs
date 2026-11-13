@@ -81,11 +81,16 @@ request (sim, pos, churn, cont, classes, locs, docs, weights, n) =
     , "proseLines" .= [[u, 1] | u <- [0 .. n - 1]]
     ]
 
--- | Every reply echoes the effective weight table and seven axis rows.
+-- | Every reply echoes the effective weight table and seven axis rows:
+-- a named axis at its weight, an unnamed one at defaultWeight - except
+-- the dead axis (4), which since the dead-file amendment (v2.35) weighs
+-- 0 until a request names it.
 wired :: WireCase -> Bool
 wired c@(_, _, _, _, _, _, _, weights, _) = case fieldsOf respond (request c) ["axes", "weights"] of
-  Just [Just (Array axes), w] -> length axes == 7 && w == Just (toJSON [[a, maybe defaultWeight id (lookup a [(x, w') | [x, w'] <- weights])] | a <- [0 .. 6 :: Integer]])
+  Just [Just (Array axes), w] -> length axes == 7 && w == Just (toJSON [[a, maybe (unnamed a) id (lookup a [(x, w') | [x, w'] <- weights])] | a <- [0 .. 6 :: Integer]])
   _ -> False
+ where
+  unnamed a = if a == 4 then 0 else defaultWeight
 
 -- | The reference's own reading of the boundaries: one discrete entry
 -- past verdictRowCap degrades, a sim pair whose endpoints descend is

@@ -45,6 +45,7 @@ pub(crate) fn check_reply(r: &Request, reply: &Reply) -> Result<()> {
         }
         _ => {}
     }
+    dead_echo(r, reply)?;
     if reply.degraded.is_some() {
         return Ok(());
     }
@@ -71,6 +72,44 @@ fn drift_policy(r: &Request, failed: &[String]) -> Result<()> {
         "core {} knobs_digest (baseline recorded {recorded:?}, ce declared {:?})",
         if held { "held" } else { "did not hold" },
         r.knobs_digest
+    );
+    Ok(())
+}
+
+/// The dead-file gate (plan v2.35): the blocking roots echo exactly as
+/// sent, `dead_added` holds exactly when one was sent, and the new
+/// baseline carries the point verbatim exactly when one rode (a
+/// degraded reply answers no new baseline to persist, so only a judged
+/// one is held to the point).
+fn dead_echo(r: &Request, reply: &Reply) -> Result<()> {
+    ensure!(
+        reply.dead_added.is_some() == r.dead.added.is_some(),
+        "core answered ratchet.deadAdded {:?} to a request that sent {:?}",
+        reply.dead_added,
+        r.dead.added
+    );
+    if reply.degraded.is_some() {
+        return Ok(());
+    }
+    ensure!(
+        reply.dead_added == r.dead.added,
+        "core echoed deadAdded {:?}, ce sent {:?}",
+        reply.dead_added,
+        r.dead.added
+    );
+    let sent = r.dead.added.as_ref().is_some_and(|a| !a.is_empty());
+    let held = reply.failed.iter().any(|c| c == "dead_added");
+    ensure!(
+        held == sent,
+        "core {} dead_added with deadAdded {:?}",
+        if held { "held" } else { "did not hold" },
+        r.dead.added
+    );
+    let echoed = reply.new_baseline.get("deadPoint");
+    ensure!(
+        echoed == r.dead.point.as_ref(),
+        "core answered newBaseline.deadPoint {echoed:?}, ce sent {:?}",
+        r.dead.point
     );
     Ok(())
 }
@@ -138,9 +177,12 @@ fn knob_echoes(r: &Request, reply: &Reply) -> Result<()> {
 }
 
 /// Sent [axis, w] rows against the reply's effective weight table:
-/// every axis 0..6 must echo the sent override or the default — a
-/// dead or mis-indexed channel reddens here at every judged run.
+/// every axis 0..6 must echo the sent override or the default — 0 for an
+/// opt-in axis (the package's `limits.score_opt_in`, the dead-file
+/// amendment), the default weight otherwise — a dead or mis-indexed
+/// channel reddens here at every judged run.
 fn assert_weights(sent: &[[i64; 2]], echoed: &[[i64; 2]], default_w: i64) -> Result<()> {
+    let opt_in = crate::tables::get().limits.score_opt_in;
     ensure!(
         echoed.len() == 7,
         "weights echo has {} axes, want 7",
@@ -151,7 +193,7 @@ fn assert_weights(sent: &[[i64; 2]], echoed: &[[i64; 2]], default_w: i64) -> Res
             .iter()
             .find(|[c, _]| *c == axis as i64)
             .map(|[_, w]| *w)
-            .unwrap_or(default_w);
+            .unwrap_or(if opt_in.contains(&axis) { 0 } else { default_w });
         ensure!(
             row[0] == axis as i64 && row[1] == want,
             "core weighted axis {axis} at {:?}, ce sent {want}",

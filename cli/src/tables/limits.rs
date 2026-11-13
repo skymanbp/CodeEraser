@@ -56,7 +56,10 @@ leaked! {
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
              dedup: DedupLimits, similar: SimilarLimits, moves: MovesLimits, caps: WireCaps,
-             graph: GraphLimits, zone: ZoneLimits, score_defaults: ScoreDefaults }
+             graph: GraphLimits, zone: ZoneLimits, score_defaults: ScoreDefaults,
+             // the dead-file amendment (plan v2.35): the axes that weigh 0
+             // unless a project names their weight (CE.Verdict.Cost.optInAxes)
+             score_opt_in: &'static [usize] }
 }
 
 /// Each verdict knob's core default, by its wire name (the degraded

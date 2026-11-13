@@ -12,6 +12,7 @@ module VerdictExtentGen
   , requestOf
   , viaRespond
   , viaScored
+  , viaRows
   , rowsReversed
   , unitsOf
   , tablesOf
@@ -121,6 +122,15 @@ viaScored ws v t = Judged s (map snd axes) (layered (zip [0 ..] ws) us) (totalLi
   (f, loc) = factsOf t
   (s, axes, _) = scored (knobsOf t v) Nothing [[a, w] | (a, w) <- zip [0 ..] ws] f loc
   us = unitsOf t
+
+-- | The score under weight rows as sent (an axis no row names weighs
+-- what the core gives it: the dead-file amendment's opt-in reads here)
+-- at the neutral violation cost.
+viaRows :: [[Integer]] -> MTree -> Integer
+viaRows ws t = s
+ where
+  (f, loc) = factsOf t
+  (s, _, _) = scored (knobsOf t 10) Nothing ws f loc
 
 -- | The score with every table's rows reversed before the fold (the
 -- continuous table and its spans together, as they are aligned).

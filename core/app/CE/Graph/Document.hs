@@ -17,7 +17,11 @@
 module CE.Graph.Document (advisoryNames, doc, statement, verdictName, whyCodes) where
 
 import CE.Document.Contract
+import CE.Graph.Cost (blockStates, rootStates)
 import Data.Aeson (Value (..), object, toJSON, (.=))
+import qualified Data.Aeson.Key as Key
+import qualified Data.Aeson.KeyMap as KM
+import Data.Bits (testBit)
 import Data.Aeson.Types (Pair)
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
@@ -43,7 +47,12 @@ schemaId = "ce.deadcode-report/0.5.0"
 -- amendment, 5A) is optional and additive: `roots` [node] the roots the
 -- graph reply named, `under` [dependent, root] its pairs, `underDropped`
 -- the core's marker when it dropped them; absent, every row and count
--- is what it was before the grouping.
+-- is what it was before the grouping. The gate (5B) is optional and
+-- additive too: a `roots` row may carry its state code as a second
+-- column (CE.Graph.Cost.rootStates), and `blocked` [node] the roots the
+-- graph answered as blocking, beside the facts `blockMask` (the
+-- project's mask over Cost.blockStates), `compared` (a comparison point
+-- rode) and `unanswered` (the reply's `blockUnanswered`).
 statement :: String
 statement =
   "range nodes\nrange advisory\nrange why\n\
@@ -51,7 +60,8 @@ statement =
   \rows kept 1 judged -\nrows reason 1 judged -\n\
   \rows dead 2+ judged nodes -\nrows reported 2 judged nodes -\n\
   \rows unmentioned 4 judged advisory nodes - -\n\
-  \rows roots 1 judged nodes\nrows under 2 judged nodes nodes\nfact underDropped judged\noptional roots under underDropped\n\
+  \rows roots 1+ judged nodes\nrows under 2 judged nodes nodes\nfact underDropped judged\noptional roots under underDropped\n\
+  \rows blocked 1 judged nodes\nfact blockMask judged\nfact compared judged\nfact unanswered judged\noptional blocked blockMask compared unanswered\n\
   \ref path nodes\nref node_name nodes\nref symbol advisory\nref why why\n"
 
 -- | The four verdicts by code 1..4 (CE.Graph.Dead).
@@ -92,6 +102,7 @@ checked req =
     , if flag req "asked" || not (flag req "dropped" || flag req "cut") then Nothing else Just "advisory: bits without the road"
     , if (flag req "asked" && not (flag req "dropped")) || null (rows req "unmentioned") then Nothing else Just "unmentioned: rows the road did not keep"
     , grouping req
+    , gated req
     ]
 
 -- | Whether the grouping rode: the `roots` table is in the request.
@@ -117,24 +128,103 @@ grouping req =
   roots = S.fromList [n | n : _ <- rows req "roots"]
   covered = S.fromList [d | d : _ <- rows req "under"]
 
+-- | Whether the roots carry their state (the gate rode, or a row is two
+-- wide; then every row is), and whether the gate rode (the `blocked`
+-- table is in the request).
+stateful, gateRode :: DocReq -> Bool
+stateful req = gateRode req || any ((== 2) . length) (rows req "roots")
+gateRode req = maybe False (M.member "blocked") (dRows req)
+
+-- | The gate held to the grouping: roots one or two wide, never both,
+-- each state a code; the two facts bits, the mask over the blockable
+-- states; every blocked node a root whose state the mask blocks;
+-- nothing blocked when the gate went unanswered.
+gated :: DocReq -> Maybe String
+gated req =
+  asum
+    [ codes req "roots" 1 0 (toInteger (length rootStates) - 1)
+    , if any (> 2) widths || (stateful req && any (/= 2) widths) then Just "roots: one or two columns, the same on every row" else Nothing
+    , bits req ["compared", "unanswered"]
+    , if fact req "blockMask" < 2 ^ length blockStates then Nothing else Just "facts: blockMask outside the blockable states"
+    , if gateRode req && not (told req) then Just "blocked: without the roots table" else Nothing
+    , asum [Just ("blocked " <> show i <> ": not a root the mask blocks") | (i, n : _) <- zip [0 :: Int ..] (rows req "blocked"), not (blocks req sts n)]
+    , if flag req "unanswered" && not (null (rows req "blocked")) then Just "blocked: rows beside an unanswered gate" else Nothing
+    ]
+ where
+  widths = map length (rows req "roots")
+  sts = stateMap req
+
+-- | Every root's state code, built once per document (a lookup per row
+-- would be quadratic in the roots); a node the map lacks reads 0, untold.
+stateMap :: DocReq -> M.Map Integer Integer
+stateMap req = M.fromList [(r, st) | [r, st] <- rows req "roots"]
+
+stateIn :: M.Map Integer Integer -> Integer -> Integer
+stateIn m n = M.findWithDefault 0 n m
+
+-- | Whether the mask blocks a root, by its state.
+blocks :: DocReq -> M.Map Integer Integer -> Integer -> Bool
+blocks req m n = case lookup (nameOf rootStates (stateIn m n)) (zip blockStates [0 ..]) of
+  Just b -> testBit (fact req "blockMask") b
+  Nothing -> False
+
 -- | The document; the advisory's three keys only when the road asked.
 deadcode :: DocReq -> Value
 deadcode req =
   object $
-    [ "dead" .= map (dead (grouped req)) (rows req "dead")
+    [ "dead" .= [gateRow req (sts, blocked) n (dead g row) | row@(n : _) <- rows req "dead"]
     , "reported" .= [object ["name" .= ref "node_name" [n], "verdict" .= verdictName v] | [n, v] <- rows req "reported"]
-    , "counts" .= object (["nodes" .= range req "nodes", "kept_edges" .= fromMaybe 0 (keptOf req)] <> groupCounts req)
+    , "counts" .= object (["nodes" .= range req "nodes", "kept_edges" .= fromMaybe 0 (keptOf req)] <> groupCounts req <> stateCounts req)
     , "unresolved_sites" .= fact req "unresolvedSites"
     , "degraded" .= degradedOf req ["reason"]
     ]
-      <> if flag req "asked"
-        then
-          [ "unmentioned" .= map advisory (rows req "unmentioned")
-          , "unmentioned_dropped" .= flag req "dropped"
-          , "unmentioned_cut" .= (flag req "cut" && not (flag req "dropped"))
-          ]
-        else []
+      -- the advisory's keys only when the road asked; the grouping's
+      -- and the gate's ride beside them either way (parenthesised: an
+      -- unbracketed `else []` swallowed every key after it)
+      <> ( if flag req "asked"
+            then
+              [ "unmentioned" .= map advisory (rows req "unmentioned")
+              , "unmentioned_dropped" .= flag req "dropped"
+              , "unmentioned_cut" .= (flag req "cut" && not (flag req "dropped"))
+              ]
+            else []
+         )
       <> ["under_dropped" .= True | told req, flag req "underDropped"]
+      <> ["gate" .= gateObj req | gateRode req]
+ where
+  -- built once per document, read per row
+  g = grouped req
+  sts = stateMap req
+  blocked = S.fromList [n | n : _ <- rows req "blocked"]
+
+-- | The gate as the project declared and the graph answered it: the
+-- blocked states by name, what the states were compared against, how
+-- many roots block, and whether the gate could be answered at all.
+gateObj :: DocReq -> Value
+gateObj req =
+  object
+    [ "block" .= [s | (b, s) <- zip [0 ..] blockStates, testBit (fact req "blockMask") b]
+    , "comparison" .= (if flag req "compared" then toJSON ("baseline" :: String) else Null)
+    , "blocked" .= length (rows req "blocked")
+    , "answered" .= not (flag req "unanswered")
+    ]
+
+-- | A root's row under the gate: its state by name and, when the gate
+-- rode, whether it blocks; a dependent's row, and every row of a
+-- request without states, as it was.
+gateRow :: DocReq -> (M.Map Integer Integer, S.Set Integer) -> Integer -> Value -> Value
+gateRow req (sts, blocked) n v = case v of
+  Object o
+    | Just (Bool True) <- KM.lookup "root" o
+    , stateful req ->
+        Object (o <> KM.fromList (["state" .= nameOf rootStates (stateIn sts n)] <> ["blocking" .= S.member n blocked | gateRode req]))
+  _ -> v
+
+-- | One count per state over the roots, when the states rode.
+stateCounts :: DocReq -> [Pair]
+stateCounts req
+  | stateful req = [Key.fromString s .= length [() | [_, st] <- rows req "roots", st == c] | (c, s) <- zip [0 ..] rootStates]
+  | otherwise = []
 
 -- | The grouping as the rows read it: the roots, and each dependent's
 -- roots ascending (the pairs ride ascending); Nothing when it did not

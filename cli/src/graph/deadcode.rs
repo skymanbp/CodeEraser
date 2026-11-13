@@ -33,6 +33,7 @@ mod convention;
 pub mod cycles;
 mod document;
 mod flags;
+mod gate;
 mod reply;
 mod targets;
 
@@ -42,6 +43,7 @@ pub use cycles::self_loop_nodes;
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;
+pub use gate::{Gate, Gated, committed_point};
 pub use reply::Grouping;
 use reply::consume;
 
@@ -79,6 +81,8 @@ pub struct Judged {
     pub advisory: Option<Advised>,
     /// The core's roots and dependents of the dead rows (plan v2.35).
     pub grouping: Grouping,
+    /// The core's answer to the dead-file gate (plan v2.35, 5B).
+    pub gated: Gated,
 }
 
 /// Whether the wire carries the two advisory tables (6.2.0). ONE
@@ -96,9 +100,7 @@ pub enum Advisory {
 }
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
-    let (idx, db_path) = dedup::refreshed_index(root, db)?;
-    let w = wire_of(root, &idx, &db_path, Advisory::Yes)?;
-    judge_report(root, core, &w)
+    judge_report(root, core, &face_wire(root, db)?)
 }
 
 /// The judgment and its document over a wire already in hand (batch 9
@@ -115,15 +117,34 @@ pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
 /// — `check` is the console's `--check`, a fact only the lines and the
 /// veto read.
 pub fn answer(root: &Path, db: Option<PathBuf>, core: &str, check: bool) -> Result<Answer> {
+    Ok(said(root, core, &face_wire(root, db)?, check)?.0)
+}
+
+/// The deadcode face's wire, the one both its doors judge (`run`, the
+/// library's, and `answer`, the console's, the MCP tool's and the
+/// GUI's): the advisory asked, and the dead-file gate (plan v2.35, 5B)
+/// — the committed point and the declared mask. The erase, score,
+/// structure and join roads send no gate here (score::run sends its
+/// own).
+fn face_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     let (idx, db_path) = dedup::refreshed_index(root, db)?;
-    let w = wire_of(root, &idx, &db_path, Advisory::Yes)?;
-    Ok(said(root, core, &w, check)?.0)
+    let mut w = wire_of(root, &idx, &db_path, Advisory::Yes)?;
+    let block = Config::load(root)
+        .map_err(anyhow::Error::msg)?
+        .deadcode
+        .mask();
+    w.gate = Some(Gate::of(root, &w, committed_point(root)?, block));
+    Ok(w)
 }
 
 /// The judgment, then its document and lines over the judgment's link.
 fn said(root: &Path, core: &str, w: &GraphWire, check: bool) -> Result<(Answer, Judged)> {
     let (j, _, held) = judged(root, core, w, &[])?;
-    let req = reply::on_request(document::request(("deadcode", check), w, &j)?, &j.grouping);
+    let req = reply::on_request(
+        document::request(("deadcode", check), w, &j)?,
+        &j,
+        w.gate.as_ref(),
+    );
     Ok((crate::document::assemble_over(core, held, req)?, j))
 }
 
@@ -142,11 +163,18 @@ pub fn judged(
 ) -> Result<(Judged, Value, crate::document::Held)> {
     let mut link = crate::corelink::judged::open(core, "graph/1")?;
     let reply = judge_on(&mut link, w, pos)?;
-    let j = consume(&reply, &w.nodes, w.unmentioned.as_ref())?;
+    let j = consume(&reply, &w.nodes, w.unmentioned.as_ref(), w.gate.as_ref())?;
     if let Some(reason) = &j.degraded {
         observe(root, reason);
     }
     Ok((j, reply, Ok(link)))
+}
+
+/// A raw reply held at the boundary over the wire that asked it (the
+/// check road's read: the positions and the gate's answer off one
+/// judgment, without the face's observe line).
+pub fn read(reply: &Value, w: &GraphWire) -> Result<Judged> {
+    consume(reply, &w.nodes, w.unmentioned.as_ref(), w.gate.as_ref())
 }
 
 /// Everything one graph.request carries, built once — the request
@@ -183,6 +211,9 @@ pub struct GraphWire {
     /// when Some — the verdict road sends the same number as threshold
     /// code 7, so one config key drives both faces.
     pub scc_floor: Option<u32>,
+    /// The dead-file gate (plan v2.35, 5B): None from `wire_of`; the
+    /// faces that judge the gate set it (`answer`, score::run).
+    pub gate: Option<Gate>,
 }
 
 /// The file-tier slice of the wire's dense assignment: (index, path)
@@ -280,6 +311,7 @@ pub fn wire_of(
         unmentioned,
         mounts,
         scc_floor: config.graph.scc_floor,
+        gate: None,
     })
 }
 
@@ -420,6 +452,9 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
             "unmentioned".into(),
             json!(u.names.keys().collect::<Vec<_>>()),
         );
+    }
+    if let Some(g) = &w.gate {
+        g.insert(obj);
     }
     body
 }

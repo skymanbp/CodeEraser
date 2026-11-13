@@ -76,12 +76,16 @@ cycleRows k f =
   docs = IS.fromList (map fromInteger (fDocFiles f))
 
 -- | One axis's effective weight: wire rows [axisCode, numerator]
--- override; unlisted axes weigh sDefaultWeight. ONE lookup, two
--- readers — the score fold and the reply's echo (review C3).
+-- override; an unlisted axis weighs 0 when it is opt-in
+-- (Cost.optInAxes, the dead axis: plan v2.35, the dead-file amendment)
+-- and sDefaultWeight otherwise. ONE lookup, two readers — the score
+-- fold and the reply's echo (review C3).
 effWeight :: ScoreKnobs -> [[Integer]] -> Integer -> Integer
 effWeight k weights code = case [w | [c, w] <- weights, c == code] of
   (w : _) -> w
-  [] -> sDefaultWeight k
+  []
+    | code `elem` Cost.optInAxes -> 0
+    | otherwise -> sDefaultWeight k
 
 -- | The full effective table 0..6, the extent law's layers and the
 -- reply's echo.

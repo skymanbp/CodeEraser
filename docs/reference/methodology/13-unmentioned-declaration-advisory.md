@@ -250,7 +250,7 @@ three keys, present only when the road was asked: `unmentioned` rows of five sca
 producer's cut, which the core cannot see — so Rust sends it as a fact beside one request row per
 name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and since plan v2.32 step 4
 the core's deadcode document lays the three keys out, naming each code and its reading
-([Document.hs:130-135](../../../core/app/CE/Graph/Document.hs#L130), [Document.hs:185-197](../../../core/app/CE/Graph/Document.hs#L185)). The console prints one line per row, a
+([Document.hs:130-135](../../../core/app/CE/Graph/Document.hs#L130), [Document.hs:181-188](../../../core/app/CE/Graph/Document.hs#L181)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
 ([Lines.hs:62-70](../../../core/app/CE/Graph/Lines.hs#L62)); the MCP `deadcode`
 tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI

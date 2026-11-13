@@ -32,7 +32,7 @@ $ ce erase . --apply
 erase applied: 1 row(s); audit trail in .ce/erase-log.ndjson
 the tree, measured (the CI face):
 $ ce check .
-check score 825/1000 | findings on 55.0 of 316 lines | per 1000 lines: size 0 complexity 0 clone 0 docdup 0 dead 174 churn 0 cycle 0 | 0 candidates
+check score 1000/1000 | findings on 0.0 of 316 lines | per 1000 lines: size 0 complexity 0 clone 0 docdup 0 unreferenced 174 (off) churn 0 cycle 0 | 0 candidates
 ratchet: 0 added, 0 removed, 1 over, 1 tolerance drawn -> FAIL (failed: ratchet_over)
 $ ce dedup . --check
 indexed 8 files (0 refreshed, 0 removed) — 0 clone blocks in 0 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped
@@ -41,9 +41,9 @@ clones: 0 near-miss clone pair(s) over 25 unit(s) — 0 judged, 1 replayed from 
 $ ce docdup . --check
 dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0, seed_pairs 0, sent 0
 $ ce deadcode . --check
-unreferenced: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
-unreferenced: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
-deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s)), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
-deadcode check: 2 unreferenced file(s) — disposition or entry_globs them
+unreferenced (born): docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
+unreferenced (orphaned): invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s): 0 standing, 1 orphaned, 1 born), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
+deadcode check: 2 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml [deadcode] block = ["orphaned", "born"] and a committed baseline
 $ ce erase . --check
 erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)

@@ -65,6 +65,7 @@ module CE.Verdict.Cost
   , zoneWarnPermille
   , zoneAskPermille
   , defaultWeight
+  , optInAxes
   , scoreScale
   , verdictNodeCap
   , verdictRowCap
@@ -234,6 +235,16 @@ violCostNeutral = 10
 -- wire can override per axis, and wTotal follows.
 defaultWeight :: Integer
 defaultWeight = 1
+
+-- | The axes a project turns on for itself (plan v2.35, the dead-file
+-- amendment): an axis listed here weighs 0 unless the request names its
+-- weight; every other axis weighs defaultWeight. The dead axis (code 4)
+-- alone: a class that may not block by default may not pull the score
+-- under a floor by default either. CE.Verdict.Score.effWeight reads it,
+-- and the definition package publishes it (`limits.score_opt_in`) for
+-- the knob digest's shipped table.
+optInAxes :: [Integer]
+optInAxes = [4]
 
 -- | The score's opening value (per-mille scale) — the last scoring
 -- number that lived as an inline literal in Score.score, outside

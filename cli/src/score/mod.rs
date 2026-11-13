@@ -17,7 +17,7 @@ pub mod knobs;
 pub mod located;
 pub mod model;
 mod pinned;
-mod provenance;
+pub(crate) mod provenance;
 pub mod wire;
 pub(crate) mod wire_check;
 
@@ -113,6 +113,8 @@ struct Measured {
     /// The extent law's duplicate spans and reference lines (v2.35).
     dup_spans: Vec<[i64; 4]>,
     ref_lines: Vec<[i64; 3]>,
+    /// The dead-file gate's two facts for the verdict wire (plan v2.35).
+    dead: wire::Dead,
 }
 
 fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
@@ -121,7 +123,8 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let (found, snap, db_path) = dedup::snapshot(root, opts.db.clone())?;
     // the dogfood gate's hot path: no mention pass, no advisory
     // tables — the score reads positions and the export surface
-    let w = deadcode::wire_of(root, &snap, &db_path, deadcode::Advisory::No)?;
+    let mut w = deadcode::wire_of(root, &snap, &db_path, deadcode::Advisory::No)?;
+    w.gate = gate_of(root, opts, &w)?;
     // the docdup family's verified pairs (7.0.0, O46): until then this
     // face sent no kind-2 row and the score's docdup axis read a
     // constant zero — one of seven axes dead, unnoticed because a zero
@@ -139,7 +142,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let fnodes = deadcode::measured_nodes(&w);
     let files = universe(&fnodes, &snap)?;
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
-    let (posmap, loops) = judged_positions(&opts.core, &w, &pos_req)?;
+    let (posmap, loops, dead) = judged_positions(&opts.core, &w, &pos_req)?;
     let idx = row_index(&files);
     let ref_lines = located::ref_lines(&snap, &idx)?;
     drop(snap);
@@ -174,7 +177,30 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         collapsed,
         skipped_self,
         anchors,
+        dead,
     })
+}
+
+/// The dead-file gate this run sends graph/1 (plan v2.35, 5B): every
+/// file node's entity, and — on a run judged against the committed
+/// baseline — its point and the declared block mask. The wholesale act
+/// records the day's point and compares nothing (no point, no mask);
+/// the trend road, which writes no baseline, sends no gate at all.
+fn gate_of(root: &Path, opts: &Opts, w: &deadcode::GraphWire) -> Result<Option<deadcode::Gate>> {
+    if opts.pinned_soft.is_some() {
+        return Ok(None);
+    }
+    let (point, block) = if opts.establish {
+        (None, 0)
+    } else {
+        let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+        let point = opts
+            .baseline
+            .as_ref()
+            .and_then(|b| b.get("deadPoint").cloned());
+        (point, cfg.deadcode.mask())
+    };
+    Ok(Some(deadcode::Gate::of(root, w, point, block)))
 }
 
 /// Each universe file's row index by path: the key the sim rows, the
@@ -285,6 +311,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
             located::prose_lines(root, &m.files, &homes)?,
         ),
         files: m.files,
+        dead: m.dead,
     };
     let (reply, link) = wire::judge(&opts.core, &req)?;
     Ok(Outcome {
@@ -326,21 +353,49 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
 /// the sibling of the deadcode --check hole (clearance review; "a
 /// gate that could not judge must never pass"). The second half is
 /// the reply's singleton cycles (6.4.0): node indices, re-keyed by
-/// the caller.
+/// the caller. The third is the dead-file gate's answer (plan v2.35,
+/// 5B): an unanswered gate refuses by name before any verdict is
+/// judged; otherwise today's point and the blocking roots' ids ride to
+/// the verdict family, which holds `dead_added` on them.
 fn judged_positions(
     core: &str,
     w: &deadcode::GraphWire,
     pos_req: &[i64],
-) -> Result<(HashMap<String, join::Pos>, Vec<i64>)> {
+) -> Result<(HashMap<String, join::Pos>, Vec<i64>, wire::Dead)> {
     let reply = deadcode::judge(core, w, pos_req)?;
+    let j = deadcode::read(&reply, w)?;
+    if let Some(reason) = &j.degraded {
+        anyhow::bail!("graph judgment degraded ({reason}) — refusing to score on it");
+    }
     anyhow::ensure!(
-        reply["degraded"] != serde_json::json!(true),
-        "graph judgment degraded ({}) — refusing to score on it",
-        reply["reason"].as_str().unwrap_or("?")
+        !j.gated.unanswered,
+        "[deadcode] block is declared and no committed baseline records which files were \
+         unreferenced — nothing to compare, refusing to judge; write one from the project root: \
+         CE_ACCEPT_BASELINE=1 ce baseline ."
     );
+    let dead = match &w.gate {
+        Some(g) => wire::Dead {
+            point: j.gated.now.clone(),
+            added: Some(
+                j.gated
+                    .blocked
+                    .iter()
+                    .map(|&n| {
+                        g.id_of(n).ok_or_else(|| {
+                            anyhow::anyhow!("graph/1 blocked node {n} has no entity this side sent")
+                        })
+                    })
+                    .collect::<Result<BTreeSet<u64>>>()?
+                    .into_iter()
+                    .collect(),
+            ),
+        },
+        None => wire::Dead::default(),
+    };
     Ok((
         join::pos_map(&reply, w)?,
         deadcode::self_loop_nodes(&reply)?,
+        dead,
     ))
 }
 

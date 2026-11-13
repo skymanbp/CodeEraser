@@ -31,6 +31,11 @@ extentLegs =
   , ("extent 8: row order of every table is not a judgment fact", all permuted trees && all rowsReversed trees)
   , ("extent 9: two disjoint copies of a tree read what one copy reads", all copies trees)
   , ("extent 10: with a dead root that alone refers to a dead file, deleting the root never lowers the score", all deadRoot trees)
+  , ("extent 10b: the dead axis named (weight row 4 = 1): deleting a dead root never lowers the score", all deadRootNamed trees)
+  , ("extent 10c: with the dead axis off a dead root A (3) -> B (5) beside a 10-line file a span names scores 444, and 333 once A is deleted", offCase)
+  , ("extent 13: no weight named: a tree scores as the same tree with its unreachable files reachable", all optedOut trees)
+  , ("extent 14: the dead axis named at 1 scores as the reference with every axis at 1 (the pre-amendment default)", all optedIn trees)
+  , ("extent 14b: six axes zeroed and the dead axis named 1 score as the reference weighing the dead axis alone", all deadAlone trees)
   ]
  where
   trees = exhaustive <> randomFamily
@@ -214,3 +219,35 @@ rootCase t = [(with, without (n + 0) with) | (a, b) <- [(3, 5), (8, 2)], let wit
 
 deadRoot :: MTree -> Bool
 deadRoot t = and [jScore (eq after) >= jScore (eq before) | (before, after) <- rootCase t]
+
+-- | The dead-file amendment (plan v2.35): the dead axis weighs 0 unless
+-- a request names its weight. Off, it reads no line of an unreachable
+-- file; named at 1, the score is the reference's all-ones score (the
+-- default before the amendment) and deleting a dead root never lowers
+-- the score.
+deadRootNamed :: MTree -> Bool
+deadRootNamed t = and [viaRows [[4, 1]] after >= viaRows [[4, 1]] before | (before, after) <- rootCase t]
+
+-- | With the axis off an unreferenced file is an ordinary file to the
+-- score - adding one dilutes, deleting one concentrates, as for any
+-- file: its lines stay in L and leave E (the lane's case, p5b/cex10b).
+offCase :: Bool
+offCase = [viaRows [] with, viaRows [] without'] == [444, 333] && [viaRows [[4, 1]] with, viaRows [[4, 1]] without'] == [0, 0]
+ where
+  base = MTree [(blank 10) {mSpans = [(1, 10, 0)]}] [] 1000 15 2
+  (with, without') = case rootCase base of
+    (b, a) : _ -> (b, a)
+    [] -> (base, base)
+
+optedOut :: MTree -> Bool
+optedOut t = viaRows [] t == viaRows [] t {tFiles = [f {mDead = False} | f <- tFiles t]}
+
+deadAlone :: MTree -> Bool
+deadAlone t = viaRows [[c, if c == 4 then 1 else 0] | c <- [0 .. 6]] t == s
+ where
+  (s, _, _) = refScore [0, 0, 0, 0, 1, 0, 0] 1 t
+
+optedIn :: MTree -> Bool
+optedIn t = viaRows [[4, 1]] t == s
+ where
+  (s, _, _) = refScore (replicate 7 1) 1 t

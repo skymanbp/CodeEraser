@@ -15,10 +15,13 @@ module CE.Verdict.Wire
   , violation
   ) where
 
+import CE.Graph.Point (addedOffence, pointShape)
 import CE.Verdict.Ratchet (Baseline (..))
 -- every boundary checker the module exports (CE.Verdict.Rows)
 import CE.Verdict.Rows
 import CE.Verdict.ExtentRows (extentOffence)
+import CE.Verdict.Knobs (effectiveKnobs)
+import CE.Verdict.Score (effectiveWeights)
 import CE.Verdict.Table
   ( ascendingBy
   , ceilingsOffence
@@ -137,6 +140,11 @@ data VerdictReq = VerdictReq
     reqSelfLoops :: Maybe [Integer]
   , -- the extent law (10.0.0, required; CE.Verdict.ExtentRows): contSpans, dupSpans, refLines, proseLines
     reqExtent :: (Maybe [[Integer]], Maybe [[Integer]], Maybe [[Integer]], Maybe [[Integer]])
+  , -- the dead-file amendment (plan v2.35, 5B; CE.Graph.Point): today's
+    -- point as graph/1 answered it (`deadNow`), copied verbatim into the
+    -- new baseline, and the blocking roots' ids, which hold `dead_added`
+    reqDeadPoint :: Maybe Value
+  , reqDeadAdded :: Maybe [Integer]
   }
 
 instance FromJSON VerdictReq where
@@ -171,6 +179,26 @@ instance FromJSON VerdictReq where
       <*> o .:? "present"
       <*> o .:? "cycleSelfLoops"
       <*> ((,,,) <$> o .:? "contSpans" <*> o .:? "dupSpans" <*> o .:? "refLines" <*> o .:? "proseLines")
+      <*> o .:? "deadPoint"
+      <*> o .:? "deadAdded"
+
+-- | Every EFFECTIVE weight 0 - the score's own table (effWeight: a row,
+-- else 0 for an opt-in axis, else the default weight) - leaves the
+-- extent law no divisor and is refused: seven zero rows, or six with
+-- the dead axis unnamed (plan v2.35, the dead-file amendment). A
+-- defaultWeight of 0 never reaches here: the thresholds range refuses
+-- it first. Judged after the knob tables' own shape.
+zeroedOffence :: VerdictReq -> Maybe String
+zeroedOffence req
+  | all (\r -> drop 1 r == [0]) (effectiveWeights k (reqWeights req)) = Just "weights: every axis zeroed"
+  | otherwise = Nothing
+ where
+  k = effectiveKnobs (reqCeilings req) (reqThresholds req)
+
+-- | The dead-file amendment's two keys (plan v2.35): the point is
+-- graph/1's own shape, held again, and the blocking roots ride beside it.
+deadOffence :: VerdictReq -> Maybe String
+deadOffence req = pointShape (reqDeadPoint req) <|> addedOffence (reqDeadPoint req) (reqDeadAdded req)
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -199,7 +227,7 @@ violation parsed req =
     , weightsOffence (reqWeights req)
     , ceilingsOffence (reqCeilings req)
     , thresholdsOffence (reqThresholds req)
-    , toleranceOffence (reqTolerance req)
+    , toleranceOffence (reqTolerance req) <|> zeroedOffence req
     , -- the rulepack's knob rows (3.1.0): the ceilings grammar one
       -- class dimension wider, judged before the floor like its kin
       classKnobsOffence (reqClassKnobs req)
@@ -220,6 +248,7 @@ violation parsed req =
       maybe Nothing presentOffence (reqPresent req)
     , selfLoopsOffence n (reqThresholds req) (reqSelfLoops req)
     , extentOffence n (reqCont req) (reqExtent req)
+    , deadOffence req
     ]
  where
   n = toInteger (length (reqTier req))

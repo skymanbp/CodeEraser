@@ -14,8 +14,9 @@
 -- from the request and the document; the core's `{:.1}` is Rust's on
 -- the halfway cases; the golden speaks both languages; and a request
 -- that leaves out a family's optional facts and tables assembles the
--- same document, but for the keys the dead-file grouping adds (plan
--- v2.35, 5A: its optional tables add keys and move no other byte).
+-- same document, but for the keys the dead-file grouping and gate add
+-- (plan v2.35, 5A and 5B: their optional tables add keys and move no
+-- other byte).
 module DocumentProps5 (battery) where
 
 import CE.Document (families, respond)
@@ -146,7 +147,9 @@ vetoed r = case (familyOf r, replyObjWith respond r) of
     [ ("rules", \x -> and [null (items x "errors"), at x "degraded" == Just Null, fact "violations" > 0])
     , ("flow", \x -> and [fact "check" == 1, fact "deny" == 1, int (path ["counts", "judged"] x) > 0])
     , ("check", const (fact "fail" == 1))
-    , ("deadcode", \x -> fact "check" == 1 && (not (null (items x "dead")) || at x "degraded" /= Just Null))
+    , -- since the dead-file amendment (v2.35 5B) a listed file fails
+      -- nothing by itself: a degraded run, or a root the gate blocks
+      ("deadcode", \x -> fact "check" == 1 && (at x "degraded" /= Just Null || any (\d -> at d "blocking" == Just (Bool True)) (items x "dead")))
     , ("audit", const (and [fact "git" == 1, fact "unreadable" == 0, tomb || dups]))
     , ("scan", \x -> not (null (items x "failed")))
     , ("dedup", const (fact "check" == 1 && fact "fail" == 1))
@@ -181,26 +184,31 @@ idle r = null names || (isJust (documentOf r') && documentOf r' == fmap ungroupe
     Just (Object o) -> setKey t (Object (foldr (KM.delete . Key.fromString) o names)) v
     _ -> v
 
--- | A deadcode document without the keys its grouping adds: `root`
--- and `under` on the rows, `roots` and `dependents` in the counts,
--- `under_dropped` at the top.
+-- | A document without the keys the dead-file amendment's optional
+-- tables add: deadcode's `root`, `under`, `state` and `blocking` on the
+-- rows, `roots`, `dependents` and the four state counts in the counts,
+-- `under_dropped` and `gate` at the top; check's `deadAdded` in the
+-- ratchet and `weights` at the top.
 ungrouped :: Value -> Value
 ungrouped v = case v of
-  Object o -> Object (KM.mapWithKey field' (KM.delete "under_dropped" o))
+  Object o -> Object (KM.mapWithKey field' (foldr KM.delete o ["gate", "under_dropped", "weights"]))
   _ -> v
  where
   field' k x
     | k == "counts" = counts x
     | k == "dead" = rows x
+    | k == "ratchet" = case x of
+        Object m -> Object (KM.delete "deadAdded" m)
+        _ -> x
     | otherwise = x
   counts c = case c of
-    Object m -> Object (KM.delete "roots" (KM.delete "dependents" m))
+    Object m -> Object (foldr (KM.delete . Key.fromString) m (words "roots dependents untold standing orphaned born"))
     _ -> c
   rows d = case d of
     Array xs -> Array (fmap row xs)
     _ -> d
   row x = case x of
-    Object m -> Object (KM.delete "root" (KM.delete "under" m))
+    Object m -> Object (foldr (KM.delete . Key.fromString) m (words "root under state blocking"))
     _ -> x
 
 optionals :: Value -> Bool

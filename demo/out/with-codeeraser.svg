@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1318" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1299" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
 <title>the same task — with CodeEraser</title>
-<rect width="849" height="1318" rx="8" fill="#0d1117"/>
+<rect width="849" height="1299" rx="8" fill="#0d1117"/>
 <rect width="849" height="32" rx="8" fill="#161b22"/>
 <rect y="16" width="849" height="16" fill="#161b22"/>
 <circle cx="18" cy="16" r="5" fill="#ff5f57"/><circle cx="36" cy="16" r="5" fill="#febc2e"/><circle cx="54" cy="16" r="5" fill="#28c840"/>
@@ -46,8 +46,8 @@
 <text x="18" y="782" fill="#c9d1d9" xml:space="preserve">erase applied: 1 row(s); audit trail in .ce/erase-log.ndjson</text>
 <text x="18" y="801" fill="#8b949e" xml:space="preserve">the tree, measured (the CI face):</text>
 <text x="18" y="820" fill="#58a6ff" xml:space="preserve">$ ce check .</text>
-<text x="18" y="839" fill="#ff7b72" xml:space="preserve">check score 825/1000 | findings on 55.0 of 316 lines | per 1000 lines: size 0 complexity 0 clone 0</text>
-<text x="18" y="858" fill="#ff7b72" xml:space="preserve">    docdup 0 dead 174 churn 0 cycle 0 | 0 candidates</text>
+<text x="18" y="839" fill="#ff7b72" xml:space="preserve">check score 1000/1000 | findings on 0.0 of 316 lines | per 1000 lines: size 0 complexity 0 clone 0</text>
+<text x="18" y="858" fill="#ff7b72" xml:space="preserve">    docdup 0 unreferenced 174 (off) churn 0 cycle 0 | 0 candidates</text>
 <text x="18" y="877" fill="#ff7b72" xml:space="preserve">ratchet: 0 added, 0 removed, 1 over, 1 tolerance drawn -&gt; FAIL (failed: ratchet_over)</text>
 <text x="18" y="896" fill="#58a6ff" xml:space="preserve">$ ce dedup . --check</text>
 <text x="18" y="915" fill="#c9d1d9" xml:space="preserve">indexed 8 files (0 refreshed, 0 removed) — 0 clone blocks in 0 groups (min 50 tokens, distinct &gt;= 7), 0</text>
@@ -62,13 +62,12 @@
 <text x="18" y="1086" fill="#c9d1d9" xml:space="preserve">    exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0,</text>
 <text x="18" y="1105" fill="#c9d1d9" xml:space="preserve">    seed_pairs 0, sent 0</text>
 <text x="18" y="1124" fill="#58a6ff" xml:space="preserve">$ ce deadcode . --check</text>
-<text x="18" y="1143" fill="#ff7b72" xml:space="preserve">unreferenced: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s)</text>
-<text x="18" y="1162" fill="#ff7b72" xml:space="preserve">    fall with it</text>
-<text x="18" y="1181" fill="#ff7b72" xml:space="preserve">unreferenced: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0</text>
-<text x="18" y="1200" fill="#ff7b72" xml:space="preserve">    file(s) fall with it</text>
-<text x="18" y="1219" fill="#ff7b72" xml:space="preserve">deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s)), 0 aggregate reports, 0 unresolved sites</text>
-<text x="18" y="1238" fill="#ff7b72" xml:space="preserve">    (verdicts assume none lands in-corpus)</text>
-<text x="18" y="1257" fill="#ff7b72" xml:space="preserve">deadcode check: 2 unreferenced file(s) — disposition or entry_globs them</text>
-<text x="18" y="1276" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
-<text x="18" y="1295" fill="#c9d1d9" xml:space="preserve">erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)</text>
+<text x="18" y="1143" fill="#c9d1d9" xml:space="preserve">unreferenced (born): docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1162" fill="#c9d1d9" xml:space="preserve">unreferenced (orphaned): invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1181" fill="#c9d1d9" xml:space="preserve">deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s): 0 standing, 1 orphaned, 1 born), 0</text>
+<text x="18" y="1200" fill="#c9d1d9" xml:space="preserve">    aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)</text>
+<text x="18" y="1219" fill="#c9d1d9" xml:space="preserve">deadcode check: 2 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml</text>
+<text x="18" y="1238" fill="#c9d1d9" xml:space="preserve">    [deadcode] block = ["orphaned", "born"] and a committed baseline</text>
+<text x="18" y="1257" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
+<text x="18" y="1276" fill="#c9d1d9" xml:space="preserve">erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)</text>
 </svg>

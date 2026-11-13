@@ -13,10 +13,11 @@ module CE.Graph (graphTooLarge, respond) where
 
 import qualified CE.Graph.Advisory as Advisory
 import CE.Graph.Build (Built (..), build, reachFrom)
-import CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation)
-import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategories, exportVisBit, granFile, minRung, mountCap, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap, underCap, rootStates, unmentionedCap, unmentionedHardCap, unmentionedVisMask)
+import CE.Graph.Contract (GraphReq (..), entityRows, mountRows, symRows, unmentionedRows, unresRows, violation)
+import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategories, exportVisBit, granFile, minRung, mountCap, nodeCap, publicFlagBit, refdefKind, roleBits, sccFloor, symCap, underCap, unmentionedCap, unmentionedHardCap, unmentionedVisMask)
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
+import qualified CE.Graph.Point as Point
 import qualified CE.Graph.Position as Position
 import qualified CE.Graph.Roots as Roots
 import CE.Wire (Family (..), Respond, respondWith, resultLine, tooLarge, tooLargeOf)
@@ -52,6 +53,10 @@ respond proto =
             || toInteger (length (symRows req)) > symCap
             || toInteger (length (unmentionedRows req)) > unmentionedHardCap
             || toInteger (length (mountRows req)) > mountCap
+            -- the gate's two tables (5B): one row per file node, and a
+            -- past point's longer list, each against the node cap
+            || toInteger (length (entityRows req)) > nodeCap
+            || toInteger (Point.pointSize (reqDeadPoint req)) > nodeCap
       , famOffence = violation
       , famDegraded = answer proto True
       , famJudged = answer proto False
@@ -76,7 +81,7 @@ answer proto degraded req =
  where
   none = [] :: [Value]
   (fields, kept)
-    | degraded = (["dead" .= none, "reported" .= none, "roots" .= none, "under" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
+    | degraded = (["dead" .= none, "reported" .= none, "roots" .= none, "under" .= none, "blocked" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
     | otherwise = (judged, bKept b)
   judged =
     [ -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
@@ -87,10 +92,10 @@ answer proto degraded req =
       -- branch held the policy instead.
       "dead" .= [deadOut i v | (i, v) <- deadRows]
     , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
-    , -- the zero-tolerance gate, named: any file-tier dead verdict
-      -- fails `ce deadcode --check` — the exit was synthesized
-      -- client-side before, where no ablation could see it
-      "fail" .= not (null deadRows)
+    , -- the gate's own answer (plan v2.35, the dead-file amendment,
+      -- 5B): a root whose state the project blocks; an unreferenced
+      -- file is listed, and fails nothing by itself
+      "fail" .= not (null (Point.gBlocked gt))
     , "pos" .= Position.positions b reach (reqPos req)
     , -- the floor is the request's where declared (6.4.0, O59),
       -- the shipped constant otherwise — the same number the
@@ -104,8 +109,11 @@ answer proto degraded req =
       -- unmentioned/mounts precedent, legacy bytes untouched
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
       <> advisoryKeys req
-      <> groupKeys (Roots.group underCap b reach (map fst deadRows))
+      <> groupKeys (Point.gState gt) grouping
+      <> Point.gKeys gt
   (b, reach, deadRows, reportedRows) = liveness req
+  grouping = Roots.group underCap b reach (map fst deadRows)
+  gt = Point.gate (reqEntities req) (reqDeadPoint req) (fromMaybe 0 (reqDeadBlock req)) (map fst deadRows) (Roots.gRoots grouping)
   -- the confidence column (2.32.0) on every dead row: the ledger it
   -- reads is required since 9.0.0
   deadOut i v = [toInteger i, toInteger v, confidence (unresRows req) (langOf i)]
@@ -128,19 +136,17 @@ advisoryKeys req = case reqUnmentioned req of
         ["exportUnmentioned" .= Advisory.judge unmentionedVisMask exemptCategories (mountRows req) rows]
 
 -- | The dead files grouped (plan v2.35, the dead-file amendment):
--- `roots` [node, state] ascending, every state untold until a
--- comparison point rides (5B; the codes are Cost.rootStates), and
+-- `roots` [node, state] ascending, the state CE.Graph.Point's (the
+-- codes are Cost.rootStates; untold when no comparison point rode), and
 -- `under` [dependent, root] ascending -- or, past `underCap`, empty
 -- beside `underDropped`, the `unmentionedDropped` shape. The roots
 -- are never dropped.
-groupKeys :: Roots.Grouping -> [Pair]
-groupKeys g =
-  ["roots" .= [[toInteger r, untold] | r <- Roots.gRoots g]]
+groupKeys :: (Int -> Integer) -> Roots.Grouping -> [Pair]
+groupKeys state g =
+  ["roots" .= [[toInteger r, state r] | r <- Roots.gRoots g]]
     <> case Roots.gUnder g of
       Just ps -> ["under" .= [[toInteger d, toInteger r] | (d, r) <- ps]]
       Nothing -> ["under" .= ([] :: [Value]), "underDropped" .= True]
- where
-  untold = toInteger (length (takeWhile (/= "untold") rootStates))
 
 -- | One build, one reach, the verdicts split by tier: the graph, its
 -- reach set, the file-tier dead rows and the reported aggregates.

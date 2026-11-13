@@ -26,6 +26,7 @@ import CE.Verdict.Soft (softLine)
 import CE.Verdict.Baseline (parseBaseline)
 import CE.Verdict.Faces (digestKey, failConditions, newBaselineObj, ratchetObj)
 import CE.Verdict.Wire (VerdictReq (..), violation)
+import CE.Graph.Point (pointSize)
 import qualified CE.Wire.Families as F
 import CE.Wire (Respond, replyLine, tooLargeOf)
 import Control.Applicative ((<|>))
@@ -82,6 +83,9 @@ rowTotal req =
       maybe 0 length (reqPresent req)
     , maybe 0 length (reqSelfLoops req)
     , let (a, b, c, d) = reqExtent req in sum (map (maybe 0 length) [a, b, c, d])
+    , -- the dead-file point and the blocking roots (plan v2.35, 5B)
+      pointSize (reqDeadPoint req)
+    , maybe 0 length (reqDeadAdded req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -101,8 +105,8 @@ judged parsed req =
     [ "candidates" .= candidates jk req
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
-      , "ratchet" .= ratchetObj (isJust (reqPresent req)) r conds
-      , "newBaseline" .= newBaselineObj r newSoft (reqKnobsDigest req)
+      , "ratchet" .= ratchetObj (isJust (reqPresent req)) (reqDeadAdded req) r conds
+      , "newBaseline" .= newBaselineObj r newSoft (reqKnobsDigest req) (reqDeadPoint req)
       , -- the EFFECTIVE knob echo (ADR-008): the client asserts the
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
@@ -166,7 +170,7 @@ judged parsed req =
   -- baseline recorded. Every disagreement wants the same answer: say
   -- so by name, and make a human name the new floor.
   digestDrift = maybe False ((/= reqKnobsDigest req) . bKnobsDigest) base
-  conds = failConditions r floorFail dedupOver digestDrift
+  conds = failConditions r floorFail dedupOver digestDrift (maybe [] id (reqDeadAdded req))
 
 -- | The second ratchet's leg (ADR-008 P2, split from result at the
 -- E01 fn gate when 2.19.0 landed): the pair's shape is already
@@ -235,6 +239,7 @@ degradedFields req =
             -- a reply without it is an older core, never a new one
             -- that judged nothing
             <> ["dropped" .= ([] :: [Value]) | isJust (reqPresent req)]
+            <> ["deadAdded" .= ([] :: [Value]) | isJust (reqDeadAdded req)]
         )
   , "newBaseline"
       .= object

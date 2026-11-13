@@ -761,3 +761,11 @@ forbid = [
 # build (e59a6d2f) against the lane's on one tree: 28 -> 10, no lane
 # row without a main block on the same pair over both spans.
 budget = 10
+
+# The house gate stays as strict as before the dead-file amendment (plan v2.35): a new or newly orphaned unreferenced file fails.
+[deadcode]
+block = ["orphaned", "born"]
+
+# The dead axis weighs 0 unless named (the same amendment); this tree keeps it on at its old weight.
+[score.weights]
+deadcode = 1

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1356" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1318" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
 <title>the same task — without CodeEraser</title>
-<rect width="849" height="1356" rx="8" fill="#0d1117"/>
+<rect width="849" height="1318" rx="8" fill="#0d1117"/>
 <rect width="849" height="32" rx="8" fill="#161b22"/>
 <rect y="16" width="849" height="16" fill="#161b22"/>
 <circle cx="18" cy="16" r="5" fill="#ff5f57"/><circle cx="36" cy="16" r="5" fill="#febc2e"/><circle cx="54" cy="16" r="5" fill="#28c840"/>
@@ -31,8 +31,8 @@
 <text x="18" y="497" fill="#8b949e" xml:space="preserve">nothing refuses anything: the turn ends here</text>
 <text x="18" y="516" fill="#8b949e" xml:space="preserve">the tree, measured (the CI face):</text>
 <text x="18" y="535" fill="#58a6ff" xml:space="preserve">$ ce check .</text>
-<text x="18" y="554" fill="#ff7b72" xml:space="preserve">check score 605/1000 | findings on 150.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231</text>
-<text x="18" y="573" fill="#ff7b72" xml:space="preserve">    docdup 42 dead 263 churn 0 cycle 0 | 3 candidates</text>
+<text x="18" y="554" fill="#ff7b72" xml:space="preserve">check score 726/1000 | findings on 104.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231</text>
+<text x="18" y="573" fill="#ff7b72" xml:space="preserve">    docdup 42 unreferenced 263 (off) churn 0 cycle 0 | 3 candidates</text>
 <text x="18" y="592" fill="#ff7b72" xml:space="preserve">ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -&gt; FAIL (failed: ratchet_over, discrete_added)</text>
 <text x="18" y="611" fill="#ff7b72" xml:space="preserve">note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table</text>
 <text x="18" y="630" fill="#58a6ff" xml:space="preserve">$ ce dedup . --check</text>
@@ -59,18 +59,16 @@
 <text x="18" y="1029" fill="#ff7b72" xml:space="preserve">    seed_pairs 0, sent 1</text>
 <text x="18" y="1048" fill="#ff7b72" xml:space="preserve">docdup check: 1 reported duplication(s) — resolve or exempt them</text>
 <text x="18" y="1067" fill="#58a6ff" xml:space="preserve">$ ce deadcode . --check</text>
-<text x="18" y="1086" fill="#ff7b72" xml:space="preserve">unreferenced: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s)</text>
-<text x="18" y="1105" fill="#ff7b72" xml:space="preserve">    fall with it</text>
-<text x="18" y="1124" fill="#ff7b72" xml:space="preserve">unreferenced: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0</text>
-<text x="18" y="1143" fill="#ff7b72" xml:space="preserve">    file(s) fall with it</text>
-<text x="18" y="1162" fill="#ff7b72" xml:space="preserve">unreferenced: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0</text>
-<text x="18" y="1181" fill="#ff7b72" xml:space="preserve">    file(s) fall with it</text>
-<text x="18" y="1200" fill="#ff7b72" xml:space="preserve">deadcode: 12 nodes, 16 kept edges, 3 unreferenced (3 root(s)), 0 aggregate reports, 0 unresolved sites</text>
-<text x="18" y="1219" fill="#ff7b72" xml:space="preserve">    (verdicts assume none lands in-corpus)</text>
-<text x="18" y="1238" fill="#ff7b72" xml:space="preserve">deadcode check: 3 unreferenced file(s) — disposition or entry_globs them</text>
-<text x="18" y="1257" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
-<text x="18" y="1276" fill="#ff7b72" xml:space="preserve">@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words)</text>
-<text x="18" y="1295" fill="#ff7b72" xml:space="preserve">    fnv1a64:fa6f7a63e41bfa36</text>
-<text x="18" y="1314" fill="#ff7b72" xml:space="preserve">erase plan: 1 eraseable, 4 advisory (dry-run; --apply to act)</text>
-<text x="18" y="1333" fill="#ff7b72" xml:space="preserve">erase check: 1 eraseable row(s) planned</text>
+<text x="18" y="1086" fill="#c9d1d9" xml:space="preserve">unreferenced (born): docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1105" fill="#c9d1d9" xml:space="preserve">unreferenced (born): invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1124" fill="#c9d1d9" xml:space="preserve">unreferenced (orphaned): invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1143" fill="#c9d1d9" xml:space="preserve">deadcode: 12 nodes, 16 kept edges, 3 unreferenced (3 root(s): 0 standing, 1 orphaned, 2 born), 0</text>
+<text x="18" y="1162" fill="#c9d1d9" xml:space="preserve">    aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)</text>
+<text x="18" y="1181" fill="#c9d1d9" xml:space="preserve">deadcode check: 3 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml</text>
+<text x="18" y="1200" fill="#c9d1d9" xml:space="preserve">    [deadcode] block = ["orphaned", "born"] and a committed baseline</text>
+<text x="18" y="1219" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
+<text x="18" y="1238" fill="#ff7b72" xml:space="preserve">@@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words)</text>
+<text x="18" y="1257" fill="#ff7b72" xml:space="preserve">    fnv1a64:fa6f7a63e41bfa36</text>
+<text x="18" y="1276" fill="#ff7b72" xml:space="preserve">erase plan: 1 eraseable, 4 advisory (dry-run; --apply to act)</text>
+<text x="18" y="1295" fill="#ff7b72" xml:space="preserve">erase check: 1 eraseable row(s) planned</text>
 </svg>

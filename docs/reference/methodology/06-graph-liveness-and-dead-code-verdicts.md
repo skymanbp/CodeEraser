@@ -546,7 +546,7 @@ the resolver cannot choose its own denominator
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
-([Lines.hs:31](../../../core/app/CE/Graph/Lines.hs#L31), [Deadcode.hs:35](../../../core/app/CE/Text/Deadcode.hs#L35)).
+([Lines.hs:31](../../../core/app/CE/Graph/Lines.hs#L31), [Deadcode.hs:38](../../../core/app/CE/Text/Deadcode.hs#L38)).
 
 The six languages plan v2.30 added sit the same exam, each against a blind audit frozen before any
 scoring and registered in [EVAL-SET-LANGS.md](../../EVAL-SET-LANGS.md): the sample is frozen first,

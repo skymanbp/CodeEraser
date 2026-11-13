@@ -75,18 +75,22 @@ judged :: [(DocFamily, Value, Value)]
 judged = judgedBy requests4 seven
 
 -- | Each family's top-level fields in its empty document, `family key
--- type` (`ref`: the measuring side's reason; `?`: or null).
+-- type` (`ref`: the measuring side's reason; `?`: or null). The empty
+-- request carries every table its statement names, the optional ones
+-- included, so deadcode's empty document holds the gate and check's
+-- its weights (the dead-file amendment, v2.35 5B) as check's holds its
+-- extent.
 fieldTable :: String
 fieldTable =
   "check schema string\ncheck score number\ncheck scoreScale number?\ncheck axes array\ncheck floor number?\n\
-  \check candidates array\ncheck joinSeverity array\ncheck ratchet object\ncheck counts object\ncheck degraded ref\ncheck extent object?\n\
+  \check candidates array\ncheck joinSeverity array\ncheck ratchet object\ncheck counts object\ncheck degraded ref\ncheck extent object?\ncheck weights array\n\
   \structure schema string\nstructure score number\nstructure scoreScale number\nstructure entropy array\n\
   \structure axes array\nstructure findings array\nstructure dirs number\nstructure divergence number?\n\
   \structure deviations array\nstructure declaredDirs number\nstructure deep bool\nstructure days number?\n\
   \structure tree array\nstructure split bool\n\
   \join schema string\njoin days number\njoin commits number\njoin degraded ref\njoin files array\njoin units array\n\
   \deadcode schema string\ndeadcode dead array\ndeadcode reported array\ndeadcode counts object\n\
-  \deadcode unresolved_sites number\ndeadcode degraded ref\n\
+  \deadcode unresolved_sites number\ndeadcode degraded ref\ndeadcode gate object\n\
   \mentions schema string\nmentions mention_rev number\nmentions universe number\nmentions sources number\n\
   \mentions rows number\nmentions capped number\nmentions dist_js_dedup_runs number\nmentions skipped object\n\
   \mentions run object\nmentions outside object\nmentions rates object\n\
@@ -174,7 +178,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
   scratch fam rs ts fs = docRequest fam rs ts fs Nothing
   blank = map (\t -> (t, [])) . words
   wanted =
-    [ "failed 0: column 0 is not a code 0..6"
+    [ "failed 0: column 0 is not a code 0..7"
     , "extent: tenths above ten times lines"
     , "scale: more than one row"
     , "degraded: out of range why"

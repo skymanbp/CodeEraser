@@ -24,7 +24,7 @@ session over: 7 of 7 writes landed
 nothing refuses anything: the turn ends here
 the tree, measured (the CI face):
 $ ce check .
-check score 605/1000 | findings on 150.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231 docdup 42 dead 263 churn 0 cycle 0 | 3 candidates
+check score 726/1000 | findings on 104.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231 docdup 42 unreferenced 263 (off) churn 0 cycle 0 | 3 candidates
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
 note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table
 $ ce dedup . --check
@@ -45,11 +45,11 @@ docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 
 dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1
 docdup check: 1 reported duplication(s) — resolve or exempt them
 $ ce deadcode . --check
-unreferenced: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
-unreferenced: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
-unreferenced: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched] — 0 file(s) fall with it
-deadcode: 12 nodes, 16 kept edges, 3 unreferenced (3 root(s)), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
-deadcode check: 3 unreferenced file(s) — disposition or entry_globs them
+unreferenced (born): docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
+unreferenced (born): invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+unreferenced (orphaned): invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+deadcode: 12 nodes, 16 kept edges, 3 unreferenced (3 root(s): 0 standing, 1 orphaned, 2 born), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
+deadcode check: 3 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml [deadcode] block = ["orphaned", "born"] and a committed baseline
 $ ce erase . --check
 @@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36
 erase plan: 1 eraseable, 4 advisory (dry-run; --apply to act)

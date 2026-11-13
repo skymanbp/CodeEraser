@@ -22,7 +22,10 @@
 -- over it by name before sending) and trend/2's (rows and declared knob
 -- rows count against it together; the measuring side refuses a window
 -- that cannot fit before measuring a commit of it). v2.35 added
--- cover/1's row ceiling, the T1/T2 run set is split between pairs by it.
+-- cover/1's row ceiling, the T1/T2 run set is split between pairs by it;
+-- and `score_opt_in`, the axes that weigh 0 unless a project names their
+-- weight (the dead-file amendment), which the knob digest's shipped
+-- weight table reads.
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -76,6 +79,7 @@ limits =
     , "graph" .= object ["scc_floor" .= Graph.sccFloor, "unmentioned_cap" .= Graph.unmentionedCap]
     , "zone" .= object ["warn_permille" .= Verdict.zoneWarnPermille, "ask_permille" .= Verdict.zoneAskPermille]
     , "score_defaults" .= defaultsEcho
+    , "score_opt_in" .= Verdict.optInAxes
     , "caps" .= caps
     , "similar" .= similar
     ]

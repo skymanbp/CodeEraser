@@ -5,6 +5,10 @@
 -- ratchet line with the conditions that held, the collapse note when
 -- something collapsed, the degraded line, and under `--roast` (the
 -- `roast` fact) one line by score band against the effective scale.
+-- An axis whose effective weight is 0 (the document's `weights`, a
+-- judged run) prints its share marked "(off)": the axis does not count
+-- (plan v2.35, the dead-file amendment); a held `dead_added` adds one
+-- line with the blocking roots' count and the command that lists them.
 -- The veto is the verdict's fail bit (the face's own exit rule; a
 -- judgment that never happened is the face's refusal, exit 2).
 module CE.Score.Lines (lines', veto) where
@@ -15,9 +19,10 @@ import Data.List (intercalate)
 lines' :: Say -> Value -> DocReq -> [Line]
 lines' say doc req =
   map (line 0) $
-    [ say "head" ([N (fact req "score"), N scale] <> extent <> [N (shareOf c) | c <- [0 .. 6]] <> [N (count (arr "candidates" doc))])
+    [ say "head" ([N (fact req "score"), N scale] <> extent <> [axis c | c <- [0 .. 6]] <> [N (count (arr "candidates" doc))])
     , say "ratchet" (map (N . count . (`arr` ratchet)) (words "added removed over toleranceDrawn") <> [P verdict])
     ]
+      <> [say "dead_added" [N (count (arr "deadAdded" ratchet))] | "dead_added" `elem` failed]
       <> [say "note" [N (fact req "collapsed"), N (fact req "skippedSelf")] | fact req "collapsed" > 0 || fact req "skippedSelf" > 0]
       <> [say "degraded" [fillOf d] | let d = key "degraded" doc, d /= Null]
       <> [say roast [] | flag req "roast"]
@@ -29,6 +34,10 @@ lines' say doc req =
     _ -> 1000
   -- the seven own shares by axis code, 0 where no row rode (a degraded run)
   shareOf c = maybe 0 id (lookup c [(c', p) | [c', p] <- rows req "axes"])
+  -- the share, marked when the axis weighs 0 (no mark without the table)
+  axis c
+    | lookup c [(c', w) | [c', w] <- rows req "weights"] == Just 0 = P (say "axis_off" [N (shareOf c)])
+    | otherwise = N (shareOf c)
   -- E and L, two holes, as the document states them (`extent.tenths`,
   -- the core's one rounding, CE.Verdict.Extent.tenths); "-" in both
   -- when no extent rode

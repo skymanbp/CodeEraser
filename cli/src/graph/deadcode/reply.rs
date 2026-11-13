@@ -2,13 +2,14 @@
 //! (moved here from deadcode.rs unchanged) and, since the dead-file
 //! amendment (plan v2.35, phase 5A), the core's grouping of the dead
 //! rows — `roots` [node, state], `under` [dependent, root] and the
-//! `underDropped` marker. Every definition is the core's
-//! (CE.Graph.Roots): this side derives no root and no pair, it holds the
-//! reply's shape to the dead table and refuses by name what does not
-//! fit — the rows are what the document and the console read.
+//! `underDropped` marker; since 5B the gate's answer (gate.rs). Every
+//! definition is the core's (CE.Graph.Roots, CE.Graph.Point): this side
+//! derives no root, no pair and no state, it holds the reply's shape to
+//! the dead table and refuses by name what does not fit — the rows are
+//! what the document and the console read.
 
 use super::super::nodes::Node;
-use super::{Judged, advisory};
+use super::{Gate, Judged, advisory, gate};
 use anyhow::{Context, Result, bail, ensure};
 use serde_json::Value;
 use std::collections::BTreeSet;
@@ -25,11 +26,13 @@ pub struct Grouping {
 
 /// The reply's rows held at the boundary. `names` is the wire's own
 /// advisory table (None = the road was not asked), read by
-/// advisory::consume.
+/// advisory::consume; `sent` the gate the request carried (None = the
+/// road sent none), read by gate::consume.
 pub(super) fn consume(
     reply: &Value,
     nodes: &[Node],
     names: Option<&crate::mention::Unmentioned>,
+    sent: Option<&Gate>,
 ) -> Result<Judged> {
     // The wire's degraded BIT is authoritative (the C9 read-the-
     // real-boolean discipline, contracts/VERSIONING.md); reason
@@ -42,10 +45,16 @@ pub(super) fn consume(
         bail!("{}", crate::corelink::skew("graph/1 `fail`"))
     };
     let dead = dead_rows(reply, nodes)?;
+    // 5A's refusal order holds: the advisory, then `reported`, then the
+    // grouping, and the gate last (it reads the grouping)
+    let advisory = advisory::consume(reply, nodes, names)?;
+    let reported = reported_rows(reply, nodes)?;
+    let grouping = grouping(reply, &dead)?;
     Ok(Judged {
-        advisory: advisory::consume(reply, nodes, names)?,
-        reported: reported_rows(reply, nodes)?,
-        grouping: grouping(reply, &dead)?,
+        advisory,
+        reported,
+        gated: gate::consume(reply, &grouping, sent, (degraded.is_some(), fail))?,
+        grouping,
         dead,
         kept: reply["counts"]["kept"].as_i64(),
         degraded,
@@ -174,13 +183,17 @@ fn ascending<T: Ord + std::fmt::Debug>(key: &str, keys: impl Iterator<Item = T>)
 }
 
 /// The grouping's rows on the deadcode document request (the face's
-/// road, `deadcode::said`): `roots` [node], `under` [dependent, root]
-/// and the dropped marker — optional in the document's statement, sent
-/// here always.
-pub(super) fn on_request(req: crate::document::Request, g: &Grouping) -> crate::document::Request {
-    req.rows("roots", g.roots.iter().map(|r| [r[0]]).collect::<Vec<_>>())
-        .rows("under", &g.under)
-        .fact("underDropped", i64::from(g.dropped))
+/// road, `deadcode::said`): `roots` (with their states when a gate rode,
+/// gate::on_request), `under` [dependent, root] and the dropped marker —
+/// optional in the document's statement, sent here always.
+pub(super) fn on_request(
+    req: crate::document::Request,
+    j: &Judged,
+    sent: Option<&Gate>,
+) -> crate::document::Request {
+    gate::on_request(req, &j.grouping, sent, &j.gated)
+        .rows("under", &j.grouping.under)
+        .fact("underDropped", i64::from(j.grouping.dropped))
 }
 
 #[cfg(test)]

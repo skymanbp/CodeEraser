@@ -15,9 +15,10 @@
 -- (an advisory table arriving without its partner, 6.2.0), by table
 -- and reason — so a producer learns which row it got wrong, never
 -- just that something was wrong.
-module CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation) where
+module CE.Graph.Contract (GraphReq (..), entityRows, mountRows, symRows, unmentionedRows, unresRows, violation) where
 
 import CE.Graph.Advisory (mountRow, unmentionedRow)
+import CE.Graph.Point (blockOffence, entitiesOffence, pointOffence)
 import CE.Wire (judgedMaskSent, required, retiredMask, rowCheck, tableOffence)
 import CE.Wire.Mask (judgedLang)
 import Data.Aeson
@@ -58,6 +59,13 @@ data GraphReq = GraphReq
     -- (CE.Wire.Mask). The node rows carry a code too, but only its
     -- sign was ever checked (the sentinel 7 rides there).
     reqMaskSent :: Bool
+  , -- the dead-file gate (plan v2.35, 5B; CE.Graph.Point): every file
+    -- node's entity id, the committed baseline's point verbatim, and
+    -- the project's block mask. Absent = no state is told, nothing
+    -- blocks, and the reply keys that echo them stay away.
+    reqEntities :: Maybe [[Integer]]
+  , reqDeadPoint :: Maybe Value
+  , reqDeadBlock :: Maybe Integer
   }
 
 instance FromJSON GraphReq where
@@ -73,6 +81,9 @@ instance FromJSON GraphReq where
       <*> o .:? "mounts"
       <*> o .:? "sccFloor"
       <*> pure (judgedMaskSent o)
+      <*> o .:? "entities"
+      <*> o .:? "deadPoint"
+      <*> o .:? "deadBlock"
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -112,6 +123,9 @@ violation req =
       tableOffence "mount" (take 1) (mountRow n) ms
     , -- a deduped SET of (node, vis, conv) triples, like `symbols`
       tableOffence "unmentioned" id (unmentionedRow n) ums
+    , entitiesOffence (reqNodes req) (reqEntities req)
+    , pointOffence (reqEntities req) (reqDeadPoint req)
+    , blockOffence (reqDeadBlock req)
     ]
  where
   n = fromIntegral (length (reqNodes req))
@@ -155,6 +169,10 @@ unmentionedRows = maybe [] id . reqUnmentioned
 
 mountRows :: GraphReq -> [[Integer]]
 mountRows = maybe [] id . reqMounts
+
+-- | The entity table as sent, [] when absent (the cap's view).
+entityRows :: GraphReq -> [[Integer]]
+entityRows = maybe [] id . reqEntities
 
 -- | The symbols table as sent, [] when absent — the cap's and the
 -- validator's view. Nothing selects a road on it: an empty table and

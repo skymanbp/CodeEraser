@@ -11,7 +11,9 @@ import CE.Text (Catalogue, table)
 catalogue :: Catalogue
 catalogue =
   table
-    "head\tcheck score {}/{} | findings on {} of {} lines | per 1000 lines: size {} complexity {} clone {} docdup {} dead {} churn {} cycle {} | {} candidates\t检查分数 {}/{} | 有问题的行 {} / {} | 每千行：尺寸 {} 复杂度 {} 克隆 {} 文档重复 {} 死代码 {} 变动 {} 循环 {} | 候选 {}\n\
+    "head\tcheck score {}/{} | findings on {} of {} lines | per 1000 lines: size {} complexity {} clone {} docdup {} unreferenced {} churn {} cycle {} | {} candidates\t检查分数 {}/{} | 有问题的行 {} / {} | 每千行：尺寸 {} 复杂度 {} 克隆 {} 文档重复 {} 无引用 {} 变动 {} 循环 {} | 候选 {}\n\
+    \axis_off\t{} (off)\t{}（不计）\n\
+    \dead_added\tdead_added: {} unreferenced root(s) in a state [deadcode] block names — ce deadcode --check lists them\tdead_added：{} 个无引用的根处于 [deadcode] block 点名的状态——ce deadcode --check 会列出它们\n\
     \ratchet\tratchet: {} added, {} removed, {} over, {} tolerance drawn -> {}\t棘轮：新增 {}，移除 {}，超限 {}，动用容差 {} -> {}\n\
     \fail\tFAIL{}\n\
     \pass\tpass\n\

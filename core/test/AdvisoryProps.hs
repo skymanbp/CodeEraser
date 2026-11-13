@@ -212,16 +212,19 @@ knobs =
 -- (malformed rows and a missing partner included — famOverCap runs
 -- first); past the soft cap a malformed row still refuses first;
 -- past the soft cap with legal rows the table is DROPPED and said
--- so while `degraded` and `fail` stand exactly where the legacy
--- reply puts them (the iron rule on the drop road).
+-- so while `degraded`, `fail`, `blocked` and `dead` stand where the
+-- legacy reply puts them (the iron rule on the drop road); `fail` is
+-- the gate's (v2.35): nothing blocked, false, the file still listed.
 capCells :: Bool
 capCells =
   and
     [ reason (lone hard "[0,0,0]" "unmentioned") == Just "graph_too_large"
     , reason (lone hard "[0,0]" "unmentioned") == Just "graph_too_large"
     , refusedBy respond (both 1 [[0, 0, 0, 0]] (dropRows <> [[0, 3]])) "unmentioned 131073: malformed row (need [node,vis,conv])"
-    , fieldsOf respond dropped ["exportUnmentioned", "unmentionedDropped", "degraded", "fail"]
-        == Just [Just (toJSON ([] :: [Value])), Just (Bool True), Just (Bool False), Just (Bool True)]
+    , fieldsOf respond dropped ["exportUnmentioned", "unmentionedDropped", "degraded", "fail", "blocked"]
+        == Just [Just (toJSON ([] :: [Value])), Just (Bool True), Just (Bool False), Just (Bool False), Just (toJSON ([] :: [Value]))]
+    , let ks = ["degraded", "fail", "blocked", "dead"] in fieldsOf respond dropped ks == fieldsOf respond (req [[0, 0, 0]] []) ks
+    , deadOf dropped `notElem` [Nothing, Just (toJSON ([] :: [Value]))]
     ]
  where
   hard = fromInteger unmentionedHardCap + 1

@@ -1,5 +1,5 @@
 {"proto":"10.0.0","type":"graph.request","id":1,"nodes":[],"edges":[],"pos":[],"unres":[]}
-{"counts":{"edges":0,"kept":0,"nodes":0},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":1,"pos":[],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":0},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":1,"pos":[],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":2,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,2,0,1]],"pos":[],"unres":[]}
 {"code":"contract","id":2,"message":"edge 0: endpoint out of range","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":3,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,1,0,1],[0,1,0,1]],"pos":[],"unres":[]}
@@ -11,25 +11,25 @@
 {"proto":"10.0.0","type":"graph.request","id":6,"nodes":[],"edges":"nope","pos":[],"unres":[]}
 {"code":"bad_request","id":6,"message":"graph: Error in $.edges: parsing [] failed, expected Array, but encountered String","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":7,"nodes":[[0,0,1],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[[0,1,0,1],[2,5,0,2],[3,4,0,1],[6,7,0,3],[7,6,0,1]],"pos":[0,1,6],"symbols":[[3,1],[5,1]],"unres":[]}
-{"counts":{"edges":5,"kept":5,"nodes":8},"cycles":[[0,[6,7]]],"dead":[[2,1,1],[3,2,1],[4,3,1],[5,4,1],[6,3,1],[7,3,1]],"degraded":false,"fail":true,"id":7,"pos":[[0,0,1,6,1,1],[1,1,0,5,1,1],[6,1,1,0,2,0]],"proto":"10.0.0","reported":[],"roots":[[2,0],[3,0],[6,0],[7,0]],"type":"graph.result","under":[[4,3],[5,2]]}
+{"blocked":[],"counts":{"edges":5,"kept":5,"nodes":8},"cycles":[[0,[6,7]]],"dead":[[2,1,1],[3,2,1],[4,3,1],[5,4,1],[6,3,1],[7,3,1]],"degraded":false,"fail":false,"id":7,"pos":[[0,0,1,6,1,1],[1,1,0,5,1,1],[6,1,1,0,2,0]],"proto":"10.0.0","reported":[],"roots":[[2,0],[3,0],[6,0],[7,0]],"type":"graph.result","under":[[4,3],[5,2]]}
 {"proto":"10.0.0","type":"graph.request","id":8,"nodes":[[0,0,2],[0,0,0]],"edges":[[0,1,0,5]],"pos":[1],"unres":[]}
-{"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":8,"pos":[[1,1,0,0,1,1]],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":8,"pos":[[1,1,0,0,1,1]],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":9,"nodes":[[0,0,2],[0,0,0],[0,1,0]],"edges":[],"pos":[],"unres":[]}
-{"counts":{"edges":0,"kept":0,"nodes":3},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":true,"id":9,"pos":[],"proto":"10.0.0","reported":[[2,1]],"roots":[[1,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":3},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":false,"id":9,"pos":[],"proto":"10.0.0","reported":[[2,1]],"roots":[[1,0]],"type":"graph.result","under":[]}
 {"edges":[[0,1,3,1]],"id":10,"nodes":[[0,0,2],[0,0,0]],"pos":[],"proto":"10.0.0","type":"graph.request","unres":[]}
-{"counts":{"edges":1,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":true,"id":10,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":1,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":false,"id":10,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":11,"nodes":[[0,0,1],[0,0,0]],"edges":[[0,1,0,1]],"pos":[],"unres":[]}
-{"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":11,"pos":[],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":1,"kept":1,"nodes":2},"cycles":[],"dead":[],"degraded":false,"fail":false,"id":11,"pos":[],"proto":"10.0.0","reported":[],"roots":[],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":12,"nodes":[[0,0,64],[0,0,0]],"edges":[],"pos":[],"unres":[]}
-{"counts":{"edges":0,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":true,"id":12,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":false,"id":12,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":13,"nodes":[[0,0,0],[0,0,0,0]],"edges":[],"pos":[],"unres":[]}
 {"code":"contract","id":13,"message":"node 1: malformed row (need [lang,kind,roles])","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":14,"nodes":[[0,0,2],[0,0,0]],"edges":[[0,1,5,1]],"pos":[],"unres":[]}
-{"counts":{"edges":1,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":true,"id":14,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":1,"kept":0,"nodes":2},"cycles":[],"dead":[[1,1,1]],"degraded":false,"fail":false,"id":14,"pos":[],"proto":"10.0.0","reported":[],"roots":[[1,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":15,"nodes":[[0,0,0],[4,0,0],[6,0,0]],"edges":[],"pos":[],"unres":[[0,0,3],[4,2,9]]}
-{"counts":{"edges":0,"kept":0,"nodes":3},"cycles":[],"dead":[[0,1,2],[1,1,0],[2,1,1]],"degraded":false,"fail":true,"id":15,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[1,0],[2,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":3},"cycles":[],"dead":[[0,1,2],[1,1,0],[2,1,1]],"degraded":false,"fail":false,"id":15,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[1,0],[2,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":16,"nodes":[[0,0,0],[0,0,0]],"edges":[],"pos":[],"symbols":[[0,1]],"unres":[]}
-{"counts":{"edges":0,"kept":0,"nodes":2},"cycles":[],"dead":[[0,2,1],[1,1,1]],"degraded":false,"fail":true,"id":16,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[1,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":2},"cycles":[],"dead":[[0,2,1],[1,1,1]],"degraded":false,"fail":false,"id":16,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[1,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":17,"nodes":[[0,0,0]],"edges":[],"pos":[],"symbols":[[1,1]],"unres":[]}
 {"code":"contract","id":17,"message":"symbol 0: node out of range","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":18,"nodes":[[0,0,0]],"edges":[],"pos":[],"unmentioned":[[0,3,0]],"unres":[]}
@@ -37,18 +37,40 @@
 {"proto":"10.0.0","type":"graph.request","id":19,"nodes":[[0,0,0]],"edges":[],"pos":[],"mounts":[[0,0,0,0]],"unres":[]}
 {"code":"contract","id":19,"message":"mounts: unmentioned table required alongside","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":20,"nodes":[[3,0,1],[3,0,0],[3,0,0],[3,0,0],[3,0,0],[3,0,0]],"edges":[[0,1,0,1],[0,2,0,1],[0,3,0,1]],"pos":[],"unres":[[3,0,3]],"symbols":[[1,1],[2,1],[3,1],[4,1],[5,1]],"mounts":[[0,0,0,2],[1,1,1,0],[2,0,0,1],[3,0,0,0],[4,1,1,2],[5,0,0,0]],"unmentioned":[[1,3,0],[2,3,0],[3,3,2],[3,7,0],[4,1,0],[4,3,0],[5,3,0]]}
-{"counts":{"edges":3,"kept":3,"nodes":6},"cycles":[],"dead":[[4,2,2],[5,2,2]],"degraded":false,"exportUnmentioned":[[1,3,0,1],[2,3,0,3],[3,7,0,2],[4,3,0,1],[5,3,0,0]],"fail":true,"id":20,"pos":[],"proto":"10.0.0","reported":[],"roots":[[4,0],[5,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":3,"kept":3,"nodes":6},"cycles":[],"dead":[[4,2,2],[5,2,2]],"degraded":false,"exportUnmentioned":[[1,3,0,1],[2,3,0,3],[3,7,0,2],[4,3,0,1],[5,3,0,0]],"fail":false,"id":20,"pos":[],"proto":"10.0.0","reported":[],"roots":[[4,0],[5,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":21,"nodes":[[0,0,0]],"edges":[],"pos":[],"mounts":[[0,0,0,0]],"unmentioned":[],"unres":[]}
-{"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,1]],"degraded":false,"exportUnmentioned":[],"fail":true,"id":21,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,1]],"degraded":false,"exportUnmentioned":[],"fail":false,"id":21,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":22,"nodes":[[0,0,0]],"edges":[],"pos":[],"mounts":[[0,2,1,0]],"unmentioned":[],"unres":[]}
 {"code":"contract","id":22,"message":"mount 0: private above total","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":23,"nodes":[[0,0,0]],"edges":[],"pos":[],"mounts":[[0,0,0,0]],"unmentioned":[[0,3]],"unres":[]}
 {"code":"contract","id":23,"message":"unmentioned 0: malformed row (need [node,vis,conv])","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"graph.request","id":24,"nodes":[[0,0,128],[0,0,0],[0,0,0]],"edges":[[0,1,0,5]],"pos":[],"unres":[]}
-{"counts":{"edges":1,"kept":1,"nodes":3},"cycles":[],"dead":[[2,1,1]],"degraded":false,"fail":true,"id":24,"pos":[],"proto":"10.0.0","reported":[],"roots":[[2,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":1,"kept":1,"nodes":3},"cycles":[],"dead":[[2,1,1]],"degraded":false,"fail":false,"id":24,"pos":[],"proto":"10.0.0","reported":[],"roots":[[2,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":25,"nodes":[[20,0,0]],"edges":[],"pos":[],"unres":[[20,0,1]]}
-{"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":true,"id":25,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":false,"id":25,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":26,"nodes":[[20,0,0]],"edges":[],"pos":[],"unres":[[20,0,1]]}
-{"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":true,"id":26,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
+{"blocked":[],"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":false,"id":26,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0]],"type":"graph.result","under":[]}
 {"proto":"10.0.0","type":"graph.request","id":27,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,2,0,1]],"pos":[]}
 {"code":"contract","id":27,"message":"unres: required at 9.0.0","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":28,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[[0,1,0,1]],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadPoint":{"files":[100,101,102,104],"dead":[100]},"deadBlock":3}
+{"blocked":[2,3],"counts":{"edges":1,"kept":1,"nodes":4},"cycles":[],"dead":[[0,1,1],[1,3,1],[2,1,1],[3,1,1]],"deadNow":{"dead":[100,101,102,103],"files":[100,101,102,103]},"degraded":false,"fail":true,"id":28,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,1],[2,2],[3,3]],"type":"graph.result","under":[[1,0]]}
+{"proto":"10.0.0","type":"graph.request","id":29,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[[0,1,0,1]],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]]}
+{"blocked":[],"counts":{"edges":1,"kept":1,"nodes":4},"cycles":[],"dead":[[0,1,1],[1,3,1],[2,1,1],[3,1,1]],"deadNow":{"dead":[100,101,102,103],"files":[100,101,102,103]},"degraded":false,"fail":false,"id":29,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[2,0],[3,0]],"type":"graph.result","under":[[1,0]]}
+{"proto":"10.0.0","type":"graph.request","id":30,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[[0,1,0,1]],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadBlock":2}
+{"blockUnanswered":true,"blocked":[],"counts":{"edges":1,"kept":1,"nodes":4},"cycles":[],"dead":[[0,1,1],[1,3,1],[2,1,1],[3,1,1]],"deadNow":{"dead":[100,101,102,103],"files":[100,101,102,103]},"degraded":false,"fail":false,"id":30,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,0],[2,0],[3,0]],"type":"graph.result","under":[[1,0]]}
+{"proto":"10.0.0","type":"graph.request","id":31,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[[0,1,0,1]],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadPoint":{"files":[100,101,102,104],"dead":[100]},"deadBlock":2}
+{"blocked":[3],"counts":{"edges":1,"kept":1,"nodes":4},"cycles":[],"dead":[[0,1,1],[1,3,1],[2,1,1],[3,1,1]],"deadNow":{"dead":[100,101,102,103],"files":[100,101,102,103]},"degraded":false,"fail":true,"id":31,"pos":[],"proto":"10.0.0","reported":[],"roots":[[0,1],[2,2],[3,3]],"type":"graph.result","under":[[1,0]]}
+{"proto":"10.0.0","type":"graph.request","id":32,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102]]}
+{"code":"contract","id":32,"message":"entities: file node 3 without a row","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":33,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"deadPoint":{"files":[],"dead":[]}}
+{"code":"contract","id":33,"message":"deadPoint: entities table required alongside","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":34,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadBlock":4}
+{"code":"contract","id":34,"message":"deadBlock: a bit outside the blockable states (orphaned born)","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":35,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadPoint":{"files":[100],"dead":[101]}}
+{"code":"contract","id":35,"message":"deadPoint.dead: not a subset of files","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":36,"nodes":[[0,0,0],[0,1,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,101]]}
+{"code":"contract","id":36,"message":"entities 1: node 1 is not a file node","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":37,"nodes":[[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,100]]}
+{"code":"contract","id":37,"message":"entities: two nodes with id 100","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"graph.request","id":38,"nodes":[[0,0,0],[0,0,0],[0,0,0],[0,0,0]],"edges":[],"pos":[],"unres":[],"entities":[[0,100],[1,101],[2,102],[3,103]],"deadPoint":{"files":[102,100],"dead":[]}}
+{"code":"contract","id":38,"message":"deadPoint.files 1: not strictly ascending","proto":"10.0.0","type":"error"}

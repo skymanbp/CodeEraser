@@ -195,6 +195,10 @@ refusals = and (map knob knobProbes <> shaped) && posRefusals
     [ refused (setKey "discrete" (toJSON [9, 7 :: Integer]) base) "not strictly ascending"
     , refused (setKey "tier" (toJSON [[1, 0 :: Integer]]) base) "index mismatch"
     , refused (setKey "weights" (toJSON [[c, 0] | c <- [0 .. 6 :: Integer]]) base) "every axis zeroed"
+    , -- judged on the EFFECTIVE table (the dead-file amendment): six zero
+      -- rows leave the unnamed dead axis at 0 too; naming it 1 is judged
+      refused (setKey "weights" (toJSON [[c, 0] | c <- [0, 1, 2, 3, 5, 6 :: Integer]]) base) "every axis zeroed"
+    , (replyObjWith respondV (setKey "weights" (toJSON [[c, if c == 4 then 1 else 0] | c <- [0 .. 6 :: Integer]]) base) >>= KM.lookup "degraded") == Just (Bool False)
     , -- the sim domain pair (M5-close review): an out-of-enum kind
       -- and a zero denominator each refuse by name
       refused (simReq [[0, 1, 3, 50, 100]]) "unknown sim kind"

@@ -83,5 +83,19 @@ fn request(o: &Outcome) -> Result<Request> {
     if let Some(d) = &r.dropped {
         req = req.rows("dropped", d);
     }
-    Ok(req.empty(&TABLES))
+    Ok(amended(req, r).empty(&TABLES))
+}
+
+/// The dead-file amendment's two tables (plan v2.35): the blocking
+/// roots, printed where the discrete members are, exactly when the reply
+/// echoed them; the effective weights (which axes count) on a judged run
+/// alone — a degraded reply echoes the defaults, not this project's table.
+fn amended(mut req: Request, r: &crate::score::wire::Reply) -> Request {
+    if let Some(d) = &r.dead_added {
+        req = req.rows("deadAdded", d.iter().map(|x| [*x]).collect::<Vec<_>>());
+    }
+    if r.degraded.is_none() {
+        req = req.rows("weights", &r.weights);
+    }
+    req
 }

@@ -239,9 +239,14 @@ catalogued =
 
 -- | Every limits group with its key count (C32): a key dropped or added
 -- on either side is a named failure, not a silently shorter object.
+-- One key is a list, not a group: `score_opt_in`, the axes weighing 0
+-- until named (the dead-file amendment, v2.35) - the dead axis alone.
 limitsHeld :: Bool
 limitsHeld = case limits of
-  Object o -> [(Key.toString k, length g) | (k, Object g) <- KM.toAscList o] == stated && KM.size o == length stated
+  Object o ->
+    [(Key.toString k, length g) | (k, Object g) <- KM.toAscList o] == stated
+      && KM.size o == length stated + 1
+      && KM.lookup "score_opt_in" o == Just (toJSON [4 :: Integer])
   _ -> False
  where
   stated = [("candidates", 7), ("caps", 13), ("clone", 6), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 15), ("similar", 14), ("zone", 2)]

@@ -104,6 +104,20 @@ pub struct Request {
     /// The extent law's four tables (v2.35; score::located), on every
     /// road: contSpans, dupSpans, refLines, proseLines.
     pub extent: crate::score::located::Tables,
+    /// The dead-file gate's two facts (plan v2.35, the dead-file
+    /// amendment): today's point as graph/1 answered it (`deadNow`,
+    /// carried unchanged; the core copies it into the new baseline) and
+    /// the blocking roots' entity ids (`dead_added`). None on the roads
+    /// that judged no gate (the dedup-only and join roads, trend).
+    pub dead: Dead,
+}
+
+/// The dead-file gate on the verdict wire: `deadPoint` and `deadAdded`,
+/// each riding exactly when Some.
+#[derive(Debug, Default)]
+pub struct Dead {
+    pub point: Option<Value>,
+    pub added: Option<Vec<u64>>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -153,6 +167,10 @@ pub struct Reply {
     /// tenths = E times ten rounded half up (the exact E stays in the
     /// core); None only on a degraded reply.
     pub extent: Option<[u64; 2]>,
+    /// The blocking roots echoed in the ratchet (the dead-file
+    /// amendment), Some exactly when `deadAdded` rode; `dead_added` is
+    /// their fail name.
+    pub dead_added: Option<Vec<u64>>,
 }
 
 impl Request {
@@ -186,6 +204,7 @@ impl Request {
             judged_loc: Vec::new(),
             doc_files: Vec::new(),
             extent: Default::default(),
+            dead: Dead::default(),
         }
     }
 }
@@ -244,6 +263,10 @@ pub fn body(r: &Request) -> Value {
             "cycleSelfLoops",
             r.cycle_self_loops.as_ref().map(|l| json!(l)),
         ),
+        // the dead-file gate (plan v2.35): the point verbatim, the
+        // blocking roots when the graph answered the gate
+        ("deadPoint", r.dead.point.clone()),
+        ("deadAdded", r.dead.added.as_ref().map(|a| json!(a))),
     ];
     for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
         o[key] = value;
@@ -296,6 +319,7 @@ struct RatchetEcho {
     fail: bool,
     failed: Vec<String>,
     dropped: Option<Vec<[u64; 3]>>,
+    dead_added: Option<Vec<u64>>,
 }
 
 fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
@@ -313,6 +337,11 @@ fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
             None
         } else {
             Some(rows(r, "dropped")?)
+        },
+        dead_added: if r["deadAdded"].is_null() {
+            None
+        } else {
+            Some(rows(r, "deadAdded")?)
         },
     })
 }
@@ -332,6 +361,7 @@ fn parse(v: &Value) -> Result<Reply> {
         fail: r.fail,
         failed: r.failed,
         dropped: r.dropped,
+        dead_added: r.dead_added,
         new_baseline: crate::corelink::judged::field(v, "newBaseline")?,
         knobs: rows(v, "knobs")?,
         weights: rows(v, "weights")?,

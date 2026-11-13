@@ -19,15 +19,18 @@ import Data.Aeson.Types (Pair)
 -- discrete member, the --fail-under floor ("either alone fails"),
 -- the dedup blocks-over-budget half (P2: `ce dedup --check` sends
 -- the pair; the ce check road never does), the knob fence, and
--- (6.4.0, O40) a ratcheted row whose file is present yet unmeasured.
-failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [(String, Bool)]
-failConditions r floorFail dedupOver digestDrift =
+-- (6.4.0, O40) a ratcheted row whose file is present yet unmeasured,
+-- and (plan v2.35, the dead-file amendment) a root of an unreferenced
+-- file whose state the project blocks, as graph/1 answered it.
+failConditions :: Ratcheted -> Bool -> Bool -> Bool -> [Integer] -> [(String, Bool)]
+failConditions r floorFail dedupOver digestDrift deadAdded =
   [ ("ratchet_over", not (null (rOver r)))
   , ("discrete_added", not (null (rAdded r)))
   , ("floor", floorFail)
   , ("dedup_budget", dedupOver)
   , ("knobs_digest", digestDrift)
   , ("rows_dropped", not (null (rDropped r)))
+  , ("dead_added", not (null deadAdded))
   ]
 
 -- | The ratchet face: the delta, the gate bit, and the NAMES of the
@@ -36,8 +39,8 @@ failConditions r floorFail dedupOver digestDrift =
 -- coincidence, which is the whole reason the rulepack fence (5.1.0)
 -- could become a fourth way to fail without any consumer guessing.
 -- Split from result at the E01 75-line function gate when it did.
-ratchetObj :: Bool -> Ratcheted -> [(String, Bool)] -> Value
-ratchetObj presentRode r conds =
+ratchetObj :: Bool -> Maybe [Integer] -> Ratcheted -> [(String, Bool)] -> Value
+ratchetObj presentRode deadAdded r conds =
   object $
     [ "added" .= rAdded r
     , "removed" .= rRemoved r
@@ -49,6 +52,9 @@ ratchetObj presentRode r conds =
       -- the dropped rows ride exactly when `present` rode (6.4.0):
       -- an empty list is an answer, an absent key is an older core
       <> ["dropped" .= rDropped r | presentRode]
+      -- the blocking roots ride back where the discrete members do,
+      -- exactly when they rode (the dead-file amendment)
+      <> ["deadAdded" .= d | Just d <- [deadAdded]]
 
 -- | The newBaseline face. softLine (2.14.0, plan v2.6 §B): derived
 -- from judgedLoc at establish, carried verbatim otherwise — the
@@ -70,8 +76,8 @@ ratchetObj presentRode r conds =
 -- language, and baseline::write is a mechanism any in-process
 -- caller may drive. The guarantee is "no CLI road persists a
 -- drifted digest without an act", not a type-level fence.
-newBaselineObj :: Ratcheted -> Maybe Integer -> Maybe Integer -> Value
-newBaselineObj r newSoft digest =
+newBaselineObj :: Ratcheted -> Maybe Integer -> Maybe Integer -> Maybe Value -> Value
+newBaselineObj r newSoft digest deadPoint =
   object $
     [ "continuous" .= rNewCont r
     , "discrete" .= rNewDisc r
@@ -79,6 +85,9 @@ newBaselineObj r newSoft digest =
     , "zoneTiers" .= [zoneWarnPermille, zoneAskPermille]
     ]
       <> digestKey digest
+      -- today's dead-file point, verbatim, exactly when it rode (the
+      -- dead-file amendment): the next run's comparison point
+      <> ["deadPoint" .= p | Just p <- [deadPoint]]
 
 -- | The digest key, present exactly when the request carried one:
 -- absent ⇔ none sent, on the judged and the degraded reply alike, so

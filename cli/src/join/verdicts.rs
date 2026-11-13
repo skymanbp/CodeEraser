@@ -115,6 +115,8 @@ fn request(
         dedup_min_distinct: None,
         judged_loc: Vec::new(),
         doc_files: score::doc_file_indices(&files),
+        // the join judges no gate: it reads the verdict table alone
+        dead: wire::Dead::default(),
         files,
     })
 }

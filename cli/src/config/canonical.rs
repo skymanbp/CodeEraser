@@ -15,7 +15,8 @@
 //! serde_json tree of the parsed config against the tree of the
 //! effective default (`Config::default()` with the core's own
 //! constants standing in for every absent score / trend / graph
-//! knob, and every axis weighed at the effective default weight):
+//! knob, and every axis weighed as the core weighs one the table does
+//! not name: the effective default weight, or 0 for an opt-in axis):
 //!
 //! 1. a `null` leaf is undeclared — dropped;
 //! 2. a leaf equal to the default tree's leaf at the same path is a
@@ -103,19 +104,33 @@ pub fn canonical(cfg: &Config) -> Value {
         }
     }
     let mut shipped = serde_json::to_value(effective_default()).expect("Config serializes");
-    // every axis weighs the effective default weight unless named
+    shipped["score"]["weights"] = shipped_weights(cfg);
+    prune(declared, Some(&shipped)).unwrap_or(Value::Object(Map::new()))
+}
+
+/// The per-axis weights the core judges with when the `[score.weights]`
+/// table names none: an opt-in axis (the core's `optInAxes`, read from
+/// the definition package's `limits.score_opt_in`; the dead axis since
+/// the dead-file amendment) weighs 0, every other axis the effective
+/// default weight — the declared `default_weight` or the core's. The
+/// opt-in set is the core's definition; this side spells no axis.
+fn shipped_weights(cfg: &Config) -> Value {
     let weight = cfg
         .score
         .default_weight
         .or(effective_default().score.default_weight)
         .expect("core default weight");
-    shipped["score"]["weights"] = Value::Object(
+    let opt_in = crate::tables::get().limits.score_opt_in;
+    Value::Object(
         crate::score::knobs::AXES
             .iter()
-            .map(|axis| ((*axis).to_string(), Value::from(weight)))
+            .enumerate()
+            .map(|(code, axis)| {
+                let w = if opt_in.contains(&code) { 0 } else { weight };
+                ((*axis).to_string(), Value::from(w))
+            })
             .collect(),
-    );
-    prune(declared, Some(&shipped)).unwrap_or(Value::Object(Map::new()))
+    )
 }
 
 /// The four rules over one node: `shipped` is the default tree's node

@@ -20,7 +20,6 @@ module CE.Verdict.Table
 
 import CE.Verdict.Cost (classIdPastFence, classKnobMaxCode, classTolCode)
 import CE.Wire (ascendingOn, knobTable, label, tableOffence, u64)
-import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (nub)
 
@@ -75,19 +74,13 @@ classKnobsOffence = table "classKnobs" one 2
 axisTable :: String -> Integer -> String -> (Integer -> Integer -> Maybe String) -> [[Integer]] -> Maybe String
 axisTable name = knobTable name "malformed row (need [axis,value])"
 
--- | A request may zero SOME axes (unlisted ones default to 1);
--- zeroing all seven leaves the score with no divisor and is refused.
+-- | The weight rows' shape: [axis, numerator], codes 0..6, no
+-- negative numerator. Whether the request leaves any axis weighing
+-- is judged on the EFFECTIVE table (CE.Verdict.Wire.zeroedOffence).
 weightsOffence :: [[Integer]] -> Maybe String
-weightsOffence rows =
-  axisTable "weights" 6 "unknown axis code" negW rows
-    <|> if length rows == 7 && all zeroed rows
-      then Just "weights: every axis zeroed"
-      else Nothing
+weightsOffence = axisTable "weights" 6 "unknown axis code" negW
  where
   negW _ w = if w < 0 then Just "negative field" else Nothing
-  zeroed row = case row of
-    [_, w] -> w == 0
-    _ -> False
 
 -- | Codes 0..4 since 2.14.0: size soft-fallback (0), coc (1), and
 -- the v0.6 zone knobs — hard line H (2), P_max (3), soft-line

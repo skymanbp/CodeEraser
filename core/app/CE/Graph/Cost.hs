@@ -11,7 +11,7 @@
 -- overflow lesson generalized: guards stay out of bounded arithmetic
 -- even while today's only use is a comparison — the Opus review
 -- caught the first draft shipping Int against the decided spec).
-module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, mountCap, unmentionedCap, unmentionedHardCap, underCap, rootStates, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits, exportVisBit, publicFlagBit, unmentionedVisMask, exemptCategories, restrictedVisBit, reexportMountBit, pkgPrivateMountBit) where
+module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, mountCap, unmentionedCap, unmentionedHardCap, underCap, rootStates, blockStates, minRung, entryMask, sccFloor, granFile, assetKind, refdefKind, roleBits, exportVisBit, publicFlagBit, unmentionedVisMask, exemptCategories, restrictedVisBit, reexportMountBit, pkgPrivateMountBit) where
 
 -- | Real oversize protection for graph requests (the envelope byte
 -- precheck is relaxed for the trusted same-machine child, so these
@@ -86,10 +86,16 @@ underCap = 131072
 
 -- | A root's state on the wire's `roots` rows, by code: 0 untold (no
 -- comparison point), 1 standing, 2 orphaned, 3 born (plan v2.35 banner,
--- the dead-file amendment). Phase 5A answers 0 on every row; the
--- comparison point that tells the other three arrives with 5B.
+-- the dead-file amendment; the definitions are CE.Graph.Point's).
 rootStates :: [String]
 rootStates = words "untold standing orphaned born"
+
+-- | The states a project may block (`[deadcode] block`, the request's
+-- `deadBlock` mask: bit i = the i-th here). `standing` is not among
+-- them: the inventory never blocks (declare an entry or delete the
+-- file); `untold` is no state of the tree.
+blockStates :: [String]
+blockStates = drop 2 rootStates
 
 -- | Which rungs count as references: an edge resolved at rung
 -- <= minRung is a reference claim. The ladder (resolve/1) never guesses

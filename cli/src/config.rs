@@ -24,6 +24,8 @@ mod tombstone; // the class's own table (plan v2.27), judged at load like the ru
 pub use tombstone::{TOMBSTONE_DEFAULT, TombstoneCfg};
 mod flow; // the flow class's own table (plan v2.31 step 5): its hook tier
 pub use flow::{FLOW_DEFAULT, FlowCfg};
+mod deadcode; // the dead-file gate (plan v2.35, 5B): the states `[deadcode] block` fails on
+pub use deadcode::{BLOCKABLE, DeadcodeCfg};
 mod ui; // the console-language selector (plan v2.29 step 9, O61) — never a knob
 pub use ui::UiCfg;
 
@@ -172,6 +174,8 @@ pub struct Config {
     pub tombstone: TombstoneCfg,
     /// The flow class's own table (plan v2.31 step 5, `[flow]`).
     pub flow: FlowCfg,
+    /// The dead-file gate's table (plan v2.35, `[deadcode]`).
+    pub deadcode: DeadcodeCfg,
     /// The project's console language (`[ui] lang`, plan v2.29 step 9,
     /// O61) — the third selector after `--lang` and CE_LANG; outside
     /// the knob fingerprint, because a language is not a judgment knob.
@@ -252,6 +256,7 @@ impl Config {
             .or_else(|| cfg.graph.fault())
             .or_else(|| cfg.tombstone.fault())
             .or_else(|| tier::tier_fault("[flow]", cfg.flow.tier.as_deref()))
+            .or_else(|| cfg.deadcode.fault())
             .or_else(|| cfg.ui.fault())
             .or_else(|| cfg.globs_fault(path.parent().unwrap_or(root)))
         {

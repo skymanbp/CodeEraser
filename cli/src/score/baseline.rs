@@ -233,6 +233,13 @@ pub fn write(root: &Path, new_baseline: &Value) -> Result<PathBuf> {
     if let Some(d) = new_baseline.get("knobsDigest").filter(|v| !v.is_null()) {
         doc["knobsDigest"] = d.clone();
     }
+    // the dead-file comparison point (plan v2.35, the dead-file
+    // amendment): the graph's files and its unreferenced ones on the day
+    // this baseline is written, the core's object verbatim — written
+    // exactly when the core sent one, absent otherwise, never null
+    if let Some(p) = new_baseline.get("deadPoint").filter(|v| !v.is_null()) {
+        doc["deadPoint"] = p.clone();
+    }
     let path = path_for(root);
     // temp + rename, not a truncating write: a `ce baseline` killed
     // mid-write (Ctrl-C, CI timeout) left a torn ce-baseline.json that

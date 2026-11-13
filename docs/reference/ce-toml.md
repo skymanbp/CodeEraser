@@ -55,9 +55,9 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | `rewrite_den` | *(absent)* | Churn axis rewrite-share threshold, ratio denominator |
 | `cochange_floor` | *(absent)* | Co-change count at which a pair counts as entangled; ≥ 1 — at 0 every pair would read hot, so 0 is refused at load by name |
 | `viol_cost` | *(absent)* | The score's strictness dial, relative to its neutral value 10 (`violCostNeutral`): score = ⌊scale · (1 − (viol_cost ⁄ 10) · E ⁄ L)⌋, floored at 0, where E is the lines a finding names and L the tree's lines — at 10 the score is the scale times the share of lines no finding names, above 10 harsher (it may reach 0 by choice), below 10 gentler; ≥ 1 — at 0 the score sits at the scale and no floor can fail, so 0 is refused at load by name |
-| `default_weight` | *(absent)* | Weight of any axis the weights table does not name |
+| `default_weight` | *(absent)* | Weight of any axis the weights table does not name (the dead axis excepted: unnamed, it weighs 0) |
 | `score_scale` | *(absent)* | The score's full scale (per-mille by default) |
-| `weights` | *(absent)* | Per-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default. The weights layer the extent: the heaviest axes' named lines count fully before a lighter axis's join them, and a weight of 0 takes its axis out of the score |
+| `weights` | *(absent)* | Per-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); an unlisted axis keeps the equal default — except `deadcode`, which weighs 0 unless named (plan v2.35, the dead-file amendment: a class that may not block by default may not pull the score under a floor by default either; `deadcode = 1` turns the axis on as it was before). The weights layer the extent: the heaviest axes' named lines count fully before a lighter axis's join them, and a weight of 0 takes its axis out of the score |
 | `tol_num` | *(absent)* | Ratchet ratio leg numerator: a ceiling may grow to ceiling*tol_num/tol_den in one edit |
 | `tol_den` | *(absent)* | Ratchet ratio leg denominator |
 | `tol_abs` | *(absent)* | Ratchet absolute leg on the file-lines rows: or by this many lines, whichever is larger |
@@ -104,6 +104,12 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `tier` | *(absent)* | The intra-function dead-code class's own hook tier (plan v2.31 step 5): observe / warn / ask / deny; unset = observe. `[guard] mode` does not reach this class, and a tier speaks only for a finding in a language the precision gate admitted (`flow::judged_mask`: the languages whose blind-reviewed exam passed), so a finding in any other language, and every unused parameter, stays advisory; the Stop leg never blocks at any tier, and `ce flow --check` exits 1 only at `deny` with a judged finding. Any other value is refused at load by name, so a mistyped tier can never look armed |
+
+## [deadcode]
+
+| key | default | meaning |
+|---|---|---|
+| `block` | *(absent)* | The root states that fail `ce deadcode --check` and `ce check` (`dead_added`), out of `"orphaned"` (the committed baseline's graph held the file and did not call it unreferenced) and `"born"` (that graph did not hold it); default empty — an unreferenced file is listed and blocks nothing (plan v2.35, the dead-file amendment). A root's state is read against what the committed baseline records (`deadPoint`: the day's file nodes and the unreferenced ones among them, written by `ce baseline`); declared while no committed baseline records which files were unreferenced, both commands refuse by name (exit 2) until `CE_ACCEPT_BASELINE=1 ce baseline .` writes one. `"standing"` is refused at load with its reason — the inventory never blocks: declare an entry or delete the file — and any other word by name. A file renamed after the baseline reads `born`. Order and repeats do not matter: the list enters the knob fingerprint as a sorted set, the empty default leaves it alone |
 
 ## [ui]
 

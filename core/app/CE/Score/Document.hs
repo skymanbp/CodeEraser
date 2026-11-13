@@ -22,6 +22,7 @@ import CE.Verdict.Faces (failConditions)
 import CE.Verdict.Ratchet (Ratcheted (..))
 import Data.Aeson (Value (Null), object, (.=))
 import Data.Foldable (asum)
+import qualified Data.Map.Strict as M
 
 -- | The catalogue lists the fail-condition names and the degraded
 -- reasons, so the measuring side sends their codes and holds neither
@@ -39,7 +40,12 @@ schemaId = "ce.check-report/0.6.0"
 -- `droppedRode` is 1; `extent` the lines the score was judged on (one
 -- row [tenths, L]: E times ten, rounded half up, as the verdict reply
 -- carries it, and the lines; none on a degraded judgment; 0.6.0, the
--- extent law); `roast` the console's `--roast` (step 5, CE.Score.Lines).
+-- extent law); `roast` the console's `--roast` (step 5, CE.Score.Lines);
+-- `deadAdded` the blocking roots' entity ids the verdict reply echoed
+-- (plan v2.35, the dead-file amendment), present in the ratchet exactly
+-- when the table rode; `weights` the effective weight table [axis, w]
+-- the verdict reply echoed on a judged run (the dead-file amendment:
+-- which axes count), present at the top exactly when the table rode.
 statement :: String
 statement =
   "range files\nrange why\n\
@@ -50,6 +56,8 @@ statement =
   \rows joinSeverity 2 judged - -\nrows added 1 judged -\nrows removed 1 judged -\n\
   \rows over 4 judged - - - -\nrows toleranceDrawn 3 judged - - -\n\
   \rows failed 1 judged -\nrows dropped 3 judged - - -\nrows extent 2 judged - -\n\
+  \rows deadAdded 1 judged -\noptional deadAdded\n\
+  \rows weights 2 judged - -\noptional weights\n\
   \ref why why\n"
 
 -- | The ratchet's fail conditions by code: the six the verdict face
@@ -58,7 +66,7 @@ statement =
 -- degraded reply's own (CE.Verdict). One spelling each, in the
 -- modules that answer them.
 failNames :: [String]
-failNames = map fst (failConditions (Ratcheted [] [] [] [] [] [] []) False False False) <> [degradedCondition]
+failNames = map fst (failConditions (Ratcheted [] [] [] [] [] [] []) False False False []) <> [degradedCondition]
 
 -- | The nullable tables one row at most, every code inside its table,
 -- the two bits 0 / 1, and no dropped row unless the register rode.
@@ -75,7 +83,7 @@ checked req =
 
 assemble :: DocReq -> Value
 assemble req =
-  object
+  object $
     [ "score" .= fact req "score"
     , "scoreScale" .= optional req "scale"
     , "axes" .= rows req "axes"
@@ -85,12 +93,15 @@ assemble req =
     , "floor" .= optional req "floor"
     , "candidates" .= rows req "candidates"
     , "joinSeverity" .= rows req "joinSeverity"
-    , "ratchet" .= object (ratchet <> ["dropped" .= rows req "dropped" | flag req "droppedRode"])
+    , "ratchet" .= object (ratchet <> ["dropped" .= rows req "dropped" | flag req "droppedRode"] <> ["deadAdded" .= concat (rows req "deadAdded") | deadRode])
     , "counts" .= counted countKeys (range req "files" : map (fact req) (drop 1 countKeys))
     , "degraded" .= degradedOf req ["reason"]
     ]
+    <> ["weights" .= rows req "weights" | rode "weights"]
  where
+  rode t = maybe False (M.member t) (dRows req)
   countKeys = words "files simPairs members collapsed skippedSelf"
+  deadRode = rode "deadAdded"
   ratchet =
     [ "added" .= concat (rows req "added")
     , "removed" .= concat (rows req "removed")
