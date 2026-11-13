@@ -135,7 +135,7 @@ kind only its grammar has, and C and C++ share a piece the same way — so a sha
 a kind the other grammar lacks ([slot.rs:24-28](../../../cli/src/merge/slot.rs#L24)), and a kind
 both grammars have sits in the shared piece, so one construct answers one class in a `.c` and a
 `.cpp` file: the compound literal `(P){1,2}` is an expression in both
-([C.hs:154-160](../../../core/app/CE/Lang/C.hs#L154); until v2.35 it sat in the C++ piece alone and
+([C.hs:158-164](../../../core/app/CE/Lang/C.hs#L158); until v2.35 it sat in the C++ piece alone and
 answered 4 in C).
 
 Haskell has no flow table, and it is this repository's core language, so its slot table carries
@@ -144,7 +144,7 @@ the two lists a flow table would give: `stmt_kinds`, its statement forms (the do
 instances, imports and the rest), and `container_kinds`, the kinds whose children stand in a
 statement position (`do`, `declarations`, `local_binds`, the class and instance bodies). A
 language with a flow table never fills either list — the unit leg holds both ways
-([Haskell.hs:125-140](../../../core/app/CE/Lang/Haskell.hs#L125), [slot.rs:120](../../../cli/src/merge/slot.rs#L120)).
+([Haskell.hs:132-147](../../../core/app/CE/Lang/Haskell.hs#L132), [slot.rs:120](../../../cli/src/merge/slot.rs#L120)).
 The Haskell grammar spells an expression, a pattern and a type with the same kinds (`apply`,
 `variable`, `tuple`…), so its type class holds only the kinds that are types alone — a type
 constructor's `name`, the arrow, `forall`, `context` and the like — and a shared kind reads as an

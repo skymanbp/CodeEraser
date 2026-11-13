@@ -25,10 +25,10 @@ can assemble evidence, but the boolean and reason are produced by `judgeRow`.
 Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
-row STANDS for its target ([wire.rs:97-113](../../../cli/src/erase/wire.rs#L97),
+row STANDS for its target ([wire.rs:86-102](../../../cli/src/erase/wire.rs#L86),
 [Erase.hs:55-61](../../../core/app/CE/Erase.hs#L55)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
-([wire.rs:116-128](../../../cli/src/erase/wire.rs#L116)); the closure itself is
+([wire.rs:105-117](../../../cli/src/erase/wire.rs#L105)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
 
 Rust's measurement leg preserves raw bytes for the final equality test: the
@@ -192,7 +192,7 @@ with more candidates than a request holds is refused by name before anything
 is sent ([wire.rs:71-95](../../../cli/src/erase/wire.rs#L71)). A degraded reply,
 should one still arrive, is the plan's refusal, naming the request, rather than
 an empty table read as “nothing to erase”, and each request's decoded count
-must equal its candidate count ([wire.rs:22-56](../../../cli/src/erase/wire.rs#L22), [wire.rs:118-128](../../../cli/src/erase/wire.rs#L118)).
+must equal its candidate count ([wire.rs:22-56](../../../cli/src/erase/wire.rs#L22), [wire.rs:107-117](../../../cli/src/erase/wire.rs#L107)).
 
 ### 5. `--apply`: predicates before writes
 
