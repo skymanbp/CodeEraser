@@ -339,7 +339,7 @@ and returns the *first* offender by name ([Structure.hs:79-98](../../../core/app
   probe at [StructureProps.hs:124-128](../../../core/test/StructureProps.hs#L124));
 - the six `dirTables` share one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
-  ([Structure.hs:85-87,96-103](../../../core/app/CE/Structure.hs#L85),
+  ([Structure.hs:85-87](../../../core/app/CE/Structure.hs#L85), [Structure.hs:104-111](../../../core/app/CE/Structure.hs#L104),
   [Structure.hs:164-177](../../../core/app/CE/Structure.hs#L164)); `staleDocRows` shares the
   ROW checker but orders **non-descending**, because one directory holds many docs
   ([Stale.hs:26-29](../../../core/app/CE/Structure/Stale.hs#L26)). Extra rules: (7.2.0) shape bits

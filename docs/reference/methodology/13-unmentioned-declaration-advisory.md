@@ -57,7 +57,7 @@ document is not a generated tree but the product's own reading of one.
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
-file's mentions ([walk.rs:251-263,291-294](../../../cli/src/mention/walk.rs#L251)). The consequence
+file's mentions ([walk.rs:251-263](../../../cli/src/mention/walk.rs#L251), [walk.rs:291-294](../../../cli/src/mention/walk.rs#L291)). The consequence
 is stated, not hidden: PDF-disguised `.ai` assets whose first NUL falls past byte 8000
 are in U (zod holds eight, requests one), and §8 prices what they add.
 

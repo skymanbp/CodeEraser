@@ -69,7 +69,7 @@ This is `S = clamp(median + k·MAD, ...)` in log-LOC space, exponentiated, read 
 
 ADR-006 defines per-file/per-function ceilings on continuous metrics (file LOC, function CoC): the ceiling is the baseline value; exceeding it fails, and coming in under it tightens the ceiling automatically. A single edit is allowed `+2%` or `+10` lines, whichever is larger — on a function's complexity row `+2%` or `+1` point (proto 9.0.0) — and consumed tolerance is reported in the `ce check` ratchet line ([DEVELOPMENT_PLAN.md:204-211](../../DEVELOPMENT_PLAN.md#L204)).
 
-As built ([Ratchet.hs:78-82,137-138](../../../core/app/CE/Verdict/Ratchet.hs#L78)) the law has two arms — the row's class allowance first, the global legs only when the class declares none:
+As built ([Ratchet.hs:78-82](../../../core/app/CE/Verdict/Ratchet.hs#L78), [Ratchet.hs:138-141](../../../core/app/CE/Verdict/Ratchet.hs#L138)) the law has two arms — the row's class allowance first, the global legs only when the class declares none:
 
 ```
 tolerated(m, Just t, c)  = c + t                                         -- the class's own allowance (5.1.0)

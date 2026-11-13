@@ -52,7 +52,7 @@ knob rule, so the ratio is always defined
 
 Benefit is the zone pressure the split takes off, priced on the advisory's own pressure model —
 `CE.Structure.Zone.zonePenalty`, reached for a classed file through `Zone.classedZone`
-[Split.hs:2-5,25,186](../../../core/app/CE/Structure/Split.hs#L2), [Zone.hs:1-10](../../../core/app/CE/Structure/Zone.hs#L1).
+[Split.hs:2-5](../../../core/app/CE/Structure/Split.hs#L2), [Split.hs:25](../../../core/app/CE/Structure/Split.hs#L25), [Split.hs:186](../../../core/app/CE/Structure/Split.hs#L186), [Zone.hs:1-10](../../../core/app/CE/Structure/Zone.hs#L1).
 The curve was the verdict family's size charge too until proto 10.0.0, when the score became the
 extent law, which reads the lines past `S` and no curve (booklet 05); the advisory is its one
 reader since:
@@ -216,7 +216,7 @@ into one of three shapes [Split.hs:186-194](../../../core/app/CE/Structure/Split
 
 The exemption row carries the **best seam's** numbers (best by ROI, not by benefit), which is
 what lets the Rust side write the machine-generated *why*
-[Split.hs:6-8,166-170](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
+[Split.hs:6-8](../../../core/app/CE/Structure/Split.hs#L6), [Split.hs:166-170](../../../core/app/CE/Structure/Split.hs#L166). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
 [size-advisory.md:62-64](../size-advisory.md#L62). Since plan v2.32 step 4 the core lays the

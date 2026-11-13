@@ -94,7 +94,7 @@ The core's L1 answer names the units whose (key, kind) occurs exactly once on on
 
 Haskell accepts `p → q` for a vanished key of the same kind appearing in exactly one other pair, when the leftover content inside the two declaration spans shares at least `declFloor` distinct hashes ([Decl.hs:71](../../../core/app/CE/FourClass/Decl.hs#L71)). Multiple sources may feed that destination; two destinations refuse the key. Every measured pair is sent, including pairs without leftover lines, because they may contain a competing destination.
 
-The declaration key supplies provenance identity and pays the cross-site cost: `declCredit = siteCostCross`. Thus `declFloor = least n with siteOpens (siteCostCross - declCredit) n = 1` ([Cost.hs:77,86-89](../../../core/app/CE/FourClass/Cost.hs#L77)). One shared line opens an edge; zero does not. Setting the credit to zero restores `destFloor = 2`.
+The declaration key supplies provenance identity and pays the cross-site cost: `declCredit = siteCostCross`. Thus `declFloor = least n with siteOpens (siteCostCross - declCredit) n = 1` ([Cost.hs:77](../../../core/app/CE/FourClass/Cost.hs#L77), [Cost.hs:87-90](../../../core/app/CE/FourClass/Cost.hs#L87)). One shared line opens an edge; zero does not. Setting the credit to zero restores `destFloor = 2`.
 
 The key replaces the line anchor for this stage. The four identical body lines of `CLASSES` have a widest alphanumeric width of 14, below `anchorFloor = 19`; they can identify content once the declaration identifies its destination. The known requests reformat coincidence has no vanished declaration and gains no declaration edge.
 
