@@ -95,7 +95,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce merge` | 一组克隆怎样折成一个函数；只当顾问 |
 | `ce arch` | 目录分层、拆环、聚类、改动影响面；只当顾问 |
 | `ce structure` | <!--ce:count:structure_axes#word-->八<!--/ce-->个结构轴与拆分定价 |
-| `ce check` / `ce baseline` | 棘轮与分数地板，<!--ce:count:fail_conditions#word-->六<!--/ce-->个具名 fail 条件 |
+| `ce check` / `ce baseline` | 棘轮与分数地板，<!--ce:count:fail_conditions#word-->七<!--/ce-->个具名 fail 条件 |
 | `ce erase` | 确定性两段式擦除；默认演练 |
 | `ce update` | 最新发布对比本构建；`--yes` 安装 |
 | `ce doctor` / `ce setup` / `ce eject` / `ce mcp` | 本机状态；Claude Code 接线；卸载；MCP 服务器 |

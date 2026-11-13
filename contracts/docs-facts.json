@@ -53,7 +53,7 @@
       "id": "count:fail_conditions#word",
       "source": "core/app/CE/Verdict/Faces.hs::failConditions",
       "tier": "scraped",
-      "value": "6"
+      "value": "7"
     },
     {
       "id": "count:families#word",
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "382"
+      "value": "410"
     },
     {
       "id": "count:grammars#word",

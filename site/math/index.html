@@ -179,7 +179,7 @@ E_f   = min(n, max(T, n - S, churn))                     -- T = the lines a find
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
-  <p class="note rule">The fail bit is a disjunction of <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions: <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>.</p>
+  <p class="note rule">The fail bit is a disjunction of <!--ce:count:fail_conditions#word-->seven<!--/ce--> <em>named</em> conditions: <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>.</p>
   <ul class="consts">
     <li><b>tolNum/tolDen</b> 102/100</li>
     <li><b>tolAbs</b> 10</li>

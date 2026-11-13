@@ -95,7 +95,7 @@ The rest — same-role advice, Datalog queries and rules, intra-function dead co
 | `ce merge` | how a clone group would fold into one function; advice only |
 | `ce arch` | directory layers, cycle cuts, clusters, change impact; advice only |
 | `ce structure` | <!--ce:count:structure_axes#word-->eight<!--/ce--> structure axes and split pricing |
-| `ce check` / `ce baseline` | the ratchet and score floor, <!--ce:count:fail_conditions#word-->six<!--/ce--> named fail conditions |
+| `ce check` / `ce baseline` | the ratchet and score floor, <!--ce:count:fail_conditions#word-->seven<!--/ce--> named fail conditions |
 | `ce erase` | the deterministic two-phase eraser; dry run by default |
 | `ce update` | latest release vs this build; `--yes` installs it |
 | `ce doctor` / `ce setup` / `ce eject` / `ce mcp` | machine state; Claude Code wiring; uninstall; the MCP server |
