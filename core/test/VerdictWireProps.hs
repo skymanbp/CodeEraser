@@ -187,19 +187,13 @@ knobProbes =
   ]
 
 refusals :: Bool
-refusals = and (map knob knobProbes <> shaped)
+refusals = and (map knob knobProbes <> shaped) && posRefusals
  where
   knob (k, code, v, want) = refused (setKey k (toJSON [[code, v]]) base) want
   -- the probes whose payload is not one knob row: a shape each
   shaped =
     [ refused (setKey "discrete" (toJSON [9, 7 :: Integer]) base) "not strictly ascending"
     , refused (setKey "tier" (toJSON [[1, 0 :: Integer]]) base) "index mismatch"
-    , refused posReq "unit-tier node"
-    , -- the pos row is five numbers since 10.0.0 (graph/1's outdegree
-      -- is not sent): a six-number row is wire skew, refused by name,
-      -- and a five-number row is judged
-      refused (setKey "pos" (toJSON [[0, 1, 0, 0, 1, 1 :: Integer]]) base) "malformed row (need 5 fields)"
-    , not (refused (setKey "pos" (toJSON [[0, 1, 0, 1, 1 :: Integer]]) base) "malformed row")
     , refused (setKey "weights" (toJSON [[c, 0] | c <- [0 .. 6 :: Integer]]) base) "every axis zeroed"
     , -- the sim domain pair (M5-close review): an out-of-enum kind
       -- and a zero denominator each refuse by name
@@ -240,6 +234,21 @@ refusals = and (map knob knobProbes <> shaped)
       "tier"
       (toJSON ([[0, 0], [1, 0]] :: [[Integer]]))
       (setKey "sim" (toJSON (rows :: [[Integer]])) base)
+  base = wireReq [] [] [] []
+  refused = refusedBy respondV
+
+-- | The verdict request's pos rows by shape: a unit-tier node is refused;
+-- the row is five numbers since 10.0.0 (graph/1's outdegree is not
+-- sent), so a six-number row is wire skew, refused by name, and a
+-- five-number row is judged.
+posRefusals :: Bool
+posRefusals =
+  and
+    [ refused posReq "unit-tier node"
+    , refused (setKey "pos" (toJSON [[0, 1, 0, 0, 1, 1 :: Integer]]) base) "malformed row (need 5 fields)"
+    , not (refused (setKey "pos" (toJSON [[0, 1, 0, 1, 1 :: Integer]]) base) "malformed row")
+    ]
+ where
   base = wireReq [] [] [] []
   posReq =
     setKey
