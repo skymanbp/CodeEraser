@@ -147,14 +147,14 @@ FP 类 distinct ≤6 / TP 类 ≥7 的分离带下沿；抑制数入 summary 透
 fixtures 并对表；四个外部语料（tip 见 EVAL-SET-M5-3.md，本表只写前七位）由
 `CE_BLESS=1 cargo test --release --test it -- --ignored eval_dedup_distinct::regenerate --nocapture`
 重量并重写冻结件与下表。仪器再生的是数字，不是读法：哪一块是数据行（真阳 / 假阳）
-仍是 2026-08-07 仲裁的记录。
+仍是 2026-08-07 仲裁的记录。自 v2.35（车道 v235_imports，2026-11-12）起 token 流不给导入族 token——导入与加载语句、包声明、Haskell 的模块头与导出表、Rust 的 `mod x;`、再导出——报告哪些已核实的段由核的覆盖规则定；下表按此重量（下限关时的块 fixtures 240 → 76、cobra 1903 → 353、requests 75 → 49、ripgrep 10937 → 1364、zod 17022 → 8029），上文 2026-08-07 的逐语料数字是那天的读数。
 
 <!-- distinct:begin -->
 | 语料 @ tip | 文件 | 块（下限关） | distinct ≤ 6 = 出厂 7 抑制 | 落在哪些文件（族 = 两端文件名） |
 |---|---|---|---|---|
-| fixtures @ tracked (SOURCES.md) | 45 | 240 | 34 | gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java ×10, lbaselib.c ↔ ldblib.c ×7, include__fmt__format.h ×5, lbaselib.c ×4, packages__zod__src__v4__locales__ru.ts ×3, packages__zod__src__v4__locales__bg.ts ×2, … 另 2 族 |
-| cobra @ adbc881 | 36 | 1903 | 13 | bash_completions_test.go ×8, bash_completions_test.go ↔ command_test.go ×3, completions_test.go ×2 |
-| requests @ 8068356 | 37 | 75 | 12 | flask_theme_support.py ×11, status_codes.py ×1 |
-| ripgrep @ 3fce3b5 | 110 | 10937 | 17 | disallowed.rs ×10, hiargs.rs ×7 |
-| zod @ 912f0f5 | 404 | 17022 | 623 | to-json-schema.test.ts ×88, ecosystem.tsx ↔ silver.tsx ×58, number.test.ts ↔ string.test.ts ×53, types.ts ↔ checks.ts ×48, template-literal.test.ts ↔ computed.test.ts ×44, ecosystem.tsx ×26, … 另 41 族 |
+| fixtures @ tracked (SOURCES.md) | 45 | 76 | 8 | include__fmt__format.h ×2, packages__zod__src__v4__locales__ru.ts ×2, lbaselib.c ×1, packages__zod__src__v4__locales__bg.ts ×1, packages__zod__src__v4__locales__ota.ts ×1, src__requests__status_codes.py ×1 |
+| cobra @ adbc881 | 36 | 353 | 6 | bash_completions_test.go ↔ command_test.go ×3, bash_completions_test.go ×2, completions_test.go ×1 |
+| requests @ 8068356 | 37 | 49 | 4 | flask_theme_support.py ×3, status_codes.py ×1 |
+| ripgrep @ 3fce3b5 | 110 | 1364 | 3 | hiargs.rs ×3 |
+| zod @ 912f0f5 | 404 | 8029 | 73 | number.test.ts ↔ string.test.ts ×11, template-literal.test.ts ↔ computed.test.ts ×11, to-json-schema.test.ts ×6, string.test.ts ×5, number.test.ts ×3, string.test.ts ↔ number.test.ts ×3, … 另 26 族 |
 <!-- distinct:end -->
