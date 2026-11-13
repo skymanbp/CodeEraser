@@ -1,7 +1,7 @@
 CodeEraser in the loop: PreToolUse guard + Stop audit, ce.toml [guard] mode = "deny"
 agent> Add discounts. I'll keep the rounding helpers local so the module is self-contained.
 $ Write invoicer/discount.py
-✗ PreToolUse deny — ce: content for <work>/invoicer/discount.py duplicates 1 indexed region(s): invoicer/money.py:1-18 (89 tokens). Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.
+✗ PreToolUse deny — ce: content for <work>/invoicer/discount.py duplicates 1 indexed region(s): invoicer/money.py:1-18 (83 tokens). Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.
 agent> Add a compact report variant next to the existing renderer.
 $ Write invoicer/report.py
 ✓ landed (the guard had nothing to say)

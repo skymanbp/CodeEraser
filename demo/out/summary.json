@@ -39,7 +39,7 @@
       },
       "dedup": {
         "rc": 1,
-        "out": "dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (89 tokens)\ndup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)\ndup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)\ndup web/api.ts:22-33 <-> web/format.ts:4-15 (114 tokens)\nindexed 9 files (0 refreshed, 0 removed) — 4 clone blocks in 4 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped\ndedup ratchet: 4 clone blocks > budget 0 — new duplication must not land"
+        "out": "dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (83 tokens)\ndup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)\ndup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)\ndup web/api.ts:22-33 <-> web/format.ts:4-15 (114 tokens)\nindexed 9 files (0 refreshed, 0 removed) — 4 clone blocks in 4 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped\ndedup ratchet: 4 clone blocks > budget 0 — new duplication must not land"
       },
       "clone": {
         "rc": 0,

@@ -2,7 +2,7 @@
 
 ```console
 $ Write invoicer/discount.py
-✗ ce：<work>/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18 (89 tokens)。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。
+✗ ce：<work>/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18 (83 tokens)。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。
 ```
 
 **一条线，两张嘴。** `ce.toml` 给 `invoicer/**` 定下 `file_lines_fail = 40`。写入时守卫拒绝会越线的那次写入，`ce scan` 用同一个数给同一棵树评级——一处声明，钩子与 CI 同读。

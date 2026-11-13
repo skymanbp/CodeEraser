@@ -28,7 +28,7 @@ check score 605/1000 | findings on 150.0 of 380 lines | per 1000 lines: size 0 c
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
 note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table
 $ ce dedup . --check
-dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (89 tokens)
+dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (83 tokens)
 dup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)
 dup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)
 dup web/api.ts:22-33 <-> web/format.ts:4-15 (114 tokens)

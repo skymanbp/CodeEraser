@@ -9,7 +9,7 @@
 <text x="18" y="79" fill="#d2a8ff" xml:space="preserve">agent&gt; Add discounts. I'll keep the rounding helpers local so the module is self-contained.</text>
 <text x="18" y="98" fill="#58a6ff" xml:space="preserve">$ Write invoicer/discount.py</text>
 <text x="18" y="117" fill="#ff7b72" xml:space="preserve">✗ PreToolUse deny — ce: content for &lt;work&gt;/invoicer/discount.py duplicates 1 indexed region(s):</text>
-<text x="18" y="136" fill="#ff7b72" xml:space="preserve">    invoicer/money.py:1-18 (89 tokens). Reuse the existing implementation instead of re-writing it.</text>
+<text x="18" y="136" fill="#ff7b72" xml:space="preserve">    invoicer/money.py:1-18 (83 tokens). Reuse the existing implementation instead of re-writing it.</text>
 <text x="18" y="155" fill="#ff7b72" xml:space="preserve">    Moving it? Trim the source region first: the probe verifies against the current tree, and the same</text>
 <text x="18" y="174" fill="#ff7b72" xml:space="preserve">    write then passes.</text>
 <text x="18" y="193" fill="#d2a8ff" xml:space="preserve">agent&gt; Add a compact report variant next to the existing renderer.</text>
