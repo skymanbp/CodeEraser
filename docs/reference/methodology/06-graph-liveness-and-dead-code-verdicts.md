@@ -217,7 +217,7 @@ Two transformations happen on the way to the wire:
    inert list into the same comprehension as the rung filter
    ([Graph.hs:133](../../../core/app/CE/Graph.hs#L133), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
    ([deadcode.rs:296-307](../../../cli/src/graph/deadcode.rs#L296)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:300-303,312](../../../cli/src/graph/deadcode.rs#L300)).
+   is a *named error*, never a panic ([deadcode.rs:300-303,314](../../../cli/src/graph/deadcode.rs#L300)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory — or, for a package whose code its manifest declares (an R package's `DESCRIPTION`,
    plan v2.30 step 4: the `Collate` files, else the files directly in `R/`), to that code alone,
