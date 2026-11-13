@@ -80,6 +80,8 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 2 行 md（`AGENTS.md` 15→7、`packages/docs-v3/MIGRATION.md` 8→7 节）是第二道 epoch 已记的标题规则；requests /
 ripgrep / cobra 没有这三种语言，零行。graph-slice 五册零新漂移（`eval_graph` 绿）。
 
+**第四道 epoch 边界（2026-11-12，车道 v235_imports）**：T1/T2 的 token 流换 epoch——`TOKENIZER_REV` 4→5，各语言 `[scan] import_kinds` / `loads` 表点名的导入与加载语句和注释一样不出 token；报告哪些已核实的段由核的覆盖规则（`cover/1`）定。本族的候选池取自这条流（S1 = 25..50 token 的近段、S3 = 指纹组），按第一道边界的拍板不部分重冻：候选、样本、精度与五审计员的判决原样留在旧 epoch，重生成要整族连审计一起重立。活门 `self_universe_tracks_units` 要求 self 宇宙与当下行喉一致，本车道改了两个冻结行的文件，故 self 三册按名续冻这两行（`CE_REFREEZE`）：`cli/src/dedup/tokens.rs` 多出车道加的两个单元（16→18，bands below_floor 7→8 / s 4→5；graph-slice 的 `use` 站点 5→6、docdup 段宇宙 below_floor 7→9），`cli/tests/it/dedup_pairs.rs` 只换 sha、字段不动；候选册 `admitted_by_lang` rs 1242→1243 手改同增，`pairs_sha256` 与 `pool_digests` 不动。四份外部宇宙的行由单元探测器出、不读 token 流，按拍板整族不重冻、本车道未重导；graph-slice 与 docdup 段宇宙五册的门照绿（`eval_graph`、`eval_docdup_universe`）。
+
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
