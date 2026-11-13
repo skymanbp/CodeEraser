@@ -748,4 +748,16 @@ forbid = [
 # sDeadIndegCeil); one row stands, the record against the shorter one
 # (85 tokens, Axes.hs 65-92 against Score.hs 29-50). Row set diffed
 # against the 705f0633 tree (tests at fad2672): that row gone, none new.
-budget = 28
+# 28 -> 10 (v2.35 imports lane): eighteen rows left with the two rule
+# changes, none bought. The import family gives the T1/T2 stream no
+# token (TOKENIZER_REV 5): five rows were the export lists of three
+# CE/*/Cost.hs module headers, three reached 50 tokens only with
+# import tokens (audit.rs against health.rs; TrendProps.hs against
+# AuditProps.hs and SplitProps.hs). The coverage rule (cover/1)
+# replaced the line-containment pass: ten rows had fewer than 50
+# tokens of their own once a longer run of the pair covered them (six
+# periodic Knobs.hs runs, four score/structure wire runs). One row
+# re-aligned (AuditProps.hs against SplitProps.hs). Row set of main's
+# build (e59a6d2f) against the lane's on one tree: 28 -> 10, no lane
+# row without a main block on the same pair over both spans.
+budget = 10
