@@ -12,7 +12,7 @@
 -- own — else the alternate in the page's own language (`<html lang>`'s
 -- primary subtag; every alternate when none is declared) whose root is
 -- shortest. Nothing here consults the tree.
-module CE.Resolve.HtmlHead (Doc (..), Page (..), page, servedFrom, splitOrigin, decodeRefs) where
+module CE.Resolve.HtmlHead (Doc (..), Page (..), page, splitOrigin, decodeRefs) where
 
 import CE.Resolve.Str (splitOnceStr, stripSuffix, utf8Len)
 import CE.Resolve.Url (percentDecode)

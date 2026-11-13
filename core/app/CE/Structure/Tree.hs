@@ -11,7 +11,7 @@
 -- slashes, root-relative. Sorting a list of Haskell Strings orders by code
 -- point, which is the byte order of their UTF-8 spelling — the order
 -- `Vec<&String>::sort` and the `BTreeMap<String, _>` key order give.
-module CE.Structure.Tree (Dir (..), Tree (..), build, dirOf, dirId, dirPaths, splitDir, stem, shapeBits) where
+module CE.Structure.Tree (Dir (..), Tree (..), build, dirOf, dirId, dirPaths, splitDir, stem) where
 
 import Data.Bits ((.|.))
 import Data.Char (isAsciiLower, isAsciiUpper, isDigit, toUpper)

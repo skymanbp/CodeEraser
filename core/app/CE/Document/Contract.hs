@@ -15,7 +15,7 @@
 -- indexes, and the reference classes its document carries. A string
 -- the measured repository owns never crosses: the document names it
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
-module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, bits, fact, flag, judgedFacts, nameOf, nameOr, spelled, optional, range, readSpec, ref, rows, single, totalRows, whyRef) where
+module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, bits, fact, flag, judgedFacts, nameOf, nameOr, spelled, optional, range, ref, rows, single, totalRows, whyRef) where
 
 import CE.Graph (graphTooLarge)
 import CE.Lang (languages)

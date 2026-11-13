@@ -10,8 +10,7 @@
 -- independently derived sets and the result has no dependence on
 -- iteration order. Determinism is structural.
 module CE.FourClass.Anchor
-  ( bucketCap
-  , sites
+  ( sites
   ) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor)

@@ -16,7 +16,6 @@ module CE.Resolve.JavaPick (
   declaredOne,
   starJdk,
   jdk,
-  sourceRoot,
   visibleIn,
   classFiles,
   ownRootDir,

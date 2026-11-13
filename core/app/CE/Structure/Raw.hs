@@ -12,7 +12,7 @@
 -- ones the measuring side sent as integers until then. A path the tree
 -- cannot place is a fault answered by name (the message the measuring
 -- side printed), never a guess.
-module CE.Structure.Raw (Raw (..), Built (..), parseRaw, rawOffence, rawRows, buildRaw, rustDebug) where
+module CE.Structure.Raw (Raw (..), Built (..), parseRaw, rawOffence, rawRows, buildRaw) where
 
 import CE.Structure.Tree (Dir (..), Tree (..), build, dirOf)
 import Data.Aeson (Object, (.!=), (.:?))

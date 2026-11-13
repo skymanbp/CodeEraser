@@ -34,8 +34,6 @@
 module CE.Verdict.Extent
   ( Unit
   , unit
-  , axisCodes
-  , unitExtent
   , extentOf
   , layered
   , extentScore

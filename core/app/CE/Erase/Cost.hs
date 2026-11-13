@@ -46,7 +46,6 @@
 -- v1 has NO knobs: the safety predicate is not tunable — a knob that
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
-  advisoryFirst,
   classNames,
   classOf,
   eraseRowCap,

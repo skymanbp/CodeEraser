@@ -20,7 +20,7 @@
 --   * an object's repeated key keeps its last value (a `BTreeMap`
 --     insert).
 -- Numbers are read for their acceptance only: no rung reads one.
-module CE.Resolve.Json (clean, readJsonc, parseJson) where
+module CE.Resolve.Json (clean, readJsonc) where
 
 import CE.Resolve.Chars (isRustWhite)
 import Data.Aeson (Value (..), toJSON)

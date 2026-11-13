@@ -18,7 +18,7 @@
 -- counts by kind code; paths and provenance are references. The
 -- trail `ce erase --log` reads is this module's second family
 -- (`trailDoc`, below).
-module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc, trailSchemaId, utcStamp) where
+module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc, utcStamp) where
 
 import CE.Document.Contract
 import CE.Erase.Cost (classNames, reasonNames)
