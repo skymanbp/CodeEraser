@@ -46,13 +46,14 @@ lines' say doc req =
       ]
   grouping d
     | not told || dropped = plain ""
-    | bool "root" d = say "falls" [N (M.findWithDefault 0 (show (key "name" d)) falls)]
+    | bool "root" d = say "falls" [N (M.findWithDefault 0 (key "name" d) falls)]
     | otherwise = case arr "under" d of
         rs | length rs > 3 -> say "under_more" [P (join ", " (map (piece . R) (take 3 rs))), N (toInteger (length rs - 3))]
         rs -> say "under" [P (join ", " (map (piece . R) rs))]
   -- the dependents under each root, counted once over the pairs (a
-  -- root's name is a reference object; its printed form is the key)
-  falls = M.fromListWith (+) [(show r, 1 :: Integer) | x <- rows', r <- arr "under" x]
+  -- root's name is a reference object, keyed as itself: aeson's Value
+  -- is ordered)
+  falls = M.fromListWith (+) [(r, 1 :: Integer) | x <- rows', r <- arr "under" x]
   trust c = case c of
     Number 0 -> say "unvouched" []
     Number 1 -> say "vacuous" []
