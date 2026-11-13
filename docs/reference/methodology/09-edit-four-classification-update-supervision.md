@@ -159,7 +159,7 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 | core answered with a `reason` (e.g. `bucket_cap`) | L1 | that reason ([batch.rs:113-117](../../../cli/src/fourclass/batch.rs#L113)) | false |
 | core answered, delta failed validation | L1 | the merge error ([batch.rs:87-89](../../../cli/src/fourclass/batch.rs#L87)) | false |
 
-`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:51](../../../cli/src/fourclass/batch.rs#L51)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:113-117](../../../cli/src/fourclass/batch.rs#L113)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([VERSIONING.md:507-508](../../../contracts/VERSIONING.md#L507)).
+`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:51](../../../cli/src/fourclass/batch.rs#L51)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:113-117](../../../cli/src/fourclass/batch.rs#L113)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([VERSIONING.md:509-510](../../../contracts/VERSIONING.md#L509)).
 
 ### Boundary checks
 
