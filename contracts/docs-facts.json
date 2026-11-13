@@ -57,7 +57,7 @@
     },
     {
       "id": "count:families#word",
-      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1 the W6 stage bags/1 and the v2.35 stage relocate/1)",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1 the W6 stage bags/1 and the v2.35 stages relocate/1, cover/1)",
       "tier": "linked",
       "value": "16"
     },
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "374"
+      "value": "378"
     },
     {
       "id": "count:grammars#word",
@@ -141,13 +141,13 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "28"
+      "value": "10"
     },
     {
       "id": "gate:dedup.tests#digits",
       "source": "cli/tests/ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "89"
+      "value": "38"
     },
     {
       "debt": "a Haskell const read by line; promote = the cap on the hello wire",
@@ -483,7 +483,7 @@
       "id": "ver:tokenizer_rev#digits",
       "source": "cli/src/dedup/tokens.rs::TOKENIZER_REV",
       "tier": "linked",
-      "value": "4"
+      "value": "5"
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
