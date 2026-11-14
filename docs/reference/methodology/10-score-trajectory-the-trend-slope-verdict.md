@@ -10,7 +10,7 @@ The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:151](..
 
 ### Boundary contract
 
-Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:207](../../../core/app/CE/Wire.hs#L207)), bound to this family's row and knob contracts ([Trend.hs:30](../../../core/app/CE/Trend.hs#L30)):
+Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:212](../../../core/app/CE/Wire.hs#L212)), bound to this family's row and knob contracts ([Trend.hs:30](../../../core/app/CE/Trend.hs#L30)):
 
 - row must be exactly `[ts, score, scale]`, with `ts >= 0`, `scale > 0`, and `0 <= score <= scale` ([Trend.hs:39-47](../../../core/app/CE/Trend.hs#L39));
 - knob must be `[code, value]` with `code ∈ {0, 1}`, `value >= 0`, and — for `code == 0` — `value >= 2` ([Trend.hs:51-57](../../../core/app/CE/Trend.hs#L51));

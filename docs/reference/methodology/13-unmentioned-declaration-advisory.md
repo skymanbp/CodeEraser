@@ -181,15 +181,15 @@ extensions, hspec-discover's `*Spec.hs`, and the rows of the newer languages' ru
 ([conv/name.rs:79-93](../../../cli/src/mention/conv/name.rs#L79),
 [conv/name.rs:95-106](../../../cli/src/mention/conv/name.rs#L95),
 [PathForms.hs:11-64](../../../core/app/CE/Lang/Common/PathForms.hs#L11)); the `main` of Python,
-Haskell, C, C++ and Java ([conv/name.rs:151-167](../../../cli/src/mention/conv/name.rs#L151));
+Haskell, C, C++ and Java ([conv/name.rs:111-127](../../../cli/src/mention/conv/name.rs#L111));
 the framework `Protocol` names a loader spells for the author — Python unittest/xunit/
 pluggy/Django hooks, TS file-form × export-name rows, Haskell `Paths_*` and hspec, and the
 tables plan v2.30 added for the C family, Java, Lua and R
 ([Protocol.hs:6-102](../../../core/app/CE/Lang/Common/Protocol.hs#L6), read by [protocol.rs:17-25](../../../cli/src/mention/conv/protocol.rs#L17),
 [conv/protocol.rs:31-63](../../../cli/src/mention/conv/protocol.rs#L31)); a Go method's
-receiver exportedness ([conv/name.rs:187-199](../../../cli/src/mention/conv/name.rs#L187));
+receiver exportedness ([conv/name.rs:147-159](../../../cli/src/mention/conv/name.rs#L147));
 and a file-level `ce:allow(unmentioned) -- <why>` claim
-([conv/name.rs:171-177](../../../cli/src/mention/conv/name.rs#L171)). Every bit is silence,
+([conv/name.rs:131-137](../../../cli/src/mention/conv/name.rs#L131)). Every bit is silence,
 the safe direction.
 
 ### 5. Visibility, mounts and the core's code
@@ -265,7 +265,7 @@ shared string, never a verdict) and lists a selected file's rows with the root-l
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:20-43](../../../cli/src/graph/canvas.rs#L20),
 [graph.js:51-71](../../../gui/ui/graph.js#L51),
-[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25), [graph_aside.js:141-155](../../../gui/ui/graph_aside.js#L141), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
+[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25), [graph_aside.js:141-155](../../../gui/ui/graph_aside.js#L141), [i18n.js:129-138](../../../gui/ui/i18n.js#L129)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 

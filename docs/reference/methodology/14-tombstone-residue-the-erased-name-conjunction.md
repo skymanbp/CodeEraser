@@ -231,7 +231,7 @@ no malformed reply, is ever read as "no sites" or "not over"
 eleventh ([Protocol.hs:119](../../../core/app/CE/Protocol.hs#L119)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
-knob ([Wire.hs:190-215](../../../core/app/CE/Wire.hs#L190),
+knob ([Wire.hs:195-220](../../../core/app/CE/Wire.hs#L195),
 [Tombstone.hs:35-59](../../../core/app/CE/Tombstone.hs#L35)). The judgment is three lines
 ([Cost.hs:47-58](../../../core/app/CE/Tombstone/Cost.hs#L47),
 [Tombstone.hs:59-65](../../../core/app/CE/Tombstone.hs#L59)):
@@ -280,7 +280,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
-  [hookio.rs:308-324](../../../cli/src/hookio.rs#L308),
+  [feed.rs:38-54](../../../cli/src/hookio/feed.rs#L38),
   [proto.rs:79-86](../../../cli/src/daemon/proto.rs#L79),
   [Text/Guard.hs:21](../../../core/app/CE/Text/Guard.hs#L21)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -312,8 +312,8 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:79-98](../../../cli/src/hookio.rs#L79),
-[hookio.rs:128](../../../cli/src/hookio.rs#L128)). The feed is the FPR ledger's raw material
+[hookio.rs:84-103](../../../cli/src/hookio.rs#L84),
+[hookio.rs:133](../../../cli/src/hookio.rs#L133)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
