@@ -70,7 +70,11 @@ jobs:
             ${{ steps.hs.outputs.cabal-store }}
             core/dist-newstyle
           key: cabal-${{ runner.os }}-ghc9.14.1-${{ hashFiles('core/ce-core.cabal', 'core/cabal.project*') }}
+      # bash, named: Windows' default PowerShell reports only the last
+      # command's exit code, so run 43537086261 went green on a failed
+      # `cabal build all` with no ce-core.exe built
       - name: Haskell build + test
+        shell: bash
         working-directory: core
         run: |
           cabal update
@@ -108,6 +112,7 @@ jobs:
           # die later on an opaque spawn failure
           CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
+          [ -f "$CE_CORE_BIN" ] || { echo "no core at $CE_CORE_BIN: cabal list-bin names a path the build never filled"; exit 1; }
           export CE_CORE_BIN
           cargo build --locked
           # The packaged crate must compile its own tests: cfg(test)
@@ -406,6 +411,7 @@ jobs:
           ghc-version: "9.14.1"
           cabal-version: "latest"
       - name: Haskell build + test
+        shell: bash
         working-directory: core
         run: |
           cabal update
@@ -443,6 +449,7 @@ jobs:
           # die later on an opaque spawn failure
           CE_CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           [ -n "$CE_CORE_BIN" ] || { echo "cabal list-bin gave nothing"; exit 1; }
+          [ -f "$CE_CORE_BIN" ] || { echo "no core at $CE_CORE_BIN: cabal list-bin names a path the build never filled"; exit 1; }
           export CE_CORE_BIN
           cargo build --locked
           # The packaged crate must compile its own tests: cfg(test)
@@ -727,6 +734,7 @@ jobs:
             core/dist-newstyle
           key: cabal-${{ runner.os }}-ghc9.14.1-${{ hashFiles('core/ce-core.cabal', 'core/cabal.project*') }}
       - name: Haskell build
+        shell: bash
         working-directory: core
         run: |
           cabal update
