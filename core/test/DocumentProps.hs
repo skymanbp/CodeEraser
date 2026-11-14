@@ -54,7 +54,7 @@ battery =
     ]
     [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk, assertRoot, namesGuarded]
  where
-  namesGuarded = map (nameOf ["a", "b"]) [-1, 0, 1, 2] == ["", "a", "b", ""]
+  namesGuarded = map (nameOf ["a", "b"]) [-1, 0, 1, 2, 2 ^ (63 :: Int), 2 ^ (64 :: Int)] == ["", "a", "b", "", "", ""]
 
 -- | Step 3's families.
 five :: [DocFamily]

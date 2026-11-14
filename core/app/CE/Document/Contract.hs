@@ -202,11 +202,13 @@ spelled table c = toJSON (nameOf table c)
 nameOf :: [String] -> Integer -> String
 nameOf = nameOr ""
 
--- | A name by a code that may fall off the table: the fallback word.
+-- | A name by a code that may fall off the table: the fallback word. The
+-- code is compared as an Integer before it is converted (a wire value
+-- past Int's range would wrap onto the table).
 nameOr :: String -> [String] -> Integer -> String
-nameOr dflt table c = case drop (fromInteger c) table of
-  n : _ | c >= 0 -> n
-  _ -> dflt
+nameOr dflt table c
+  | c >= 0 && c < toInteger (length table) = table !! fromInteger c
+  | otherwise = dflt
 
 -- | A language's report name by its wire code (CE.Lang's rows), empty
 -- off the table.
