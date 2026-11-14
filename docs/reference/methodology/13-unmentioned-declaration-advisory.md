@@ -12,7 +12,7 @@ referenced name read as unmentioned) is the direction every rule is built agains
 the four-way verdicts: it never turns a gate red, never enters `ce erase`, and is
 rendered with that word on every surface
 ([Cost.hs:51-53](../../../core/app/CE/Graph/Cost.hs#L51),
-[Deadcode.hs:29-31](../../../core/app/CE/Text/Deadcode.hs#L29)). The plan calls it ADR-008
+[Deadcode.hs:31-33](../../../core/app/CE/Text/Deadcode.hs#L31)). The plan calls it ADR-008
 step 3b ([DEVELOPMENT_PLAN.md:240](../../DEVELOPMENT_PLAN.md#L240)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
@@ -216,7 +216,7 @@ category word has none of the exempt bits 0..10 (bit 11, a Rust `cfg` naming no 
 is rendered but never exempts) — the mask reads the
 visibility word, the exemptions read the category word, and the two never cross
 ([Advisory.hs:62-71](../../../core/app/CE/Graph/Advisory.hs#L62),
-[Cost.hs:234-235](../../../core/app/CE/Graph/Cost.hs#L234), [Cost.hs:248-249](../../../core/app/CE/Graph/Cost.hs#L248)).
+[Cost.hs:236-237](../../../core/app/CE/Graph/Cost.hs#L236), [Cost.hs:250-251](../../../core/app/CE/Graph/Cost.hs#L250)).
 The code is a frozen total order `1 > 2 > 3 > 0`: **1 private** when the file has at
 least one mount, every mount is a private `mod` and no façade re-exports it, or the
 package keeps it private; **2 restricted** on visibility bit 2; **3 reexported** on mounts
@@ -230,7 +230,7 @@ judges the graph but drops the table and says so (`unmentionedDropped`), and the
 producer cuts at the same number so the two can never disagree — and `unmentionedHardCap`
 524,288 is the outer bound only a defective client reaches
 ([Cost.hs:42-75](../../../core/app/CE/Graph/Cost.hs#L42),
-[Graph.hs:131-138](../../../core/app/CE/Graph.hs#L131)). The iron rule is two byte-level
+[Graph.hs:134-141](../../../core/app/CE/Graph.hs#L134)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
 the same with or without them ([VERSIONING-ARCHIVE-6.0-7.1.md:115-117](../../../contracts/VERSIONING-ARCHIVE-6.0-7.1.md#L115)).
 
@@ -250,9 +250,9 @@ three keys, present only when the road was asked: `unmentioned` rows of five sca
 producer's cut, which the core cannot see — so Rust sends it as a fact beside one request row per
 name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and since plan v2.32 step 4
 the core's deadcode document lays the three keys out, naming each code and its reading
-([Document.hs:184-191](../../../core/app/CE/Graph/Document.hs#L184), [Document.hs:275-287](../../../core/app/CE/Graph/Document.hs#L275)). The console prints one line per row, a
+([Document.hs:185-192](../../../core/app/CE/Graph/Document.hs#L185), [Document.hs:276-288](../../../core/app/CE/Graph/Document.hs#L276)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
-([Lines.hs:93-104](../../../core/app/CE/Graph/Lines.hs#L93)); the MCP `deadcode`
+([Lines.hs:96-107](../../../core/app/CE/Graph/Lines.hs#L96)); the MCP `deadcode`
 tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI
 graph screen receives that document beside the canvas one in a single `ce.graph-screen`
 reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report a second time
@@ -260,8 +260,8 @@ and join the two across two snapshots), joins the two by file path (a rendering 
 shared string, never a verdict) and lists a selected file's rows with the root-level census
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:20-43](../../../cli/src/graph/canvas.rs#L20),
-[graph.js:50-70](../../../gui/ui/graph.js#L50),
-[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25), [graph_aside.js:134-148](../../../gui/ui/graph_aside.js#L134), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
+[graph.js:51-71](../../../gui/ui/graph.js#L51),
+[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25), [graph_aside.js:141-155](../../../gui/ui/graph_aside.js#L141), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
