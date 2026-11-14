@@ -123,7 +123,10 @@ fn grouping(reply: &Value, dead: &[Vec<i64>]) -> Result<Grouping> {
             format!("pre-amendment core: graph/1 offers no `{key}` (the dead-file grouping)")
         })
     }
-    let roots: Vec<i64> = table::<[i64; 1]>(reply, "roots")?.into_iter().map(|[r]| r).collect();
+    let roots: Vec<i64> = table::<[i64; 1]>(reply, "roots")?
+        .into_iter()
+        .map(|[r]| r)
+        .collect();
     let under = table::<[i64; 2]>(reply, "under")?;
     let dropped = reply["underDropped"].as_bool() == Some(true);
     let deads: BTreeSet<i64> = dead.iter().map(|r| r[0]).collect();
