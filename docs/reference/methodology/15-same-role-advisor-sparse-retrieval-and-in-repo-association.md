@@ -117,7 +117,7 @@ corpus ranks the same on every platform and the frozen evaluation rows compare b
 ([Math.hs:1-5](../../../core/app/CE/Similar/Rank/Math.hs#L1)).
 
 The core returns the `K = 5` best candidates for a query, excluding the query's own seat,
-ordered by score then identity ([Score.hs:80-92](../../../core/app/CE/Similar/Rank/Score.hs#L80)). A term in more than half the units — idf 0 — is neither score
+ordered by score then identity ([Score.hs:80-92](../../../core/app/CE/Similar/Rank/Score.hs#L80)). A term in half the units or more — idf 0 — is neither score
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
 would cost the whole corpus per query, so the measuring side asks df first and fetches the list
 only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:86-94](../../../core/app/CE/Similar/Rank/Cost.hs#L86), [rank.rs:146-174](../../../cli/src/similar/rank.rs#L146)).

@@ -285,8 +285,9 @@ A projection gate pins that the symbol column survives the hub's generic table
   step 5b; any non-literal form ⇒ the convention) narrows bit 0 to the
   names it lists ([visibility/py.rs:30-40](../../../cli/src/fourclass/visibility/py.rs#L30)) — the
   Haskell export-list precedent, and the same narrowing the underscore convention already
-  is: a helper the module's own export list omits is not public API, so the erase refusal
-  `public_surface` no longer holds it; a body under `if TYPE_CHECKING:` carries conv
+  is: a helper the module's own export list omits is not public API, so the erase plan no
+  longer refuses its file as `public_surface`; since 9.1.0 such a whole-file row is refused as
+  `reachable_by_name` instead (booklet 12 section 2); a body under `if TYPE_CHECKING:` carries conv
   `Ambient` ([conv/py.rs:58-71](../../../cli/src/mention/conv/py.rs#L58)). requests `_types.py:157`
   now reads private and exempt and leaves the advisory; `__init__.py:60 check_compatibility`,
   public by convention but absent from the module's `__all__`, leaves it too (exported

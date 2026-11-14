@@ -543,7 +543,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
   [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
   "symbols":[[node,visibility]],"unmentioned":[[node,vis,conv]],
-  "mounts":[[node,private,total,bits]],"sccFloor":u64}`——稠密 0 基索引即
+  "mounts":[[node,private,total,bits]],"sccFloor":u64,
+  "entities":[[node,id]],"deadPoint":{"files":[id],"dead":[id]},"deadBlock":mask}`
+  （后三键 10.0.0：死文件门的输入，缺席 = 不讲状态、不拦）——稠密 0 基索引即
   节点身份，**无文本形物过线**（ADR-002 A6；6.2.0 的两张顾问表同律——候选名 `AdvisoryName`
   留在 Rust 侧，过线的只有整数）；节点行**三元组、单一合法元数**（5.0.0 起：
   pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
@@ -566,7 +568,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `{"id","dead":[[idx,verdict,confidence]]（9.0.0 起恒三列）,"reported":[[idx,verdict]],"fail",
   "pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],"cycles":[[sccId,[idx]]],
   "roots":[[idx]],"under":[[dep,root]],"states":[[idx,state]],"blocked":[idx],
-  "counts":{"nodes","edges","kept"},"degraded"(,"reason"∈{graph_too_large})}`——
+  (,"underDropped":true)(,"blockUnanswered":true)(,"deadNow":{"files":[id],"dead":[id]}),
+  "counts":{"nodes","edges","kept"},"degraded"(,"reason"∈{graph_too_large})}`
+  （`roots` 起的四键与三个可选键 10.0.0：`underDropped` 在依附对超 `underCap` 时、
+  `blockUnanswered` 在声明了拦截而请求无比较点时、`deadNow` 在请求带 `entities` 时）——
   `dead` 只承载文件粒度判决，`reported` 承载 package/section 聚合判决；非降级时
   `fail` 当且仅当有被拦的文件（`blocked` 非空；10.0.0 第 5B 部分起，此前为 `dead` 非空），降级应答恒 true。两表 verdict ∈ {1 unref_private,
   2 unref_public, 3 unreach_private, 4 unreach_public}（入度×可达两轴 + 公私隔离）；
@@ -588,7 +593,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     ∨ verbatim 半的全析取——run 过线正是为让 core 持有全部判决输入）；
     `degraded.reason ∈ {docdup_too_large}`。
   - `verdict/1`（判决落 score 批）：request 携三信号事实表 + `baseline` 原样字节
-    （Rust 不解释，ADR-008 反抢跑），2.6.0 起并可携加性 `dedup`
+    （Rust 不解释，ADR-008 反抢跑），10.0.0 起并恒带范围律的四张表——`contSpans`（与
+    `continuous` 逐行对齐的 `[file,lo,hi]`，宇宙外为 -1）、`dupSpans` `[file,lo,hi,kind]`、
+    `refLines` `[src,dst,line]`、`proseLines` `[file,lines]`（`CE.Verdict.ExtentRows`），
+    2.6.0 起并可携加性 `dedup`
     `[blocks,budget]` 对（第二棘轮判决输入，`ce dedup --check` 专用），6.1.0 起并可携
     加性 `symbols`:`[[u,visibility]]`——**与 graph/1 同一张导出面表**，只改按 tier 宇宙
     下标；核按 `Graph.Cost.exportVisBit` 读出导出集并给 `Pos.pFlags` 置 `publicFlagBit`，

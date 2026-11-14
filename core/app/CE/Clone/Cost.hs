@@ -30,7 +30,7 @@ minUnitNodes = 24
 -- | Per-tree node ceiling. Sizing anchor (design §4.4, F5):
 -- Zhang-Shasha is O(n1·n2·min(d,l)1·min(d,l)2); at 256 nodes with a
 -- typical min(depth, leaves) ≈ 16 one pair costs ≈ 256·256·16·16 ≈
--- 1.7×10⁷ strict map updates — bounded work per pair, decided before
+-- 1.7×10⁷ cell updates — bounded work per pair, decided before
 -- any corpus measurement.
 unitNodeCap :: Integer
 unitNodeCap = 256

@@ -8,7 +8,7 @@ the Haskell core for judgment. No text crosses the judgment wire (`graph/1`) —
 to the layout step `document/1` — and node identity **is** the row index
 ([Contract.hs:27-33](../../../core/app/CE/Graph/Contract.hs#L27)). Every number below is a constant in
 `CE.Graph.Cost` or a frozen storage code, so the computation is a pure function of the edge
-set and the flag column. The files it does not reach form the **dead set** (§7); what a face says
+set and the node rows' role column. The files it does not reach form the **dead set** (§7); what a face says
 about each of them is that it is **unreferenced** — no reference was found, which is not the claim
 that the file is unused. Since plan v2.35 the dead set is grouped into roots and dependents, each root
 compared against the point `ce-baseline.json` records, and by default an unreferenced file is listed and fails
@@ -95,7 +95,7 @@ that reads edges refuses by name until a run settles them
 |---|---|---|---|---|---|
 | TS/TSX | relative + extension order `ts, tsx, d.ts, mts, cts` ([Ts.hs:51-53](../../../core/app/CE/Resolve/Ts.hs#L51), [Ts.hs:77-83](../../../core/app/CE/Resolve/Ts.hs#L77)) | ESM `.js`→`.ts` rewrite, only if the TS twin is in scope and the JS twin is absent on disk ([Ts.hs:89-101](../../../core/app/CE/Resolve/Ts.hs#L89)) | nearest tsconfig `paths`, then `baseUrl` join ([Ts.hs:103-121](../../../core/app/CE/Resolve/Ts.hs#L103)); its `extends` chain read as tsc reads it — an array's last entry is the nearest base, a diamond is no cycle, no hop cap, and a cycle, a missing base or a non-string entry breaks the chain to `config_depth` ([TsConfig.hs:86-93](../../../core/app/CE/Resolve/TsConfig.hs#L86), [TsConfig.hs:46-49](../../../core/app/CE/Resolve/TsConfig.hs#L46)) | workspace member by `name` + `exports` subpath — the exact key, else the single-`*` pattern whose longest prefix encloses it, a `null` entry exporting nothing ([Ts.hs:135-157](../../../core/app/CE/Resolve/Ts.hs#L135), [Ts.hs:159-180](../../../core/app/CE/Resolve/Ts.hs#L159)) | a Node builtin, bare or `node:`-prefixed, ⇒ External before any package is read ([Ts.hs:210-215](../../../core/app/CE/Resolve/Ts.hs#L210), [Ts.hs:69-75](../../../core/app/CE/Resolve/Ts.hs#L69)); a bare specifier in deps or under a `node_modules/` of the importer's directory or any ancestor ⇒ External ([Ts.hs:190-198](../../../core/app/CE/Resolve/Ts.hs#L190)) |
 | Python | leading-dot relative; *n* dots climb *n−1* levels ([Py.hs:49-64](../../../core/app/CE/Resolve/Py.hs#L49)) | absolute dotted path over source roots ([Py.hs:71-89](../../../core/app/CE/Resolve/Py.hs#L71)) | `__init__.py` longest-prefix degradation ([Py.hs:91-100](../../../core/app/CE/Resolve/Py.hs#L91)) | stdlib table, `__future__` by name (a real module the public-names table omits, step 8), or pyproject dep ⇒ External ([Py.hs:113-120](../../../core/app/CE/Resolve/Py.hs#L113)) | — (structurally empty: a computed `import_module` / `__import__` opens a `dynamic` site, refused before the ladder, [Py.hs:15-16](../../../core/app/CE/Resolve/Py.hs#L15)) |
-| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([Rs.hs:73-84](../../../core/app/CE/Resolve/Rs.hs#L73)); crate roots include Cargo's `<name>/main.rs` auto-discovery form since step 8 ([Cargo.hs:78-85](../../../core/app/CE/Resolve/Cargo.hs#L78)) | `use crate::…` from covering crate roots ([Rs.hs:129](../../../core/app/CE/Resolve/Rs.hs#L129)) — a spec a hand fold cut mid-path is read whole from the `use` on its line, never guessed shallow ([Rs.hs:98-107](../../../core/app/CE/Resolve/Rs.hs#L98)), and a group with no path before its brace opens one site per entry ([sites.rs:235-238](../../../cli/src/graph/sites.rs#L235)); a lib+bin package's two root terminals are settled by the root whose top level defines or imports the next segment, neither or both still refuse ([Rs.hs:147-155](../../../core/app/CE/Resolve/Rs.hs#L147)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([Rs.hs:130-136](../../../core/app/CE/Resolve/Rs.hs#L130), [Rs.hs:178-188](../../../core/app/CE/Resolve/Rs.hs#L178)); a bare head DECLARED as a module in the site's own namespace is read before any crate name — uniform paths, step 8 ([Rs.hs:164-174](../../../core/app/CE/Resolve/Rs.hs#L164)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([Ladder2.hs:103-106](../../../core/app/CE/Lang/Common/Ladder2.hs#L103), [Rs.hs:193-207](../../../core/app/CE/Resolve/Rs.hs#L193)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([Rs.hs:216-227](../../../core/app/CE/Resolve/Rs.hs#L216)); a uniform-path facade `pub use source::Thing` binds too, its hop reading the facade's own `mod source;`; a `pub use p::*` glob is followed when exactly one glob's module exports the name — a pub item of its own or a pub use, never a glob inside it ([Rs.hs:251-261](../../../core/app/CE/Resolve/Rs.hs#L251), [RsSurface.hs:95-98](../../../core/app/CE/Resolve/RsSurface.hs#L95)), and a `pub extern crate x [as y]` binds the crate root under the bound name ([rs_surface.rs:42-45](../../../cli/src/graph/ladder/rs_surface.rs#L42)) |
+| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([Rs.hs:73-84](../../../core/app/CE/Resolve/Rs.hs#L73)); crate roots include Cargo's `<name>/main.rs` auto-discovery form since step 8 ([Cargo.hs:78-85](../../../core/app/CE/Resolve/Cargo.hs#L78)) | `use crate::…` from covering crate roots ([Rs.hs:129](../../../core/app/CE/Resolve/Rs.hs#L129)) — a spec a hand fold cut mid-path is read whole from the `use` on its line, never guessed shallow ([Rs.hs:98-107](../../../core/app/CE/Resolve/Rs.hs#L98)), and a group with no path before its brace opens one site per entry ([sites.rs:235-238](../../../cli/src/graph/sites.rs#L235)); a lib+bin package's two root terminals are settled by the root whose top level defines or imports the next segment, neither or both still refuse ([Rs.hs:147-155](../../../core/app/CE/Resolve/Rs.hs#L147)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([Rs.hs:130-136](../../../core/app/CE/Resolve/Rs.hs#L130), [Rs.hs:178-188](../../../core/app/CE/Resolve/Rs.hs#L178)); a bare head DECLARED as a module in the site's own namespace is read before any crate name — uniform paths, step 8 ([Rs.hs:164-174](../../../core/app/CE/Resolve/Rs.hs#L164)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; a walked package by its normalized name (`-` read as `_`) anchors at its lib root and descends, two such packages ⇒ ambiguous_workspace; a dependency the owning package's `Cargo.toml` declares ⇒ External; anything else is out of scope ([Ladder2.hs:103-106](../../../core/app/CE/Lang/Common/Ladder2.hs#L103), [Rs.hs:193-207](../../../core/app/CE/Resolve/Rs.hs#L193)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([Rs.hs:216-227](../../../core/app/CE/Resolve/Rs.hs#L216)); a uniform-path facade `pub use source::Thing` binds too, its hop reading the facade's own `mod source;`; a `pub use p::*` glob is followed when exactly one glob's module exports the name — a pub item of its own or a pub use, never a glob inside it ([Rs.hs:251-261](../../../core/app/CE/Resolve/Rs.hs#L251), [RsSurface.hs:95-98](../../../core/app/CE/Resolve/RsSurface.hs#L95)), and a `pub extern crate x [as y]` binds the crate root under the bound name ([rs_surface.rs:42-45](../../../cli/src/graph/ladder/rs_surface.rs#L42)) |
 | Go | longest in-scope `go.mod` module prefix ([Go.hs:71-90](../../../core/app/CE/Resolve/Go.hs#L71)) | importer's module `replace` directives ([Go.hs:95-111](../../../core/app/CE/Resolve/Go.hs#L95)) | stdlib table, or a dotted first segment with no local match ⇒ External ([Go.hs:127-131](../../../core/app/CE/Resolve/Go.hs#L127)) | — | — |
 | Markdown | relative join, the path percent-decoded after the `#` split; a directory holding in-scope files is a package ([Md.hs:80-89](../../../core/app/CE/Resolve/Md.hs#L80), [Md.hs:113-119](../../../core/app/CE/Resolve/Md.hs#L113)); a walked asset the index holds no parse of (an image, a data file) is a file-level edge, its node standing as an asset ([Md.hs:97-103](../../../core/app/CE/Resolve/Md.hs#L97)) | anchor, percent-decoded, validated against the target's anchor set — rendered-text ATX and setext slugs plus raw-HTML anchor ids ([Md.hs:121-126](../../../core/app/CE/Resolve/Md.hs#L121), [md_slug.rs:42-57](../../../cli/src/graph/ladder/md_slug.rs#L42)); a confirmed section of another file also references that file (an `also` row, below) | reference-link definition substituted, chain rerun relabeled ([Md.hs:53-57](../../../core/app/CE/Resolve/Md.hs#L53), [Md.hs:128-140](../../../core/app/CE/Resolve/Md.hs#L128)) | bare fragment = in-file section claim, taken as written ([Md.hs:107-111](../../../core/app/CE/Resolve/Md.hs#L107)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([Md.hs:71](../../../core/app/CE/Resolve/Md.hs#L71), [Md.hs:82-83](../../../core/app/CE/Resolve/Md.hs#L82), [Url.hs:16](../../../core/app/CE/Resolve/Url.hs#L16)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([Hs.hs:50-56](../../../core/app/CE/Resolve/Hs.hs#L50)) — a stanza's roots include the `common` blocks it `import:`s ([CabalWalk.hs:171-176](../../../core/app/CE/Resolve/CabalWalk.hs#L171)), and an `import {-# SOURCE #-} M` answers `M.hs` like any import ([Hs.hs:20-22](../../../core/app/CE/Resolve/Hs.hs#L20)) | a module an in-corpus package exposes — the package a PackageImports spec names (`import "pkg" M`, the spec keeping the quoted package, [Hs.hs:71](../../../core/app/CE/Resolve/Hs.hs#L71)), else any package the owner's `build-depends` declares, the owner's own package among them (cabal: a component listing its own package in `build-depends` depends on that package's library and sees its exposed modules; release 1.10.0) — under that package's library roots; hidden `other-modules` stay out; two such packages ⇒ ambiguous_workspace ([Hs.hs:11-16](../../../core/app/CE/Resolve/Hs.hs#L11), [Hs.hs:110-120](../../../core/app/CE/Resolve/Hs.hs#L110)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([Hs.hs:124-129](../../../core/app/CE/Resolve/Hs.hs#L124)) | — | — |
@@ -242,9 +242,19 @@ the reader sees what the graph refuses to know
 
 ### 4. Boundary contract and caps
 
-`graph.request` carries `nodes: [[lang, kind, roles]]`, `edges: [[src, dst, kind, rung]]`, and
-an optional `pos: [idx]`. The core machine-checks, in request order so the message is
-deterministic ([Contract.hs:88-110](../../../core/app/CE/Graph/Contract.hs#L88)):
+`graph.request` carries `nodes: [[lang, kind, roles]]`, `edges: [[src, dst, kind, rung]]`, an
+optional `pos: [idx]`, the `unres` ledger (required since 9.0.0; §8 reads it), an optional
+`sccFloor`, the advisory tables `symbols`, `unmentioned` and `mounts` (booklet 13 §5), and the
+dead-file gate's `entities`, `deadPoint` and `deadBlock` (§10)
+([Contract.hs:71-86](../../../core/app/CE/Graph/Contract.hs#L71)). The core machine-checks it in one
+order, so the message is deterministic ([Contract.hs:95-128](../../../core/app/CE/Graph/Contract.hs#L95)):
+the advisory pair `unmentioned` / `mounts` travels together or not at all; the retired judged-mask
+key is refused; `unres` must be present; `sccFloor` is checked; then, row by row, the node rows, the
+edge rows, `pos`, `symbols`, `unres`, `mounts` and `unmentioned`; last the gate's three tables:
+`entities` one `[node, id]` row per file node and none for another kind, ascending by node, every id
+inside u64 and no id twice; `deadPoint` its two lists strictly ascending inside u64, `dead` within
+`files`, and never without `entities`; `deadBlock` no bit outside the blockable states
+([Point.hs:41-101](../../../core/app/CE/Graph/Point.hs#L41)). The node, edge and `pos` rules:
 
 - node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:216-231](../../../core/app/CE/Graph/Contract.hs#L216));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
@@ -405,6 +415,23 @@ alive by the references the graph cannot read (7.2.0, above) — and no other: d
 construction in code is an open set that grows with each language version, so no enumeration of it
 can be called complete (plan v2.14 K8).
 
+**Reference forms and entry families the graph does not read.** Each of these leaves a file listed as
+unreferenced although something runs or loads it, and each is a new reference form or entry family: by
+the dead-file exam's bars every such family is its own rule set with its own fresh-material exam
+([deadfile-gen2-bars-v1.md](../../../contracts/eval/deadfile-gen2-bars-v1.md) §5), so none is read until
+it has passed one. The remedy meanwhile is to declare the file an entry in `[graph] entry_globs`, or to
+write `ce:allow(deadcode) -- <why>` in the file:
+
+- a Rust file reached only by `include!("x.rs")` (no site kind reads `include!`, `include_str!` or
+  `include_bytes!`);
+- a Go program file in `package main` that is not named `main.go`;
+- a Java class with a `main` whose name the entry names do not list;
+- a `package.json` `bin` or `exports` that points into `outDir` while the sources sit under `rootDir`;
+- an ambient `.d.ts` that nothing imports;
+- a script run by its path (`python scripts/tool.py`, `Rscript analysis/run.R`);
+- a rockspec's `modules`;
+- a worker loaded by `new URL(...)`.
+
 Bit 0 was the other one, and it closed at 4.1.0. Nothing at file granularity ever measured it,
 because public-ness is not a file fact ([flags.rs:1-11](../../../cli/src/graph/deadcode/flags.rs#L1));
 it now reaches the core through the `symbols` export surface
@@ -442,7 +469,7 @@ so they agree with `Position`'s `sccId` by construction
 
 **Cycles are reported, never judged** — the verdict pass does not read this list
 ([Cycles.hs:3-4](../../../core/app/CE/Graph/Cycles.hs#L3)). A cyclic island with no entry seed is
-therefore in the dead set by reachability alone, without a special case (its files are roots, §10).
+therefore in the dead set by reachability alone, without a special case (its files are roots unless a dead file outside the cycle refers into it, §10).
 
 The per-node join surface, computed only for the requested `pos` indices, is
 `[idx, indeg, outdeg, sccId, sccSize, reachIn]`
@@ -644,8 +671,9 @@ never built ([Point.hs:133-134](../../../core/app/CE/Graph/Point.hs#L133),
 [Graph.hs:119](../../../core/app/CE/Graph.hs#L119)). **The guarantee:** the gate passes iff M is
 empty, because a non-empty finite M has a root (follow supporters inside M upward through the finite
 condensation). With `block = ["orphaned", "born"]` and a comparison point, the gate passes iff every
-unreferenced file is standing. **Where this equals the roots-only reading, and where it differs.** When
-M = D — every unreferenced file in a blocked state: no standing file, both states blocked — the blocking
+unreferenced file is standing. **Where this equals the roots-only reading, and where it differs.** M = D
+exactly when every unreferenced file's state is one the list names — both states blocked with no standing
+file is one such case, `block = ["born"]` with every unreferenced file born another — and then the blocking
 files are D's roots exactly. When M is a proper part of D the two readings differ on the files of M that
 are roots of M but dependents in D: a newly unreferenced file under a standing root (`s.ts`, unreferenced
 when the baseline was written, comes to import `lib.ts`, which lost its live reference, and a new `n.ts`:

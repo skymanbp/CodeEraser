@@ -61,7 +61,8 @@
    docs-facts 已在 v1.3.0 与 v1.4.1 两次把 pin 提交打红，而 tag 腿要等的正是这个提交的
    全部 check。清单、docs-facts、`packaging/` 齐动，提交并推 main，CI 绿。**tag 之前只跑离线
    三检**：`node scripts/packaging.js --check`（投影与生成器逐字节，`it/packaging.rs` 也跑它）、
-   把公式拷进 `brew tap-new --no-git ci/codeeraser` 再 `brew style` 与 `brew audit --strict`、
+   把公式拷进 `brew tap-new --no-git ci/codeeraser`，`brew` 有 `trust` 子命令时先 `brew trust "$tap"`，
+   再 `brew style --formula "$tap/codeeraser"` 与 `brew audit --formula --strict "$tap/codeeraser"`、
    `pipx run check-jsonschema` 按三份 winget 清单自报的 schema 校验（后两条的逐字命令抄自
    ci.yml 的 `packaging-live`，需要 Homebrew 与 pipx 的机器）。`packaging-live` 本身**装不了
    还没发布的 draft**——公式里的 url 是公开发布 URL，此刻 draft 的资产还是 404；它是**公开渠道**
@@ -85,7 +86,7 @@
    后 publish，再把 `release` 分支快进到 tag 提交（marketplace 条目注册的就是这个分支，装机据此
    跟发布）。tag 腿等 check 时只赦免**按名列出**的 skipped 腿（`SKIPPED_OK`：本 workflow 的
    dispatch 段 `build` / `draft` + ci.yml 只在周程 / 手动跑的 `starter-https` / `setup-wiring` /
-   `release-rehearsal` / `packaging-live`；`it/release_roster.rs` 守这张名单等于 ci.yml 的 `if:`
+   `release-rehearsal` / `packaging-live` / `frozen-oracles`；`it/release_roster.rs` 守这张名单等于 ci.yml 的 `if:`
    行——漏一个名字，下一次 publish 就被它的 skipped 拒掉）。publish 之后三条**可选**腿各看
    一个仓库 secret，缺则具名跳过、走 §3 手动：`publish-crate`（`CARGO_REGISTRY_TOKEN`）、
    `homebrew-tap`（`HOMEBREW_TAP_TOKEN`）、`winget-pr`（`WINGET_TOKEN`）。

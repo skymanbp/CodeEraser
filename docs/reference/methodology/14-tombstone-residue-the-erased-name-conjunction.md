@@ -397,8 +397,8 @@ in the next commit) and the ledger's first surviving false positive — a `///` 
 now spans lines, `used to` on one and the common noun `docs` on the next, bound to a local
 variable `docs` that commit erased (the single-word-name cost the ruling accepted) — and the
 keyword table and strict ledger versions (`TOMBSTONE_REV` 2, v2.35) re-run as round 10 on a
-history grown to 852 events: 10 / 13, the same six true positives and one false positive, plus
-one true positive and three false positives in the newer history, each a common noun (`subject`,
+history grown to 852 events: 10 / 13: round 9's nine sites unchanged (eight true positives and
+one false positive), plus one true positive and three false positives in the newer history, each a common noun (`subject`,
 and two Chinese ones) that happened to spell an identifier the commit erased. The gate
 is ≤ 1 % of events: requests 0 / 400 from round 3 on; self 3 / 530 = 0.57 % at round 6 under
 the ruling's reading (provenance narrative counts as residue, the in-between sites are

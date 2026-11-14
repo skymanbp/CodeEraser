@@ -85,9 +85,9 @@ is superadditive, so the bracket is non-negative for any well-formed zone triple
 `max 0` clamp is what keeps the degenerate `H <= S` fallback (where `p(total) − 2·P_max < 0`)
 from producing a negative benefit.
 
-The zone triple is the advisory's own `S/H/P_max`. Rust sends the two lines the score reads too:
-knobs 12 and 13 ride once, tree-wide, off the committed soft line and the global
-`file_lines_fail` (left out when it is `0` = no hard line, so the core's `750` judges). Since
+The zone triple is the advisory's own `S/H/P_max`. Rust sends two lines:
+knobs 12 and 13 ride once, tree-wide, off the committed soft line (the line the score reads
+too) and the global `file_lines_fail` (left out when it is `0` = no hard line, so the core's `750` judges). Since
 proto 9.0.0 the request also carries the verdict's own `classKnobs` rows and each seam file's
 class, and a classed file is priced on its class's opening edge and hard line
 (`Zone.classedZone`); until then the advisory was class-blind while `verdict/1` (since 3.1.0)
