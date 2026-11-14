@@ -112,10 +112,10 @@ pub(crate) enum Cmd {
         format: OutFormat,
         /// Exit 1 when an unreferenced file is in a state
         /// `[deadcode] block` names (the files that block are the roots
-        /// of those files) or the judgment degraded (a gate that could
-        /// not judge never passes), exit 2 when a block is declared and
-        /// ce-baseline.json holds no comparison point; with nothing
-        /// declared an unreferenced file is listed and fails nothing
+        /// of those files); exit 2 when the judgment degraded, or a block
+        /// is declared and no committed baseline carries a comparison
+        /// point; with nothing declared an unreferenced file is listed
+        /// and fails nothing
         #[arg(long)]
         check: bool,
     },
@@ -231,9 +231,9 @@ pub(crate) enum Cmd {
     /// pre-commit gate: staged net LOC, touched duplicates and the
     /// tombstone class over the staged set (exit 1 in deny mode when
     /// duplicates are touched, or at `[tombstone] tier` deny past its
-    /// budget). FAIL-OPEN: with no reachable ce-core it reports the
-    /// skip and exits 0 — a CI-facing gate that passes on a missing
-    /// core
+    /// budget). FAIL-OPEN: with no reachable ce-core, or a ce.toml it
+    /// cannot read, it reports the skip and exits 0 — a CI-facing gate
+    /// that passes on a missing core
     Precommit {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,

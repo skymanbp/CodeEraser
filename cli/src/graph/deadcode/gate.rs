@@ -185,6 +185,16 @@ pub(super) fn on_request(
         .fact("unanswered", i64::from(gated.unanswered))
 }
 
+/// The deadcode face's could-not-judge rule (release 1.10.0): its
+/// document is unjudged, and the CLI exits 2, when the document's
+/// `degraded` names a reason — the rule `ce flow` / `ce arch` /
+/// `ce merge` read — or, under `--check`, when a declared block could not
+/// be answered (`ce-baseline.json` holds no comparison point). Exit 1
+/// stays the gate's no: a blocked file.
+pub fn unjudged(doc: &Value, check: bool) -> bool {
+    !doc["degraded"].is_null() || (check && doc["gate"]["answered"] == json!(false))
+}
+
 #[cfg(test)]
 #[path = "../../../tests/unit/graph/deadcode/gate.rs"]
 mod tests;

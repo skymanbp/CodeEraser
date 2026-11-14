@@ -43,7 +43,7 @@ pub use convention::Position;
 pub use cycles::self_loop_nodes;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;
-pub use gate::{Gate, Gated, committed_point};
+pub use gate::{Gate, Gated, committed_point, unjudged};
 pub use reply::Grouping;
 use reply::consume;
 

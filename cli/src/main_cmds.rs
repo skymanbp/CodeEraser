@@ -131,14 +131,15 @@ pub fn deadcode_cmd(
     check: bool,
 ) -> ExitCode {
     // --check (M5-close CI gate): the DECISION and its refusal line are
-    // the core's (a degraded run that judged nothing, or a blocking file
-    // -- a root of the unreferenced files whose state `[deadcode] block`
-    // names -- fails; plan v2.32 step 5, plan v2.35
-    // the dead-file amendment); a declared block the gate could not answer
-    // (no committed point) is a judgment that did not happen, exit 2
+    // the core's (a blocking file -- a root of the unreferenced files
+    // whose state `[deadcode] block` names -- fails, exit 1); a degraded
+    // judgment, with or without --check, and under --check a declared
+    // block the gate could not answer (`ce-baseline.json` holds no
+    // comparison point) are judgments that did not happen, exit 2
+    // (graph::deadcode::unjudged, the rule every degrading family reads)
     let answer = faces::deadcode(root, core, Plumb::gate(db, check));
     answered("deadcode", "deadcode", json, answer, |doc| {
-        Ok(check && doc["gate"]["answered"] == serde_json::json!(false))
+        Ok(codeeraser::graph::deadcode::unjudged(doc, check))
     })
 }
 

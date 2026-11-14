@@ -54,7 +54,7 @@ graph.mentions	刷新提及语料宇宙（树中每个可能引用到名字的�
 deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决，无引用文件按根分组（每个文件的状态与门的答复），以及符号层顾问（无他文件拼写其名的声明——永不判决）
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
-deadcode.check	有无引用文件处于 [deadcode] block 列出的状态（被拦的是这些文件中的根）、或判决本身降级即退出 1（判不了的门永不通过）；声明了 block 而 ce-baseline.json 里没有比较点即退出 2；未声明时无引用文件只列出、不拦
+deadcode.check	有无引用文件处于 [deadcode] block 列出的状态即退出 1（被拦的是这些文件中的根）；判决本身降级、或声明了 block 而没有已提交的基线带比较点即退出 2；未声明时无引用文件只列出、不拦
 clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
 clone.units	改为列出单元宇宙而非判决
 docdup	文档重复判决：对缓存活段经核 docdup/1 精确 Jaccard
@@ -116,7 +116,7 @@ audit	Stop 审计：净行数 + 触及改动文件的重复块 + 墓碑残留（
 audit.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 health	SessionStart 健康行 + 守护进程预热
 health.hook	钩子模式：从 stdin 读 JSON 信封（必带）
-precommit	pre-commit 门：暂存净行数、触及的重复与暂存集上的墓碑残留类（deny 档触重、或 `[tombstone] tier` 为 deny 且越预算即退出 1）。FAIL-OPEN：核不可达即报跳过并退 0——缺核也放行的 CI 门
+precommit	pre-commit 门：暂存净行数、触及的重复与暂存集上的墓碑残留类（deny 档触重、或 `[tombstone] tier` 为 deny 且越预算即退出 1）。FAIL-OPEN：核不可达、或读不了 ce.toml 时报跳过并退 0——缺核也放行的 CI 门
 precommit.root	仓库根（默认当前目录）
 commitmsg	commit-msg 门：`ce precommit` 再跑一次，把 git 交给钩子的提交说明文件当作多一个面——在说明里把被删的名字论证掉，与 README 里一样是墓碑残留（feed 与拒绝句记为 COMMIT_EDITMSG:行）。接法：.git/hooks/commit-msg 里跑 `ce commitmsg \"$1\"`；PR 正文存成文件即同一个面（CI 配方，不是钩子）
 commitmsg.file	提交说明文件（git 的 `$1`）；其注释行不计

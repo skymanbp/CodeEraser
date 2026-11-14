@@ -42,7 +42,7 @@ Commands:
   settle     PostToolUse record: read the hook envelope on stdin and, when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran — the person let the write through. Never speaks
   audit      Stop audit: net LOC + duplicate blocks touching changed files + tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
-  precommit  pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
+  precommit  pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core, or a ce.toml it cannot read, it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
   commitmsg  commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
   mcp        MCP server over stdio: the read-only report face of every judgment family, plus this machine's and this build's own diagnostics — none of the tools can write
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
@@ -144,7 +144,7 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --check            Exit 1 when an unreferenced file is in a state `[deadcode] block` names (the files that block are the roots of those files) or the judgment degraded (a gate that could not judge never passes), exit 2 when a block is declared and ce-baseline.json holds no comparison point; with nothing declared an unreferenced file is listed and fails nothing
+      --check            Exit 1 when an unreferenced file is in a state `[deadcode] block` names (the files that block are the roots of those files); exit 2 when the judgment degraded, or a block is declared and no committed baseline carries a comparison point; with nothing declared an unreferenced file is listed and fails nothing
   -h, --help             Print help
 ```
 
@@ -541,7 +541,7 @@ Options:
 ## ce precommit
 
 ```text
-pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
+pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core, or a ce.toml it cannot read, it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
 
 Usage: ce precommit [OPTIONS] [ROOT]
 
