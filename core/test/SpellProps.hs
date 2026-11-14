@@ -93,7 +93,7 @@ flowUnits :: Bool
 flowUnits = map (spell "flow" flowStrings noRows "unit") [[0, 2], [0, 3], [0, 9], [1, 0], [2, 0], [0, -1]] == [Just "f", Just "g", Just "", Just "", Nothing, Nothing]
 
 flowVars :: Bool
-flowVars = map (spell "flow" flowStrings noRows "var") [[0, 2, 1], [0, 2, 2], [0, 3, 0], [0, 2, -1]] == [Just "y", Nothing, Nothing, Nothing]
+flowVars = map (spell "flow" flowStrings noRows "var") [[0, 2, 1], [0, 2, 2], [0, 3, 0], [0, 2, -1], [0, 2, 2 ^ (63 :: Int)], [0, 2, 2 ^ (64 :: Int)]] == [Just "y", Nothing, Nothing, Nothing, Nothing, Nothing]
 
 -- | Member 0 of group 0 holds hole rows at nodes (0, 1); the second
 -- member none.

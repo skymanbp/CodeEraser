@@ -84,6 +84,7 @@ offence :: Req -> Maybe String
 offence r =
   firstOffender
     ( labelled "unit" unitWhy (rUnits r)
+        <> labelled "unit" (\row -> firstOf [(any past row, "value past the Int range")]) (rUnits r)
         <> ["sigs: not one set per unit" | length (rSigs r) /= length (rUnits r)]
         <> labelled "sig" sigWhy (rSigs r)
         <> labelled "print" (width4 "malformed print" printWhy) (rPrints r)
@@ -109,8 +110,10 @@ offence r =
     | null set = Just "empty set"
     | not (all word set) = Just "element outside u64"
     | otherwise = Nothing
-  printWhy row = if not (word (head' row)) then Just "hash outside u64" else if any (< 0) (drop 1 row) then Just "negative file, line or tok" else Nothing
-  nearWhy row = if any (< 0) row then Just "negative file or line" else Nothing
+  printWhy row = firstOf [(not (word (head' row)), "hash outside u64"), (any (< 0) (drop 1 row), "negative file, line or tok"), (any past (drop 1 row), "file, line or tok past the Int range")]
+  nearWhy row = firstOf [(any (< 0) row, "negative file or line"), (any past row, "file or line past the Int range")]
+  firstOf cs = foldr (\(hit, why) rest -> if hit then Just why else rest) Nothing cs
+  past = (>= 2 ^ (63 :: Int))
   width4 msg check row = if length row /= 4 then Just msg else check row
   head' = foldr const 0
   evens xs = [x | (i, x) <- zip [0 :: Int ..] xs, even i]

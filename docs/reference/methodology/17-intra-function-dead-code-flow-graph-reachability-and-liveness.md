@@ -181,7 +181,7 @@ a finally continuing with the union of the pending completions — and reads the
 traces; the shipped judgment must agree finding for finding on 200 seeded random requests of one to
 three units each (judged bits and dynamic counts included)
 ([ReferenceFlow.hs:1-12](../../../core/test/ReferenceFlow.hs#L1)). The battery adds the
-hand-written cases of every kind, forty-three contract refusals pinned by name, the cap and the
+hand-written cases of every kind, forty-seven contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
 ([Spec.hs:124](../../../core/test/Spec.hs#L124)).

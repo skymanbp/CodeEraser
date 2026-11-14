@@ -92,6 +92,7 @@ aligned req =
     [ if null (rows req "faults") || all (null . rows req) verdict then Nothing else Just "faults: beside the core's rows"
     , codes req "errors" 1 1 11
     , if judged req then asum [dense req "heads" goals, dense req "goals" goals, headsMatch] else Nothing
+    , asum [within req t c lo | (t, c, lo) <- [("preds", 0, 0), ("answers", 0, 0), ("proof", 0, 0), ("proof", 5, -1)]]
     ]
  where
   verdict = ["goals", "preds", "answers", "proof", "errors"]

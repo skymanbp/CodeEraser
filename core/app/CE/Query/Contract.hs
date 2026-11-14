@@ -19,7 +19,7 @@ import CE.Query.Lex (Fault (..), Lexed (..), Tok (..), lexProgram)
 import CE.Query.Pack (renderPack, reservedAt)
 import CE.Query.Schema (arityOf)
 import CE.Query.Tree (NodeTree, parseTree, treeTables)
-import CE.Wire (rowCheck, tableOffence)
+import CE.Wire (intTop, rowCheck, tableOffence)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Char (isDigit)
 import Data.Foldable (asum)
@@ -122,9 +122,16 @@ offence req =
     , textsShape req
     , clashOf req
     , asum (zipWith tokenShape [0 :: Int ..] (programOf req))
-    , if preludeOf req < 0 then Just "negative prelude" else Nothing
+    , preludeShape (preludeOf req)
     , asum (map tableShape (tablesOf req))
     ]
+
+-- | The shipped-clause count: not negative, and an Int (it is converted).
+preludeShape :: Integer -> Maybe String
+preludeShape p
+  | p < 0 = Just "negative prelude"
+  | p > intTop = Just "prelude past the Int range"
+  | otherwise = Nothing
 
 -- | A pack rides only beside the texts it is lexed between, and must
 -- render (its refusal is CE.Query.Pack's, by name).

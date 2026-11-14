@@ -15,7 +15,7 @@
 module CE.FourClass.Moves.Contract (MovesReq (..), PairIn (..), Side (..), overCap, offence) where
 
 import CE.FourClass.Moves.Cost (movesLineCap, movesUnitCap)
-import CE.Wire (label, rowCheck, tableOffence, u64)
+import CE.Wire (intTop, label, rowCheck, tableOffence, u64)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
 
@@ -101,5 +101,6 @@ unitShape side nKeys = rowCheck (side <> " unit") "malformed unit (need [key,kin
       | key < 0 || key >= toInteger nKeys -> Just "key outside the key table"
       | kind < 0 -> Just "negative kind"
       | from < 1 || to < from -> Just "span not 1-based and ordered"
+      | to > intTop -> Just "span past the Int range"
       | stack < 0 || stack > 1 -> Just "stack not a bit"
     _ -> Nothing

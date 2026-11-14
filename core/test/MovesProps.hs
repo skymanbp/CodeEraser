@@ -98,7 +98,8 @@ raw keys sides =
 -- | Each refusal: the request, the offender's stem.
 refusals :: [(Value, String)]
 refusals =
-  [ (raw [-1] [], "key 0: outside u64")
+  [ (raw [7] [([[0, 1, 1]], [], [[0, 0, 1, 18446744073709551616, 0]]), none], "pair 0 before unit 0: span past the Int range")
+  , (raw [-1] [], "key 0: outside u64")
   , (raw [] [([[0, 1, -1]], [], []), none], "pair 0 before line 0: negative width")
   , (raw [] [([[-1, 1, 1]], [], []), none], "pair 0 before line 0: negative content code")
   , (raw [] [([[1, 1]], [], []), none], "pair 0 before line 0: malformed line (need [code,hash,width])")

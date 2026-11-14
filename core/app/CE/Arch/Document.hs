@@ -51,7 +51,7 @@ statement =
 slots :: DocReq -> Maybe String
 slots req
   | Just _ <- dDegraded req = Nothing
-  | otherwise = asum [dense req t (range req u) | (t, u) <- perSlot, maybe False (M.member t) (dRows req)]
+  | otherwise = asum ([dense req t (range req u) | (t, u) <- perSlot, maybe False (M.member t) (dRows req)] <> [within req "widths" c 0 | c <- [1, 2]])
  where
   perSlot = [("files", "files"), ("dirs", "dirs"), ("layers", "dirs"), ("metrics", "dirs"), ("rankFiles", "files"), ("rankDirs", "dirs"), ("widths", "dirs")]
 

@@ -29,7 +29,7 @@ module CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf) where
 
 import CE.Similar.Rank.Cost (channels, rankCap, scoredDfRatio, wordChannel)
 import CE.Similar.Rank.Score (QTerm, expandRows)
-import CE.Wire (label, rowCheck, tableOffence)
+import CE.Wire (intTop, label, rowCheck, tableOffence)
 import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
@@ -81,6 +81,7 @@ offence :: RankReq -> Maybe String
 offence r =
   asum
     [ scalars r
+    , wide r
     , tableOffence "seen" id (\i s -> seat "seen" i s) (seen r)
     , tableOffence "query" (take 1) (rowCheck "query" "malformed query term (need [term,channel,tf])" 3 queryRow) (query r)
     , tableOffence "words" (take 1) (rowCheck "words" "malformed word (need [term,marg])" 2 wordRow) (words_ r)
@@ -127,6 +128,13 @@ scalars r
   | avgLen r < 1 = Just "avg: non-positive"
   | keep r < 0 = Just "k: negative"
   | maybe False (\s -> s < 0 || s >= corpusN r) (exclude r) = Just "exclude: seat out of range"
+  | otherwise = Nothing
+
+-- | n bounds every seat and k is converted: both an Int.
+wide :: RankReq -> Maybe String
+wide r
+  | corpusN r > intTop = Just "n: past the Int range"
+  | keep r > intTop = Just "k: past the Int range"
   | otherwise = Nothing
 
 -- | The cross-table rules: postings name a terms row and a lens row; a

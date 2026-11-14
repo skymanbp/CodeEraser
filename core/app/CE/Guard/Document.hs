@@ -19,7 +19,7 @@ import qualified CE.Flow.Document as Flow
 import CE.Text
 import qualified CE.Text.Guard as T
 import CE.Tombstone (kindNames)
-import CE.Wire (label)
+import CE.Wire (intTop, label)
 import Data.Aeson (Value, object)
 import Data.Foldable (asum)
 
@@ -62,7 +62,7 @@ checked req =
    where
     named what = fmap (\w -> label "say" i <> what <> " " <> w)
     inside u x = named "out of range" (if x < 0 || x >= range req u then Just u else Nothing)
-    span' u a n = named "out of range" (if a < 0 || n < 0 || a + n > range req u then Just u else Nothing)
+    span' u a n = named "out of range" (if a < 0 || n < 0 || a + n > range req u || a + n > intTop then Just u else Nothing)
     fenced fence = named "not a fence" (if fence < 0 || fence > 2 then Just (show fence) else Nothing)
 
 lines' :: Say -> Value -> DocReq -> [Line]

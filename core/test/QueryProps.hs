@@ -193,6 +193,7 @@ refusals =
     , refusedBy respond (tables ["1" .= rows [[-1]]]) "facts 1 0: negative fact value"
     , refusedBy respond (tables ["1" .= rows [[1], [1]]]) "facts 1 1: not strictly ascending"
     , refusedBy respond (request "" [] [("prelude", Number (-1))]) "negative prelude"
+    , refusedBy respond (request "" [] [("prelude", Number (2 ^ (64 :: Int)))]) "prelude past the Int range"
     ]
  where
   program toksRaw = setKey "program" (toJSON (toksRaw :: [[Integer]])) (request "" [] [])

@@ -90,7 +90,7 @@ flowVar :: M.Map String Strings -> Integer -> Integer -> Integer -> Maybe String
 flowVar strings = \f nth v -> do
   vars <- join (vars' f)
   Branch names <- join (M.lookup nth vars)
-  if v < 0 then Nothing else IM.lookup (fromInteger v) names >>= leafText
+  if v < 0 || v > toInteger (maxBound :: Int) then Nothing else IM.lookup (fromInteger v) names >>= leafText
  where
   vars' = byNth strings "vars" legendOf
   -- a vars entry whose first element is an integer, with its second

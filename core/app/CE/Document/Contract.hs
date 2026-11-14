@@ -15,14 +15,14 @@
 -- indexes, and the reference classes its document carries. A string
 -- the measured repository owns never crosses: the document names it
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
-module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, bits, fact, flag, judgedFacts, nameOf, nameOr, spelled, optional, range, ref, rows, single, totalRows, whyRef) where
+module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, within, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, bits, fact, flag, judgedFacts, nameOf, nameOr, spelled, optional, range, ref, rows, single, totalRows, whyRef) where
 
 import CE.Graph (graphTooLarge)
 import CE.Lang (languages)
 import CE.Lang.Spec (Language (..))
 import CE.Text (Catalogue, Lang, Line)
 import CE.Verdict (verdictTooLarge)
-import CE.Wire (label)
+import CE.Wire (intTop, label)
 import Data.Aeson (FromJSON (..), Value (..), object, toJSON, withObject, (.:), (.:?), (.=))
 import Data.Aeson.Key (fromString)
 import qualified Data.Aeson.KeyMap as KM
@@ -164,7 +164,15 @@ range req k = M.findWithDefault 0 k (fromMaybe M.empty (dRanges req))
 
 -- | Every row's column `c` a code in [lo, hi].
 codes :: DocReq -> String -> Int -> Integer -> Integer -> Maybe String
-codes req t c lo hi = asum [Just (label t i <> "column " <> show c <> " is not a code " <> show lo <> ".." <> show hi) | (i, r) <- zip [0 :: Int ..] (rows req t), any outside (take 1 (drop c r))]
+codes req t c lo hi = columnIn req t c (lo, hi) ("is not a code " <> show lo <> ".." <> show hi)
+
+-- | Every row's column `c` in [lo, the largest Int]: a column the
+-- family converts with `fromInteger`, refused before it can wrap.
+within :: DocReq -> String -> Int -> Integer -> Maybe String
+within req t c lo = columnIn req t c (lo, intTop) ("outside " <> show lo <> ".." <> show intTop)
+
+columnIn :: DocReq -> String -> Int -> (Integer, Integer) -> String -> Maybe String
+columnIn req t c (lo, hi) what = asum [Just (label t i <> "column " <> show c <> " " <> what) | (i, r) <- zip [0 :: Int ..] (rows req t), any outside (take 1 (drop c r))]
  where
   outside x = x < lo || x > hi
 

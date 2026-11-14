@@ -154,6 +154,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
   arch = head'' (requests "arch")
   merge = head'' (requests "merge")
   flow = head'' (requests "flow")
+  query = setKey "degraded" Null (head'' (map emptyRequest (familiesNamed ["query"])))
   rowsSet t v r = setKey "rows" (setKey t v (orNull (at r "rows"))) r
   orNull = fromMaybe Null
   head'' = foldr const Null
@@ -169,6 +170,9 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , setKey "degraded" (toJSON (0 :: Int)) (rowsSet "groups" (toJSON ([] :: [Value])) (rowsSet "members" (toJSON ([] :: [Value])) (rowsSet "holes" (toJSON ([] :: [Value])) (setKey "ranges" (object ["members" .= (0 :: Int), "why" .= (1 :: Int)]) (setKey "facts" (object ["nodes" .= (1 :: Int), "merged_duplicates" .= (0 :: Int), "not_isomorphic" .= (0 :: Int), "no_slot_table" .= (0 :: Int), "unbuilt" .= (0 :: Int), "over_cap" .= (0 :: Int), "only" .= (0 :: Int)]) merge)))))
     , rowsSet "layers" (toJSON ([] :: [Value])) arch
     , rowsSet "shown" (toJSON [[0 :: Int], [-1]]) flow
+    , rowsSet "widths" (toJSON [[d, 2 ^ (64 :: Int), 1] | d <- [0 .. int (path ["ranges", "dirs"] arch) - 1]]) arch
+    , rowsSet "preds" (toJSON [[2 ^ (64 :: Int) :: Integer]]) query
+    , docRequest "guard" [("files", 1), ("matches", 2 ^ (65 :: Int)), ("places", 0), ("units", 0), ("errors", 0)] [("say", [[0, 0, 1, 2 ^ (64 :: Int), 0, 0, 0]]), ("matches", []), ("places", [])] [] Nothing
     ]
   wanted =
     [ "document: unknown family nope"
@@ -182,6 +186,9 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , "degraded: with fact nodes"
     , "layers: not one row per slot in order"
     , "shown 1: unknown kind; the catalogue lists unreachable, dead_store, unused_local, unused_param"
+    , "widths 0: column 1 outside 0..9223372036854775807"
+    , "preds 0: column 0 outside 0..9223372036854775807"
+    , "say 0: out of range matches"
     ]
   dropKey k r = case r of
     Object o -> Object (KM.delete (Key.fromString k) o)

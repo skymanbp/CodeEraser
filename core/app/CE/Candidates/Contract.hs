@@ -15,7 +15,7 @@
 module CE.Candidates.Contract (CandReq (..), offence, overCap) where
 
 import CE.Candidates.Cost (candidateNearCap, candidatePrintCap, candidateSigCap, candidateUnitCap)
-import CE.Wire (elements, label, outsideU64, rowCheck, u64)
+import CE.Wire (elements, intTop, label, outsideU64, rowCheck, u64)
 import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
@@ -49,12 +49,14 @@ overCap req =
  where
   over cap k = toInteger k > cap
 
--- | Every unit row's own shape, then one set per unit, then the sets,
+-- | Every unit row's own shape and then its Int bound (the pass converts
+-- every column), then one set per unit, then the sets,
 -- the instances and the near runs, each table in request order.
 offence :: CandReq -> Maybe String
 offence req =
   asum
     [ asum (zipWith unitShape [0 ..] (unitRows req))
+    , asum [Just (label "unit" i <> "value past the Int range") | (i, row) <- zip [0 :: Int ..] (unitRows req), any (> intTop) row]
     , if length (sigRows req) /= length (unitRows req) then Just "sigs: not one set per unit" else Nothing
     , asum (zipWith setShape [0 ..] (sigRows req))
     , asum (zipWith printShape [0 ..] (printRows req))
@@ -106,6 +108,7 @@ printShape = rowCheck "print" "malformed print (need [hash,file,line,tok])" 4 ch
     (h : rest)
       | not (u64 h) -> Just "hash outside u64"
       | any (< 0) rest -> Just "negative file, line or tok"
+      | any (> intTop) rest -> Just "file, line or tok past the Int range"
     _ -> Nothing
 
 -- | [fileA, lineA, fileB, lineB]: every cell non-negative.
@@ -114,4 +117,5 @@ nearShape = rowCheck "near" "malformed near run (need [fileA,lineA,fileB,lineB])
  where
   checks row
     | any (< 0) row = Just "negative file or line"
+    | any (> intTop) row = Just "file or line past the Int range"
     | otherwise = Nothing

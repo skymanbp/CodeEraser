@@ -16,7 +16,7 @@ module CE.Flow.Contract (FlowReq (..), offence, overCap) where
 import CE.Flow.Cost
 import qualified CE.Flow.Shape as Shape
 import CE.Flow.Tree (Unit, build)
-import CE.Wire (ascendingOn, rowCheck)
+import CE.Wire (ascendingOn, intTop, rowCheck)
 import Control.Applicative ((<|>))
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
@@ -74,7 +74,7 @@ stmtShape = rowCheck "stmt" "malformed stmt (need [u,seq,parent,kind,flags,aux])
       | any (< 0) [u, sq, aux] || parent < -1 || kind < 0 || flags < 0 -> Just "negative stmt value"
       | kind > toInteger kindCeil -> Just "unknown kind"
       | flags > stmtFlagCeil -> Just "flags outside five bits"
-    _ -> Nothing
+    _ -> past row
 
 -- | [u, v, declSeq, flags]: declSeq may be −1 (a parameter).
 varShape :: Int -> [Integer] -> Maybe String
@@ -84,7 +84,7 @@ varShape = rowCheck "var" "malformed var (need [u,v,declSeq,flags])" 4 checks
     [u, v, decl, flags]
       | any (< 0) [u, v, flags] || decl < -1 -> Just "negative var value"
       | flags > varFlagCeil -> Just "flags outside four bits"
-    _ -> Nothing
+    _ -> past row
 
 -- | [u, seq, v, mode]: all non-negative, mode bounded.
 useShape :: Int -> [Integer] -> Maybe String
@@ -94,8 +94,14 @@ useShape = rowCheck "use" "malformed use (need [u,seq,v,mode])" 4 checks
     [_, _, _, mode] | mode > modeCeil -> Just "unknown mode"
     _ -> negative "negative use value" 0 row
 
--- | Every value at or above the floor.
+-- | Every value at or above the floor, and none past the Int range.
 negative :: String -> Integer -> [Integer] -> Maybe String
 negative message floor' row
   | any (< floor') row = Just message
+  | otherwise = past row
+
+-- | No value past the Int range: CE.Flow.Tree converts each one.
+past :: [Integer] -> Maybe String
+past row
+  | any (> intTop) row = Just "value past the Int range"
   | otherwise = Nothing

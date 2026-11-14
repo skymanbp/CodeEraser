@@ -152,7 +152,9 @@ nonVacuous =
 -- | One case per line: the request's tables as overrides of a small
 -- valid request, then the message stem.
 refusals :: [(RReq, String)]
-refusals = [(apply over, why) | [over, why] <- cells (unlines table)]
+refusals =
+  [(apply over, why) | [over, why] <- cells (unlines table)]
+    <> [(base {rN = 2 ^ (63 :: Int)}, "n: past the Int range"), (base {rK = 2 ^ (64 :: Int)}, "k: past the Int range")]
  where
   table =
     [ "n -1 ; n: negative"

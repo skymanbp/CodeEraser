@@ -4,7 +4,7 @@
 -- the row / table / element / knob checks the families compose. The
 -- refusal TEXTS stay each family's: these take them as arguments, so
 -- a fold never rewords a contract. CE.Wire re-exports all of it.
-module CE.Wire.Rows (label, u64, outsideU64, required, rowCheck, tableOffence, ascendingOn, elements, knobTable, topCode) where
+module CE.Wire.Rows (label, u64, outsideU64, intTop, required, rowCheck, tableOffence, ascendingOn, elements, knobTable, topCode) where
 
 import Data.Foldable (asum)
 
@@ -21,6 +21,12 @@ required key = Just (key <> ": required at 9.0.0")
 -- | Inside the u64 range: 0 <= x < 2^64.
 u64 :: Integer -> Bool
 u64 x = x >= 0 && x < 2 ^ (64 :: Int)
+
+-- | The largest value an `Int` holds, as an Integer: a value a family
+-- converts with `fromInteger` is compared with it first, so a value
+-- past it is refused instead of wrapping onto another.
+intTop :: Integer
+intTop = toInteger (maxBound :: Int)
 
 -- | The one out-of-range class most element tables refuse with.
 outsideU64 :: [(Integer -> Bool, String)]
