@@ -137,6 +137,12 @@
       "value": "1"
     },
     {
+      "id": "count:stages#word",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (the stages: NOT_FAMILIES without hello, tables/1, document/1)",
+      "tier": "linked",
+      "value": "8"
+    },
+    {
       "debt": "a Haskell list read by line; promote = the axis roster on the structure wire",
       "id": "count:structure_axes#word",
       "source": "core/app/CE/Structure/Axes.hs::axes (count arms)",
