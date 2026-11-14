@@ -9,7 +9,7 @@ import CE.Text (Catalogue, table)
 catalogue :: Catalogue
 catalogue =
   table
-    "file\tjoin {} <-> {}: {} blocks / {} tokens / {} near-miss | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {} | {}\t联判 {} <-> {}：{} 块 / {} tokens / {} 近似对 | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {} | {}\n\
+    "file\tjoin {} <-> {}: {} blocks / {} tokens / {} near-miss | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {} | {}\t联判 {} <-> {}：{} 块 / {} 个记号 / {} 近似对 | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {} | {}\n\
     \verdict\t{} (sev {}, conf {})\n\
     \self_pair\tself-pair (off the sim table)\n\
     \unjudged\tunjudged\n\

@@ -8,7 +8,7 @@ import CE.Text (Catalogue, table)
 catalogue :: Catalogue
 catalogue =
   table
-    "dup\tdup {}:{}-{} <-> {}:{}-{} ({} tokens)\t重复 {}:{}-{} <-> {}:{}-{}（{} tokens）\n\
-    \summary\tindexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped\t已索引 {} 个文件（刷新 {}，移除 {}）— {} 个克隆块 / {} 组（最少 {} tokens，多样性 >= {}），抑制低多样性 {}，热链 {}，跳过陈旧 {}\n\
+    "dup\tdup {}:{}-{} <-> {}:{}-{} ({} tokens)\t重复 {}:{}-{} <-> {}:{}-{}（{} 个记号）\n\
+    \summary\tindexed {} files ({} refreshed, {} removed) — {} clone blocks in {} groups (min {} tokens, distinct >= {}), {} low-diversity suppressed, {} hot chained, {} stale skipped\t已索引 {} 个文件（刷新 {}，移除 {}）— {} 个克隆块 / {} 组（最少 {} 个记号，多样性 >= {}），抑制低多样性 {}，热链 {}，跳过陈旧 {}\n\
     \over\tdedup ratchet: {} clone blocks > budget {} — new duplication must not land\t去冗棘轮：{} 个克隆块 > 预算 {} — 新增重复不得落地\n\
     \under\tdedup ratchet: {} clone blocks < budget {} — ratchet the budget down\t去冗棘轮：{} 个克隆块 < 预算 {} — 请把预算下调咬合"

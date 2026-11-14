@@ -61,7 +61,7 @@ pub(super) fn judged(
 ) -> Result<(Report, Held)> {
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let reader = Reader::open(&idx)?;
-    let q: Resolved = query::resolve(&reader, ask)?;
+    let q: Resolved = query::resolve(&reader, &ask.typed(root))?;
     let arm = rank::Ask {
         query: &q.terms,
         k: K,

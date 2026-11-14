@@ -32,9 +32,22 @@ impl Ask {
         };
         ensure!(line >= 1, "`at` line numbers start at 1, got `{spec}`");
         Ok(Ask::At {
-            path: path.replace('\\', "/"),
+            path: path.to_string(),
             line,
         })
+    }
+
+    /// The ask with its path spelled as the index spells one
+    /// (`walk::typed`): every face's `at` names the same seat however it
+    /// was typed (release 1.10.0, item H33).
+    pub fn typed(&self, root: &std::path::Path) -> Ask {
+        match self {
+            Ask::At { path, line } => Ask::At {
+                path: crate::scan::walk::typed(root, path),
+                line: *line,
+            },
+            other => other.clone(),
+        }
     }
 
     /// Exactly one of the three, from the optional parts every face

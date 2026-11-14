@@ -12,6 +12,7 @@ use ignore::WalkBuilder;
 use ignore::overrides::OverrideBuilder;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
+pub use typed::typed;
 
 /// The secret-file globs BOTH walks refuse — this measurement walk and
 /// the mention universe (mention/walk.rs) — one table of NAMES, so the
@@ -73,6 +74,8 @@ pub fn rel_str(root: &Path, path: &Path) -> String {
         .to_string()
         .replace('\\', "/")
 }
+
+mod typed;
 
 /// Read a walked file, degrading a MID-WALK DELETION to None — one
 /// vanished file must not abort the whole run (the probe.rs stale

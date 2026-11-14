@@ -271,7 +271,10 @@ pub fn wire_of(
     advisory: Advisory,
 ) -> Result<GraphWire> {
     let (files, edges, unresolved_sites, sites) = graph_rows(idx)?;
-    if files.is_empty() {
+    // the refusal guards a command run in the wrong directory, so it asks
+    // the index, not the graph: a tree whose files the graph reads none
+    // of (prose only, release 1.10.0 item I1) is judged on an empty graph
+    if files.is_empty() && idx.file_count()? == 0 {
         bail!(
             "empty index at {} — nothing was walked; wrong root?",
             db_path.display()

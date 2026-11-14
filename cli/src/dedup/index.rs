@@ -368,6 +368,14 @@ impl Index {
     pub(crate) fn raw(&self) -> &rusqlite::Connection {
         &self.conn
     }
+
+    /// How many files the index holds, every kind (the graph reads only
+    /// some of them).
+    pub fn file_count(&self) -> Result<i64> {
+        Ok(self
+            .conn
+            .query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?)
+    }
 }
 
 /// READ-ONLY index facts for diagnostics: `(indexed files, cache key

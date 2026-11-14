@@ -259,7 +259,7 @@ const CE_I18N = {
     provDead: (v, why) => `死码：${v}——${why}`,
     provDoc: (t, s, e, i, u, n) => `文档重复：${t}:${s}-${e} 的孪生（J ${i}/${u}，逐字 ${n} 词）`,
     provLinked: (n) => `；所在小节被 ${n} 处链接`,
-    provTwin: (t, s, e, k, unit) => `克隆：${t}:${s}-${e} 处的 T1 孪生块（${k} 个 token），覆盖单元 ${unit}`,
+    provTwin: (t, s, e, k, unit) => `克隆：${t}:${s}-${e} 处的 T1 孪生块（${k} 个记号），覆盖单元 ${unit}`,
     eraseLog: "审计日志", readingLog: "读取审计日志…",
     logHead: (n, k) => `${n} 条已执行记录，${k} 行不可读`,
     logEmpty: "审计日志存在但没有记录",

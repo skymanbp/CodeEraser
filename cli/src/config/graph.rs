@@ -92,14 +92,10 @@ impl GraphCfg {
     }
 }
 
-/// A declared path as `walk::rel_str` spells one: `/` separators, no
-/// `./` head, no trailing slash, and `.` is the root (empty).
+/// A declared path as `walk::rel_str` spells one, by the one reading of
+/// a typed path (`walk::typed`, read against no root: a declared path is
+/// root-relative): `/` separators, no `./` head, no trailing slash, and
+/// `.` is the root (empty).
 fn normalized(declared: &str) -> String {
-    let path = declared.replace('\\', "/");
-    let path = path.trim_start_matches("./").trim_end_matches('/');
-    if path == "." {
-        String::new()
-    } else {
-        path.to_string()
-    }
+    crate::scan::walk::typed(std::path::Path::new(""), declared)
 }

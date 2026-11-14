@@ -11,8 +11,9 @@ use crate::docdup::judge::candidates::SegRow;
 use anyhow::Result;
 
 /// Verbatim doc duplicates: for every core-reported pair, the side
-/// whose section FEWER links land on is the candidate (release 1.10.0,
-/// erase/section.rs: a linked section is referenced), and on equal
+/// FEWER links land on (its section, or a target inside it the erase
+/// would remove: erase/section.rs) is the candidate (release 1.10.0),
+/// and on equal
 /// counts the path-lexicographically later occurrence, as before
 /// (erase.md: the survivor is chosen deterministically, never judged
 /// "better"). The candidate's count rides to the core, which refuses a
@@ -32,7 +33,7 @@ pub(super) fn doc_candidates(
                 links,
                 &s.path,
                 cache.text(&s.path)?,
-                s.start_line,
+                (s.start_line, s.end_line),
             ))
         };
         let (la, lb) = (linked(*a)?, linked(*b)?);
