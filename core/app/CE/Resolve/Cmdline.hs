@@ -26,7 +26,8 @@ module CE.Resolve.Cmdline (
   isMsvc,
 ) where
 
-import Data.Char (isAsciiLower, isAsciiUpper, toLower)
+import CE.Resolve.Chars (asciiLower)
+import Data.Char (isAsciiLower, isAsciiUpper)
 import Data.List (isSuffixOf)
 
 -- | `compdb_flags::is_msvc`: an MSVC driver basename under either
@@ -39,9 +40,6 @@ isMsvc prog = any (eqIgnoreAsciiCase name) ["cl", "cl.exe", "clang-cl", "clang-c
 -- | `str::eq_ignore_ascii_case`.
 eqIgnoreAsciiCase :: String -> String -> Bool
 eqIgnoreAsciiCase a b = length a == length b && and (zipWith (\x y -> asciiLower x == asciiLower y) a b)
-
-asciiLower :: Char -> Char
-asciiLower c = if isAsciiUpper c then toLower c else c
 
 -- | A Windows tool spelling: separator, drive, executable suffix, or MSVC
 -- basename.

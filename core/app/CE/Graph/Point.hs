@@ -24,7 +24,7 @@
 -- UNANSWERED and blocks nothing (every state is untold, M is empty).
 -- `deadNow` is today's point, the object the next baseline records (the
 -- verdict family copies it verbatim).
-module CE.Graph.Point (Gate (..), addedOffence, blockOffence, entitiesOffence, gate, pointOffence, pointShape, pointSize, readPoint) where
+module CE.Graph.Point (Gate (..), addedOffence, blockOffence, entitiesOffence, gate, pointOffence, pointShape, pointSize) where
 
 import CE.Graph.Cost (blockStates, granFile, rootStates)
 import CE.Wire (label, u64)

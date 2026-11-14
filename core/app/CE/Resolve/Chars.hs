@@ -10,10 +10,12 @@
 -- (tests subrepo unit/graph/resolve_text/) asks both sides about every
 -- scalar value again, so a toolchain update that moves a property is
 -- seen, not inherited. The range reader is shared: CE.Resolve.Lower's
--- two classes are tables of the same shape.
-module CE.Resolve.Chars (isRustWhite, isRustAlnum, hexRanges, within) where
+-- two classes and CE.Similar.Lower's mapping are tables of the same
+-- shape. And Rust's `char::to_ascii_lowercase`, the one spelling the
+-- configuration readers fold ASCII case with.
+module CE.Resolve.Chars (isRustWhite, isRustAlnum, hexRanges, within, asciiLower) where
 
-import Data.Char (ord)
+import Data.Char (isAsciiUpper, ord, toLower)
 import Numeric (readHex)
 import qualified Data.IntMap.Strict as IM
 
@@ -35,6 +37,11 @@ within :: IM.IntMap Int -> Char -> Bool
 within table c = maybe False (\(_, hi) -> o <= hi) (IM.lookupLE o table)
  where
   o = ord c
+
+-- | `char::to_ascii_lowercase`: an ASCII capital lowered, every other
+-- character itself.
+asciiLower :: Char -> Char
+asciiLower c = if isAsciiUpper c then toLower c else c
 
 -- | Ascending inclusive ranges written as hexadecimal words, low and
 -- high bound each.

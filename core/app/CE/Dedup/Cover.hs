@@ -19,7 +19,7 @@
 -- pair is never split. Every offence is a named refusal, the cap
 -- included: a request over it is a planning fault of the measuring
 -- side, not a degraded judgment. No knob — t and d are facts of the run.
-module CE.Dedup.Cover (CoverReq (..), respond) where
+module CE.Dedup.Cover (respond) where
 
 import CE.Dedup.Cost (coverRowCap)
 import CE.Dedup.Cover.Rule (Class (..), Run (..), classify)

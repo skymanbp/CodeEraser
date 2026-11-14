@@ -30,7 +30,7 @@ pub(super) fn lines_for(root: &Path, cfg: &Config, path: &str) -> Thresholds {
 
 /// The graded zone's two lines and its arming, resolved once per
 /// write from the file's own table (P4) and ce.toml's opt-in.
-pub(super) struct ZoneLines {
+struct ZoneLines {
     pub cap: usize,
     pub warn: usize,
     pub armed: bool,

@@ -10,8 +10,8 @@
 -- leg asks both sides about every scalar value again.
 module CE.Similar.Lower (rustToLower) where
 
+import CE.Resolve.Chars (hexRanges)
 import Data.Char (chr, ord)
-import Numeric (readHex)
 import qualified Data.IntMap.Strict as IM
 
 -- | The lowercase of one character, as the characters it becomes.
@@ -19,12 +19,11 @@ rustToLower :: Char -> String
 rustToLower '\x130' = "i\x307"
 rustToLower c = [maybe c chr (IM.lookup (ord c) mapping)]
 
--- | 1487 characters and their single-character lowercase.
+-- | 1487 characters and their single-character lowercase, read as
+-- word pairs by the range reader (CE.Resolve.Chars.hexRanges: the same
+-- pairs of hexadecimal words).
 mapping :: IM.IntMap Int
-mapping = IM.fromDistinctAscList (pairUp [n | w <- words (unwords [mappedA, mappedB, mappedC, mappedD, mappedE, mappedF, mappedG, mappedH]), (n, "") <- readHex w])
- where
-  pairUp (a : b : rest) = (a, b) : pairUp rest
-  pairUp _ = []
+mapping = hexRanges (unwords [mappedA, mappedB, mappedC, mappedD, mappedE, mappedF, mappedG, mappedH])
 
 mappedA :: String
 mappedA =

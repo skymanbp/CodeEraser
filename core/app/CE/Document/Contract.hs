@@ -198,9 +198,9 @@ flag req k = fact req k /= 0
 spelled :: [String] -> Integer -> Value
 spelled table c = toJSON (nameOf table c)
 
--- | The same name as a plain string, empty off the table.
+-- | The same name as a plain string, empty off the table (either side).
 nameOf :: [String] -> Integer -> String
-nameOf table c = concat (take 1 (drop (fromInteger c) table))
+nameOf = nameOr ""
 
 -- | A name by a code that may fall off the table: the fallback word.
 nameOr :: String -> [String] -> Integer -> String

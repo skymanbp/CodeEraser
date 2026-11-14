@@ -14,9 +14,10 @@
 -- shortest. Nothing here consults the tree.
 module CE.Resolve.HtmlHead (Doc (..), Page (..), page, splitOrigin, decodeRefs) where
 
+import CE.Resolve.Chars (asciiLower)
 import CE.Resolve.Str (splitOnceStr, stripSuffix, utf8Len)
 import CE.Resolve.Url (percentDecode)
-import Data.Char (chr, isAsciiLower, isAsciiUpper, isDigit, isHexDigit, digitToInt, toLower)
+import Data.Char (chr, isAsciiLower, isAsciiUpper, isDigit, isHexDigit, digitToInt)
 import Data.List (isPrefixOf, isSuffixOf, minimumBy)
 import Data.Maybe (mapMaybe)
 import Data.Ord (comparing)
@@ -131,6 +132,3 @@ decoded rest = case break (== ';') rest of
   scalar v
     | v == 0 || v > 0x10FFFF || (v >= 0xD800 && v <= 0xDFFF) = Nothing
     | otherwise = Just (chr (fromInteger v))
-
-asciiLower :: Char -> Char
-asciiLower c = if isAsciiUpper c then toLower c else c

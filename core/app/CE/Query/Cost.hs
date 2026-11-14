@@ -55,6 +55,7 @@ module CE.Query.Cost (
   sortSym,
   sortSet,
   sortOpen,
+  sortNames,
   errSyntax,
   errUnknownPred,
   errArity,
@@ -175,6 +176,11 @@ sortInt = 3
 sortSym = 4
 sortSet = 5
 sortOpen = -1
+
+-- | The sorts by name beside their codes: the one table the document's
+-- names (CE.Query.Document) and the schema's rows (CE.Query.Schema) read.
+sortNames :: [(String, Integer)]
+sortNames = [("node", sortNode), ("dir", sortDir), ("unit", sortUnit), ("int", sortInt), ("sym", sortSym), ("set", sortSet)]
 
 -- | Program errors, answered in a normal reply's `errors` table as
 -- `[tokenIndex, code]` — a misspelled rule is the program's fault,

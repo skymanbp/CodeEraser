@@ -20,8 +20,10 @@ import CE.Erase.Cost (classNames, classOf, eraseRowCap, judgeLinked, keptRows)
 import CE.Wire (Respond, RowsReq (..), knoblessRows, label, required, resultLine, retiredClassZero, rowCheck, tooLarge, topCode)
 import qualified CE.Wire.Families as F
 import Data.Aeson
+import Data.Array (listArray, (!))
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
+import qualified Data.Map.Strict as M
 
 -- | The shared knobless cascade with this family's bindings
 -- (CE.Wire.knoblessRows): per-class row shapes refused by name,
@@ -107,12 +109,15 @@ linkedBattery req = case linkedOf req of
       , asum (zipWith order [1 :: Int ..] (zip ls (drop 1 ls)))
       ]
  where
-  facts = rowsOf req
+  -- each fact row's class, indexed once: a linked row's check is a
+  -- lookup, not a walk of the fact rows
+  total = length (rowsOf req)
+  classes = listArray (0, total - 1) (map classOf (rowsOf req))
   linkedShape = rowCheck "linked" "malformed row (need [row,links])" 2 check
   check l = case l of
     [r, n]
-      | r < 0 || r >= toInteger (length facts) -> Just "row out of range"
-      | classOf (facts !! fromInteger r) /= 1 -> Just "not a documentation row"
+      | r < 0 || r >= toInteger total -> Just "row out of range"
+      | classes ! fromInteger r /= (1 :: Integer) -> Just "not a documentation row"
       | n < 1 -> Just "links below 1"
     _ -> Nothing
   order i (prev, cur)
@@ -122,8 +127,10 @@ linkedBattery req = case linkedOf req of
 judged :: String -> RowsReq -> B8.ByteString
 judged proto req = reply proto req verdicts False
  where
-  links = maybe [] id (linkedOf req)
-  verdicts = zipWith (\i r -> judgeLinked (sum [n | [j, n] <- links, j == i]) r) [0 ..] (rowsOf req)
+  -- row -> links, built once (the battery has proved the rows strictly
+  -- ascending, so each row is linked at most once)
+  links = M.fromList [(j, n) | [j, n] <- maybe [] id (linkedOf req)]
+  verdicts = zipWith (\i r -> judgeLinked (M.findWithDefault 0 i links) r) [0 ..] (rowsOf req)
 
 -- | Over-cap: a complete degraded reply that FAILS with an empty
 -- verdict table — a plan the core refused to judge licenses nothing.

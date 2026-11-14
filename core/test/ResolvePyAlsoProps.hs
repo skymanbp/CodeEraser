@@ -81,7 +81,7 @@ starLegs = (names, stars)
     , starred pkgFiles [(1, "__main__.py", "pkg")] [] [("pkg/__init__.py", [], True)] ([], [0])
     , starred pkgFiles [(1, "__main__.py", "pkg")] [] [("pkg/__init__.py", ["sub"], True)] ([(0, "pkg/sub.py", 2)], [0])
     , starred pkgFiles [(1, "__main__.py", "pkg")] [(0, ["helper"])] [("pkg/__init__.py", [], True)] ([], [])
-    , refusedAll [("pkg/sub.py", [], False), ("pkg/__init__.py", [], False)] "py.all 1: not after the path before it"
+    , refusedAll [("pkg/sub.py", [], False), ("pkg/__init__.py", [], False)] "py.all 1: not strictly ascending"
     , refusedAll [("pkg/sub.py", ["x"], False)] "py.all 0: not a walked __init__.py"
     , refusedAll [("pkg/__init__.py", [""], True)] "py.all 0: an empty name"
     ]

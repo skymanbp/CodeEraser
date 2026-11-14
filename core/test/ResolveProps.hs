@@ -51,7 +51,7 @@ battery = runLegs (names <> ownNames) (probes <> ownPackage <> [queryLinks])
     , all counted (take 40 cases)
     , all (\c -> (reply' (request c) >>= (`field` "forced")) == Just (toJSON ([] :: [Value]))) (take 20 cases)
     , wantedFirst
-    , refused (setKey "files" (toJSON ["b.py", "a.py" :: String]) base) "file 1: not after the path before it"
+    , refused (setKey "files" (toJSON ["b.py", "a.py" :: String]) base) "file 1: not strictly ascending"
     , refused (setKey "origins" (toJSON [firstFile]) base) "origin 0: a walked file"
     , siteRefused 7 0 0 "language this family does not resolve"
     , siteRefused langPy 0 9999 "kind or file out of range"

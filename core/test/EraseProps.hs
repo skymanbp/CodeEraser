@@ -23,9 +23,10 @@ import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, r
 
 -- | The linked-section leg (release 1.10.0) rides beside the older legs.
 battery :: IO Bool
-battery = runLegs (names <> [linkedName]) (probes <> [linkedFace])
+battery = runLegs (names <> [linkedName, capName]) (probes <> [linkedFace, linkedAtCap])
  where
   linkedName = "a linked section refuses as linked_section after the byte checks, and linked refusals name the offender"
+  capName = "at the row cap, every documentation row linked, the reply is judgeLinked over the same rows"
   names =
     [ "the predicate matches the enumerated truth table, reasons included"
     , "a mixed request judges every row in order and conserves counts"
@@ -274,3 +275,16 @@ linkedFace =
   linked l = setKey "linked" (toJSON (l :: [[Integer]])) (req [ok, ok, [3, 1, 2, 0, 0]])
   bad = [[[3, 1]], [[2, 1]], [[1, 0]], [[1, 1], [0, 1]], [[1]]]
   whys = ["linked 0: row out of range", "linked 0: not a documentation row", "linked 0: links below 1", "linked 1: rows not ascending", "linked 0: malformed row"]
+
+-- | At the row cap (release 1.10.0): eraseRowCap documentation rows,
+-- every one linked, the facts that erase and the ones the byte checks
+-- refuse alternating, answered equal to judgeLinked over the same rows
+-- — a correctness leg at the size the cap admits (the linked table is
+-- read through a map built once, CE.Erase).
+linkedAtCap :: Bool
+linkedAtCap = fmap (`field` "rows") (replyObjWith respond request) == Just (Just (toJSON want))
+ where
+  facts = take (fromInteger eraseRowCap) (cycle [[1, 60, 60, 60, 1], [1, 59, 60, 60, 1]])
+  counts = [1 + i `mod` 3 | i <- [0 .. eraseRowCap - 1]]
+  request = setKey "linked" (toJSON (zipWith (\i n -> [i, n]) [0 ..] counts)) (req facts)
+  want = [[if e then 1 else 0, r] | (e, r) <- zipWith judgeLinked counts facts] :: [[Integer]]

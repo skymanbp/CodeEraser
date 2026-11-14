@@ -14,6 +14,7 @@
 -- sort here exactly as the strings would.
 module CE.Arch.Document (doc) where
 
+import CE.Arch.Louvain (majorityDir)
 import CE.Document.Contract
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Foldable (asum)
@@ -116,11 +117,9 @@ cut refs row = case row of
   _ -> Null
 
 -- | A cluster with its files in row order and the directory holding
--- most of them — the least directory on a tie, the reading the core
+-- most of them — CE.Arch.Louvain.majorityDir, the reading the core
 -- names a misplaced file's majority by.
 cluster :: (Integer -> Integer) -> Integer -> [Integer] -> Value
 cluster dirAt c fs = object ["cluster" .= c, "majority" .= dir majority, "files" .= map path fs]
  where
-  held = M.fromListWith (+) [(dirAt f, 1 :: Int) | f <- fs]
-  top = maximum (M.elems held)
-  majority = minimum [d | (d, n) <- M.toList held, n == top]
+  majority = majorityDir (M.toList (M.fromListWith (+) [(dirAt f, 1 :: Int) | f <- fs]))

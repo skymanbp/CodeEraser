@@ -11,7 +11,7 @@
 -- hit)], in the order the judgment answered; a hit is two references
 -- of the family's class and its metrics by name; the counts are the
 -- universe, the measuring side's counters and the hits, in that order.
-module CE.Document.Envelope (Envelope (..), envelopeOf, enveloped, envelopedFamily, envelopeStatement, verdicts) where
+module CE.Document.Envelope (Envelope (..), envelopeOf, envelopedFamily, envelopeStatement, verdicts) where
 
 import CE.Document.Contract
 import Data.Aeson (Value, object, (.=))

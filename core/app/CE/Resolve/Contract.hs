@@ -31,7 +31,7 @@ import CE.Resolve.Request
 import CE.Resolve.RsSurface (readsAsAt, readsAsSurface)
 import CE.Resolve.Tables (kindImportFrom, kindRefDef, kindRefLink)
 import CE.Resolve.World (ofLangs)
-import CE.Wire (label)
+import CE.Wire (ascendingOn, label)
 import Data.Array (listArray, (!))
 import Data.Aeson (Value (..), encode)
 import qualified Data.ByteString.Lazy as BL
@@ -102,24 +102,24 @@ overCap rq = requestSize rq > resolveCap
 offence :: ResolveReq -> Maybe String
 offence rq =
   asum
-    [ ascending "file" (rqFiles rq)
-    , ascending "origin" (rqOrigins rq)
+    [ ascendingOn "file" id (rqFiles rq)
+    , ascendingOn "origin" id (rqOrigins rq)
     , asum [Just ("origin " <> show i <> ": a walked file") | (i, o) <- zip [0 :: Int ..] (rqOrigins rq), Set.member o walked]
     , asum (zipWith site [0 :: Int ..] (rqSites rq)) <|> pyNamesOffence rq <|> pyAllOffence rq walked
-    , ascending "java.header" (map fst (rqJavaHeaders rq))
+    , ascendingOn "java.header" id (map fst (rqJavaHeaders rq))
     , asum [Just ("c.db " <> show i <> ": probe out of range") | (i, Db _ p _) <- zip [0 :: Int ..] (cDbs (rqC rq)), p < 0 || p > 2]
     , asum [Just ("c.include " <> show i <> ": not a walked file") | (i, (p, _)) <- zip [0 :: Int ..] (cIncludes (rqC rq)), not (Set.member p walked)]
-    , ascending "hs.cabal" (map fst (rqHsCabals rq))
-    , ascending "hs.owner" (map fst (rqHsOwners rq))
+    , ascendingOn "hs.cabal" id (map fst (rqHsCabals rq))
+    , ascendingOn "hs.owner" id (map fst (rqHsOwners rq))
     , asum [Just ("hs.owner " <> show i <> ": its file is not walked or its cabal not carried") | (i, (f, c)) <- zip [0 :: Int ..] (rqHsOwners rq), not (Set.member f walked && Set.member c cabals)]
-    , ascending "ts.package" (rqTsPackages rq)
-    , ascending "ts.chain" (rqTsChains rq)
+    , ascendingOn "ts.package" id (rqTsPackages rq)
+    , ascendingOn "ts.chain" id (rqTsChains rq)
     , asum (zipWith tsFact [0 :: Int ..] (rqTsFacts rq))
     , asum [Just ("ts.fact " <> show i <> ": asked twice") | (i, (seen, k)) <- zip [0 :: Int ..] (zip (scanl (flip Set.insert) Set.empty keys) keys), Set.member k seen]
-    , ascending "rs.package" (rqRsPackages rq)
-    , ascending "rs.crateRoot" (rqRsCrateRoots rq)
-    , ascending "rs.manifest" (rqRsManifests rq)
-    , ascending "rs.owner" (map fst (rqRsOwners rq))
+    , ascendingOn "rs.package" id (rqRsPackages rq)
+    , ascendingOn "rs.crateRoot" id (rqRsCrateRoots rq)
+    , ascendingOn "rs.manifest" id (rqRsManifests rq)
+    , ascendingOn "rs.owner" id (map fst (rqRsOwners rq))
     , asum [Just ("rs.owner " <> show i <> ": its file is not walked") | (i, (f, _)) <- zip [0 :: Int ..] (rqRsOwners rq), not (Set.member f walked)]
     , mdOffence rq walked
     ]
@@ -155,7 +155,7 @@ offence rq =
 -- each row a walked package `__init__.py` with no empty name.
 pyAllOffence :: ResolveReq -> Set.Set String -> Maybe String
 pyAllOffence rq walked =
-  ascending "py.all" [p | (p, _, _) <- rqPyAll rq]
+  ascendingOn "py.all" id [p | (p, _, _) <- rqPyAll rq]
     <|> listToMaybe [label "py.all" i <> why | (i, (p, ns, _)) <- zip [0 :: Int ..] (rqPyAll rq), Just why <- [row p ns]]
  where
   row p ns
@@ -188,12 +188,12 @@ pyNamesOffence rq =
 mdOffence :: ResolveReq -> Set.Set String -> Maybe String
 mdOffence rq walked =
   asum
-    [ ascending "asset" (rqAssets rq)
-    , ascending "md.slugs" (map fst (rqMdSlugs rq))
+    [ ascendingOn "asset" id (rqAssets rq)
+    , ascendingOn "md.slugs" id (map fst (rqMdSlugs rq))
     , stray "md.slugs" "not a walked Markdown file" "markdown" walked (map fst (rqMdSlugs rq))
-    , ascending "md.refs" [f | (f, _, _) <- rqMdRefs rq]
+    , ascendingOn "md.refs" id [f | (f, _, _) <- rqMdRefs rq]
     , bare "a Markdown reference site without its file's table" (\s -> sLang s == langMd && sKind s `elem` [kindRefLink, kindRefDef]) tabled
-    , ascending "html.docs" (map docPath (rqHtmlDocs rq))
+    , ascendingOn "html.docs" id (map docPath (rqHtmlDocs rq))
     , stray "html.docs" "not an HTML file of the request" "html" known (map docPath (rqHtmlDocs rq))
     , bare "an HTML site without its file's document" ((== langHtml) . sLang) paged
     ]
@@ -207,7 +207,3 @@ mdOffence rq walked =
   paged = Set.fromList (map docPath (rqHtmlDocs rq))
   known = walked <> Set.fromList (rqOrigins rq)
   path = listArray (0, length (rqFiles rq) + length (rqOrigins rq) - 1) (rqFiles rq <> rqOrigins rq)
-
--- | A path table in strictly ascending order: no path twice.
-ascending :: String -> [String] -> Maybe String
-ascending name xs = asum [Just (label name i <> "not after the path before it") | (i, (a, b)) <- zip [1 :: Int ..] (zip xs (drop 1 xs)), a >= b]

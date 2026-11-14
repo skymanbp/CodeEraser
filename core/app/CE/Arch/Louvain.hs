@@ -13,11 +13,11 @@
 -- Cluster ids are renumbered 0, 1, 2… by each cluster's least file.
 -- Nothing divides: modularity only ever compares, so the core stays
 -- in integers (the CE.Clone.Cost stance).
-module CE.Arch.Louvain (clusters, misplaced) where
+module CE.Arch.Louvain (clusters, majorityDir, misplaced) where
 
 import qualified Data.IntMap.Strict as IM
-import Data.List (maximumBy, nub)
-import Data.Ord (comparing)
+import Data.List (maximumBy, minimumBy, nub)
+import Data.Ord (Down (..), comparing)
 
 -- | A weighted undirected graph on 0..k−1: neighbours without self
 -- arcs, and each vertex's degree (for a super-vertex, its members'
@@ -99,4 +99,11 @@ misplaced dirOf cluster =
  where
   held c d = IM.findWithDefault 0 d (IM.findWithDefault IM.empty c counts)
   counts = IM.fromListWith (IM.unionWith (+)) [(c, IM.singleton (dirOf IM.! f) (1 :: Int)) | (f, c) <- IM.toList cluster]
-  majority = IM.map (fst . maximumBy (comparing (\(d, m) -> (m, negate d))) . IM.toList) counts
+  majority = IM.map (majorityDir . IM.toList) counts
+
+-- | The directory holding most files, the least directory on a tie: the
+-- one reading of a cluster's majority, read by the misplaced files here
+-- and the document's `majority` (CE.Arch.Document). Over a non-empty
+-- list of (directory, file count).
+majorityDir :: (Ord d) => [(d, Int)] -> d
+majorityDir = fst . minimumBy (comparing (\(d, n) -> (Down n, d)))

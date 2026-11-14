@@ -16,7 +16,7 @@
 module DocumentProps (battery) where
 
 import CE.Document (catalogue, emptyOf, families, respond)
-import CE.Document.Contract (DocFamily (..), docRowCap)
+import CE.Document.Contract (DocFamily (..), docRowCap, nameOf)
 import CE.Lang (digestOf, pack)
 import qualified CE.Resolve.Tables as ResolveTables
 import CE.Limits (limits)
@@ -50,8 +50,11 @@ battery =
     , "the limits package holds its stated keys, group by group"
     , "a query's goals name their answers, an answer its proof rows below the root, a row its depth"
     , "an assertion's proof root labels its arguments by the goal's sorts"
+    , "a name by code is empty off the table, below it and past it"
     ]
-    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk, assertRoot]
+    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk, assertRoot, namesGuarded]
+ where
+  namesGuarded = map (nameOf ["a", "b"]) [-1, 0, 1, 2] == ["", "a", "b", ""]
 
 -- | Step 3's families.
 five :: [DocFamily]

@@ -41,7 +41,10 @@ impl Labels {
         }
     }
 
-    /// One answer value as text, by the sort the core answered.
+    /// One answer value as text, by the sort the core answered — its
+    /// wire code, a frozen position (CE.Query.Cost: node 0, dir 1,
+    /// unit 2, int 3, sym 4, set 5); an int, the open sort and any other
+    /// code print the number.
     pub fn render(&self, sort: i64, v: i128) -> String {
         let at = |list: &[String], word: &str| {
             usize::try_from(v)
@@ -50,12 +53,12 @@ impl Labels {
                 .cloned()
                 .unwrap_or_else(|| format!("{word}#{v}"))
         };
-        match legend::sort_name(sort) {
-            "node" => at(&self.nodes, "node"),
-            "dir" => at(&self.dirs, "dir"),
-            "unit" => at(&self.units, "unit"),
-            "set" => at(&self.sets, "set"),
-            "sym" => u64::try_from(v)
+        match sort {
+            0 => at(&self.nodes, "node"),
+            1 => at(&self.dirs, "dir"),
+            2 => at(&self.units, "unit"),
+            5 => at(&self.sets, "set"),
+            4 => u64::try_from(v)
                 .ok()
                 .and_then(|h| self.names.get(&h))
                 .cloned()

@@ -17,6 +17,7 @@
 module CE.Query.Document (queryDoc, rulesDoc) where
 
 import CE.Document.Contract
+import CE.Query.Cost (errAggregate, errArity, errArityCap, errFactHead, errHead, errPrelude, errSort, errSyntax, errUnknownPred, errUnsafe, errUnstratified, sortNames)
 import CE.Query.Schema (sortsOf)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Foldable (asum)
@@ -60,27 +61,28 @@ statement =
 counts :: [String]
 counts = words "rules queries asserts strata facts derived answers violations proofNodes proofTruncated"
 
--- | The core's program errors by code; 0 is the measuring side's own
--- (a fault, whose message is its text).
-errorNames :: [String]
-errorNames =
-  [ "lexical"
-  , "syntax error"
-  , "unknown predicate"
-  , "arity mismatch"
-  , "sort mismatch"
-  , "unsafe variable"
-  , "unstratifiable negation"
-  , "prelude predicate redefined"
-  , "aggregate shape"
-  , "anonymous head"
-  , "fact predicate as rule head"
-  , "arity over the cap"
+-- | The core's program errors by code, each name beside its constant
+-- (CE.Query.Cost), so a reordering cannot split them; 0 is the
+-- measuring side's own (a fault, whose message is its text).
+errorTable :: [(Integer, String)]
+errorTable =
+  [ (0, "lexical")
+  , (errSyntax, "syntax error")
+  , (errUnknownPred, "unknown predicate")
+  , (errArity, "arity mismatch")
+  , (errSort, "sort mismatch")
+  , (errUnsafe, "unsafe variable")
+  , (errUnstratified, "unstratifiable negation")
+  , (errPrelude, "prelude predicate redefined")
+  , (errAggregate, "aggregate shape")
+  , (errHead, "anonymous head")
+  , (errFactHead, "fact predicate as rule head")
+  , (errArityCap, "arity over the cap")
   ]
 
--- | A sort's name by code (CE.Query.Cost); any other is `open`.
+-- | A sort's name by code (CE.Query.Cost's table); any other is `open`.
 sortName :: Integer -> String
-sortName = nameOr "open" (words "node dir unit int sym set")
+sortName c = fromMaybe "open" (lookup c [(code, name) | (name, code) <- sortNames])
 
 -- | A fault answers no goal; an error code is the core's; a judged
 -- program's heads are its goals, one each, in order.
@@ -138,7 +140,7 @@ errors req
  where
   face :: Value -> Value -> Integer -> Value -> Value
   face at tok code what = object ["at" .= at, "token" .= tok, "code" .= code, "what" .= what]
-  named c = toJSON (fromMaybe "?" (lookup c (zip [0 ..] errorNames)))
+  named c = toJSON (fromMaybe "?" (lookup c errorTable))
 
 goal :: (Integer -> [Int]) -> [Integer] -> [Integer] -> Value
 goal answersOf head' row = case (head', row) of

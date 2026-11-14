@@ -27,7 +27,7 @@ use std::path::Path;
 /// Bytes the HEAD and working texts of one measurement may total; past
 /// it the write is not credited (the per-blob READ_CAP and the file
 /// cap PAIR_CAP are the audit reader's own).
-pub const RELOC_BYTES: usize = 16 << 20;
+const RELOC_BYTES: usize = 16 << 20;
 
 /// What the stage concluded: which matches are relocations (indices
 /// into the matches it was handed), whether every one is (then the

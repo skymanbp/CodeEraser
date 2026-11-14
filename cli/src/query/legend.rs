@@ -1,21 +1,12 @@
 //! The query family's legend (plan v2.31 step 2, design booklet §4.2):
-//! the sort names an answer is labelled by, the enum vocabularies the
-//! fact assembler spells into name hashes, and the hash itself. The
+//! the enum vocabularies the fact assembler spells into name hashes,
+//! and the hash itself (an answer's sort is read by its wire code,
+//! facts/mod.rs `render`; the sort names are the core's). The
 //! fact schema and its names are the core's (CE.Query.Schema; the
 //! lexed program carries the names back, lexed.rs — plan v2.33 W1). No
 //! name crosses the wire as a fact (§5.9.2): a constant goes as
 //! fnv1a64, and every answer comes back as ids this side labels again
 //! through the request's own tables.
-
-/// The sorts by code (CE.Query.Cost: node 0 … set 5); the open sort
-/// a position nothing constrained resolves to is −1 and reads `open`.
-const SORT_NAMES: [&str; 6] = ["node", "dir", "unit", "int", "sym", "set"];
-
-/// A sort's name; the open sort (and any code outside the table)
-/// reads `open`.
-pub fn sort_name(sort: i64) -> &'static str {
-    named(&SORT_NAMES, sort).unwrap_or("open")
-}
 
 /// The one hash of a name — the same fnv1a64 the mention table and
 /// the term bags key by, so `mention("foo", F)` meets the index's

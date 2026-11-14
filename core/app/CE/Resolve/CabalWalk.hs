@@ -10,8 +10,9 @@ module CE.Resolve.CabalWalk (
   walk,
 ) where
 
+import CE.Resolve.Chars (asciiLower)
 import CE.Resolve.Str (joinRel, rustTrim, splitOn, splitWhitespace)
-import Data.Char (isAsciiLower, isAsciiUpper, isDigit, toLower)
+import Data.Char (isAsciiLower, isAsciiUpper, isDigit)
 import Data.List (isPrefixOf)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe, isJust, isNothing, listToMaybe, mapMaybe)
@@ -196,11 +197,8 @@ setMain values st = case (wRegion st, cStanzas out) of
 -- names are case-insensitive, values are not.
 headWord :: String -> String
 headWord t = case splitWhitespace t of
-  (w : _) -> map lowerAscii w
+  (w : _) -> map asciiLower w
   [] -> ""
-
-lowerAscii :: Char -> Char
-lowerAscii c = if isAsciiUpper c then toLower c else c
 
 alnumAscii :: Char -> Bool
 alnumAscii c = isAsciiUpper c || isAsciiLower c || isDigit c
@@ -209,7 +207,7 @@ alnumAscii c = isAsciiUpper c || isAsciiLower c || isDigit c
 -- rest); Nothing for a line that carries no field colon.
 splitField :: String -> Maybe (String, String)
 splitField t = case break (== ':') t of
-  (name, _ : rest) | not (null name) && all (\c -> alnumAscii c || c == '-') name -> Just (map lowerAscii name, rustTrim rest)
+  (name, _ : rest) | not (null name) && all (\c -> alnumAscii c || c == '-') name -> Just (map asciiLower name, rustTrim rest)
   _ -> Nothing
 
 -- | `dep_name`: "base >=4.19 && <5" → "base"; a token that does not

@@ -21,7 +21,7 @@ use rusqlite::{Connection, OptionalExtension, Transaction};
 pub(super) const KEY: &str = "tokenizer_rev";
 
 /// The meta row holding the definition package's digest.
-pub(super) const PACKAGE_KEY: &str = "tables_digest";
+const PACKAGE_KEY: &str = "tables_digest";
 
 /// The package digest this process measures with; Err = the named
 /// reason there is no package (the index cannot be keyed without it).

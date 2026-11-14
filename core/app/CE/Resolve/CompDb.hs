@@ -30,13 +30,14 @@ module CE.Resolve.CompDb (
   isAbsolute,
 ) where
 
+import CE.Resolve.Chars (asciiLower)
 import CE.Resolve.Cmdline (splitCommand, splitGnu, splitWindows, windowsShaped)
 import CE.Resolve.Flags (Chain, chain)
 import CE.Resolve.Str (joinRel, parentDir, replaceChar, rustLines, rustTrim, utf8Len)
 import Data.Aeson (Value (..))
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
-import Data.Char (isAsciiUpper, ord, toLower)
+import Data.Char (ord)
 import Data.Foldable (toList)
 import Data.List (stripPrefix)
 import qualified Data.Map.Strict as M
@@ -150,8 +151,7 @@ stripRoot root abs' = do
   drive = case root of
     (c : ':' : _) -> ord c < 0x80
     _ -> False
-  same hd = if drive then map lower hd == map lower root else hd == root
-  lower c = if isAsciiUpper c then toLower c else c
+  same hd = if drive then map asciiLower hd == map asciiLower root else hd == root
   splitBytes 0 s = Just ("", s)
   splitBytes n (c : cs)
     | utf8Len [c] <= n = (\(a, b) -> (c : a, b)) <$> splitBytes (n - utf8Len [c]) cs

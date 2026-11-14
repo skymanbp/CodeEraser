@@ -184,7 +184,7 @@ impl Fence {
     }
 
     /// Whether a fence is open.
-    pub(crate) fn is_open(&self) -> bool {
+    fn is_open(&self) -> bool {
         self.0.is_some()
     }
 }

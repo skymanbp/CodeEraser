@@ -9,7 +9,7 @@
 -- side invents cannot be judged by accident.
 module CE.Query.Schema (arityOf, codeNamed, schemaNames, schemaRows, sortsOf) where
 
-import CE.Query.Cost (sortDir, sortInt, sortNode, sortSet, sortSym, sortUnit)
+import CE.Query.Cost (sortNames)
 import qualified Data.IntMap.Strict as IM
 
 -- | The table, one row per predicate — `code name sort…` — in the
@@ -57,7 +57,7 @@ parsed (code : _name : sorts) | [(n, "")] <- reads code = (,) n <$> traverse sor
 parsed _ = Nothing
 
 sortNamed :: String -> Maybe Integer
-sortNamed name = lookup name [("node", sortNode), ("dir", sortDir), ("unit", sortUnit), ("int", sortInt), ("sym", sortSym), ("set", sortSet)]
+sortNamed name = lookup name sortNames
 
 -- | The sorts of a fact predicate's arguments; Nothing = not a fact
 -- predicate (a program predicate, or an unknown code).
