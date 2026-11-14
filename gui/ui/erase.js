@@ -77,12 +77,26 @@ function renderErase() {
         `<div class="erow ${r.eraseable ? "kill" : "adv"}">` +
         `<i>${mark}</i><b>${esc(r.path)}${span}</b> <em>${esc(r.class)}</em>` +
         `<span>${esc(r.eraseable ? tr("willErase") : r.reason)}</span>` +
-        `<small>${esc(r.provenance)}</small></div>`
+        `<small>${esc(provText(r))}</small></div>`
       );
     })
     .join("") || `<div class="erow adv">${esc(tr("nothingPlanned"))}</div>`;
   $("erase-diff").textContent = d.diff || "";
   $("erase-diff").hidden = !d.diff;
+}
+
+// A plan row's provenance in the screen's language, written from its
+// facts (`from`, ce.erase-plan 0.5.0) through this screen's own labels,
+// as the screen's other labels are.
+function provText(r) {
+  const f = r.from;
+  const [s, e] = f.span || [0, 0];
+  if (f.family === "deadcode") return tr("provDead", f.verdict, tr("deadWhy")[f.whyCode] ?? "");
+  if (f.family === "docdup") {
+    const linked = f.linked > 0 ? tr("provLinked", f.linked) : "";
+    return tr("provDoc", f.twin, s, e, f.jaccard[0], f.jaccard[1], f.verbatim) + linked;
+  }
+  return tr("provTwin", f.twin, s, e, f.tokens, f.unit);
 }
 
 function renderEraseLog() {

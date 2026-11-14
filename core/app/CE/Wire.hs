@@ -95,6 +95,10 @@ data RowsReq = RowsReq
     -- three complexity rows derived from them. Nothing = the key
     -- never came, which scan/1 refuses by name at 9.0.0.
     eventsOf :: Maybe [[Integer]]
+  , -- erase/1's linked table (10.0.0, release 1.10.0): [row, links]
+    -- for a doc row whose section a link's fragment lands on. Nothing
+    -- = no row is linked.
+    linkedOf :: Maybe [[Integer]]
   }
 
 -- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
@@ -125,6 +129,7 @@ instance FromJSON RowsReq where
       <*> pure (judgedMaskSent o)
       <*> o .:? "targets"
       <*> o .:? "events"
+      <*> o .:? "linked"
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

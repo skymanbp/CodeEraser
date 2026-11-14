@@ -28,3 +28,5 @@
 {"code":"contract","id":14,"message":"target 1: out of key order","proto":"10.0.0","type":"error"}
 {"proto":"10.0.0","type":"erase.request","id":15,"rows":[[3,1,2,0,0]]}
 {"code":"contract","id":15,"message":"targets: required at 9.0.0","proto":"10.0.0","type":"error"}
+{"proto":"10.0.0","type":"erase.request","id":16,"rows":[[1,80,80,80,1],[1,80,80,80,1]],"targets":[[0,1,5],[1,6,9]],"linked":[[1,2]]}
+{"counts":{"advisory":1,"eraseable":1,"rows":2},"degraded":false,"fail":false,"id":16,"kept":[1,1],"proto":"10.0.0","rows":[[1,0],[0,8]],"type":"erase.result"}

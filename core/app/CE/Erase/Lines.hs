@@ -36,10 +36,32 @@ lines' say doc req =
       , W (spanText (key "span" r))
       , W (txt "reason" r)
       , P (if txt "reason" r == "language_unresolved" then say "detail" [N (int "sites" r)] else plain "")
-      , R (key "provenance" r)
+      , P (provenance say (key "from" r))
       ]
   kinds = [(k, n) | (k, Number n) <- fields (key "out_of_class" (key "counts" doc))]
   kind (k, n) = say "kind" [W k, N (round n), fillOf (key k (key "families" doc))]
+
+-- | A row's provenance clause in the console's language, written from
+-- its facts (release 1.10.0; the document's `provenance` keeps the
+-- English sentence the measuring side wrote, which the English clause
+-- equals): the dead file's verdict word (a document word in both
+-- languages) and its reason, a doc twin's survivor, Jaccard and
+-- verbatim count and the links its section receives, a clone twin's
+-- other copy, tokens and covered unit.
+provenance :: Say -> Value -> Piece
+provenance say f = case txt "family" f of
+  "deadcode" -> say "prov_dead" [W (txt "verdict" f), P (say (whyKey (int "whyCode" f)) [])]
+  "docdup" ->
+    let linked = int "linked" f
+        tail' = if linked > 0 then say "prov_linked" [N linked] else plain ""
+     in say "prov_doc" (twin <> [N (nth "jaccard" 0), N (nth "jaccard" 1), N (int "verbatim" f), P tail'])
+  _ -> say "prov_twin" (twin <> [N (int "tokens" f), R (key "unit" f)])
+ where
+  whyKey c = if c == 1 then "why_unreach" else "why_unref"
+  twin = [R (key "twin" f), N (nth "span" 0), N (nth "span" 1)]
+  nth k n = case fromJSON (key k f) of
+    Success xs | length (xs :: [Integer]) > n -> xs !! n
+    _ -> 0
 
 -- | `:start-end`, or nothing for a whole-file row (the trail's
 -- records read it too).

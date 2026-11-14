@@ -13,7 +13,7 @@
 //! name, because the plan it would leave holds two rows per target.
 
 use crate::document::Held;
-use crate::erase::model::{Candidate, REASON_NAMES, Verdict};
+use crate::erase::model::{Candidate, Verdict, reason_names};
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
@@ -56,7 +56,10 @@ pub fn judge(core: &str, cands: &[Candidate], cap: usize) -> Result<(Vec<Verdict
     Ok((verdicts, Ok(link)))
 }
 
-/// One request's body: the fact rows and their target table.
+/// One request's body: the fact rows, their target table and, when a
+/// doc row's section is linked, the `linked` table ([row, links] by
+/// ascending row; release 1.10.0 — the core refuses such a row as
+/// `linked_section`).
 fn request_body(cands: &[Candidate]) -> Value {
     let rows: Vec<[i64; 5]> = cands
         .iter()
@@ -65,7 +68,15 @@ fn request_body(cands: &[Candidate]) -> Value {
             [c.class as i64, w, x, y, z]
         })
         .collect();
-    json!({ "rows": rows, "targets": targets_of(cands) })
+    let linked: Vec<[i64; 2]> = (cands.iter().enumerate())
+        .filter(|(_, c)| c.linked() > 0)
+        .map(|(i, c)| [i as i64, c.linked()])
+        .collect();
+    let mut body = json!({ "rows": rows, "targets": targets_of(cands) });
+    if !linked.is_empty() {
+        body["linked"] = json!(linked);
+    }
+    body
 }
 
 /// The request split: greedy runs of whole paths, each run at most
@@ -119,7 +130,7 @@ fn decode(reply: &Value, n: usize) -> Result<Vec<Verdict>> {
         .into_iter()
         .zip(kept)
         .map(|([bit, reason], k)| {
-            let _ = REASON_NAMES
+            let _ = reason_names()
                 .get(reason as usize)
                 .context("erase reason out of range — wire-version skew")?;
             ensure!(k == 0 || k == 1, "erase kept bit {k} is not a boolean");

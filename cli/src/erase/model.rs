@@ -13,37 +13,49 @@ use std::collections::BTreeMap;
 /// landing shape.
 pub const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
 
-/// Frozen class positions — the wire's `class` field (erase/1).
-/// Class 3 is dead_file on the CONFIDENCE road (2.32.0, H3): its
-/// trust fact is the graph family's own per-row confidence. Class 0
-/// was the same candidate family on the local-count road; it was
-/// superseded at 2.32.0 and RETIRED at 4.0.0 when the grace window
-/// closed. Its position stays frozen and never renders — the core
-/// refuses a class-0 row by name, and renumbering the survivors
-/// would move three other frozen codes to save one array slot.
-pub const CLASS_NAMES: [&str; 4] = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"];
+/// The class names by their frozen codes (the wire's `class` field,
+/// erase/1) — the core's table (CE.Erase.Cost `classNames`, read from
+/// the definition package's erase document entry). The measuring side
+/// keeps no copy since release 1.10.0: the plan carries the codes the
+/// core answered and the document names them; this side names a class
+/// only where it writes text of its own (the trail record, the diff's
+/// hunk header, the convergence refusal).
+pub fn class_names() -> &'static [&'static str] {
+    crate::tables::get().document.erase.classes
+}
 
-/// Frozen reason positions — the wire's `reason` field (erase/1).
-/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file
-/// whose verdict is `unref_public` or `unreach_public` is refused by
-/// name, because the four-way dead code exists precisely so an
-/// exported API cannot be treated as plain dead. Since 7.0.0 the twin
-/// road (class 2) carries the copy's verdict code too and meets the
-/// same bar. Position 7 arrived at 9.1.0 (lane v235_licence): the two
-/// whole-file classes have no eraseable outcome — a row whose every
-/// other fact holds is refused as `reachable_by_name`, because "nothing
-/// in the tree references this file" is not evidence that nothing uses
-/// it (a script run by name, a file a tool finds by convention).
-pub const REASON_NAMES: [&str; 8] = [
-    "eraseable",
-    "language_unresolved",
-    "not_full_segment",
-    "bytes_differ",
-    "copy_not_dead",
-    "unit_not_covered",
-    "public_surface",
-    "reachable_by_name",
-];
+/// The reason names by their frozen codes (erase/1's `reason`), the
+/// core's table (CE.Erase.Cost `reasonNames`), as `class_names`.
+pub fn reason_names() -> &'static [&'static str] {
+    crate::tables::get().document.erase.reasons
+}
+
+/// Where a candidate comes from, as facts (release 1.10.0): the core
+/// renders the provenance clause from them in the console's language,
+/// and the plan document carries them beside the English `provenance`.
+#[derive(Clone, Debug)]
+pub enum Source {
+    /// A dead file: the graph's verdict code (1..4) and reason code.
+    Dead { verdict: i64, why: i64 },
+    /// A verbatim doc twin: the surviving copy and its span, the
+    /// Jaccard numerator and denominator, the verbatim word count, and
+    /// the links the candidate's section receives.
+    Doc {
+        twin: String,
+        span: (i64, i64),
+        jaccard: (i64, i64),
+        verbatim: i64,
+        linked: i64,
+    },
+    /// A whole-unit T1 twin: the other copy and its span, the run's
+    /// tokens and the first covered unit.
+    Twin {
+        twin: String,
+        span: (i64, i64),
+        tokens: i64,
+        unit: String,
+    },
+}
 
 /// The one out-of-class kind gather.rs counts: a verified T1/T2 clone
 /// block covering no whole unit has no deterministic-safe erase, and
@@ -60,10 +72,23 @@ pub struct Candidate {
     /// 1-based inclusive line span; None = the whole file.
     pub span: Option<(i64, i64)>,
     pub provenance: String,
+    /// The facts the provenance sentence is written from.
+    pub source: Source,
     /// Unresolved reference sites in the row's language — the fact
     /// behind `language_unresolved`, carried for the reader (FIELD-TEST,
     /// plan v2.25); the wire sees it only where a class's facts do.
     pub sites: i64,
+}
+
+impl Candidate {
+    /// The links the candidate's section receives (a doc twin's), the
+    /// fact erase/1's `linked` table carries; 0 for every other row.
+    pub fn linked(&self) -> i64 {
+        match &self.source {
+            Source::Doc { linked, .. } => *linked,
+            _ => 0,
+        }
+    }
 }
 
 /// One judged row as the wire returns it (erase/1): the predicate's
@@ -77,15 +102,22 @@ pub struct Verdict {
     pub kept: bool,
 }
 
-/// One judged plan row.
+/// One judged plan row. `class` and `reason` are the core's names for
+/// the codes beside them (`codes`, what the document request sends);
+/// the serialized row — the plan hash's bytes — is unchanged by the
+/// codes and the source facts riding beside it.
 #[derive(Serialize, Clone)]
 pub struct Row {
     pub class: &'static str,
     pub eraseable: bool,
     pub reason: &'static str,
+    #[serde(skip)]
+    pub codes: (usize, i64),
     pub path: String,
     pub span: Option<(i64, i64)>,
     pub provenance: String,
+    #[serde(skip)]
+    pub source: Source,
     /// Unresolved sites in this row's language (Candidate::sites).
     pub sites: i64,
     /// fnv1a64 of the target file's bytes at plan time — apply

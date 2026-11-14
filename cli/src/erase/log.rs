@@ -8,7 +8,7 @@
 //! The document and the console lines are the core's
 //! (erase/document.rs `trail_answer`, CE.Erase.Document `trailDoc`).
 
-use crate::erase::model::{CLASS_NAMES, LOG_SCHEMA};
+use crate::erase::model::{LOG_SCHEMA, class_names};
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use std::path::Path;
@@ -66,7 +66,7 @@ pub fn read(root: &Path) -> Result<Log> {
 }
 
 /// One line → one record, or the reason it is not one. A class the
-/// writer's table does not hold cannot cross to the core (a record's
+/// core's table does not hold cannot cross to the core (a record's
 /// class goes by code), so it is a refused line whose reason names the
 /// class it read (booklet §13 item 42).
 fn record(line: &str) -> std::result::Result<Record, String> {
@@ -74,7 +74,7 @@ fn record(line: &str) -> std::result::Result<Record, String> {
     if r.schema != LOG_SCHEMA {
         return Err(format!("schema {:?} is not {LOG_SCHEMA}", r.schema));
     }
-    if !CLASS_NAMES.contains(&r.class.as_str()) {
+    if !class_names().contains(&r.class.as_str()) {
         return Err(format!("class {:?} is not an erase class", r.class));
     }
     Ok(r)

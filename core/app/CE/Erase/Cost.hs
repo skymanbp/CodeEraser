@@ -43,12 +43,16 @@
 --   7 reachable_by_name (9.1.0) — a whole-file row whose every other
 --     fact holds: nothing in the tree references the file, which is
 --     not evidence that nothing uses it
+--   8 linked_section (10.0.0, release 1.10.0) — a byte-identical doc
+--     segment whose section a link's fragment lands on: the section is
+--     referenced, so emptying it is not provably safe (`judgeLinked`)
 -- v1 has NO knobs: the safety predicate is not tunable — a knob that
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
   classNames,
   classOf,
   eraseRowCap,
+  judgeLinked,
   judgeRow,
   keptRows,
   publicDeadVerdicts,
@@ -75,7 +79,7 @@ publicDeadVerdicts = [2, 4]
 -- (plan v2.32 step 5).
 classNames, reasonNames :: [String]
 classNames = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"]
-reasonNames = words "eraseable language_unresolved not_full_segment bytes_differ copy_not_dead unit_not_covered public_surface reachable_by_name"
+reasonNames = words "eraseable language_unresolved not_full_segment bytes_differ copy_not_dead unit_not_covered public_surface reachable_by_name linked_section"
 
 -- | Row ceiling: candidates are bounded by dead files + verbatim
 -- pairs + whole-unit twins; 4096 is far above any honest plan.
@@ -110,6 +114,18 @@ judgeRow [3, verdict, conf, _, _]
   | conf == 0 = (False, 1)
   | otherwise = (False, 7)
 judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase
+
+-- | A row's verdict with the links its section receives (10.0.0, the
+-- `linked` table): `n` link sites resolve to the candidate's file with
+-- a fragment naming the heading (or HTML id) whose section holds the
+-- segment. Placed AFTER the byte checks — a pair that is not byte-equal
+-- keeps its present reason — and only a row that would erase can be
+-- refused for it: a linked section is referenced, and erasing its body
+-- would leave the link landing on an emptied heading.
+judgeLinked :: Integer -> [Integer] -> (Bool, Integer)
+judgeLinked n row = case judgeRow row of
+  (True, _) | n > 0 -> (False, 8)
+  v -> v
 
 -- | A fact row's class — its first field; an empty row (unreachable
 -- behind famOffence) reads as the retired class 0, which no rule

@@ -112,11 +112,22 @@ erase = do
     reason <- if ok == 1 then pure 0 else (+ 1) <$> num 6
     kept <- (\x -> if x == 0 then 0 else 1) <$> rand 4
     pure [cls, f, spanned, s + 1, s + 12, sites, 18446744073709551000 - s, ok, reason, kept]
+  provs <- mapM (prov np) (zip [0 ..] cands)
+  let tab k = [r | (k', r) <- provs, k' == k]
   out <- some 2 [[0, 3]]
   check <- num 2
   apply <- num 2
   applied <- if apply == 1 then num 3 else pure 0
-  pure (docRequest "erase" [("paths", toInteger np), ("cands", toInteger nc)] [("cands", cands), ("outOfClass", out)] [("check", check), ("apply", apply), ("applied", applied)] Nothing)
+  pure (docRequest "erase" [("paths", toInteger np), ("cands", toInteger nc)] ([("cands", cands), ("outOfClass", out)] <> [(k, tab k) | k <- ["provDead", "provDoc", "provTwin"]]) [("check", check), ("apply", apply), ("applied", applied)] Nothing)
+
+-- | Candidate `i`'s provenance row (release 1.10.0) in its class's
+-- table: a doc row's twin and its section's links, a twin row's block,
+-- a dead file's verdict and its why code.
+prov :: Int -> (Integer, [Integer]) -> G (String, [Integer])
+prov np (i, c) = case take 1 c of
+  [1] -> (\f s j u w n -> ("provDoc", [i, f, s + 1, s + 12, j, j + u + 1, w + 50, n])) <$> num np <*> num 100 <*> num 60 <*> num 20 <*> num 80 <*> num 3
+  [2] -> (\f s t -> ("provTwin", [i, f, s + 1, s + 12, t + 50])) <$> num np <*> num 100 <*> num 200
+  _ -> (\v -> ("provDead", [i, v + 1, if v < 2 then 0 else 1])) <$> num 4
 
 trail :: G Value
 trail = do

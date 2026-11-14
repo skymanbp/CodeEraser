@@ -48,7 +48,7 @@ folded per-language unresolved count
 
 The class positions are part of the source contract: position `0` is
 retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
-([Cost.hs:5-26](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
+([Cost.hs:5-26](../../../core/app/CE/Erase/Cost.hs#L5), [Cost.hs:81](../../../core/app/CE/Erase/Cost.hs#L81)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 
@@ -80,7 +80,7 @@ rows ([gather.rs:86-106](../../../cli/src/erase/gather.rs#L86)).
 The position stays frozen and is refused **by name** rather than folded into
 `unknown class`, so a client still sending it learns which road replaced it
 ([Erase.hs:40](../../../core/app/CE/Erase.hs#L40), the text owned by [Retired.hs:30-31](../../../core/app/CE/Wire/Retired.hs#L30),
-[model.rs:16-23](../../../cli/src/erase/model.rs#L16)). Renumbering the
+[Cost.hs:81](../../../core/app/CE/Erase/Cost.hs#L81)). Renumbering the
 survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
 The Rust graph leg still refuses a degraded deadcode report by name before
@@ -93,9 +93,15 @@ any dead row is minted, so an incomplete graph judgment cannot become proof
 `[1, verbatim, wordsA, wordsB, bytesEqual]`. The first three values are the
 reported verbatim length and the two segment word counts; `bytesEqual` is the
 raw-slice equality bit ([Cost.hs:90-93](../../../core/app/CE/Erase/Cost.hs#L90)).
-The client chooses the path-lexicographically later segment as the candidate,
-then computes equality from the two inclusive line slices
-([gather.rs:136-165](../../../cli/src/erase/gather.rs#L136)).
+The client counts, for each side, the link sites whose fragment names the
+heading (or HTML id) of the section holding the segment — the nearest heading
+at or above its first line, slugged by the ladder's own rule; a segment above
+the first heading has no section and counts 0 — and chooses the side with FEWER
+such links as the candidate, the path-lexicographically later one on equal
+counts; it then computes equality from the two inclusive line slices
+([gather.rs:136-165](../../../cli/src/erase/gather.rs#L136)). Since release
+1.10.0 the candidate's count rides beside the rows as the `linked` table
+(`[row, links]` for each linked row, strictly ascending; [Erase.hs:101](../../../core/app/CE/Erase.hs#L101)).
 
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
@@ -105,7 +111,11 @@ returns `(True, 0)` ([Cost.hs:93](../../../core/app/CE/Erase/Cost.hs#L93)).
 **Guard.** A short verbatim run refuses with reason `2`; a byte mismatch refuses
 with reason `3` ([Cost.hs:91-92](../../../core/app/CE/Erase/Cost.hs#L91)). The
 guard therefore licenses only a complete segment whose bytes are identical,
-not merely a high similarity score.
+not merely a high similarity score. A row that passes and whose section is
+linked is refused with reason `8` (`judgeLinked`, [Cost.hs:125](../../../core/app/CE/Erase/Cost.hs#L125)): a section
+a link lands on is referenced, and emptying it is not provably safe. An erased
+copy leaves its heading in place, so remove the heading or put a link to the
+surviving copy.
 
 #### Class 2 — `t1_twin`
 
@@ -145,15 +155,16 @@ for a partial-unit block is the coverage, not the liveness.
 
 The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:110](../../../core/app/CE/Erase/Cost.hs#L110)) and as `reachable_by_name` past it (9.1.0, [Cost.hs:111](../../../core/app/CE/Erase/Cost.hs#L111)): the trust fact is named first because it says the graph could not even show the file unreferenced, which tells the reader more than the residual rule that holds for every whole-file row. Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:61-71](../../../core/app/CE/Erase/Cost.hs#L61)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger is refused by name ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
 
-### 3. The eight reason codes
+### 3. The nine reason codes
 
-The advisory vocabulary is frozen at eight positions in the client model
-([model.rs:26-46](../../../cli/src/erase/model.rs#L26)). The table records the
-meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
-the successful verdict; the other seven are refusals. The domain only ever
-grows — position 6 arrived at 6.1.0 and position 7 at 9.1.0, and nothing
-renumbered, because a frozen position that moves silently rewrites every plan
-a reader has already read.
+The advisory vocabulary is frozen at nine positions in the core's table
+([Cost.hs:82](../../../core/app/CE/Erase/Cost.hs#L82)); since release 1.10.0 the
+measuring side reads the names from the definition package and keeps no copy.
+The table records the meaning and the exact condition that emits each code.
+Reason `0` is the successful verdict; the other eight are refusals. The domain
+only ever grows — position 6 arrived at 6.1.0, position 7 at 9.1.0 and
+position 8 at 10.0.0, and nothing renumbered, because a frozen position that
+moves silently rewrites every plan a reader has already read.
 
 | position/name | meaning | condition in `judgeRow` |
 |---|---|---|
@@ -165,6 +176,7 @@ a reader has already read.
 | `4 copy_not_dead` | the T1 twin's target file is not graph-dead | class 2: `copyDead == 0`; the catch-all malformed-row arm also refuses with this code ([Cost.hs:94-97](../../../core/app/CE/Erase/Cost.hs#L94), [Cost.hs:112](../../../core/app/CE/Erase/Cost.hs#L112)) |
 | `5 unit_not_covered` | the duplicate block does not cover a whole unit | class 2: `unitCovered /= 1` ([Cost.hs:94-95](../../../core/app/CE/Erase/Cost.hs#L94)) |
 | `7 reachable_by_name` | a whole-file row whose every other fact holds: nothing in the tree references the file, which is not evidence that nothing uses it | class 2 after all five checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:94-100](../../../core/app/CE/Erase/Cost.hs#L94), [Cost.hs:108-111](../../../core/app/CE/Erase/Cost.hs#L108)) |
+| `8 linked_section` | a byte-identical doc copy whose section a link's fragment lands on: the section is referenced | class 1: a row `judgeRow` would make eraseable, with a `linked` count above 0 (`judgeLinked`, [Cost.hs:125-128](../../../core/app/CE/Erase/Cost.hs#L125)) |
 
 The order in the table is operational, not descriptive. For a class-2 row with
 several bad facts, the first failing guard determines the one reason returned;

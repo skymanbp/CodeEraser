@@ -40,20 +40,32 @@ pub fn slug_hash(text: &str) -> u64 {
 /// it in). A heading line can carry an anchor tag too — its own slug
 /// drops the tag, the id still enters, after the slug.
 pub(crate) fn slug_set(text: &str) -> Vec<String> {
+    let mut rows: Vec<(usize, u8, String)> = heading_slugs(text)
+        .into_iter()
+        .map(|(row, slug)| (row, 0, slug))
+        .collect();
+    rows.extend(anchors(text).into_iter().map(|(row, id)| (row, 1, id)));
+    rows.sort_by_key(|(row, rank, _)| (*row, *rank));
+    rows.into_iter().map(|(_, _, slug)| slug).collect()
+}
+
+/// Each heading's row and its GitHub slug, in document order, -N
+/// suffixes for duplicates — the slug a link's fragment names, so the
+/// section a heading opens can be matched against the links that land
+/// on it (erase's `linked_section`, release 1.10.0).
+pub(crate) fn heading_slugs(text: &str) -> Vec<(usize, String)> {
     let mut seen: BTreeMap<String, usize> = BTreeMap::new();
-    let mut rows: Vec<(usize, u8, String)> = Vec::new();
+    let mut out = Vec::new();
     for heading in headings(text) {
         // the rendered text is trimmed like GitHub trims it — a
         // dropped trailing tag must not leave a hyphen behind
         let base = slugify(render_text(&heading.text).trim());
         let n = seen.entry(base.clone()).or_insert(0usize);
         let slug = if *n == 0 { base } else { format!("{base}-{n}") };
-        rows.push((heading.line, 0, slug));
+        out.push((heading.line, slug));
         *n += 1;
     }
-    rows.extend(anchors(text).into_iter().map(|(row, id)| (row, 1, id)));
-    rows.sort_by_key(|(row, rank, _)| (*row, *rank));
-    rows.into_iter().map(|(_, _, slug)| slug).collect()
+    out
 }
 
 /// The heading as rendered: a backslash escape unescapes, a code

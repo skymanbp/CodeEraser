@@ -22,10 +22,11 @@ module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc,
 
 import CE.Document.Contract
 import CE.Erase.Cost (classNames, reasonNames)
+import CE.Graph.Document (verdictName)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Aeson.Key (fromString)
 import Data.Foldable (asum)
-import Data.List (sortOn)
+import Data.List (sort, sortOn)
 import qualified Data.Map.Strict as M
 import Text.Printf (printf)
 
@@ -52,11 +53,19 @@ diffContext = 3
 -- out-of-class row [kind, count]; `check` the console's `--check`,
 -- `apply` whether the apply line prints and `applied` the rows it
 -- erased (0 is a count).
+-- Each candidate's provenance as facts (release 1.10.0), one row in
+-- exactly one of three tables keyed by the row's place: `provDead`
+-- [cand, verdict 1..4, why 0..1], `provDoc` [cand, twin, start, end,
+-- J numerator, J denominator, verbatim words, links to its section],
+-- `provTwin` [cand, twin, start, end, tokens] with the covered unit as
+-- the `unit` reference (keyed by row).
 statement :: String
 statement =
   "range paths\nrange cands\nfact check judged\nfact apply judged\nfact applied judged\n\
   \rows cands 10 judged - paths - - - - - - - -\nrows outOfClass 2 judged - -\n\
-  \ref path paths\nref provenance cands\nref diff cands cands\n"
+  \rows provDead 3 judged cands - -\nrows provDoc 8 judged cands paths - - - - - -\n\
+  \rows provTwin 5 judged cands paths - - -\n\
+  \ref path paths\nref provenance cands\nref unit cands\nref diff cands cands\n"
 
 checked :: DocReq -> Maybe String
 checked req =
@@ -68,11 +77,31 @@ checked req =
     , codes req "outOfClass" 0 0 (toInteger (length outOfClass) - 1)
     , bits req ["check", "apply"]
     , if fact req "applied" > 0 && not (flag req "apply") then Just "facts: applied without apply" else Nothing
+    , if sort (concatMap (take 1) (provRows req)) == [0 .. range req "cands" - 1] then Nothing else Just "prov: not one provenance row per candidate"
+    , codes req "provDead" 1 1 4
+    , codes req "provDead" 2 0 1
+    , codes req "provDoc" 7 0 (toInteger (maxBound :: Int))
     ]
 
 -- | The rows the closure kept, with their place in the request.
 planRows :: DocReq -> [(Integer, [Integer])]
 planRows req = [(i, r) | (i, r) <- zip [0 ..] (rows req "cands"), drop 9 r == [1]]
+
+-- | The three provenance tables' rows together.
+provRows :: DocReq -> [[Integer]]
+provRows req = concatMap (rows req) ["provDead", "provDoc", "provTwin"]
+
+-- | Candidate `i`'s provenance facts as the document's `from` object:
+-- the source family and its facts (the English sentence stays in
+-- `provenance`, unchanged; release 1.10.0, schema 0.5.0).
+from :: DocReq -> Integer -> Value
+from req i = case [(t, r) | t <- ["provDead", "provDoc", "provTwin"], r@(c : _) <- rows req t, c == i] of
+  ("provDead", [_, v, w]) : _ -> object ["family" .= ("deadcode" :: String), "verdict" .= verdictName v, "whyCode" .= w]
+  ("provDoc", [_, p, s, e, ji, ju, vb, n]) : _ ->
+    object ["family" .= ("docdup" :: String), "twin" .= ref "path" [p], "span" .= [s, e], "jaccard" .= [ji, ju], "verbatim" .= vb, "linked" .= n]
+  ("provTwin", [_, p, s, e, t]) : _ ->
+    object ["family" .= ("dedup" :: String), "twin" .= ref "path" [p], "span" .= [s, e], "tokens" .= t, "unit" .= ref "unit" [i]]
+  _ -> Null
 
 assemble :: DocReq -> Value
 assemble req =
@@ -95,6 +124,7 @@ assemble req =
         , "path" .= ref "path" [f]
         , "span" .= (if spanned == 1 then toJSON [s, e] else Null)
         , "provenance" .= ref "provenance" [i]
+        , "from" .= from req i
         , "sites" .= sites
         , "hash" .= hash
         ]
@@ -167,7 +197,7 @@ trailAssemble req =
 
 -- | The two documents' schema ids (the facts registry reads them here).
 schemaId, trailSchemaId :: String
-schemaId = "ce.erase-plan/0.4.0"
+schemaId = "ce.erase-plan/0.5.0"
 trailSchemaId = "ce.erase-trail-report/0.2.0"
 
 -- | `YYYY-MM-DDTHH:MM:SSZ` from epoch milliseconds — the proleptic

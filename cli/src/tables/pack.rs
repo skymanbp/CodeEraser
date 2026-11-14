@@ -121,11 +121,16 @@ leaked! {
     DocCheck { failed: Names, reasons: Names }
     /// A degrading family's catalogue entry (7.9.0): its reasons by code.
     DocReasons { reasons: Names }
+    /// The erase document's catalogue entry: its class and reason names
+    /// by their frozen codes (CE.Erase.Cost) — the trail writer names a
+    /// class by them and the trail reader codes one back (release 1.10.0:
+    /// the measuring side's copies of the two tables went).
+    DocErase { classes: Names, reasons: Names }
     /// The entries this side reads of the report documents' catalogue
     /// (7.8.0): the schema ids and empty documents are the core's
     /// statement and never bound here.
     DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
-                 merge: DocReasons }
+                 merge: DocReasons, erase: DocErase }
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }

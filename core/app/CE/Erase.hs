@@ -16,7 +16,7 @@
 -- The predicate is deliberately knobless: safety is not tunable.
 module CE.Erase (respond) where
 
-import CE.Erase.Cost (classNames, classOf, eraseRowCap, judgeRow, keptRows)
+import CE.Erase.Cost (classNames, classOf, eraseRowCap, judgeLinked, keptRows)
 import CE.Wire (Respond, RowsReq (..), knoblessRows, label, required, resultLine, retiredClassZero, rowCheck, tooLarge, topCode)
 import qualified CE.Wire.Families as F
 import Data.Aeson
@@ -69,6 +69,7 @@ targetsBattery req = case targetsOf req of
       [ counts ts
       , asum (zipWith3 targetShape [0 :: Int ..] ts (rowsOf req))
       , asum (zipWith keyOrder [1 :: Int ..] (zip ts (drop 1 ts)))
+      , linkedBattery req
       ]
  where
   counts ts
@@ -92,10 +93,37 @@ targetShape i t row = rowCheck "target" "malformed row (need [pathId,start,end])
       | cls /= 1 && s > 0 -> Just "whole-file class names a span"
     _ -> Nothing
 
+-- | The linked table's contract (10.0.0, release 1.10.0): each
+-- [row, links] names a fact row in range that is a documentation row
+-- (class 1, the only class with a section), carries at least one link
+-- (an unlinked row is simply absent), and the rows strictly ascend, so
+-- a row is linked once.
+linkedBattery :: RowsReq -> Maybe String
+linkedBattery req = case linkedOf req of
+  Nothing -> Nothing
+  Just ls ->
+    asum
+      [ asum (zipWith linkedShape [0 :: Int ..] ls)
+      , asum (zipWith order [1 :: Int ..] (zip ls (drop 1 ls)))
+      ]
+ where
+  facts = rowsOf req
+  linkedShape = rowCheck "linked" "malformed row (need [row,links])" 2 check
+  check l = case l of
+    [r, n]
+      | r < 0 || r >= toInteger (length facts) -> Just "row out of range"
+      | classOf (facts !! fromInteger r) /= 1 -> Just "not a documentation row"
+      | n < 1 -> Just "links below 1"
+    _ -> Nothing
+  order i (prev, cur)
+    | take 1 prev >= take 1 cur = Just (label "linked" i <> "rows not ascending")
+    | otherwise = Nothing
+
 judged :: String -> RowsReq -> B8.ByteString
 judged proto req = reply proto req verdicts False
  where
-  verdicts = map judgeRow (rowsOf req)
+  links = maybe [] id (linkedOf req)
+  verdicts = zipWith (\i r -> judgeLinked (sum [n | [j, n] <- links, j == i]) r) [0 ..] (rowsOf req)
 
 -- | Over-cap: a complete degraded reply that FAILS with an empty
 -- verdict table — a plan the core refused to judge licenses nothing.

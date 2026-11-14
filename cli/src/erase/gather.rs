@@ -6,7 +6,8 @@
 //! the families' masked/normalized equivalences are how candidates
 //! are FOUND; byte identity licenses only a doc span's erasure.
 
-use crate::erase::model::Candidate;
+use crate::erase::model::{Candidate, Source};
+use crate::erase::section::{self, Links};
 use crate::graph::deadcode::{self, Advisory};
 use crate::scan::lang::Lang;
 use crate::score::anchor::{UnitSpans, units_by_path};
@@ -34,10 +35,11 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     let lang_unres = lang_unresolved(&idx)?;
     let units = units_by_path(&idx)?;
     let (segs, dups, _) = crate::docdup::judge::rows_of(root, &idx, core)?;
+    let links = crate::graph::load::unit_links(&idx)?;
     drop(idx);
     let mut cache = TextCache::new(root);
     let mut cands = dead_candidates(&dead, &lang_unres)?;
-    cands.extend(doc_candidates(&segs, &dups, &mut cache)?);
+    cands.extend(doc_candidates(&segs, &dups, &links, &mut cache)?);
     let mut out_of_class = BTreeMap::new();
     // the copy's dead VERDICT, not a death bit (7.0.0): the core's
     // publicDeadVerdicts bar reaches the twin road through this code
@@ -127,46 +129,88 @@ fn dead_candidates(
                 path: d.path.clone(),
                 span: None,
                 provenance: format!("deadcode: {} — {}", d.verdict, d.why),
+                source: Source::Dead {
+                    verdict: code,
+                    why: d.why_code as i64,
+                },
                 sites: lang_count(lang_unres, &d.path),
             })
         })
         .collect()
 }
 
-/// Verbatim doc duplicates: for every core-reported pair, the
-/// path-lexicographically FIRST occurrence survives and the other is
-/// the candidate (erase.md: the survivor is chosen deterministically,
-/// never judged "better").
+/// Verbatim doc duplicates: for every core-reported pair, the side
+/// whose section FEWER links land on is the candidate (release 1.10.0,
+/// erase/section.rs: a linked section is referenced), and on equal
+/// counts the path-lexicographically later occurrence, as before
+/// (erase.md: the survivor is chosen deterministically, never judged
+/// "better"). The candidate's count rides to the core, which refuses a
+/// linked candidate as `linked_section`.
 fn doc_candidates(
     segs: &[crate::docdup::judge::candidates::SegRow],
     dups: &[(usize, usize, crate::docdup::judge::Doc)],
+    links: &Links,
     cache: &mut TextCache,
 ) -> Result<Vec<Candidate>> {
     let mut out = Vec::new();
     for (a, b, m) in dups {
         let key = |i: usize| (segs[i].path.as_str(), segs[i].start_line);
-        let (keep, gone) = if key(*a) <= key(*b) {
-            (*a, *b)
-        } else {
-            (*b, *a)
+        let mut linked = |i: usize| -> Result<i64> {
+            let s = &segs[i];
+            Ok(section::links_to(
+                links,
+                &s.path,
+                cache.text(&s.path)?,
+                s.start_line,
+            ))
         };
-        let (s, t) = (&segs[keep], &segs[gone]);
-        let eq = cache.slice(&s.path, s.start_line, s.end_line)?
-            == cache.slice(&t.path, t.start_line, t.end_line)?;
-        out.push(Candidate {
-            class: 1,
-            facts: [m.verbatim as i64, s.words, t.words, i64::from(eq)],
-            path: t.path.clone(),
-            span: Some((t.start_line, t.end_line)),
-            provenance: format!(
-                "docdup: twin of {}:{}-{} (J {}/{}, verbatim {} words)",
-                s.path, s.start_line, s.end_line, m.inter, m.union, m.verbatim
-            ),
-            // a doc twin's licence is byte equality, never liveness
-            sites: 0,
-        });
+        let (la, lb) = (linked(*a)?, linked(*b)?);
+        let a_first = key(*a) <= key(*b);
+        let (keep, gone, n) = match la.cmp(&lb) {
+            std::cmp::Ordering::Less => (*b, *a, la),
+            std::cmp::Ordering::Greater => (*a, *b, lb),
+            _ if a_first => (*a, *b, lb),
+            _ => (*b, *a, la),
+        };
+        out.push(doc_candidate(&segs[keep], &segs[gone], m, n, cache)?);
     }
     Ok(out)
+}
+
+/// One verbatim doc candidate: `t` erased in favour of `s`, its
+/// section linked from `linked` places.
+fn doc_candidate(
+    s: &crate::docdup::judge::candidates::SegRow,
+    t: &crate::docdup::judge::candidates::SegRow,
+    m: &crate::docdup::judge::Doc,
+    linked: i64,
+    cache: &mut TextCache,
+) -> Result<Candidate> {
+    let eq = cache.slice(&s.path, s.start_line, s.end_line)?
+        == cache.slice(&t.path, t.start_line, t.end_line)?;
+    let mut provenance = format!(
+        "docdup: twin of {}:{}-{} (J {}/{}, verbatim {} words)",
+        s.path, s.start_line, s.end_line, m.inter, m.union, m.verbatim
+    );
+    if linked > 0 {
+        provenance += &format!("; section linked from {linked} places");
+    }
+    Ok(Candidate {
+        class: 1,
+        facts: [m.verbatim as i64, s.words, t.words, i64::from(eq)],
+        path: t.path.clone(),
+        span: Some((t.start_line, t.end_line)),
+        provenance,
+        source: Source::Doc {
+            twin: s.path.clone(),
+            span: (s.start_line, s.end_line),
+            jaccard: (m.inter as i64, m.union as i64),
+            verbatim: m.verbatim as i64,
+            linked,
+        },
+        // a doc twin's licence is byte equality, never liveness
+        sites: 0,
+    })
 }
 
 /// Whole-unit T1 twins: a dedup block side that covers at least one
@@ -228,6 +272,12 @@ fn twin_candidates(
                 "dedup: T1 block twin at {of}:{os}-{oe} ({} tokens), covers unit {}",
                 blk.tokens, covered[0]
             ),
+            source: Source::Twin {
+                twin: of.clone(),
+                span: (os as i64, oe as i64),
+                tokens: blk.tokens as i64,
+                unit: covered[0].clone(),
+            },
             sites: lang_count(lang_unres, tf),
         });
     }

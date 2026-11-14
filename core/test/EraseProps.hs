@@ -17,7 +17,7 @@
 module EraseProps (battery) where
 
 import CE.Erase (respond)
-import CE.Erase.Cost (eraseRowCap, judgeRow, keptRows, reasonNames)
+import CE.Erase.Cost (eraseRowCap, judgeLinked, judgeRow, keptRows, reasonNames)
 import Data.Aeson
 import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runLegs, setKey)
 
@@ -33,8 +33,9 @@ battery = runLegs names probes
     , "the target closure keeps an eraseable row, else the advisory about the file"
     , "kept rides on every judged reply, a request without targets is refused by name, and target refusals name the offender"
     , "no t1_twin or dead_file row is eraseable under any legal fact combination"
+    , "a linked section refuses as linked_section after the byte checks, and linked refusals name the offender"
     ]
-  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace, noFileLicence]
+  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace, noFileLicence, linkedFace]
 
 -- | Exact expected (eraseable, reason) per fact combination — the
 -- independent second derivation is this literal table, written from
@@ -254,3 +255,21 @@ noFileLicence =
  where
   twins = [[2, w, x, y, z] | w <- [0, 1], x <- [0, 1], y <- [0 .. 4], z <- [0 .. 3]]
   deads = [[3, w, x, y, z] | w <- [1 .. 4], x <- [0 .. 2], y <- [0 .. 2], z <- [0 .. 2]]
+
+-- | The linked table (10.0.0, release 1.10.0): a doc row that would
+-- erase is refused as linked_section (8) when its section receives a
+-- link; a row the byte checks refuse keeps its reason; through the
+-- real respond the table moves exactly its row; and each refusal names
+-- the row (out of range, not a documentation row, links below 1, rows
+-- not ascending, malformed).
+linkedFace :: Bool
+linkedFace =
+  map (uncurry judgeLinked) [(1, ok), (0, ok), (2, [1, 59, 60, 60, 1]), (1, [1, 60, 60, 60, 0])]
+    == [(False, 8), (True, 0), (False, 2), (False, 3)]
+    && fmap (`field` "rows") (replyObjWith respond (linked [[1, 1]])) == Just (Just (toJSON [[1, 0], [0, 8 :: Integer], [0, 7]]))
+    && and (zipWith (\l why -> refusedBy respond (linked l) why) bad whys)
+ where
+  ok = [1, 60, 60, 60, 1]
+  linked l = setKey "linked" (toJSON (l :: [[Integer]])) (req [ok, ok, [3, 1, 2, 0, 0]])
+  bad = [[[3, 1]], [[2, 1]], [[1, 0]], [[1, 1], [0, 1]], [[1]]]
+  whys = ["linked 0: row out of range", "linked 0: not a documentation row", "linked 0: links below 1", "linked 1: rows not ascending", "linked 0: malformed row"]

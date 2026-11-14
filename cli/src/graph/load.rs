@@ -92,6 +92,21 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     )
 }
 
+/// How many reference sites land on each (file, unit) — the edges
+/// the ladder resolved with a unit: a Markdown link's fragment naming
+/// a heading's slug, an HTML link's naming an element id (erase's
+/// `linked_section` fact, release 1.10.0). A site counts once per
+/// target whatever rung answered it.
+pub fn unit_links(idx: &Index) -> Result<std::collections::BTreeMap<(String, String), i64>> {
+    let found: Vec<(String, String, i64)> = rows(
+        idx.raw(),
+        "SELECT dst_path, dst_unit, COUNT(DISTINCT site_id) FROM edges
+         WHERE dst_unit <> '' GROUP BY dst_path, dst_unit",
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+    )?;
+    Ok(found.into_iter().map(|(p, u, n)| ((p, u), n)).collect())
+}
+
 /// One row per site-owning file: (path, total sites, unresolved
 /// sites) — the trust ledger raw material (2.32.0, H3).
 pub type PathSites = Vec<(String, i64, i64)>;

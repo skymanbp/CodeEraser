@@ -19,12 +19,13 @@ pub mod gather;
 pub mod log;
 mod model;
 pub mod render;
+mod section;
 mod wire;
 
 use crate::document::Held;
 use anyhow::{Result, bail};
 pub use model::{
-    CLASS_NAMES, Candidate, Counts, LOG_SCHEMA, Plan, REASON_NAMES, Row, T1T2_NO_WHOLE_UNIT,
+    Candidate, Counts, LOG_SCHEMA, Plan, Row, Source, T1T2_NO_WHOLE_UNIT, class_names, reason_names,
 };
 use std::path::{Path, PathBuf};
 
@@ -54,9 +55,10 @@ pub fn planned_within(
     cap: usize,
 ) -> Result<(Plan, Held)> {
     let mut g = gather::candidates(root, db, core)?;
-    g.candidates.sort_by(|a, b| {
-        (&a.path, a.span, CLASS_NAMES[a.class]).cmp(&(&b.path, b.span, CLASS_NAMES[b.class]))
-    });
+    let (classes, reasons) = (class_names(), reason_names());
+    let class = |c: usize| classes.get(c).copied().unwrap_or("?");
+    g.candidates
+        .sort_by(|a, b| (&a.path, a.span, class(a.class)).cmp(&(&b.path, b.span, class(b.class))));
     let (verdicts, held) = wire::judge(core, &g.candidates, cap)?;
     let rows: Vec<Row> = g
         .candidates
@@ -64,13 +66,16 @@ pub fn planned_within(
         .zip(verdicts)
         .filter(|(_, v)| v.kept)
         .map(|(c, v)| Row {
-            class: CLASS_NAMES[c.class],
+            class: class(c.class),
             eraseable: v.eraseable,
-            reason: REASON_NAMES[v.reason as usize],
+            // the code is in range: wire::decode held it to the table
+            reason: reasons.get(v.reason as usize).copied().unwrap_or("?"),
+            codes: (c.class, v.reason),
             hash: g.hashes.get(&c.path).copied().unwrap_or(0),
             path: c.path.clone(),
             span: c.span,
             provenance: c.provenance.clone(),
+            source: c.source.clone(),
             sites: c.sites,
         })
         .collect();
@@ -104,7 +109,7 @@ fn converge(root: &Path, db: Option<PathBuf>, core: &str, applied: &Plan) -> Res
         .filter(|r| {
             applied
                 .eraseable()
-                .any(|a| a.class == r.class && a.path == r.path)
+                .any(|a| a.codes.0 == r.codes.0 && a.path == r.path)
         })
         .map(|r| format!("{} {}", r.class, r.path))
         .collect();

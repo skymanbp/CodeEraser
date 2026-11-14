@@ -22,6 +22,12 @@ const CE_I18N = {
     eraseable: "eraseable", advisory: "advisory",
     willErase: "will erase", nothingPlanned: "nothing planned — the tree is clean",
     erasePreview: "preview plan", eraseApply: "apply plan",
+    // a plan row's provenance written from its facts (ce.erase-plan 0.5.0
+    // `from`): copies of the core's console clauses (CE.Text.Erase)
+    provDead: (v, why) => `deadcode: ${v} — ${why}`,
+    provDoc: (t, s, e, i, u, n) => `docdup: twin of ${t}:${s}-${e} (J ${i}/${u}, verbatim ${n} words)`,
+    provLinked: (n) => `; section linked from ${n} places`,
+    provTwin: (t, s, e, k, unit) => `dedup: T1 block twin at ${t}:${s}-${e} (${k} tokens), covers unit ${unit}`,
     // the audit trail's face (O50): the same records `ce erase --log`
     // prints, read from .ce/erase-log.ndjson — never written here
     eraseLog: "audit log", readingLog: "reading the audit log…",
@@ -250,6 +256,10 @@ const CE_I18N = {
     eraseable: "可擦", advisory: "仅建议",
     willErase: "将擦除", nothingPlanned: "无可计划——树是干净的",
     erasePreview: "预览计划", eraseApply: "执行计划",
+    provDead: (v, why) => `死码：${v}——${why}`,
+    provDoc: (t, s, e, i, u, n) => `文档重复：${t}:${s}-${e} 的孪生（J ${i}/${u}，逐字 ${n} 词）`,
+    provLinked: (n) => `；所在小节被 ${n} 处链接`,
+    provTwin: (t, s, e, k, unit) => `克隆：${t}:${s}-${e} 处的 T1 孪生块（${k} 个 token），覆盖单元 ${unit}`,
     eraseLog: "审计日志", readingLog: "读取审计日志…",
     logHead: (n, k) => `${n} 条已执行记录，${k} 行不可读`,
     logEmpty: "审计日志存在但没有记录",

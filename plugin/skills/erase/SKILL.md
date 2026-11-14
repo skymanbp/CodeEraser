@@ -26,8 +26,11 @@ ce erase . --apply    # act on it (git repo + clean worktree required)
 ce erase . --log      # the audit trail every apply appended (.ce/erase-log.ndjson)
 ```
 
-One class erases without judgment: verbatim doc duplicates (a
-byte-identical segment, every copy after the first) — the tool plans
+One class erases without judgment: verbatim doc duplicates (of two
+byte-identical segments, the copy fewer links' fragments land on; a
+copy whose section a link lands on is advisory, `linked_section`) —
+an erased copy leaves its heading in place, so remove the heading or
+put a link to the surviving copy. The tool plans
 them deterministically, applies behind preconditions, and proves its
 own convergence (contract: docs/reference/erase.md); the trail it
 leaves is the same document the MCP tool `erase_log` and the GUI erase
