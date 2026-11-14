@@ -39,7 +39,7 @@ Commands:
   daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
   probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone and flow classes at their own [tombstone] and [flow] tiers
-  settle     PostToolUse record: read the hook envelope on stdin and, when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran — the person let the write through. Never speaks
+  settle     PostToolUse leg: read the hook envelope on stdin; ask a daemon already running to re-measure the written file in the shared index (never starts one), and when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran. Never speaks
   audit      Stop audit: net LOC + duplicate blocks touching changed files + tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
   precommit  pre-commit gate: staged net LOC, touched duplicates and the tombstone class over the staged set (exit 1 in deny mode when duplicates are touched, or at `[tombstone] tier` deny past its budget). FAIL-OPEN: with no reachable ce-core, or a ce.toml it cannot read, it reports the skip and exits 0 — a CI-facing gate that passes on a missing core
@@ -499,7 +499,7 @@ Options:
 ## ce settle
 
 ```text
-PostToolUse record: read the hook envelope on stdin and, when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran — the person let the write through. Never speaks
+PostToolUse leg: read the hook envelope on stdin; ask a daemon already running to re-measure the written file in the shared index (never starts one), and when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran. Never speaks
 
 Usage: ce settle [OPTIONS]
 

@@ -207,9 +207,10 @@ pub(crate) enum Cmd {
         #[arg(long)]
         hook: bool,
     },
-    /// PostToolUse record: read the hook envelope on stdin and, when this
-    /// session's PreToolUse answered `ask` for the same tool call, record
-    /// that the tool ran — the person let the write through. Never speaks
+    /// PostToolUse leg: read the hook envelope on stdin; ask a daemon
+    /// already running to re-measure the written file in the shared index
+    /// (never starts one), and when this session's PreToolUse answered
+    /// `ask` for the same tool call, record that the tool ran. Never speaks
     Settle {
         /// Hook mode: read the JSON envelope on stdin (required)
         #[arg(long)]
