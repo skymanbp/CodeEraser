@@ -3,7 +3,7 @@
 -- | What the Rust rungs read of a file's syntax tree, as the measuring
 -- side's tree-sitter read it (plan v2.33 W2-text stage F; facts 4 and 5
 -- of CE.Resolve.TsFacts), and the re-export surface's questions over it
--- (moved from cli/src/graph/ladder/rs_reexport.rs — `binds_to`, `exports`
+-- (moved from cli/src/graph/ladder/rs_reexport.rs (gone at f6c2788a) — `binds_to`, `exports`
 -- and `owns` are the Rust functions of the same name). At one row
 -- (`RsAt`): how many bodied `mod` items enclose it and their names,
 -- outermost first; each `mod` item starting there with its `#[path]`

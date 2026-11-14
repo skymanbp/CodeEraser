@@ -1,5 +1,5 @@
 -- | The inheritance rung of a simple Java type name (plan v2.33 W2-text
--- stage C; moved from cli/src/graph/ladder/java_inherit.rs, each
+-- stage C; moved from cli/src/graph/ladder/java_inherit.rs (gone at cc11c60f), each
 -- function named after the Rust one it replaces): a member type the
 -- class enclosing the site inherits from a supertype another walked file
 -- declares. JLS 6.4.1 puts the members a class declares or inherits in

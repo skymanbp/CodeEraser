@@ -1,5 +1,5 @@
 -- | The Markdown rungs (plan v2.33 W2-text stage G; once
--- cli/src/graph/ladder/md.rs; design §4 row 5): doc targets resolve at
+-- cli/src/graph/ladder/md.rs, until ef4ed263; design §4 row 5): doc targets resolve at
 -- file and section granularity. R1 joins a relative target — what
 -- precedes `?` and `#` — decoded after the split (an encoded `%23` is a
 -- literal `#` of the

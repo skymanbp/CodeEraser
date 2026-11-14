@@ -1,5 +1,5 @@
 -- | Compiler command and response-file argv, read without consulting the
--- host (cli/src/graph/cmdline.rs until plan v2.33 W2-text; each function
+-- host (cli/src/graph/cmdline.rs (gone at c4eac446) until plan v2.33 W2-text; each function
 -- below is the Rust function of the same name, the character loop of the
 -- Rust `Peekable<Chars>` spelled as a list the function returns the rest
 -- of). Clang's JSON reader chooses its syntax with the host's `_WIN32`;

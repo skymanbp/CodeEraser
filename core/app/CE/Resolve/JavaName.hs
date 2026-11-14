@@ -1,5 +1,5 @@
 -- | A Java specifier without its type annotations (plan v2.33 W2-text
--- stage C; cli/src/graph/ladder/java_pick.rs `unannotated` and the
+-- stage C; cli/src/graph/ladder/java_pick.rs (gone at cc11c60f) `unannotated` and the
 -- annotation half of java_header.rs's lexer, each function below named
 -- after the Rust one it replaces): `a.b.@Tag C` names `a.b.C` (JLS
 -- 9.7.4) — each `@` with its dotted name and argument list, the

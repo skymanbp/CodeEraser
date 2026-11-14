@@ -1,5 +1,5 @@
 -- | The `ce query` / `ce rules` console lines (plan v2.32 step 5),
--- transcribed from cli/src/query/console.rs: the errors first (a
+-- transcribed from cli/src/query/console.rs (gone at e35fde53): the errors first (a
 -- program with an error answers nothing), the degraded reason, then
 -- each goal — a question with its answers, an assertion with its
 -- witnesses — every proof row indented by its depth in the

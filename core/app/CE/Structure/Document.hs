@@ -6,7 +6,7 @@
 -- docs/reference/authority-track.md §5), transcribed from the face
 -- that assembled it on the measuring side (cli/src/structure/judge.rs
 -- `run` / `tree_rows` / `split_relabel` / `relabel`, the document in
--- cli/src/structure/report.rs `report_json`): the score and its
+-- cli/src/structure/report.rs (gone at eea12432) `report_json`): the score and its
 -- scale, the entropy and axis rows, the findings and deviations named
 -- by directory, the flat directory tree with each node's axes rolled
 -- from the findings, and — only when the advisory rode — the split

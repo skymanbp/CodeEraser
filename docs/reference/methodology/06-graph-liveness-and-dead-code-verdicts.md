@@ -11,7 +11,7 @@ to the layout step `document/1` — and node identity **is** the row index
 set and the flag column. The files it does not reach form the **dead set** (§7); what a face says
 about each of them is that it is **unreferenced** — no reference was found, which is not the claim
 that the file is unused. Since plan v2.35 the dead set is grouped into roots and dependents, each root
-compared against the committed baseline, and by default an unreferenced file is listed and fails
+compared against the point `ce-baseline.json` records, and by default an unreferenced file is listed and fails
 nothing; a project that wants a gate declares one (§10).
 
 ### 1. Pipeline
@@ -613,8 +613,8 @@ holds (`bScc`) in one pass and never drops it; the dependent → root pairs cost
 are dropped whole, the reply saying so with `underDropped`
 ([Cost.hs:77-85](../../../core/app/CE/Graph/Cost.hs#L77), [Graph.hs:116](../../../core/app/CE/Graph.hs#L116)).
 
-**The comparison point and the states** ([Point.hs:5-26](../../../core/app/CE/Graph/Point.hs#L5)). The
-committed baseline records the graph's own facts on the day it is written: `deadPoint = {files, dead}`,
+**The comparison point and the states** ([Point.hs:5-26](../../../core/app/CE/Graph/Point.hs#L5)).
+`ce-baseline.json` records the graph's own facts on the day it is written: `deadPoint = {files, dead}`,
 the entity ids of every file node the graph judged and of those in the dead set — a file's id is its size
 row's, `score::baseline::file_entity` of its project-relative path. graph/1 answers today's point
 (`deadNow`) and the verdict family copies it into every baseline it writes. Every file of D has a

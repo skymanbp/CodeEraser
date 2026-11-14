@@ -1,5 +1,5 @@
 -- | The Rust module tree's mechanics (moved from
--- cli/src/graph/ladder/rs_tree.rs in plan v2.33 W2-text stage F — each
+-- cli/src/graph/ladder/rs_tree.rs (gone at f6c2788a) in plan v2.33 W2-text stage F — each
 -- function below is the Rust function of the same name): one
 -- child-lookup throat, the descent that stops at the deepest walked
 -- module, the multi-anchor walk and its fold, the crate roots covering a

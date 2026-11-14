@@ -1,5 +1,5 @@
 -- | An R package's DESCRIPTION (Writing R Extensions §1.1.1; moved from
--- cli/src/graph/ladder/r/description.rs and the package-code expansion
+-- cli/src/graph/ladder/r/description.rs (gone at 1278a18c) and the package-code expansion
 -- of cli/src/graph/deadcode/targets.rs in plan v2.33 W2-text stage B —
 -- each function below is the Rust function of the same name), read for
 -- the two fields the graph needs: `Package`, the name `library()` and

@@ -2,7 +2,7 @@
 -- any path is joined (plan v2.33 W2-text stage G; once
 -- cli/src/graph/ladder/md.rs `is_scheme` and md_slug.rs
 -- `percent_decode`, whose Rust copies the HTML rungs read until stage H
--- moved those rungs here too): whether the target leaves the corpus
+-- (738b8521) moved those rungs here too): whether the target leaves the corpus
 -- by a URI scheme, and the target percent-decoded.
 module CE.Resolve.Url (isScheme, percentDecode) where
 

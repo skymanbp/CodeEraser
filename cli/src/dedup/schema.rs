@@ -23,8 +23,8 @@ mod parser;
 /// structural cache and the docsegs table, struct_rev + docdup_rev
 /// in the cache key. v4: `has_tokens` on files, the graph tables,
 /// graph_rev in the key. v8: edges.via_reexport (the §4 R5
-/// amendment's mark). ALTERs fold into CREATE — the wipe model
-/// has no migration path to alter along.
+/// amendment's mark). v9: trend rows carry their measuring toolchain.
+/// ALTERs fold into CREATE — the wipe model has no migration path to alter along.
 /// v10: density scoring (proto 2.17.0) re-prices every cached trend
 /// score — a mixed-regime trajectory would fabricate a slope.
 /// v11 (plan v2.14): the `bindings` table — the names each import
@@ -59,7 +59,7 @@ mod parser;
 /// changes preserve it under a separate gate (schema/parser.rs).
 /// v17 (plan v2.30 step 5b-9): the T3 verdict cache `t3ted`
 /// (dedup/t3/cache.rs) beside its generation row in meta.
-const SCHEMA_VERSION: i64 = 17; // 9: trend rows carry their measuring toolchain
+const SCHEMA_VERSION: i64 = 17;
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS df;

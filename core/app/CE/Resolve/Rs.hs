@@ -1,4 +1,4 @@
--- | The Rust rungs (moved from cli/src/graph/ladder/rs.rs, rs_use.rs and
+-- | The Rust rungs (moved from cli/src/graph/ladder/rs.rs (gone at f6c2788a), rs_use.rs and
 -- rs_bind.rs in plan v2.33 W2-text stage F — each function below is the
 -- Rust function of the same name).
 --   R1 `mod foo;` mounts dir/foo.rs | dir/foo/mod.rs under the

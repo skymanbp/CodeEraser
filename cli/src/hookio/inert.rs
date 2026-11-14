@@ -1,7 +1,7 @@
 //! A hook that cannot measure leaves a trace (ADR-003 A9f: degraded
 //! state is surfaced, never silent). Since plan v2.32 step 2 every
 //! table a hook measures with is the core's `tables/1` package; with
-//! no package (no core, a pre-7.7.0 core) the hook stays inert — exit
+//! no package (no core, or one out of step: corelink::skew) the hook stays inert — exit
 //! 0, never a deny — and a stderr line alone is invisible in Claude
 //! Code. So the gate writes the observe-feed line every other degraded
 //! path writes (`degraded` true, `reason` = the CLI's own refusal), and

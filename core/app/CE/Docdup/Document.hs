@@ -1,7 +1,7 @@
 -- | The `ce docdup` document (plan v2.32 step 5; design booklet
--- docs/reference/authority-track.md §5), transcribed from the face that
--- assembled it on the measuring side (cli/src/docdup/judge/mod.rs `run`
--- and `Counts` through the shared envelope, cli/src/report.rs): the
+-- docs/reference/authority-track.md §5; assembled on the measuring side
+-- until 59d17286, whose cli/src/docdup/judge/mod.rs `run` and `Counts`
+-- still measure what it states): the
 -- segment pairs the core's verdict bit names duplicates, each with its
 -- raw intersection and union and its verbatim run, and the thirteen
 -- counters. The measuring side sends its live segments (file, span and

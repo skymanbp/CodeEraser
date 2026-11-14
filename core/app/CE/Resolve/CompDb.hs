@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The C-family databases: translation-unit commands and directory-wide
--- flags (cli/src/graph/compdb.rs until plan v2.33 W2-text; each function
+-- flags (cli/src/graph/compdb.rs (gone at c4eac446) until plan v2.33 W2-text; each function
 -- below is the Rust function of the same name).
 -- https://clang.llvm.org/docs/JSONCompilationDatabase.html, Format:
 -- `arguments` is argv; `command` uses quoting. File and flag paths belong

@@ -1,5 +1,5 @@
 -- | The `ce arch` console lines (plan v2.32 step 5), transcribed from
--- cli/src/arch/console.rs: one counts line, the layers from the top
+-- cli/src/arch/console.rs (gone at e35fde53): one counts line, the layers from the top
 -- level down, every cut arc with the file references it folds, the
 -- misplaced files, the impact walk when a focus was named, and the
 -- metrics table padded to its widest directory; an empty section says

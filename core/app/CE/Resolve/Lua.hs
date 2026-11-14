@@ -1,5 +1,5 @@
 -- | Lua rungs (plan v2.30 step 4; design booklet §8 row Lua; moved from
--- cli/src/graph/ladder/lua.rs in plan v2.33 wave W2a, on text since
+-- cli/src/graph/ladder/lua.rs (gone at 6227189b) in plan v2.33 wave W2a, on text since
 -- W2-text — each function below is the Rust function of the same name).
 -- A Lua module is whatever `package.searchers` finds (Lua 5.4 manual
 -- §6.3): `require` first answers a name `package.loaded` already holds —

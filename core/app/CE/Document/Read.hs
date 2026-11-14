@@ -33,8 +33,8 @@ spoken cat ls ex fam =
     , dfExit = \req -> ex (dfAssemble fam req) req
     }
 
--- | The shared report throat's console (cli/src/report.rs `emit`, the
--- clone and docdup families): one `hit` line per row of the document's
+-- | The clone and docdup families' console (the measuring side prints
+-- it through cli/src/document.rs `emit`): one `hit` line per row of the document's
 -- hit table, then the `summary` sentence over the counters it names
 -- (in the order given) with the raw tail of the rest.
 emitted :: (String -> [Fill] -> Piece) -> (Value -> [Fill]) -> String -> [String] -> Value -> [Line]

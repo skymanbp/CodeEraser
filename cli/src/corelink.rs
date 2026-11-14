@@ -75,10 +75,10 @@ pub struct HelloReply {
     #[serde(default)]
     pub capabilities: Vec<String>,
     /// The fnv1a64 of the core's definition package (7.7.0): a core
-    /// answering `tables/1` names it here. Absent = an older core (the
-    /// package fetch refuses it by its missing capability); present
-    /// and unequal to the package this run read = refused by name
-    /// (crate::tables::check_hello).
+    /// answering `tables/1` names it here. Absent = skew (the package
+    /// fetch refuses a core without the capability, corelink::skew);
+    /// present and unequal to the package this run read = refused by
+    /// name (crate::tables::check_hello).
     #[serde(default, rename = "tablesDigest")]
     pub tables_digest: Option<u64>,
 }
@@ -208,9 +208,9 @@ fn spawn(core: &str) -> Result<Child, String> {
 }
 
 /// What this ce needs and the core it reached does not carry — a
-/// capability or a reply key every 9.x core answers with. `validate`
-/// pins the major and `tables::check_hello` the definition package's
-/// digest, so no older core gets this far: reaching it means the two
+/// capability or a reply key every core of the pinned major (PROTO)
+/// answers with. `validate` pins the major and `tables::check_hello` the
+/// definition package's digest, so no other core gets this far: reaching it means the two
 /// binaries come from different builds, and the one remedy is named.
 pub fn skew(what: &str) -> String {
     format!("core offers no {what}: ce and ce-core are out of step (install both from one release)")

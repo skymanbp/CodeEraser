@@ -1,5 +1,5 @@
 -- | What every Java rung shares (plan v2.33 W2-text stage C; moved from
--- cli/src/graph/ladder/java_pick.rs and java_sets.rs, each function
+-- cli/src/graph/ladder/java_pick.rs (gone at cc11c60f) and java_sets.rs, each function
 -- named after the Rust one it replaces): the request's view of the
 -- tree — the walked headers and the package index over them — the
 -- settling rules (one hit resolves, the declared `[graph.search_roots]

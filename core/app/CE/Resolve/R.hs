@@ -1,5 +1,5 @@
 -- | R rungs (plan v2.30 step 4; design booklet §8 row R; moved from
--- cli/src/graph/ladder/r/mod.rs in plan v2.33 W2-text stage B — each
+-- cli/src/graph/ladder/r/mod.rs (gone at 1278a18c) in plan v2.33 W2-text stage B — each
 -- function below is the Rust function of the same name). R has no
 -- import statement: `source("x.R")` runs a file, and `library(pkg)`,
 -- `requireNamespace("pkg")` and `pkg::name` reach a package (the

@@ -1,4 +1,4 @@
--- | The JSONC reader of the TS rungs (moved from cli/src/graph/jsonc.rs
+-- | The JSONC reader of the TS rungs (moved from cli/src/graph/jsonc.rs (gone at 097e5ba3)
 -- and roots.rs `read_jsonc` in plan v2.33 W2-text stage E): tsconfig and
 -- package.json in the wild carry comments and trailing commas, so
 -- `clean` strips both (string-aware, char by char), and what is left is

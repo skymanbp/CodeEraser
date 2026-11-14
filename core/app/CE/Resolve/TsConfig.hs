@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The tsconfig chain and the package.json surface the TS rungs read
--- (moved from cli/src/graph/roots_ts.rs and the package.json half of
+-- (moved from cli/src/graph/roots_ts.rs (gone at 097e5ba3) and the package.json half of
 -- roots.rs in plan v2.33 W2-text stage E — each function below is the
 -- Rust function of the same name): the nearest tsconfig from a
 -- directory and every config its `extends` reaches, folded to the

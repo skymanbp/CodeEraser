@@ -1,5 +1,5 @@
 -- | The `ce merge` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/merge/console.rs.
+-- byte for byte from cli/src/merge/console.rs (gone at e35fde53).
 module CE.Text.Merge (catalogue) where
 
 import CE.Text (Catalogue, table)

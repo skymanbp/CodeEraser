@@ -279,7 +279,7 @@ const CE_I18N = {
     trend: "趋势", window: "窗口", measured: "已测", pending: "待测",
     failedPrefix: "失败", windowCommits: (n) => `${n} 个提交`,
     date: "日期", score: "分数", axes: "判轴", none: "无",
-    // 与控制台同词（cli/src/structure/report.rs / score/report.rs）
+    // 与控制台同词（核的 CE.Text.Structure / CE.Text.Check）
     scoreStructure: "结构分数", scoreCheck: "检查分数",
     depth: "深度", subdirs: "子目录", files: "文件", findings: "发现",
     deviation: "偏差",

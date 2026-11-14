@@ -1,6 +1,6 @@
 -- | Java rungs (plan v2.30 step 3; design booklet §8 row Java; the
 -- inheritance, folded-import and second-top-level-class boundaries
--- closed in step 5b; moved from cli/src/graph/ladder/java.rs in plan
+-- closed in step 5b; moved from cli/src/graph/ladder/java.rs (gone at cc11c60f) in plan
 -- v2.33 W2-text stage C — each function below is the Rust function of
 -- the same name). Java names a class by its package, and a package is
 -- what a compilation unit DECLARES (JLS 7.4), not where the file sits —

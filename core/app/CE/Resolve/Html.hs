@@ -1,5 +1,5 @@
 -- | The HTML rungs (plan v2.33 W2-text stage H; once
--- cli/src/graph/ladder/html.rs; booklet §8, HTML row). A page names what
+-- cli/src/graph/ladder/html.rs (gone at 738b8521); booklet §8, HTML row). A page names what
 -- the site serves, so a target is any walked path — a page, a document,
 -- a code file, or a walked asset the index never holds — and a directory
 -- serves its index page. R1 joins a relative reference onto the

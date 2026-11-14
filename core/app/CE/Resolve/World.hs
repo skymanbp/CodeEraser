@@ -2,7 +2,7 @@
 -- since W2-text): the walked paths as a set — the ladders' `scope.files`,
 -- the only place a candidate may come from — each site file's path by
 -- its index, and the directories that hold an importable Go file; and
--- the steps every ladder takes over it (once cli/src/graph/ladder/paths.rs,
+-- the steps every ladder takes over it (once cli/src/graph/ladder/paths.rs (gone at 9c1f7668),
 -- retired in W2-text stage D; `scan::lang::Lang::from_path`).
 module CE.Resolve.World (
   World (..),

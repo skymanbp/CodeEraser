@@ -3,10 +3,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The `ce clone` documents (plan v2.32 step 5; design booklet
--- docs/reference/authority-track.md §5), transcribed from the faces
--- that assembled them on the measuring side: the T3 report
--- (cli/src/dedup/t3/mod.rs `Judged::report` through the shared
--- envelope, cli/src/report.rs) — the pairs the core's verdict bit
+-- docs/reference/authority-track.md §5; assembled on the measuring side
+-- until 59d17286): the T3 report — the pairs the core's verdict bit
 -- names clones, each with its raw tree edit distance and both sizes,
 -- and the sixteen counters — and the unit universe `--units` lists
 -- (cli/src/faces/mod.rs `clone`, the `units` arm). The measuring side sends every

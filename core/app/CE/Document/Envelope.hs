@@ -2,8 +2,8 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The shared judgment-report envelope (plan v2.32 step 5), the
--- core's side of cli/src/report.rs `Pair` / `Report` / `envelope`: the
+-- | The shared judgment-report envelope (plan v2.32 step 5; the
+-- measuring side's copy of the shape went at 59d17286): the
 -- families whose report is the pairs a verdict bit names plus a counts
 -- ledger — clone and docdup — state one shape, and the shape gives
 -- their statement's pair table and facts, the verdict bit's check and

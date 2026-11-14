@@ -1,5 +1,5 @@
 -- | One Java site's questions to the package index (plan v2.33 W2-text
--- stage C; moved from cli/src/graph/ladder/java.rs's `At`, each function
+-- stage C; moved from cli/src/graph/ladder/java.rs (gone at cc11c60f)'s `At`, each function
 -- named after the Rust method it replaces). `from` is the referencing
 -- file: every candidate handed out is one it can see (CE.Resolve.JavaPick
 -- `visibleIn`).

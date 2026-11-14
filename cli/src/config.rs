@@ -131,8 +131,8 @@ pub(crate) struct StructureCfg {
 /// Trend-family knobs (M7.5b; trend/2 since 2.31.0): both OPTIONAL — absent =
 /// the core's own defaults (minPoints 3, floor 0 = report-only; the
 /// knob rows ride the wire only when declared, the ceilings/27b9bc2
-/// pattern). decline_floor_micro is micro-per-mille per day; a
-/// declared floor is what arms the fail bit.
+/// pattern). decline_floor_micro is millionths of the full scale per
+/// day (CE.Trend.Cost); a declared floor is what arms the fail bit.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub(crate) struct TrendCfg {
@@ -204,8 +204,8 @@ impl Config {
     /// The whole parsed config, not a chosen table. The first version
     /// fingerprinted `[[rules.class]]` alone, and an adversarial
     /// review found the scope wrong within the hour: two lines of
-    /// `[score]` — `viol_cost = 0` — pin the score at the scale, so
-    /// `ce check --fail-under 917` can never fail again, and
+    /// `[score]` — `viol_cost = 0` — pin the score at the scale, so a
+    /// `--fail-under` floor can never fail again, and
     /// `tol_abs = 100000` erases the ratchet's own tolerance. Both
     /// move the same gates a glob edit moves, neither touched the
     /// class table, and neither asked anyone to name a floor. Picking

@@ -1,7 +1,7 @@
 -- | The similar family's constants (plan v2.29 step 5; ADR-008 sixth
 -- instalment): the same-role conjunction and its floors, repatriated
--- from cli/src/similar/bm25.rs where the ROI instrument carried them
--- as its declared mirror. Each candidate rides as nine integers —
+-- from the measuring side's ROI instrument, which carried them as its
+-- declared mirror (its file went at d10083de). Each candidate rides as nine integers —
 -- the distinct spelled terms shared per channel [N,P,C,D,S,L] and the
 -- BM25 score as a fraction (both rank/1's answer since plan v2.33 W3),
 -- and the shape-equality bit the measuring side reads; WHICH

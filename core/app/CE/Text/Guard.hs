@@ -1,6 +1,6 @@
 -- | Every sentence the PreToolUse guard speaks (plan v2.32 step 5;
 -- the three budget kinds since the v2.35 guard lane, GD1),
--- transcribed byte for byte from cli/src/guard/say.rs (a `\` line
+-- transcribed byte for byte from cli/src/guard/say.rs (gone at 0446c274) (a `\` line
 -- continuation there drops the next line's leading space), the
 -- duplicate probe's match list (cli/src/guard/probe.rs `reason`) and
 -- the tombstone place (cli/src/tombstone/mod.rs `Row::place`).

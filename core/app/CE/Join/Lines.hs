@@ -1,5 +1,5 @@
 -- | The `ce join` console lines (plan v2.32 step 5), transcribed from
--- cli/src/join/report.rs: one line per file pair with its three legs
+-- cli/src/join/report.rs (gone at eea12432): one line per file pair with its three legs
 -- and the lattice's verdict, one per unit pair with its family's
 -- metric and churn, the degraded leg, the window summary.
 -- Report-only: no veto.

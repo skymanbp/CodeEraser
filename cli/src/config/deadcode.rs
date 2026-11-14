@@ -2,8 +2,8 @@
 //! dead-file amendment, phase 5B). One key:
 //!
 //! - `block` — the root states that fail `ce deadcode --check` and
-//!   `ce check` (`dead_added`), out of `"orphaned"` (a file the
-//!   committed baseline's graph held and did not call unreferenced) and
+//!   `ce check` (`dead_added`), out of `"orphaned"` (a file the graph
+//!   `ce-baseline.json` records held and did not call unreferenced) and
 //!   `"born"` (a file that baseline's graph did not hold). Default empty:
 //!   an unreferenced file is listed and blocks nothing. `"standing"` is
 //!   refused with its reason — the inventory never blocks: declare an

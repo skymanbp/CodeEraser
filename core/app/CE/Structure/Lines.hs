@@ -1,5 +1,5 @@
 -- | The `ce structure` console lines (plan v2.32 step 5), transcribed
--- from cli/src/structure/report.rs: the score line, the layout
+-- from cli/src/structure/report.rs (gone at eea12432): the score line, the layout
 -- divergence when directories were declared, the deviations, the
 -- findings, and under `--split-candidates` the advisory — a
 -- candidate's ROI is benefit over cost to one decimal (CE.Text.fixed:

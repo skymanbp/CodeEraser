@@ -7,7 +7,7 @@
 -- that assembled it on the measuring side (cli/src/join/mod.rs
 -- `file_rows` / `judged_files`, cli/src/join/verdicts.rs
 -- `pair_verdicts`, cli/src/join/churn_unit.rs `rows`, the document in
--- cli/src/join/report.rs `report_json`): the file pairs in path order,
+-- cli/src/join/report.rs (gone at eea12432) `report_json`): the file pairs in path order,
 -- each with both sides' graph position and window churn, the
 -- co-change count where the pair made the table, and the lattice's
 -- verdict on the pair; the unit pairs in the order the clone families

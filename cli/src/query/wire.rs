@@ -89,7 +89,7 @@ pub fn body(
 }
 
 /// One request over a link past its handshake, behind the
-/// capability gate (a pre-7.3.0 core is healthy and answers nothing).
+/// capability gate (a core without the family is skew, corelink::skew, named).
 pub fn ask(link: &mut Link, body: Value) -> Result<Value, String> {
     Ok(judged::ask(link, CAP, KIND, body)?)
 }

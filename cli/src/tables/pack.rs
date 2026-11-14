@@ -187,7 +187,7 @@ impl std::ops::Deref for DocCatalogue {
 
 impl DocCatalogue {
     /// Whether `family`'s document prints indented; None = an entry
-    /// that states no `pretty` (a pre-7.10.0 catalogue).
+    /// that states no `pretty` (the family is no catalogue entry).
     pub fn pretty(&self, family: &str) -> Option<bool> {
         self.pretty.get(family).copied()
     }

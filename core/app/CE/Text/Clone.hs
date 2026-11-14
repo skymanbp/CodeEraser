@@ -1,9 +1,7 @@
--- | The `ce clone` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/dedup/t3/mod.rs (`print`, through the
--- shared report throat cli/src/report.rs `emit`, whose `clones: `
--- prefix prints in English under both languages) and the `--units`
--- listing (cli/src/main_judge.rs `print_units`, whose unit row is
--- English only).
+-- | The `ce clone` console sentences (plan v2.32 step 5; moved here
+-- byte for byte from the measuring side at 59d17286): the `clones: `
+-- prefix prints in English under both languages, and the `--units`
+-- listing's unit row is English only.
 module CE.Text.Clone (catalogue) where
 
 import CE.Text (Catalogue, table)

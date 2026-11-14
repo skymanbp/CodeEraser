@@ -12,7 +12,7 @@ on:
   workflow_call:
     inputs:
       os:
-        description: "runs-on label: windows-latest, ubuntu-22.04, macos-latest, macos-15-intel, ubuntu-22.04-arm"
+        description: "runs-on label: the callers' matrix rows (release.yml build, ci.yml release-rehearsal)"
         type: string
         required: true
       key:

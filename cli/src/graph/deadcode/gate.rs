@@ -79,7 +79,7 @@ impl Gate {
     }
 }
 
-/// The committed baseline's point as the gate reads it: the envelope
+/// `ce-baseline.json`'s point as the gate reads it: the envelope
 /// (`score::baseline::document`, every schema), its `deadPoint` key
 /// verbatim; no file or no key = None.
 pub fn committed_point(root: &Path) -> Result<Option<Value>> {
@@ -87,7 +87,7 @@ pub fn committed_point(root: &Path) -> Result<Option<Value>> {
 }
 
 /// The reply's gate held at the boundary: `states` and `blocked`
-/// present (a reply without them is a pre-amendment core); one state row
+/// present and in shape (otherwise wire skew, corelink::skew); one state row
 /// per dead row, in its order, each code inside 0..3; `blocked` strictly
 /// ascending, every node an unreferenced file (a dead row; since the
 /// gate reads every file's state a blocked file may be a dependent);
@@ -100,10 +100,8 @@ pub(super) fn consume(
     sent: Option<&Gate>,
     (degraded, fail): (bool, bool),
 ) -> Result<Gated> {
-    let states: Vec<[i64; 2]> = serde_json::from_value(reply["states"].clone())
-        .context("pre-amendment core: graph/1 offers no `states` (the dead-file gate)")?;
-    let blocked: Vec<i64> = serde_json::from_value(reply["blocked"].clone())
-        .context("pre-amendment core: graph/1 offers no `blocked` (the dead-file gate)")?;
+    let states: Vec<[i64; 2]> = super::reply::keyed(reply, "states", "the dead-file gate")?;
+    let blocked: Vec<i64> = super::reply::keyed(reply, "blocked", "the dead-file gate")?;
     ensure!(
         states.iter().map(|s| s[0]).eq(dead.iter().map(|r| r[0])),
         "graph/1 `states` is not one row per dead row, in its order"

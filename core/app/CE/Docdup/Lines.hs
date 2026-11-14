@@ -1,6 +1,6 @@
--- | The `ce docdup` console lines (plan v2.32 step 5): the report
--- through the shared throat (cli/src/report.rs `emit` with the
--- templates of cli/src/docdup/judge/mod.rs `print`) — one line per
+-- | The `ce docdup` console lines (plan v2.32 step 5; moved here from
+-- the measuring side at 59d17286, whose cli/src/document.rs `emit`
+-- prints them): one line per
 -- duplicate pair, each segment as `path:start-end kind`, then the
 -- summary with the counters it does not name as a raw tail — and under
 -- `--check` (the `check` fact) the refusal on stderr when any pair was

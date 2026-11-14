@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The TS / TSX rungs (moved from cli/src/graph/ladder/ts.rs and
+-- | The TS / TSX rungs (moved from cli/src/graph/ladder/ts.rs (gone at 097e5ba3) and
 -- ts_node.rs in plan v2.33 W2-text stage E — each function below is the
 -- Rust function of the same name).
 --   R1 relative + extension order — the order IS the norm, so several

@@ -54,7 +54,7 @@ graph.mentions	刷新提及语料宇宙（树中每个可能引用到名字的�
 deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决，无引用文件按根分组（每个文件的状态与门的答复），以及符号层顾问（无他文件拼写其名的声明——永不判决）
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
-deadcode.check	有无引用文件处于 [deadcode] block 列出的状态即退出 1（被拦的是这些文件中的根）；判决本身降级、或声明了 block 而没有已提交的基线带比较点即退出 2；未声明时无引用文件只列出、不拦
+deadcode.check	有无引用文件处于 [deadcode] block 列出的状态即退出 1（被拦的是这些文件中的根）；判决本身降级、或声明了 block 而 ce-baseline.json 没有比较点即退出 2；未声明时无引用文件只列出、不拦
 clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
 clone.units	改为列出单元宇宙而非判决
 docdup	文档重复判决：对缓存活段经核 docdup/1 精确 Jaccard

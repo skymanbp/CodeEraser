@@ -1,4 +1,4 @@
--- | The cabal layout walk (moved from cli/src/graph/cabal_parse.rs in
+-- | The cabal layout walk (moved from cli/src/graph/cabal_parse.rs (gone at 9c1f7668) in
 -- plan v2.33 W2-text stage D — each function below is the Rust function
 -- of the same name): stanza headers, fields with their continuation
 -- blocks, and the routing of each collected field into the surface.

@@ -112,22 +112,33 @@ fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
     Ok(rows)
 }
 
-/// The grouping held to the dead rows: both keys present (a reply
-/// without them is a pre-amendment core), each table strictly
+/// A graph/1 reply key read in the shape this ce reads; absent or in
+/// another shape it is wire skew (corelink::skew), the key and what this
+/// side reads it for named (release 1.10.0, item H40).
+pub(super) fn keyed<T: serde::de::DeserializeOwned>(
+    reply: &Value,
+    key: &str,
+    what: &str,
+) -> Result<T> {
+    serde_json::from_value(reply[key].clone()).with_context(|| {
+        crate::corelink::skew(&format!(
+            "graph/1 `{key}` in the shape this ce reads ({what})"
+        ))
+    })
+}
+
+/// The grouping held to the dead rows: both keys present and in shape
+/// (otherwise wire skew, corelink::skew, the key named), each table strictly
 /// ascending, every root a dead row, every pair a
 /// dependent (a dead row that is no root) beside a root, no pair beside
 /// the dropped marker, and — unless dropped — no dependent without one.
 fn grouping(reply: &Value, dead: &[Vec<i64>]) -> Result<Grouping> {
-    fn table<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> Result<Vec<T>> {
-        serde_json::from_value(reply[key].clone()).with_context(|| {
-            format!("pre-amendment core: graph/1 offers no `{key}` (the dead-file grouping)")
-        })
-    }
-    let roots: Vec<i64> = table::<[i64; 1]>(reply, "roots")?
+    const USE: &str = "the dead-file grouping";
+    let roots: Vec<i64> = keyed::<Vec<[i64; 1]>>(reply, "roots", USE)?
         .into_iter()
         .map(|[r]| r)
         .collect();
-    let under = table::<[i64; 2]>(reply, "under")?;
+    let under: Vec<[i64; 2]> = keyed(reply, "under", USE)?;
     let dropped = reply["underDropped"].as_bool() == Some(true);
     let deads: BTreeSet<i64> = dead.iter().map(|r| r[0]).collect();
     ascending("roots", roots.iter())?;

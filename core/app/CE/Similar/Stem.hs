@@ -1,4 +1,4 @@
--- | Porter's stemmer (plan v2.33 W6; moved from cli/src/similar/stem.rs,
+-- | Porter's stemmer (plan v2.33 W6; moved from cli/src/similar/stem.rs (gone at 924fddab),
 -- every function below named after the Rust one it replaces) — M. F.
 -- Porter, "An algorithm for suffix stripping", Program 14(3):130–137,
 -- 1980 — the 1980 algorithm as the measuring side published it, over

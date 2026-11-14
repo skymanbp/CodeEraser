@@ -1,6 +1,6 @@
--- | Go rungs (design §4 row 4; moved from cli/src/graph/ladder/go.rs in
+-- | Go rungs (design §4 row 4; moved from cli/src/graph/ladder/go.rs (gone at 6227189b) in
 -- plan v2.33 wave W2a, on text since W2-text, with the go.mod reader of
--- cli/src/graph/gomod.rs — each function below is the Rust function of
+-- cli/src/graph/gomod.rs (gone at c4eac446) — each function below is the Rust function of
 -- the same name). Go resolves at PACKAGE granularity: an import path
 -- names a directory, the node identity is (pkg_dir, ""), and collapsing
 -- to one file would be a guess — so a directory only counts as an

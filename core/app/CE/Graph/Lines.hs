@@ -1,5 +1,5 @@
 -- | The `ce deadcode` console lines (plan v2.32 step 5), transcribed
--- from cli/src/graph/deadcode/report.rs and the `--check` lines of
+-- from cli/src/graph/deadcode/report.rs (gone at e35fde53) and the `--check` lines of
 -- cli/src/main_cmds.rs: each unreferenced file with its verdict, reason
 -- and trust; the aggregates; the symbol advisory when the road was asked
 -- (the dropped table in one line, else its rows, the census by code

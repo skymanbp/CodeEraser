@@ -1,5 +1,5 @@
 -- | One invocation's explicit include chain, classified before the ladder
--- searches it (cli/src/graph/compdb_flags.rs until plan v2.33 W2-text;
+-- searches it (cli/src/graph/compdb_flags.rs (gone at c4eac446) until plan v2.33 W2-text;
 -- each function below is the Rust function of the same name).
 -- https://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html, Directory
 -- Options: `-iquote` applies "only to the quote form" and comes "before

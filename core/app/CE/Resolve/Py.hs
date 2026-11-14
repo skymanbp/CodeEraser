@@ -1,4 +1,4 @@
--- | Python rungs (design §4 row 2; moved from cli/src/graph/ladder/py.rs
+-- | Python rungs (design §4 row 2; moved from cli/src/graph/ladder/py.rs (gone at 6227189b)
 -- in plan v2.33 wave W2a, on text since W2-text — each function below is
 -- the Rust function of the same name). R1 leading-dot relative imports —
 -- n dots climb n−1 package levels, then the dotted remainder walks down;

@@ -4,7 +4,7 @@
 
 -- | The `ce check` document (plan v2.32 step 4; design booklet
 -- docs/reference/authority-track.md §5), transcribed from the face
--- that assembled it on the measuring side (cli/src/score/report.rs
+-- that assembled it on the measuring side (cli/src/score/report.rs (gone at e35fde53)
 -- `report_json`, the outcome in cli/src/score/model.rs): the score
 -- and its scale, the axes, the floor the run was armed with, the
 -- candidate and severity rows, the ratchet with the conditions that

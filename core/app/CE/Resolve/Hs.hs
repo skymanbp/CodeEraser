@@ -1,4 +1,4 @@
--- | The Haskell rungs (moved from cli/src/graph/ladder/hs.rs in plan
+-- | The Haskell rungs (moved from cli/src/graph/ladder/hs.rs (gone at 9c1f7668) in plan
 -- v2.33 W2-text stage D — each function below is the Rust function of
 -- the same name). A module name is dots-to-slashes under a source root;
 -- the roots are cabal facts (CE.Resolve.Cabal).

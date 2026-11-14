@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The Cargo surface the Rust rungs and the declared-target and mounts
--- passes read (moved from cli/src/graph/cargo.rs and the bin-root facts
+-- passes read (moved from cli/src/graph/cargo.rs (gone at f6c2788a) and the bin-root facts
 -- of cli/src/graph/mounts.rs in plan v2.33 W2-text stage F — each
 -- function below is the Rust function of the same name): one
 -- Cargo.toml's package name, lib and bin target paths and declared

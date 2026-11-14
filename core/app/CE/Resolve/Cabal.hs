@@ -1,4 +1,4 @@
--- | A package's .cabal file (moved from cli/src/graph/cabal.rs and
+-- | A package's .cabal file (moved from cli/src/graph/cabal.rs (gone at 9c1f7668) and
 -- cabal_parse.rs in plan v2.33 W2-text stage D — each function below is
 -- the Rust function of the same name), read for the facts the Haskell
 -- rungs, the declared-target pass and the mounts table consume:

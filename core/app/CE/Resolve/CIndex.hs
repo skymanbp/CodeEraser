@@ -1,5 +1,5 @@
 -- | What the compile databases say about each C-family file (plan v2.30
--- step 5b, item 14; moved from cli/src/graph/ladder/c_index.rs and
+-- step 5b, item 14; moved from cli/src/graph/ladder/c_index.rs (gone at 6227189b) and
 -- c_search.rs in plan v2.33 wave W2a, on text since W2-text — each
 -- function below is the Rust function of the same name). The measuring
 -- side finds the databases clangd would find; this module seats the

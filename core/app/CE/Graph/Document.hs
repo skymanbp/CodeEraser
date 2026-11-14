@@ -3,11 +3,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The `ce deadcode` document (plan v2.32 step 4; design booklet
--- docs/reference/authority-track.md §5), transcribed from the face
--- that assembled it on the measuring side (cli/src/graph/deadcode.rs
--- `consume` / `dead_rows` / `reported_rows` / `named`,
--- cli/src/graph/deadcode/why.rs, cli/src/graph/deadcode/advisory.rs,
--- the document in cli/src/report.rs `deadcode_json`): the file-tier
+-- docs/reference/authority-track.md §5; assembled on the measuring
+-- side until cacc2741, the reason words until e35fde53;
+-- cli/src/graph/deadcode.rs and cli/src/graph/deadcode/advisory.rs
+-- still gather what it states): the file-tier
 -- dead verdicts with their reason and trust, the aggregates reported
 -- and never called dead, the counts, the degraded reason, and — when
 -- the road asked for it — the symbol advisory, one row per name the

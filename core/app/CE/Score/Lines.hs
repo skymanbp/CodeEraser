@@ -1,5 +1,5 @@
 -- | The `ce check` (and `ce baseline`) console lines (plan v2.32 step
--- 5), transcribed from cli/src/score/report.rs: the score line (since
+-- 5), transcribed from cli/src/score/report.rs (gone at e35fde53): the score line (since
 -- the extent law: the lines the findings are on, E of L with E to one
 -- decimal, and each axis's own share per 1000 lines), the
 -- ratchet line with the conditions that held, the collapse note when

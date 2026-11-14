@@ -1,5 +1,5 @@
 -- | The `ce arch` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/arch/console.rs: English beside Chinese,
+-- byte for byte from cli/src/arch/console.rs (gone at e35fde53): English beside Chinese,
 -- `{}` holes; a row the measuring side printed in English under both
 -- languages carries the same template twice.
 module CE.Text.Arch (catalogue) where

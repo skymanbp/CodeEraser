@@ -113,7 +113,7 @@ pub(crate) enum Cmd {
         /// Exit 1 when an unreferenced file is in a state
         /// `[deadcode] block` names (the files that block are the roots
         /// of those files); exit 2 when the judgment degraded, or a block
-        /// is declared and no committed baseline carries a comparison
+        /// is declared and ce-baseline.json holds no comparison
         /// point; with nothing declared an unreferenced file is listed
         /// and fails nothing
         #[arg(long)]

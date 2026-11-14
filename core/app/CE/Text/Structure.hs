@@ -1,5 +1,5 @@
 -- | The `ce structure` console sentences (plan v2.32 step 5),
--- transcribed byte for byte from cli/src/structure/report.rs.
+-- transcribed byte for byte from cli/src/structure/report.rs (gone at eea12432).
 module CE.Text.Structure (catalogue) where
 
 import CE.Text (Catalogue, table)

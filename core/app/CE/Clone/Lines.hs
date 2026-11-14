@@ -1,8 +1,7 @@
--- | The `ce clone` console lines (plan v2.32 step 5): the T3 report
--- through the shared throat (cli/src/report.rs `emit` with the
--- templates of cli/src/dedup/t3/mod.rs `print`) — one line per clone
--- pair, the summary with the counters it does not name as a raw tail —
--- and the `--units` listing (cli/src/main_judge.rs `print_units`). Both
+-- | The `ce clone` console lines (plan v2.32 step 5; moved here from
+-- the measuring side at 59d17286, whose cli/src/document.rs `emit`
+-- prints them): one line per clone pair, the summary with the counters
+-- it does not name as a raw tail — and the `--units` listing. Both
 -- report-only: no veto.
 module CE.Clone.Lines (lines', unitLines) where
 

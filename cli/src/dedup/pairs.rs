@@ -2,8 +2,8 @@
 //! candidate ANCHORS only; every anchor pair this module ENUMERATES
 //! is verified by exact bidirectional extension over the two
 //! normalized token streams; the maximal runs of >= t tokens go to the
-//! core, whose coverage rule (cover/1, dedup/cover.rs) says which are
-//! reported.
+//! core, whose coverage rule (cover/1, CE.Dedup.Cover; the request is
+//! built in dedup/pairs/cover.rs) says which are reported.
 //! Enumeration is not exhaustive above the hot cap: a hot hash group is
 //! walked as an adjacent chain, so the non-adjacent pairs inside it
 //! are never verified and any block only they would witness is not

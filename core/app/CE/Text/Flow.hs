@@ -1,5 +1,5 @@
 -- | The `ce flow` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/flow_report/console.rs.
+-- byte for byte from cli/src/flow_report/console.rs (gone at e35fde53).
 module CE.Text.Flow (catalogue) where
 
 import CE.Text (Catalogue, table)

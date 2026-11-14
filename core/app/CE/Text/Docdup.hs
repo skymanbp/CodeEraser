@@ -1,10 +1,7 @@
--- | The `ce docdup` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/docdup/judge/mod.rs (`print` and `name`,
--- through the shared report throat cli/src/report.rs `emit`, whose
--- `dups: ` prefix prints in English under both languages) and the
--- `--check` veto (cli/src/main_judge.rs `docdup_cmd`, its `docdup
--- check: ` prefix English under both, cli/src/main_judge.rs
--- `emit_checked`).
+-- | The `ce docdup` console sentences (plan v2.32 step 5; moved here
+-- byte for byte from the measuring side at 59d17286): the `dups: `
+-- prefix prints in English under both languages, and so does the
+-- `--check` veto's `docdup check: ` prefix.
 module CE.Text.Docdup (catalogue) where
 
 import CE.Text (Catalogue, table)

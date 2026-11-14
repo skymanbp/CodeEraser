@@ -3,7 +3,7 @@
 -- 8-bit fixed point from an integer log2, every per-term contribution
 -- floored to 16-bit fixed point, query weights in 1/256, and the PPMI
 -- widening's floors and caps. Until W3 they lived in
--- cli/src/similar/bm25.rs and ppmi.rs; the measuring side now reads
+-- cli/src/similar/bm25.rs (gone at d10083de) and ppmi.rs; the measuring side now reads
 -- them from the definition package (CE.Limits) — the frozen eval docs
 -- echo them — and computes nothing with them but which rows to fetch.
 module CE.Similar.Rank.Cost (

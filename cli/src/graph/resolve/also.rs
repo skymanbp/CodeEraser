@@ -13,12 +13,12 @@ use serde_json::Value;
 /// The reply's `also` table (proto 9.1.0) by site: `[site, target,
 /// rung]` strictly ascending by (site, target), never a file answer's own
 /// path (a section answer's holder row names its file: the section is
-/// the answer, the file one more reference). An absent table is a core
-/// that predates it — refused by name,
+/// the answer, the file one more reference). An absent table is wire
+/// skew (corelink::skew), refused by name,
 /// since reading it as empty would quietly drop the edges it carries.
 pub(super) fn also_rows(reply: &Value, out: &[Outcome]) -> Result<Vec<Also>, String> {
     if reply.get("also").is_none() {
-        return Err("resolve/1: no `also` table: a core before proto 9.1.0".into());
+        return Err(crate::corelink::skew("resolve/1 `also` table"));
     }
     let rows: Vec<(usize, String, Rung)> = judged::table(reply, "also")?;
     let mut by_site: Vec<Also> = vec![Also::default(); out.len()];
@@ -50,11 +50,11 @@ pub(super) fn also_rows(reply: &Value, out: &[Outcome]) -> Result<Vec<Also>, Str
 /// The reply's `opaque` table (lane v235_graphtrust): the star-import
 /// sites, strictly ascending, whose package's `__all__` no literal
 /// reads — each carries one more unresolved ledger row. An absent table
-/// is a core that predates it, refused by name: reading it as empty
+/// is wire skew (corelink::skew), refused by name: reading it as empty
 /// would let such a site vouch for its language.
 fn opaque_rows(reply: &Value, by_site: &mut [Also]) -> Result<(), String> {
     if reply.get("opaque").is_none() {
-        return Err("resolve/1: no `opaque` table: a core before lane v235_graphtrust".into());
+        return Err(crate::corelink::skew("resolve/1 `opaque` table"));
     }
     let rows: Vec<usize> = judged::table(reply, "opaque")?;
     if rows.windows(2).any(|w| w[0] >= w[1]) {

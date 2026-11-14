@@ -1,5 +1,5 @@
 -- | The `ce join` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/join/report.rs. The verdict tail, the
+-- byte for byte from cli/src/join/report.rs (gone at eea12432). The verdict tail, the
 -- graph position and the tokens metric print in English under both
 -- languages (`verdict_str`, `pos_str`, `sim_str`'s t1t2 arm).
 module CE.Text.Join (catalogue) where

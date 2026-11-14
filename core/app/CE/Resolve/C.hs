@@ -1,6 +1,6 @@
 -- | C / C++ rungs (plan v2.30 step 2; the compile database completed in
 -- step 5b, item 14; the `include` rung in step 6; design booklet §8 row
--- C / C++; moved from cli/src/graph/ladder/c.rs in plan v2.33 wave W2a,
+-- C / C++; moved from cli/src/graph/ladder/c.rs (gone at 6227189b) in plan v2.33 wave W2a,
 -- on text since W2-text — each function below is the Rust function of
 -- the same name). The site is a `preproc_include`; its form (`"x.h"` or
 -- `<x.h>`) IS the search order the language defines (C17 §6.10.2):

@@ -1,8 +1,7 @@
--- | The `ce deadcode` console sentences (plan v2.32 step 5),
--- transcribed byte for byte from cli/src/graph/deadcode/report.rs,
--- the reason and trust words (cli/src/graph/deadcode/why.rs,
--- cli/src/graph/deadcode.rs `conf_word`) and the `--check` lines
--- (cli/src/main_cmds.rs `deadcode_cmd`). The verdict and advisory code
+-- | The `ce deadcode` console sentences (plan v2.32 step 5; moved here
+-- byte for byte from the measuring side at e35fde53, the reason and
+-- trust words with them) and the `--check` lines cli/src/main_cmds.rs
+-- `deadcode_cmd` prints. The verdict and advisory code
 -- names print in English under both languages (they are the document's
 -- words); the advisory's reading prints in the console's language, by
 -- code (`adv_<code>`; the document keeps CE.Graph.Document's English

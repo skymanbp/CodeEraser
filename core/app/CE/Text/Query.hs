@@ -1,5 +1,5 @@
 -- | The `ce query` / `ce rules` console sentences (plan v2.32 step 5),
--- transcribed byte for byte from cli/src/query/console.rs and the
+-- transcribed byte for byte from cli/src/query/console.rs (gone at e35fde53) and the
 -- rules face's no-file line (cli/src/main_query.rs `show`).
 module CE.Text.Query (catalogue) where
 
