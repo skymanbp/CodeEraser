@@ -273,7 +273,7 @@ pub fn wire_of(
     let (files, edges, unresolved_sites, sites) = graph_rows(idx)?;
     // the refusal guards a command run in the wrong directory, so it asks
     // the index, not the graph: a tree whose files the graph reads none
-    // of (prose only, judged since release 1.10.0) is judged on an empty graph
+    // of (prose only) is judged on an empty graph (release 1.10.0)
     if files.is_empty() && idx.file_count()? == 0 {
         bail!(
             "empty index at {} — nothing was walked; wrong root?",
