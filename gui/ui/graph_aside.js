@@ -46,8 +46,9 @@ function advisoryCensus() {
 }
 
 // The gate off the document's `gate` object, as the console reads it:
-// one row per state that has a root (only when a comparison point rode
-// — without one no state word is printed), then one row in three
+// one row per state that has an unreferenced file (only when a
+// comparison point rode — without one no state word is printed), then
+// one row in three
 // readings — nothing declared, declared and answered, declared and
 // unanswered.
 function gateRows() {
@@ -100,7 +101,7 @@ function renderGraphAside(i) {
 function verdictRows(f) {
   let html = `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(tr("deadWhy")[f.whyCode] ?? String(f.whyCode))}</div>`;
   const d = deadByPath.get(f.path);
-  if (d) html += d.root === false ? underRows(d) : rootRows(d);
+  if (d) html += stateRows(d) + (d.root === false ? underRows(d) : rootRows(d));
   if (f.conf != null) {
     const word = tr("trustNames")[f.conf] ?? String(f.conf);
     html += `<div class="row ${f.conf === 0 ? "bad" : "zero"}">${esc(tr("trust"))}: <b>${esc(word)}</b></div>`;
@@ -108,15 +109,21 @@ function verdictRows(f) {
   return html;
 }
 
-// A root: its state (when a comparison point rode), a marked row when
-// the gate blocks it, and the files that fall with it — the count, then
-// the names, cut at FALLS_SHOWN; nothing when none falls, as the console.
-function rootRows(d) {
+// Any unreferenced file, root or dependent: its state (when a
+// comparison point rode) and a marked row when the gate blocks it.
+function stateRows(d) {
   let html = "";
   if (deadDoc.gate && deadDoc.gate.comparison != null && d.state != null) {
     html += row(tr("rootState"), tr("stateWords")[d.state] ?? d.state);
   }
   if (d.blocking === true) html += `<div class="row bad"><b>${esc(tr("rootBlocks"))}</b></div>`;
+  return html;
+}
+
+// A root: the files that fall with it — the count, then the names, cut
+// at FALLS_SHOWN; nothing when none falls, as the console.
+function rootRows(d) {
+  let html = "";
   const falls = fallsByRoot.get(d.name) ?? [];
   if (!falls.length) return html;
   html += `<div class="row">${esc(tr("graphFalls", falls.length))}</div>`;

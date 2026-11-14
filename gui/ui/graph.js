@@ -1,9 +1,10 @@
 // CodeEraser GUI — the graph screen (batch 9 P18, user-ruled): the
 // ce.graph-canvas document as a drawn map. File tier only; the
 // layout is deterministic (no random seed — the same document draws
-// the same picture); a root the project's gate blocks and cycle members
-// ride the alarm ramp, every other unreferenced file is drawn hollow (a
-// root's ring solid, a dependent's dashed); teal is selection only;
+// the same picture); a file the project's gate blocks (root or
+// dependent) and cycle members ride the alarm ramp, every other
+// unreferenced file is drawn hollow (a root's ring solid, a dependent's
+// dashed, blocking or not); teal is selection only;
 // magnitude is geometry (node radius = degree), never a printed number.
 // Rendering only: every verdict on this screen came from the one core
 // judgment the CLI also prints.
@@ -11,8 +12,8 @@
 // The deadcode half of the reply is the document `ce deadcode --format
 // json` prints for the same tree (plan v2.35 5C: the screen's judgment
 // carries the gate through the deadcode face's one wire): its rows give
-// each unreferenced file its root / dependent standing, a root's state
-// and whether it blocks, and its `unmentioned` advisory rows sit beside
+// each unreferenced file its root / dependent standing, its state and
+// whether it blocks, and its `unmentioned` advisory rows sit beside
 // the canvas. Both halves are joined here by path — a rendering join on
 // a string the two documents share, never a verdict. Both arrive in ONE
 // ce.graph-screen reply off one judgment (plan v2.30 step 5b item 31),
@@ -166,17 +167,18 @@ function linkedPaths(i) {
   return new Set(d.root === false ? d.under ?? [] : fallsByRoot.get(path) ?? []);
 }
 
-// A node's look: a blocking root filled on the alarm ramp; any other
-// unreferenced file hollow (panel fill, alarm ring), a root's ring
-// solid and a dependent's dashed; cycle members and live files as the
-// ramp has always drawn them.
+// A node's look: a blocking file filled on the alarm ramp, root or
+// dependent; any other unreferenced file hollow (panel fill, alarm
+// ring); a root's ring solid and a dependent's dashed either way; cycle
+// members and live files as the ramp has always drawn them.
 function nodeLook(file, colors) {
   const d = deadByPath.get(file.path), cycle = file.cycle === true;
   if (file.verdict == null) {
     return { fill: cycle ? heat(1) : colors["--panel-2"], ring: cycle ? heat(2) : colors["--line"], dash: [] };
   }
-  if (d && d.blocking === true) return { fill: heat(4), ring: heat(3), dash: [] };
-  return { fill: colors["--panel-2"], ring: heat(3), dash: d && d.root === false ? [3, 2] : [] };
+  const dash = d && d.root === false ? [3, 2] : [];
+  if (d && d.blocking === true) return { fill: heat(4), ring: heat(3), dash };
+  return { fill: colors["--panel-2"], ring: heat(3), dash };
 }
 
 function drawNodes(ctx, map, colors) {
