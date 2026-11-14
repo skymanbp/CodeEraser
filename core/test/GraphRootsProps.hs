@@ -12,7 +12,7 @@
 -- definitions are read off it word for word -- f is a root when every
 -- dead file that supports it is supported by it; a dependent's roots are
 -- the roots that support it.
-module GraphRootsProps (battery) where
+module GraphRootsProps (battery, closureOf) where
 
 import CE.Graph.Build (build, reachFrom)
 import CE.Graph.Cost (underCap)
@@ -79,10 +79,16 @@ dead c = [f | f <- kFiles c, not (any (\e -> e == f || closure c !! e !! f) (kEn
 
 -- | The transitive closure of the arc relation (paths of length >= 1).
 closure :: Case -> [[Bool]]
-closure c = foldl through start [0 .. 3]
+closure c = closureOf 4 (kArcs c)
+
+-- | Warshall's triple loop over n nodes (the gate battery reads the
+-- support relation off it too).
+closureOf :: Int -> [(Int, Int)] -> [[Bool]]
+closureOf n arcs = foldl through start vs
  where
-  start = [[(i, j) `elem` kArcs c | j <- [0 .. 3]] | i <- [0 .. 3 :: Int]]
-  through m k = [[m !! i !! j || (m !! i !! k && m !! k !! j) | j <- [0 .. 3]] | i <- [0 .. 3]]
+  vs = [0 .. n - 1]
+  start = [[(i, j) `elem` arcs | j <- vs] | i <- vs]
+  through m k = [[m !! i !! j || (m !! i !! k && m !! k !! j) | j <- vs] | i <- vs]
 
 -- | The reference's roots and (dependent, root) pairs, ascending.
 reference :: Case -> ([Int], [(Int, Int)])

@@ -52,7 +52,7 @@ ratchetObj presentRode deadAdded r conds =
       -- the dropped rows ride exactly when `present` rode (6.4.0):
       -- an empty list is an answer, an absent key is an older core
       <> ["dropped" .= rDropped r | presentRode]
-      -- the blocking roots ride back where the discrete members do,
+      -- the blocking files ride back where the discrete members do,
       -- exactly when they rode (the dead-file amendment)
       <> ["deadAdded" .= d | Just d <- [deadAdded]]
 

@@ -81,7 +81,7 @@ answer proto degraded req =
  where
   none = [] :: [Value]
   (fields, kept)
-    | degraded = (["dead" .= none, "reported" .= none, "roots" .= none, "under" .= none, "blocked" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
+    | degraded = (["dead" .= none, "reported" .= none, "roots" .= none, "under" .= none, "states" .= none, "blocked" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
     | otherwise = (judged, bKept b)
   judged =
     [ -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
@@ -93,8 +93,9 @@ answer proto degraded req =
       "dead" .= [deadOut i v | (i, v) <- deadRows]
     , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
     , -- the gate's own answer (plan v2.35, the dead-file amendment,
-      -- 5B): a root whose state the project blocks; an unreferenced
-      -- file is listed, and fails nothing by itself
+      -- 5B): a root of M, the unreferenced files whose state the project
+      -- blocks (CE.Graph.Point); an unreferenced file in no blocked state
+      -- is listed, and fails nothing by itself
       "fail" .= not (null (Point.gBlocked gt))
     , "pos" .= Position.positions b reach (reqPos req)
     , -- the floor is the request's where declared (6.4.0, O59),
@@ -109,11 +110,13 @@ answer proto degraded req =
       -- unmentioned/mounts precedent, legacy bytes untouched
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
       <> advisoryKeys req
-      <> groupKeys (Point.gState gt) grouping
+      <> groupKeys grouping
       <> Point.gKeys gt
   (b, reach, deadRows, reportedRows) = liveness req
   grouping = Roots.group underCap b reach (map fst deadRows)
-  gt = Point.gate (reqEntities req) (reqDeadPoint req) (fromMaybe 0 (reqDeadBlock req)) (map fst deadRows) (Roots.gRoots grouping)
+  -- the gate's M-roots: the same condensation, the file filter M; the
+  -- pairs of that call are never forced
+  gt = Point.gate (reqEntities req) (reqDeadPoint req) (fromMaybe 0 (reqDeadBlock req)) (map fst deadRows) (Roots.gRoots . Roots.group underCap b reach)
   -- the confidence column (2.32.0) on every dead row: the ledger it
   -- reads is required since 9.0.0
   deadOut i v = [toInteger i, toInteger v, confidence (unresRows req) (langOf i)]
@@ -136,14 +139,14 @@ advisoryKeys req = case reqUnmentioned req of
         ["exportUnmentioned" .= Advisory.judge unmentionedVisMask exemptCategories (mountRows req) rows]
 
 -- | The dead files grouped (plan v2.35, the dead-file amendment):
--- `roots` [node, state] ascending, the state CE.Graph.Point's (the
--- codes are Cost.rootStates; untold when no comparison point rode), and
--- `under` [dependent, root] ascending -- or, past `underCap`, empty
--- beside `underDropped`, the `unmentionedDropped` shape. The roots
--- are never dropped.
-groupKeys :: (Int -> Integer) -> Roots.Grouping -> [Pair]
-groupKeys state g =
-  ["roots" .= [[toInteger r, state r] | r <- Roots.gRoots g]]
+-- `roots` [node] ascending and `under` [dependent, root] ascending --
+-- or, past `underCap`, empty beside `underDropped`, the
+-- `unmentionedDropped` shape. The roots are never dropped. Each file's
+-- state rides once, in CE.Graph.Point's `states` (roots and dependents
+-- alike), never beside a root here.
+groupKeys :: Roots.Grouping -> [Pair]
+groupKeys g =
+  ["roots" .= [[toInteger r] | r <- Roots.gRoots g]]
     <> case Roots.gUnder g of
       Just ps -> ["under" .= [[toInteger d, toInteger r] | (d, r) <- ps]]
       Nothing -> ["under" .= ([] :: [Value]), "underDropped" .= True]

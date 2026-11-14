@@ -8,7 +8,7 @@
 -- An axis whose effective weight is 0 (the document's `weights`, a
 -- judged run) prints its share marked "(off)": the axis does not count
 -- (plan v2.35, the dead-file amendment); a held `dead_added` adds one
--- line with the blocking roots' count and the command that lists them.
+-- line with the blocking files' count and the command that lists them.
 -- The veto is the verdict's fail bit (the face's own exit rule; a
 -- judgment that never happened is the face's refusal, exit 2).
 module CE.Score.Lines (lines', veto) where

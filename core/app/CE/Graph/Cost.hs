@@ -84,15 +84,17 @@ unmentionedHardCap = 524288
 underCap :: Integer
 underCap = 131072
 
--- | A root's state on the wire's `roots` rows, by code: 0 untold (no
--- comparison point), 1 standing, 2 orphaned, 3 born (plan v2.35 banner,
--- the dead-file amendment; the definitions are CE.Graph.Point's).
+-- | An unreferenced file's state on the wire's `states` rows, by code:
+-- 0 untold (no comparison point), 1 standing, 2 orphaned, 3 born (plan
+-- v2.35 banner, the dead-file amendment; every unreferenced file has
+-- one, root or dependent; the definitions are CE.Graph.Point's).
 rootStates :: [String]
 rootStates = words "untold standing orphaned born"
 
 -- | The states a project may block (`[deadcode] block`, the request's
--- `deadBlock` mask: bit i = the i-th here). `standing` is not among
--- them: the inventory never blocks (declare an entry or delete the
+-- `deadBlock` mask: bit i = the i-th here): the unreferenced files in a
+-- masked state form the gate's set, whose roots block. `standing` is not
+-- among them: the inventory never blocks (declare an entry or delete the
 -- file); `untold` is no state of the tree.
 blockStates :: [String]
 blockStates = drop 2 rootStates

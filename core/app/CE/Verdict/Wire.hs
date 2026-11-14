@@ -142,7 +142,7 @@ data VerdictReq = VerdictReq
     reqExtent :: (Maybe [[Integer]], Maybe [[Integer]], Maybe [[Integer]], Maybe [[Integer]])
   , -- the dead-file amendment (plan v2.35, 5B; CE.Graph.Point): today's
     -- point as graph/1 answered it (`deadNow`), copied verbatim into the
-    -- new baseline, and the blocking roots' ids, which hold `dead_added`
+    -- new baseline, and the blocking files' ids, which hold `dead_added`
     reqDeadPoint :: Maybe Value
   , reqDeadAdded :: Maybe [Integer]
   }
@@ -196,7 +196,7 @@ zeroedOffence req
   k = effectiveKnobs (reqCeilings req) (reqThresholds req)
 
 -- | The dead-file amendment's two keys (plan v2.35): the point is
--- graph/1's own shape, held again, and the blocking roots ride beside it.
+-- graph/1's own shape, held again, and the blocking files ride beside it.
 deadOffence :: VerdictReq -> Maybe String
 deadOffence req = pointShape (reqDeadPoint req) <|> addedOffence (reqDeadPoint req) (reqDeadAdded req)
 

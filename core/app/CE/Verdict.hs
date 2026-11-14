@@ -83,7 +83,7 @@ rowTotal req =
       maybe 0 length (reqPresent req)
     , maybe 0 length (reqSelfLoops req)
     , let (a, b, c, d) = reqExtent req in sum (map (maybe 0 length) [a, b, c, d])
-    , -- the dead-file point and the blocking roots (plan v2.35, 5B)
+    , -- the dead-file point and the blocking files (plan v2.35, 5B)
       pointSize (reqDeadPoint req)
     , maybe 0 length (reqDeadAdded req)
     ]

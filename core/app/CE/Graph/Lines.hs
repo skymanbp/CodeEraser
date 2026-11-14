@@ -7,8 +7,8 @@
 -- `entry_globs` hint when half the file tier or more is unreferenced
 -- (two at least — `files` the file nodes); and under `--check` (the
 -- `check` fact) the refusal on stderr. The veto: `--check` and the
--- judgment's fail — a root whose state the project blocks, or a
--- degraded run (plan v2.35, 5B).
+-- judgment's fail — a blocking file (a root of the unreferenced files
+-- whose state the project blocks), or a degraded run (plan v2.35, 5B).
 --
 -- Under the grouping (plan v2.35, the dead-file amendment, 5A) the roots
 -- print first, each once with the number of files that fall with it
@@ -18,10 +18,12 @@
 -- counts the roots. When the core dropped the pairs the roots print
 -- without a count, the dependents without roots, and one line says so
 -- with the core's cap. The word is "unreferenced": the finding is that
--- no reference was found, not that the file is unused. A root's state
--- (5B) prints only when a comparison point rode: without one every root
--- is untold, and a word on every row would tell nothing (the document
--- keeps `state` and its count).
+-- no reference was found, not that the file is unused. Every file's
+-- state (5B), root or dependent, prints where the file is listed, and
+-- only when a comparison point rode: without one every file is untold,
+-- and a word on every row would tell nothing (the document keeps
+-- `state` and its count); the summary then counts the files by state.
+-- A blocking dependent is marked by its state word like a blocking root.
 module CE.Graph.Lines (lines', veto) where
 
 import CE.Document.Read
@@ -45,7 +47,7 @@ lines' say doc req =
   dead d =
     say
       "dead"
-      [ P (if compared doc && bool "root" d && key "state" d /= Null then say "state_mark" [P (stateWord say (txt "state" d))] else plain "")
+      [ P (if compared doc && key "state" d /= Null then say "state_mark" [P (stateWord say (txt "state" d))] else plain "")
       , R (key "name" d)
       , W (txt "verdict" d)
       , P (say (if int "whyCode" d == 1 then "why_unreach" else "why_unref") [])
@@ -103,13 +105,13 @@ advisoryLines say doc
   by c = N (count [() | a <- rowsA, txt "code" a == c])
   count = toInteger . length
 
--- | Whether a comparison point rode: every root is untold exactly when
--- none did, so one told root, or the gate's comparison, says one did.
+-- | Whether a comparison point rode: every file is untold exactly when
+-- none did, so one told file, or the gate's comparison, says one did.
 compared :: Value -> Bool
 compared doc = (gate /= Null && key "comparison" gate /= Null) || any told (arr "dead" doc)
  where
   gate = key "gate" doc
-  told d = bool "root" d && key "state" d /= Null && txt "state" d /= "untold"
+  told d = key "state" d /= Null && txt "state" d /= "untold"
 
 -- | The gate could be answered (or none was declared).
 answered :: Value -> Bool
@@ -127,7 +129,7 @@ blockWords say doc = P (join ", " (map (stateWord say . unString) (arr "block" (
     _ -> ""
 
 -- | Under `--check` (stderr): the degraded run, the unanswered gate, or
--- the blocking roots by name (the first eight; the rows above list them
+-- the blocking files by name (the first eight; the rows above list them
 -- all) with the states that blocked them.
 refusal :: Say -> Value -> [Piece]
 refusal say doc = case key "degraded" doc of
@@ -153,10 +155,10 @@ listed say doc
   gate = key "gate" doc
   nDead = toInteger (length (arr "dead" doc))
 
--- | The judgment failed: a degraded run, or a root whose state the
--- project blocks (plan v2.35, the dead-file amendment: an unreferenced
--- file is listed and fails nothing by itself). An unanswered gate is
--- the face's own refusal (exit 2), never this bit.
+-- | The judgment failed: a degraded run, or a blocking file (plan v2.35,
+-- the dead-file amendment: an unreferenced file in no blocked state is
+-- listed and fails nothing by itself). An unanswered gate is the face's
+-- own refusal (exit 2), never this bit.
 failed :: Value -> Bool
 failed doc = key "degraded" doc /= Null || any (bool "blocking") (arr "dead" doc)
 

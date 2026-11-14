@@ -48,11 +48,13 @@ schemaId = "ce.deadcode-report/0.5.0"
 -- graph reply named, `under` [dependent, root] its pairs, `underDropped`
 -- the core's marker when it dropped them; absent, every row and count
 -- is what it was before the grouping. The gate (5B) is optional and
--- additive too: a `roots` row may carry its state code as a second
--- column (CE.Graph.Cost.rootStates), and `blocked` [node] the roots the
--- graph answered as blocking, beside the facts `blockMask` (the
--- project's mask over Cost.blockStates), `compared` (a comparison point
--- rode) and `unanswered` (the reply's `blockUnanswered`).
+-- additive too: `states` [node, state] every dead row's state code
+-- (CE.Graph.Cost.rootStates; roots and dependents alike, one row each),
+-- and `blocked` [node] the files the graph answered as blocking (the
+-- roots of the dead files in a blocked state), beside the facts
+-- `blockMask` (the project's mask over Cost.blockStates), `compared` (a
+-- comparison point rode) and `unanswered` (the reply's
+-- `blockUnanswered`).
 statement :: String
 statement =
   "range nodes\nrange advisory\nrange why\n\
@@ -60,8 +62,8 @@ statement =
   \rows kept 1 judged -\nrows reason 1 judged -\n\
   \rows dead 2+ judged nodes -\nrows reported 2 judged nodes -\n\
   \rows unmentioned 4 judged advisory nodes - -\n\
-  \rows roots 1+ judged nodes\nrows under 2 judged nodes nodes\nfact underDropped judged\noptional roots under underDropped\n\
-  \rows blocked 1 judged nodes\nfact blockMask judged\nfact compared judged\nfact unanswered judged\noptional blocked blockMask compared unanswered\n\
+  \rows roots 1 judged nodes\nrows under 2 judged nodes nodes\nfact underDropped judged\noptional roots under underDropped\n\
+  \rows states 2 judged nodes -\nrows blocked 1 judged nodes\nfact blockMask judged\nfact compared judged\nfact unanswered judged\noptional states blocked blockMask compared unanswered\n\
   \ref path nodes\nref node_name nodes\nref symbol advisory\nref why why\n"
 
 -- | The four verdicts by code 1..4 (CE.Graph.Dead).
@@ -128,41 +130,40 @@ grouping req =
   roots = S.fromList [n | n : _ <- rows req "roots"]
   covered = S.fromList [d | d : _ <- rows req "under"]
 
--- | Whether the roots carry their state (the gate rode, or a row is two
--- wide; then every row is), and whether the gate rode (the `blocked`
--- table is in the request).
+-- | Whether the states rode (the `states` table is in the request), and
+-- whether the gate rode (the `blocked` table is).
 stateful, gateRode :: DocReq -> Bool
-stateful req = gateRode req || any ((== 2) . length) (rows req "roots")
+stateful req = maybe False (M.member "states") (dRows req)
 gateRode req = maybe False (M.member "blocked") (dRows req)
 
--- | The gate held to the grouping: roots one or two wide, never both,
--- each state a code; the two facts bits, the mask over the blockable
--- states; every blocked node a root whose state the mask blocks;
--- nothing blocked when the gate went unanswered.
+-- | The gate held to the dead table: each state a code, one row per dead
+-- row in its order; the two facts bits, the mask over the blockable
+-- states; every blocked node a dead row whose state the mask blocks (the
+-- core's law blocks the roots of that set; the document holds the
+-- membership); nothing blocked when the gate went unanswered.
 gated :: DocReq -> Maybe String
 gated req =
   asum
-    [ codes req "roots" 1 0 (toInteger (length rootStates) - 1)
-    , if any (> 2) widths || (stateful req && any (/= 2) widths) then Just "roots: one or two columns, the same on every row" else Nothing
+    [ codes req "states" 1 0 (toInteger (length rootStates) - 1)
+    , if stateful req && [n | n : _ <- rows req "states"] /= [n | n : _ <- rows req "dead"] then Just "states: not one row per dead row, in its order" else Nothing
     , bits req ["compared", "unanswered"]
     , if fact req "blockMask" < 2 ^ length blockStates then Nothing else Just "facts: blockMask outside the blockable states"
-    , if gateRode req && not (told req) then Just "blocked: without the roots table" else Nothing
-    , asum [Just ("blocked " <> show i <> ": not a root the mask blocks") | (i, n : _) <- zip [0 :: Int ..] (rows req "blocked"), not (blocks req sts n)]
+    , if gateRode req && not (told req && stateful req) then Just "blocked: without the roots and states tables" else Nothing
+    , asum [Just ("blocked " <> show i <> ": not an unreferenced file the mask blocks") | (i, n : _) <- zip [0 :: Int ..] (rows req "blocked"), not (blocks req sts n)]
     , if flag req "unanswered" && not (null (rows req "blocked")) then Just "blocked: rows beside an unanswered gate" else Nothing
     ]
  where
-  widths = map length (rows req "roots")
   sts = stateMap req
 
--- | Every root's state code, built once per document (a lookup per row
--- would be quadratic in the roots); a node the map lacks reads 0, untold.
+-- | Every dead file's state code, built once per document (a lookup per
+-- row would be quadratic); a node the map lacks reads 0, untold.
 stateMap :: DocReq -> M.Map Integer Integer
-stateMap req = M.fromList [(r, st) | [r, st] <- rows req "roots"]
+stateMap req = M.fromList [(r, s) | [r, s] <- rows req "states"]
 
 stateIn :: M.Map Integer Integer -> Integer -> Integer
 stateIn m n = M.findWithDefault 0 n m
 
--- | Whether the mask blocks a root, by its state.
+-- | Whether the mask blocks a dead file, by its state.
 blocks :: DocReq -> M.Map Integer Integer -> Integer -> Bool
 blocks req m n = case lookup (nameOf rootStates (stateIn m n)) (zip blockStates [0 ..]) of
   Just b -> testBit (fact req "blockMask") b
@@ -199,7 +200,7 @@ deadcode req =
 
 -- | The gate as the project declared and the graph answered it: the
 -- blocked states by name, what the states were compared against, how
--- many roots block, and whether the gate could be answered at all.
+-- many files block, and whether the gate could be answered at all.
 gateObj :: DocReq -> Value
 gateObj req =
   object
@@ -209,21 +210,21 @@ gateObj req =
     , "answered" .= not (flag req "unanswered")
     ]
 
--- | A root's row under the gate: its state by name and, when the gate
--- rode, whether it blocks; a dependent's row, and every row of a
--- request without states, as it was.
+-- | A dead file's row under the gate, root or dependent: its state by
+-- name and, when the gate rode, whether it blocks; every row of a
+-- request without states as it was.
 gateRow :: DocReq -> (M.Map Integer Integer, S.Set Integer) -> Integer -> Value -> Value
 gateRow req (sts, blocked) n v = case v of
   Object o
-    | Just (Bool True) <- KM.lookup "root" o
-    , stateful req ->
+    | stateful req ->
         Object (o <> KM.fromList (["state" .= nameOf rootStates (stateIn sts n)] <> ["blocking" .= S.member n blocked | gateRode req]))
   _ -> v
 
--- | One count per state over the roots, when the states rode.
+-- | One count per state over the unreferenced files, when the states
+-- rode.
 stateCounts :: DocReq -> [Pair]
 stateCounts req
-  | stateful req = [Key.fromString s .= length [() | [_, st] <- rows req "roots", st == c] | (c, s) <- zip [0 ..] rootStates]
+  | stateful req = [Key.fromString s .= length [() | [_, st] <- rows req "states", st == c] | (c, s) <- zip [0 ..] rootStates]
   | otherwise = []
 
 -- | The grouping as the rows read it: the roots, and each dependent's

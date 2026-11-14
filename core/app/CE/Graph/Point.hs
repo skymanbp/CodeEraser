@@ -9,14 +9,21 @@
 -- baseline's `deadPoint` verbatim: `files`, the ids of every file node
 -- the graph judged on the day the baseline was written, and `dead`, the
 -- ids of those that were unreferenced, both ascending, `dead` a subset
--- of `files`. A root's STATE, by CE.Graph.Cost.rootStates: no point ->
--- untold; its id in the point's `dead` -> standing; in `files` and not
--- in `dead` -> orphaned; not in `files` -> born. Dependents have no
--- state. `deadBlock` is the project's mask over the blockable states
--- (CE.Graph.Cost.blockStates, bit i = the i-th): a root is BLOCKED when
--- its state's bit is in the mask; a mask without a point is UNANSWERED
--- and blocks nothing. `deadNow` is today's point, the object the next
--- baseline records (the verdict family copies it verbatim).
+-- of `files`. Let D be the unreferenced files (the `dead` rows). EVERY
+-- member of D has a STATE, roots and dependents alike, by
+-- CE.Graph.Cost.rootStates: no point -> untold; its id in the point's
+-- `dead` -> standing; in `files` and not in `dead` -> orphaned; not in
+-- `files` -> born. `deadBlock` is the project's mask over the blockable
+-- states (CE.Graph.Cost.blockStates, bit i = the i-th); M is the members
+-- of D whose state's bit is in the mask, and a file BLOCKS when it is a
+-- root OF M: in M, and supported by every member of M that supports it
+-- (CE.Graph.Roots' law with M in the place of D; the caller hands that
+-- call in, the pairs never forced). The gate passes iff M is empty: a
+-- non-empty finite M has a root. When M = D the blocked set is D's
+-- roots; every root of D in M is a root of M. A mask without a point is
+-- UNANSWERED and blocks nothing (every state is untold, M is empty).
+-- `deadNow` is today's point, the object the next baseline records (the
+-- verdict family copies it verbatim).
 module CE.Graph.Point (Gate (..), addedOffence, blockOffence, entitiesOffence, gate, pointOffence, pointShape, pointSize, readPoint) where
 
 import CE.Graph.Cost (blockStates, granFile, rootStates)
@@ -91,9 +98,9 @@ entitiesOffence nodes ents = case ents of
  where
   files = S.fromList [i | (i, _ : k : _) <- zip [0 ..] nodes, k == granFile]
 
--- | The verdict family's `deadAdded` (the blocking roots' ids): it rides
--- beside the point it was judged against, strictly ascending, inside the
--- point's `dead`.
+-- | The verdict family's `deadAdded` (the blocking files' ids): it
+-- rides beside the point it was judged against, strictly ascending,
+-- inside the point's `dead`.
 addedOffence :: Maybe Value -> Maybe [Integer] -> Maybe String
 addedOffence p added = case (added, p >>= either (const Nothing) Just . readPoint) of
   (Nothing, _) -> Nothing
@@ -103,13 +110,16 @@ addedOffence p added = case (added, p >>= either (const Nothing) Just . readPoin
     | not (S.fromList xs `S.isSubsetOf` S.fromList ds) -> Just "deadAdded: an id outside deadPoint.dead"
     | otherwise -> Nothing
 
--- | One judgment's gate: each root's state code, the blocked roots and
--- the reply keys (`blocked`, `blockUnanswered` when true, `deadNow` when
--- the entities rode). The contract has held every input's shape.
+-- | One judgment's gate: every unreferenced file's state code, the
+-- blocked files and the reply keys (`states` [node, state] one row per
+-- unreferenced file ascending, `blocked`, `blockUnanswered` when true,
+-- `deadNow` when the entities rode). The contract has held every
+-- input's shape. `rootsOf` answers the roots of a set of unreferenced
+-- files (CE.Graph.Roots' law over that set).
 data Gate = Gate {gState :: Int -> Integer, gBlocked :: [Int], gKeys :: [Pair]}
 
-gate :: Maybe [[Integer]] -> Maybe Value -> Integer -> [Int] -> [Int] -> Gate
-gate ents point mask deads roots = Gate stateOf blocked keys
+gate :: Maybe [[Integer]] -> Maybe Value -> Integer -> [Int] -> ([Int] -> [Int]) -> Gate
+gate ents point mask deads rootsOf = Gate stateOf blocked keys
  where
   idOf = IM.fromList [(fromInteger n, x) | [n, x] <- maybe [] id ents]
   told = either (const Nothing) (\(fs, ds) -> Just (S.fromList fs, S.fromList ds)) . readPoint =<< point
@@ -119,10 +129,12 @@ gate ents point mask deads roots = Gate stateOf blocked keys
       | S.member x fs -> "orphaned"
       | otherwise -> "born"
     _ -> "untold"
-  blocked = [r | r <- roots, Just b <- [lookup (stateOf r) blockable], testBit mask b]
+  -- M, and the files that block: M's roots (none when M is empty)
+  masked = [d | d <- deads, Just b <- [lookup (stateOf d) blockable], testBit mask b]
+  blocked = if null masked then [] else rootsOf masked
   blockable = [(code s, b) | (b, s) <- zip [0 ..] blockStates]
   keys =
-    ["blocked" .= blocked]
+    ["states" .= [[toInteger d, stateOf d] | d <- deads], "blocked" .= blocked]
       <> ["blockUnanswered" .= True | mask /= 0, Nothing <- [told]]
       <> ["deadNow" .= object ["files" .= sort (IM.elems idOf), "dead" .= sort [x | d <- deads, Just x <- [IM.lookup d idOf]]] | Just _ <- [ents]]
   code s = toInteger (length (takeWhile (/= s) rootStates))

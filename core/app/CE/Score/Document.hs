@@ -41,7 +41,7 @@ schemaId = "ce.check-report/0.6.0"
 -- row [tenths, L]: E times ten, rounded half up, as the verdict reply
 -- carries it, and the lines; none on a degraded judgment; 0.6.0, the
 -- extent law); `roast` the console's `--roast` (step 5, CE.Score.Lines);
--- `deadAdded` the blocking roots' entity ids the verdict reply echoed
+-- `deadAdded` the blocking files' entity ids the verdict reply echoed
 -- (plan v2.35, the dead-file amendment), present in the ratchet exactly
 -- when the table rode; `weights` the effective weight table [axis, w]
 -- the verdict reply echoed on a judged run (the dead-file amendment:
