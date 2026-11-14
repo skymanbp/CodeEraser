@@ -107,7 +107,7 @@ pub struct Request {
     /// The dead-file gate's two facts (plan v2.35, the dead-file
     /// amendment): today's point as graph/1 answered it (`deadNow`,
     /// carried unchanged; the core copies it into the new baseline) and
-    /// the blocking roots' entity ids (`dead_added`). None on the roads
+    /// the blocking files' entity ids (`dead_added`). None on the roads
     /// that judged no gate (the dedup-only and join roads, trend).
     pub dead: Dead,
 }
@@ -167,7 +167,7 @@ pub struct Reply {
     /// tenths = E times ten rounded half up (the exact E stays in the
     /// core); None only on a degraded reply.
     pub extent: Option<[u64; 2]>,
-    /// The blocking roots echoed in the ratchet (the dead-file
+    /// The blocking files echoed in the ratchet (the dead-file
     /// amendment), Some exactly when `deadAdded` rode; `dead_added` is
     /// their fail name.
     pub dead_added: Option<Vec<u64>>,
@@ -274,7 +274,7 @@ fn optional(r: &Request) -> [(&'static str, Option<Value>); 11] {
             r.cycle_self_loops.as_ref().map(|l| json!(l)),
         ),
         // the dead-file gate (plan v2.35): the point verbatim, the
-        // blocking roots when the graph answered the gate
+        // blocking files when the graph answered the gate
         ("deadPoint", r.dead.point.clone()),
         ("deadAdded", r.dead.added.as_ref().map(|a| json!(a))),
     ]

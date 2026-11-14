@@ -131,8 +131,9 @@ pub fn deadcode_cmd(
     check: bool,
 ) -> ExitCode {
     // --check (M5-close CI gate): the DECISION and its refusal line are
-    // the core's (a degraded run that judged nothing, or a root whose
-    // state `[deadcode] block` names, fails; plan v2.32 step 5, plan v2.35
+    // the core's (a degraded run that judged nothing, or a blocking file
+    // -- a root of the unreferenced files whose state `[deadcode] block`
+    // names -- fails; plan v2.32 step 5, plan v2.35
     // the dead-file amendment); a declared block the gate could not answer
     // (no committed point) is a judgment that did not happen, exit 2
     let answer = faces::deadcode(root, core, Plumb::gate(db, check));

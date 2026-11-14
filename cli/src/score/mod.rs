@@ -308,7 +308,7 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
 /// the reply's singleton cycles (6.4.0): node indices, re-keyed by
 /// the caller. The third is the dead-file gate's answer (plan v2.35,
 /// 5B): an unanswered gate refuses by name before any verdict is
-/// judged; otherwise today's point and the blocking roots' ids ride to
+/// judged; otherwise today's point and the blocking files' ids ride to
 /// the verdict family, which holds `dead_added` on them.
 fn judged_positions(
     core: &str,

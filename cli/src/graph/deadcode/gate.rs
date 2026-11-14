@@ -3,10 +3,12 @@
 //! file node's entity id (`score::baseline::file_entity` of its
 //! project-relative path, the id its size row has), the committed
 //! baseline's `deadPoint` verbatim, and the `[deadcode] block` mask —
-//! and reads the core's answer back: the blocked roots, whether the gate
-//! could be answered, and today's point (`deadNow`). The states, the
-//! comparison and what blocks are the core's (CE.Graph.Point); nothing
-//! here joins a point to a file or decides a state.
+//! and reads the core's answer back: every unreferenced file's state,
+//! the blocked files (the roots of the unreferenced files whose state the
+//! mask names), whether the gate could be answered, and today's point
+//! (`deadNow`). The states, the comparison and what blocks are the
+//! core's (CE.Graph.Point); nothing here joins a point to a file, decides
+//! a state or derives a blocked file.
 
 use super::{GraphWire, Grouping};
 use anyhow::{Context, Result, bail, ensure};
@@ -24,11 +26,14 @@ pub struct Gate {
     pub block: u8,
 }
 
-/// The core's answer: the blocked roots (ascending nodes), whether a
-/// mask rode without a point, and today's point (Some exactly when the
-/// entities rode and the judgment was not degraded).
+/// The core's answer: every unreferenced file's state ([node, state],
+/// one row per dead row in its order; the codes are
+/// CE.Graph.Cost.rootStates), the blocked files (ascending nodes),
+/// whether a mask rode without a point, and today's point (Some exactly
+/// when the entities rode and the judgment was not degraded).
 #[derive(Debug, Default)]
 pub struct Gated {
+    pub states: Vec<[i64; 2]>,
     pub blocked: Vec<i64>,
     pub unanswered: bool,
     pub now: Option<Value>,
@@ -65,7 +70,7 @@ impl Gate {
         obj.insert("deadBlock".into(), json!(self.block));
     }
 
-    /// A blocked root's entity id, from the table this side sent.
+    /// A blocked file's entity id, from the table this side sent.
     pub fn id_of(&self, node: i64) -> Option<u64> {
         self.entities
             .binary_search_by_key(&node, |&(n, _)| n)
@@ -81,21 +86,32 @@ pub fn committed_point(root: &Path) -> Result<Option<Value>> {
     Ok(crate::score::baseline::document(root)?.and_then(|d| d.get("deadPoint").cloned()))
 }
 
-/// The reply's gate held at the boundary: `blocked` present (a reply
-/// without it is a pre-amendment core), strictly ascending, every node a
-/// root; nothing blocked beside an unanswered gate; the fail bit the
-/// gate's answer (degraded, or a blocked root); `deadNow` present
-/// exactly when the entities rode on a judged reply, two ascending id
-/// lists.
+/// The reply's gate held at the boundary: `states` and `blocked`
+/// present (a reply without them is a pre-amendment core); one state row
+/// per dead row, in its order, each code inside 0..3; `blocked` strictly
+/// ascending, every node an unreferenced file (a dead row; since the
+/// gate reads every file's state a blocked file may be a dependent);
+/// nothing blocked beside an unanswered gate; the fail bit the gate's
+/// answer (degraded, or a blocked file); `deadNow` present exactly when
+/// the entities rode on a judged reply, two ascending id lists.
 pub(super) fn consume(
     reply: &Value,
-    g: &Grouping,
+    dead: &[Vec<i64>],
     sent: Option<&Gate>,
     (degraded, fail): (bool, bool),
 ) -> Result<Gated> {
+    let states: Vec<[i64; 2]> = serde_json::from_value(reply["states"].clone())
+        .context("pre-amendment core: graph/1 offers no `states` (the dead-file gate)")?;
     let blocked: Vec<i64> = serde_json::from_value(reply["blocked"].clone())
         .context("pre-amendment core: graph/1 offers no `blocked` (the dead-file gate)")?;
-    let roots: BTreeSet<i64> = g.roots.iter().map(|r| r[0]).collect();
+    ensure!(
+        states.iter().map(|s| s[0]).eq(dead.iter().map(|r| r[0])),
+        "graph/1 `states` is not one row per dead row, in its order"
+    );
+    if let Some([n, s]) = states.iter().find(|s| !(0..=3).contains(&s[1])) {
+        bail!("graph/1 file {n}: state {s} outside 0..3");
+    }
+    let deads: BTreeSet<i64> = dead.iter().map(|r| r[0]).collect();
     for (i, w) in blocked.windows(2).enumerate() {
         ensure!(
             w[0] < w[1],
@@ -103,8 +119,8 @@ pub(super) fn consume(
             i + 1
         );
     }
-    if let Some(n) = blocked.iter().find(|n| !roots.contains(n)) {
-        bail!("graph/1 blocked node {n} is not a root");
+    if let Some(n) = blocked.iter().find(|n| !deads.contains(n)) {
+        bail!("graph/1 blocked node {n} is not an unreferenced file");
     }
     let unanswered = reply["blockUnanswered"].as_bool() == Some(true);
     ensure!(
@@ -118,6 +134,7 @@ pub(super) fn consume(
     );
     Ok(Gated {
         now: now_of(reply, sent.is_some() && !degraded)?,
+        states,
         blocked,
         unanswered,
     })
@@ -145,19 +162,20 @@ fn now_of(reply: &Value, expected: bool) -> Result<Option<Value>> {
 }
 
 /// The gate's rows on the deadcode document request (the face's road):
-/// each root with its state, the blocked roots, the mask, whether a
-/// point rode and whether the gate went unanswered. Without a gate the
-/// grouping rides as 5A sent it.
+/// the roots, every unreferenced file's state, the blocked files, the
+/// mask, whether a point rode and whether the gate went unanswered.
+/// Without a gate the grouping rides as 5A sent it.
 pub(super) fn on_request(
     req: crate::document::Request,
     g: &Grouping,
     sent: Option<&Gate>,
     gated: &Gated,
 ) -> crate::document::Request {
+    let req = req.rows("roots", g.roots.iter().map(|&r| [r]).collect::<Vec<_>>());
     let Some(gate) = sent else {
-        return req.rows("roots", g.roots.iter().map(|r| [r[0]]).collect::<Vec<_>>());
+        return req;
     };
-    req.rows("roots", &g.roots)
+    req.rows("states", &gated.states)
         .rows(
             "blocked",
             gated.blocked.iter().map(|&n| [n]).collect::<Vec<_>>(),

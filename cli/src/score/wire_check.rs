@@ -76,7 +76,7 @@ fn drift_policy(r: &Request, failed: &[String]) -> Result<()> {
     Ok(())
 }
 
-/// The dead-file gate (plan v2.35): the blocking roots echo exactly as
+/// The dead-file gate (plan v2.35): the blocking files echo exactly as
 /// sent, `dead_added` holds exactly when one was sent, and the new
 /// baseline carries the point verbatim exactly when one rode (a
 /// degraded reply answers no new baseline to persist, so only a judged

@@ -1,8 +1,9 @@
 //! The graph reply read at the boundary: the dead and reported rows
 //! (moved here from deadcode.rs unchanged) and, since the dead-file
 //! amendment (plan v2.35, phase 5A), the core's grouping of the dead
-//! rows — `roots` [node, state], `under` [dependent, root] and the
-//! `underDropped` marker; since 5B the gate's answer (gate.rs). Every
+//! rows — `roots` [node], `under` [dependent, root] and the
+//! `underDropped` marker; since 5B the gate's answer (gate.rs: every
+//! unreferenced file's state and the blocked files). Every
 //! definition is the core's (CE.Graph.Roots, CE.Graph.Point): this side
 //! derives no root, no pair and no state, it holds the reply's shape to
 //! the dead table and refuses by name what does not fit — the rows are
@@ -14,12 +15,12 @@ use anyhow::{Context, Result, bail, ensure};
 use serde_json::Value;
 use std::collections::BTreeSet;
 
-/// The grouping the core answered: the roots with their state (0..3,
-/// CE.Graph.Cost.rootStates; untold until a comparison point rides),
-/// the pairs ascending, and whether the core dropped them over its cap.
+/// The grouping the core answered: the roots ascending, the pairs
+/// ascending, and whether the core dropped them over its cap (the
+/// states ride once, in the gate's `states`, gate.rs).
 #[derive(Debug, Default)]
 pub struct Grouping {
-    pub roots: Vec<[i64; 2]>,
+    pub roots: Vec<i64>,
     pub under: Vec<[i64; 2]>,
     pub dropped: bool,
 }
@@ -46,14 +47,14 @@ pub(super) fn consume(
     };
     let dead = dead_rows(reply, nodes)?;
     // 5A's refusal order holds: the advisory, then `reported`, then the
-    // grouping, and the gate last (it reads the grouping)
+    // grouping, and the gate last (it reads the dead rows)
     let advisory = advisory::consume(reply, nodes, names)?;
     let reported = reported_rows(reply, nodes)?;
     let grouping = grouping(reply, &dead)?;
     Ok(Judged {
         advisory,
         reported,
-        gated: gate::consume(reply, &grouping, sent, (degraded.is_some(), fail))?,
+        gated: gate::consume(reply, &dead, sent, (degraded.is_some(), fail))?,
         grouping,
         dead,
         kept: reply["counts"]["kept"].as_i64(),
@@ -113,27 +114,24 @@ fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
 
 /// The grouping held to the dead rows: both keys present (a reply
 /// without them is a pre-amendment core), each table strictly
-/// ascending, every root a dead row with a state code, every pair a
+/// ascending, every root a dead row, every pair a
 /// dependent (a dead row that is no root) beside a root, no pair beside
 /// the dropped marker, and — unless dropped — no dependent without one.
 fn grouping(reply: &Value, dead: &[Vec<i64>]) -> Result<Grouping> {
-    let table = |key: &str| -> Result<Vec<[i64; 2]>> {
+    fn table<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> Result<Vec<T>> {
         serde_json::from_value(reply[key].clone()).with_context(|| {
             format!("pre-amendment core: graph/1 offers no `{key}` (the dead-file grouping)")
         })
-    };
-    let (roots, under) = (table("roots")?, table("under")?);
+    }
+    let roots: Vec<i64> = table::<[i64; 1]>(reply, "roots")?.into_iter().map(|[r]| r).collect();
+    let under = table::<[i64; 2]>(reply, "under")?;
     let dropped = reply["underDropped"].as_bool() == Some(true);
     let deads: BTreeSet<i64> = dead.iter().map(|r| r[0]).collect();
-    ascending("roots", roots.iter().map(|r| r[0]))?;
+    ascending("roots", roots.iter())?;
     ascending("under", under.iter().map(|&[d, r]| (d, r)))?;
-    let rooted: BTreeSet<i64> = roots.iter().map(|r| r[0]).collect();
-    for &[n, state] in &roots {
-        ensure!(deads.contains(&n), "graph/1 root {n} is not a dead row");
-        ensure!(
-            (0..=3).contains(&state),
-            "graph/1 root {n}: state {state} outside 0..3"
-        );
+    let rooted: BTreeSet<i64> = roots.iter().copied().collect();
+    if let Some(n) = roots.iter().find(|n| !deads.contains(n)) {
+        bail!("graph/1 root {n} is not a dead row");
     }
     ensure!(
         !dropped || under.is_empty(),
@@ -183,8 +181,9 @@ fn ascending<T: Ord + std::fmt::Debug>(key: &str, keys: impl Iterator<Item = T>)
 }
 
 /// The grouping's rows on the deadcode document request (the face's
-/// road, `deadcode::said`): `roots` (with their states when a gate rode,
-/// gate::on_request), `under` [dependent, root] and the dropped marker —
+/// road, `deadcode::said`): `roots` (and, when a gate rode, every
+/// file's state, gate::on_request), `under` [dependent, root] and the
+/// dropped marker —
 /// optional in the document's statement, sent here always.
 pub(super) fn on_request(
     req: crate::document::Request,
