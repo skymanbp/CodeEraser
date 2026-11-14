@@ -266,14 +266,16 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <em>unreferenced</em>: no reference was found, which is not the claim that it is unused. A dead file
   <code>g</code> supports <code>f</code> when a kept path leads from <code>g</code> to <code>f</code>;
   <code>f</code> is a <em>root</em> when every dead file supporting it is supported by it, otherwise a
-  <em>dependent</em> under the roots that support it. The committed baseline's <code>deadPoint</code> gives a
-  root its state — <code>standing</code> (unreferenced then), <code>orphaned</code> (there and referenced
-  then), <code>born</code> (not there then); a dependent has none, and the point is keyed by path, so a
-  renamed file reads <code>born</code>. By default every unreferenced file is listed and fails nothing.
-  <code>[deadcode] block</code>, out of <code>"orphaned"</code> and <code>"born"</code>
-  (<code>"standing"</code> is refused: the inventory never blocks), fails <code>ce deadcode --check</code>
-  and <code>ce check</code>'s <code>dead_added</code> on a root in a named state; a declared block with no
-  point refuses with exit 2. Two blind audits back the default: 392 of 424 existing unreferenced files
+  <em>dependent</em> under the roots that support it. The baseline's <code>deadPoint</code> gives every
+  unreferenced file, root or dependent, its state — <code>standing</code> (unreferenced then),
+  <code>orphaned</code> (there and referenced then), <code>born</code> (not there then); the point is keyed
+  by path, so a renamed file reads <code>born</code>. By default every unreferenced file is listed and fails
+  nothing. <code>[deadcode] block</code>, out of <code>"orphaned"</code> and <code>"born"</code>
+  (<code>"standing"</code> is refused: the inventory never blocks), names a set M of unreferenced files;
+  the files that block are M's roots (the same root law, with M in place of the dead set), so
+  <code>ce deadcode --check</code> and <code>ce check</code>'s <code>dead_added</code> fail exactly when M
+  is not empty, a new file under a standing root included; a declared block with no point refuses with
+  exit 2. Two blind audits back the default: 392 of 424 existing unreferenced files
   were in use, and new ones were too few to judge (21 orphaned, 90 born, under the 100 a class needs).</p><details class="more"><summary>Derivation and constants</summary><p class="note"><code>inert</code> = {3 asset, 5 unused ref-def}, excluded by the core:
   an image link renders bytes and an unused reference definition renders nothing. Since proto 2.32.0
   each unreferenced row carries a confidence judged from the per-language site ledger (0 unvouched, 1 vacuous,

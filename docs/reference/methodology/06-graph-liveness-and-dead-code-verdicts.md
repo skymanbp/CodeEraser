@@ -606,46 +606,63 @@ holds (`bScc`) in one pass and never drops it; the dependent → root pairs cost
 are dropped whole, the reply saying so with `underDropped`
 ([Cost.hs:77-85](../../../core/app/CE/Graph/Cost.hs#L77), [Graph.hs:115](../../../core/app/CE/Graph.hs#L115)).
 
-**The comparison point and the states** ([Point.hs:5-19](../../../core/app/CE/Graph/Point.hs#L5)). The
+**The comparison point and the states** ([Point.hs:5-26](../../../core/app/CE/Graph/Point.hs#L5)). The
 committed baseline records the graph's own facts on the day it is written: `deadPoint = {files, dead}`,
 the entity ids of every file node the graph judged and of those in the dead set — a file's id is its size
 row's, `score::baseline::file_entity` of its project-relative path. graph/1 answers today's point
-(`deadNow`) and the verdict family copies it into every baseline it writes. A root's **state**: its id in
-the point's `dead` → `standing`; in `files` and not in `dead` → `orphaned`; not in `files` → `born`; no
-point rode → `untold` ([Cost.hs:87-91](../../../core/app/CE/Graph/Cost.hs#L87),
-[Point.hs:111-128](../../../core/app/CE/Graph/Point.hs#L111)). A dependent has no state. Two corners
-follow, both by these words:
+(`deadNow`) and the verdict family copies it into every baseline it writes. Every file of D has a
+**state**, root and dependent alike: its id in the point's `dead` → `standing`; in `files` and not in
+`dead` → `orphaned`; not in `files` → `born`; no point rode → `untold`
+([Cost.hs:87-92](../../../core/app/CE/Graph/Cost.hs#L87),
+[Point.hs:121-140](../../../core/app/CE/Graph/Point.hs#L121)). Two corners follow, both by
+these words:
 
-- *A dependent is not judged by its own history.* With `main.ts` importing `lib.ts` when the baseline was
-  written, replace that import and add `n.ts` importing `lib.ts`: `lib.ts` lost its last live reference,
-  but a new unreferenced file still refers to it, so it is a dependent under the `born` root `n.ts`, not
-  `orphaned`. A project that blocks `orphaned` alone is not failed by it; one that blocks `born` is, by
-  `n.ts`.
+- *A file is judged by its own history, wherever it hangs.* With `main.ts` importing `lib.ts` when the
+  baseline was written, replace that import and add `n.ts` importing `lib.ts`: `lib.ts` lost its last live
+  reference and reads `orphaned`, a dependent under the `born` root `n.ts`. A project that blocks
+  `orphaned` alone is failed by `lib.ts` (no file in a blocked state supports it); one that blocks both
+  states is failed by `n.ts` alone, `lib.ts` falling with it.
 - *The point is keyed by path.* A standing `s.ts` renamed to `t.ts` has an id the point never saw:
   `t.ts` reads `born`.
 
 **The gate.** `ce.toml [deadcode] block` lists the states that fail, out of `"orphaned"` and `"born"` —
 `blockStates`, the states after `untold` and `standing`
-([Cost.hs:93-98](../../../core/app/CE/Graph/Cost.hs#L93)); the default is empty. `"standing"` is refused
+([Cost.hs:94-100](../../../core/app/CE/Graph/Cost.hs#L94)); the default is empty. `"standing"` is refused
 at load by name — the inventory never blocks: declare an entry or delete the file — and any other word
 by name ([config/deadcode.rs:33-47](../../../cli/src/config/deadcode.rs#L33)); the list enters
-`knobs_digest` (booklet 05). A root whose state the list names is **blocking**. `ce deadcode --check`
-exits 1 when a root blocks or the judgment degraded — the reply's `fail` bit is exactly that answer
-([Lines.hs:160-161](../../../core/app/CE/Graph/Lines.hs#L160)) — and `ce check` holds its seventh fail
-condition, `dead_added`, on the same roots ([Faces.hs:33](../../../core/app/CE/Verdict/Faces.hs#L33)). A
-declared `block` with no comparison point — no baseline, or one written before the amendment — cannot be
-answered: both commands refuse by name with exit 2 and the remedy, `CE_ACCEPT_BASELINE=1 ce baseline .`
-from the project root ([main_cmds.rs:140](../../../cli/src/main_cmds.rs#L140),
+`knobs_digest` (booklet 05). Write M for the files of D whose state the list names. A file is
+**blocking** when it is a root *of M*: in M, and supported by every file of M that supports it — the root
+law above with M in the place of D, read off the same condensation; the pairs of that second reading are
+never built ([Point.hs:133-134](../../../core/app/CE/Graph/Point.hs#L133),
+[Graph.hs:119](../../../core/app/CE/Graph.hs#L119)). **The guarantee:** the gate passes iff M is
+empty, because a non-empty finite M has a root (follow supporters inside M upward through the finite
+condensation). With `block = ["orphaned", "born"]` and a comparison point, the gate passes iff every
+unreferenced file is standing. **Where this equals the roots-only reading, and where it differs.** When
+M = D — every unreferenced file in a blocked state: no standing file, both states blocked — the blocking
+files are D's roots exactly. When M is a proper part of D the two readings differ on the files of M that
+are roots of M but dependents in D: a newly unreferenced file under a standing root (`s.ts`, unreferenced
+when the baseline was written, comes to import `lib.ts`, which lost its live reference, and a new `n.ts`:
+both block, though their one root is standing), and, under `block = ["born"]`, a born file whose only
+supporter is an orphaned root (a new file nothing live reaches). Every root of D whose state the list
+names is a root of M, so nothing the roots-only reading blocked stops blocking. `ce deadcode --check`
+exits 1 when a file blocks or the judgment degraded — the reply's `fail` bit is exactly that answer
+([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163)) — and `ce check` holds its seventh fail
+condition, `dead_added`, on the same files ([Faces.hs:33](../../../core/app/CE/Verdict/Faces.hs#L33)). A
+declared `block` with no comparison point — no `ce-baseline.json`, or one written before the amendment
+(the file on disk is what is read) — cannot be answered: both commands refuse by name with exit 2 and the
+remedy, `CE_ACCEPT_BASELINE=1 ce baseline .` from the project root, then commit the file
+([main_cmds.rs:140](../../../cli/src/main_cmds.rs#L140),
 [score/mod.rs:320](../../../cli/src/score/mod.rs#L320)). With nothing declared an unreferenced file is
 listed and fails nothing.
 
-**The document and the faces.** `ce.deadcode-report` 0.5.0 carries, on each `dead` row, `root`; on a
-root, `state` and `blocking`; on a dependent, `under` (its roots); in `counts`, `roots`, `dependents` and
-one count per state; at the top, `gate = {block, comparison, blocked, answered}` and, when the pairs were
-dropped, `under_dropped` ([Document.hs:203-221](../../../core/app/CE/Graph/Document.hs#L203)). The
-console prints the roots first, each with the files that fall with it, then the dependents naming their
-roots; a root's state is printed only when a comparison point rode. The GUI's graph screen and the MCP
-tool read the same document.
+**The document and the faces.** `ce.deadcode-report` 0.5.0 carries, on each `dead` row, `root`,
+`state` and `blocking`; on a dependent, `under` (its roots); in `counts`, `roots`, `dependents` and one
+count per state over the unreferenced files; at the top, `gate = {block, comparison, blocked, answered}`
+and, when the pairs were dropped, `under_dropped`
+([Document.hs:213-220](../../../core/app/CE/Graph/Document.hs#L213)). The console prints the
+roots first, each with the files that fall with it, then the dependents naming their roots; every file's
+state is printed where it is listed, only when a comparison point rode, so a blocking dependent is marked
+like a blocking root. The GUI's graph screen and the MCP tool read the same document.
 
 **The score.** The dead axis keeps its law and weighs 0 unless `[score.weights] deadcode` names it
 (booklet 05).

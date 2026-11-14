@@ -85,10 +85,12 @@ For every candidate pair or unreferenced file:
 4. An unreferenced file with an `entry_globs` match or exported surface
    may be a public API — confirm before removing.
 5. Act on roots: a dependent (its `under` names its roots) falls with
-   them, so judge the root first. Read its `state`: `born` or
-   `orphaned` is this change's own; `standing` was there before
-   (inventory); `untold` means no committed baseline carried a point,
-   so it says nothing about whether the file is new. The listing fails nothing by default, and no row is a
+   them, so judge the root first. Every unreferenced file has a
+   `state`, root or dependent: `born` or `orphaned` is this change's
+   own; `standing` was there before (inventory); `untold` means
+   `ce-baseline.json` holds no comparison point, so it says nothing
+   about whether the file is new. A row with `blocking` true fails the
+   gate, a dependent as much as a root. The listing fails nothing by default, and no row is a
    deletion licence: an unreferenced FILE may be used by its name:
    run as a script or by a command (Makefile, CI workflow, package
    script, README instructions), found by a tool's convention
