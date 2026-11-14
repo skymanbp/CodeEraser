@@ -43,7 +43,7 @@ references them, which is not proof that nothing uses them.
 
 ```sh
 ce dedup . --format json      # T1/T2 clone blocks
-ce deadcode . --format json   # unreferenced files under their roots, each root's state
+ce deadcode . --format json   # unreferenced files under their roots, each file's state
 ce join . --days 14 --format json   # similarity × position × churn
 ```
 

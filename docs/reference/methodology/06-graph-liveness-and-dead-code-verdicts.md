@@ -268,7 +268,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:65-85](../../../core/app/CE/Graph.hs#L65)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:468-482](../../../cli/src/graph/deadcode.rs#L468)) and `ce deadcode --check` relays the
-core's fail bit — degraded, or a blocking root (§10) ([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
+core's fail bit — degraded, or a blocking file (§10) ([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
 
 ### 5. Kept arcs and liveness
 
@@ -487,7 +487,7 @@ separate `reported` table and are never in the dead set — aggregates are not c
 proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its verdicts on
 the node kind column it always received ([Graph.hs:173-175](../../../core/app/CE/Graph.hs#L173),
 `granFile` at [Cost.hs:130-139](../../../core/app/CE/Graph/Cost.hs#L130)), and carries the additive
-`fail` bit, since plan v2.35 the gate's own answer — a degraded run or a blocking root (§10). The Rust
+`fail` bit, since plan v2.35 the gate's own answer — a degraded run or a blocking file (§10). The Rust
 side keeps the split as a boundary
 contract, because `ce erase` builds its dead-file rows from the `dead` table (rows, not deletions —
 book 12 §2, `reachable_by_name`): an aggregate arriving in `dead` refuses as wire skew, never a directory row
@@ -550,9 +550,9 @@ the resolver cannot choose its own denominator
 ([eval_graph_precision.rs:1-6](../../../cli/tests/it/eval_graph_precision.rs#L1)); the sample is 100 sites
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, became a gate, and since
-plan v2.35 it is a project's declaration: `ce deadcode --check` exits non-zero when a root's state is
-one `[deadcode] block` names (§10) — this repository blocks `orphaned` and `born`
-([Lines.hs:160-161](../../../core/app/CE/Graph/Lines.hs#L160), [Deadcode.hs:37](../../../core/app/CE/Text/Deadcode.hs#L37)).
+plan v2.35 it is a project's declaration: `ce deadcode --check` exits non-zero when an unreferenced
+file's state is one `[deadcode] block` names (§10) — this repository blocks `orphaned` and `born`
+([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163), [Deadcode.hs:43](../../../core/app/CE/Text/Deadcode.hs#L43)).
 
 The six languages plan v2.30 added sit the same exam, each against a blind audit frozen before any
 scoring and registered in [EVAL-SET-LANGS.md](../../EVAL-SET-LANGS.md): the sample is frozen first,
@@ -662,7 +662,7 @@ and, when the pairs were dropped, `under_dropped`
 ([Document.hs:213-220](../../../core/app/CE/Graph/Document.hs#L213)). The console prints the
 roots first, each with the files that fall with it, then the dependents naming their roots; every file's
 state is printed where it is listed, only when a comparison point rode, so a blocking dependent is marked
-like a blocking root. The GUI's graph screen and the MCP tool read the same document.
+as a blocking root is. The GUI's graph screen and the MCP tool read the same document.
 
 **The score.** The dead axis keeps its law and weighs 0 unless `[score.weights] deadcode` names it
 (booklet 05).

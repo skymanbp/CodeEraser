@@ -99,7 +99,7 @@ pub(crate) enum Cmd {
     },
     /// Judge liveness over the cached reference graph: the ladder's
     /// edges, the core's four-way verdicts, the unreferenced files
-    /// grouped under their roots (each root's state and the gate's
+    /// grouped under their roots (each file's state and the gate's
     /// answer), and the symbol-level advisory (declarations no other
     /// file spells — never a verdict)
     Deadcode {
