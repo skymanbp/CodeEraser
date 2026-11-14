@@ -93,10 +93,14 @@ any dead row is minted, so an incomplete graph judgment cannot become proof
 `[1, verbatim, wordsA, wordsB, bytesEqual]`. The first three values are the
 reported verbatim length and the two segment word counts; `bytesEqual` is the
 raw-slice equality bit ([Cost.hs:94-97](../../../core/app/CE/Erase/Cost.hs#L94)).
-The client counts, for each side, the link sites whose fragment names the
-heading (or HTML id) of the section holding the segment — the nearest heading
-at or above its first line, slugged by the ladder's own rule; a segment above
-the first heading has no section and counts 0 — and chooses the side with FEWER
+The client counts, for each side, the link sites whose fragment names a target
+erasing the segment would leave dangling or empty — in Markdown every heading
+(slugged by the ladder's own rule) and every raw-HTML anchor (`<a id>`,
+`<a name>`, `<hN id>`) on a line from the nearest heading at or above the
+segment's first line through its last line (from its first line when no heading
+is above it, so a segment above the first heading answers only for the targets
+inside it), in HTML the innermost id holding its first line and every id that
+opens inside it; each distinct target once — and chooses the side with FEWER
 such links as the candidate, the path-lexicographically later one on equal
 counts; it then computes equality from the two inclusive line slices
 ([doc_rows.rs:13-85](../../../cli/src/erase/doc_rows.rs#L13)). Since release
