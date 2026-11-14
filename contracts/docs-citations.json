@@ -28,8 +28,8 @@
   },
   "docs/reference/methodology.md|size-advisory.md|d2b53e03d12ebc60|0": {
     "target": "size-advisory.md",
-    "line": 36,
-    "end": 39,
+    "line": 37,
+    "end": 40,
     "text": "- 软线随仓库自身分布浮动：`S = clamp(median + k×MAD(log-LOC),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/budget.rs|b076d7328122f9cb|0": {
@@ -3716,10 +3716,16 @@
     "end": 11,
     "text": "{-# LANGUAGE OverloadedStrings #-}"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/test/VerdictExtentProps.hs|304e28b416585da3|0": {
+    "target": "../../../core/test/VerdictExtentProps.hs",
+    "line": 21,
+    "end": 24,
+    "text": ", (\"extent 2a T1: adding a file whose every line is named never raises the score\", all junk trees)"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/test/VerdictExtentProps.hs|f105d739e48d8ada|0": {
     "target": "../../../core/test/VerdictExtentProps.hs",
-    "line": 34,
-    "end": 35,
+    "line": 36,
+    "end": 37,
     "text": ", (\"extent 10b: the dead axis named (weight row 4 = 1): deleting a dead root never lowers the score\", all deadRootNamed trees)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|07bfccd0bf37790c|0": {
@@ -4498,6 +4504,12 @@
     "end": 49,
     "text": "arcs =\nS.fromList"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|00401a4718d16b2a|0": {
+    "target": "../../../core/app/CE/Graph/Contract.hs",
+    "line": 71,
+    "end": 86,
+    "text": "instance FromJSON GraphReq where"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|218b48ca3a9e695a|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
     "line": 106,
@@ -4539,11 +4551,11 @@
     "end": 33,
     "text": "-- | Wire shape (design brief §2): index = node identity, nothing"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|9c522356ed628d7f|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|9f276939118cb40e|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 88,
-    "end": 110,
-    "text": "-- | First boundary-contract offender, if any — checked in request"
+    "line": 95,
+    "end": 128,
+    "text": "violation :: GraphReq -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
@@ -4772,6 +4784,12 @@
     "line": 5,
     "end": 26,
     "text": "-- | The dead-file comparison point and the gate over it (plan v2.35,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Point.hs|96485f29e43bae99|0": {
+    "target": "../../../core/app/CE/Graph/Point.hs",
+    "line": 41,
+    "end": 101,
+    "text": "-- | The point's two lists, read and held to their shape: each strictly"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Point.hs|ad1889f479950e48|0": {
     "target": "../../../core/app/CE/Graph/Point.hs",
@@ -5908,12 +5926,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Text/Join.hs|1789ec410184c9b8|0": {
     "target": "../../../core/app/CE/Text/Join.hs",
-    "line": 21,
+    "line": 22,
     "text": "\\degraded\\tjoin graph leg degraded: {}\\t联判图信号腿已降级：{}\\n\\"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Text/Join.hs|1908969cef0f6a66|0": {
     "target": "../../../core/app/CE/Text/Join.hs",
-    "line": 22,
+    "line": 23,
     "text": "\\summary\\tjoin {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\\t联判 {} 天窗口：{} 文件对，{} 单元行，{} 提交（判决出自 check 判决格；退出码仍仅报告）\""
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|046596fdbf5a2466|0": {
@@ -6684,60 +6702,60 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|0c01dba9739e23a9|0": {
     "target": "../size-advisory.md",
-    "line": 109,
-    "end": 113,
+    "line": 110,
+    "end": 114,
     "text": "- **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|34258d75cd93294a|0": {
     "target": "../size-advisory.md",
-    "line": 117,
-    "end": 120,
+    "line": 118,
+    "end": 121,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|3ba2981147276636|0": {
     "target": "../size-advisory.md",
-    "line": 57,
+    "line": 58,
     "text": "φ（`roiPhiMilli`）。设计初稿的「基线重键噪声」并入 φ：搬走的成员换键、基线具名重立一次，是每个新文件付一次的固定代价，不另立项（同批退役）。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4601876c535f456f|0": {
     "target": "../size-advisory.md",
-    "line": 53,
-    "end": 54,
+    "line": 54,
+    "end": 55,
     "text": "- 收益 B = **渐进区罚分回收**，模型唯一一项。设计初稿另列的「dedup 预算效应」与「热/冷单元隔离」已于 v2.30 步 5b 退役、不再是「未实现」："
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|61139df7c49aa851|0": {
     "target": "../size-advisory.md",
-    "line": 62,
-    "end": 64,
+    "line": 63,
+    "end": 65,
     "text": "- **区内仲裁**：过 S 而无可行缝（所有候选 ROI<1 = 高内聚长文件）"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|77d5e91eafe05a8a|0": {
     "target": "../size-advisory.md",
-    "line": 96,
-    "end": 99,
+    "line": 97,
+    "end": 100,
     "text": "benefit = 软区间罚回收（拆分建议自己的压力模型 `CE.Structure.Zone`；"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
-    "line": 125,
-    "end": 128,
+    "line": 126,
+    "end": 129,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|c968916b34a20771|0": {
     "target": "../size-advisory.md",
-    "line": 129,
+    "line": 130,
     "text": "- 窗口 = 14 天（§4.1 双周锚），测量常数非 wire 旋钮。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d9dffcd08eba8db2|0": {
     "target": "../size-advisory.md",
-    "line": 100,
-    "end": 105,
+    "line": 101,
+    "end": 106,
     "text": "- **共引代理**：真·文件内符号共引不存在于任何缓存（v0.6 映射实证）；"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|e77a0b42e14cb13a|0": {
     "target": "../size-advisory.md",
-    "line": 121,
-    "end": 124,
+    "line": 122,
+    "end": 125,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|02279480097b02df|0": {
@@ -7989,19 +8007,19 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/applied.rs|6298d87129a8d01b|0": {
     "target": "../../../cli/src/guard/applied.rs",
-    "line": 82,
-    "end": 113,
+    "line": 83,
+    "end": 114,
     "text": "pub(super) fn apply(env: &Envelope) -> Result<Applied, Unapplied> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/applied.rs|675b5401ec0faa92|0": {
     "target": "../../../cli/src/guard/applied.rs",
-    "line": 55,
-    "end": 79,
+    "line": 56,
+    "end": 80,
     "text": "/// Why an Edit has no resulting text."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/applied.rs|842b5e8518e22e34|0": {
     "target": "../../../cli/src/guard/applied.rs",
-    "line": 121,
+    "line": 122,
     "text": "pub(super) fn before_lines("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|0d1f767faaaa5e3c|0": {
@@ -8280,7 +8298,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|a0b1a68cbae66910|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 320,
+    "line": 321,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|12e40c77b441466a|0": {

@@ -19,7 +19,7 @@ why the judgment layer is a pure function of measured facts and why the
 size hard line is a declared line — 750 by default, or the `file_lines_fail` a `[[rules.class]]` declares for the paths it owns — while the soft line is a
 statistic of the repository's own frozen distribution
 ([DEVELOPMENT_PLAN.md:61](../DEVELOPMENT_PLAN.md#L61),
-[size-advisory.md:36-39](size-advisory.md#L36)).
+[size-advisory.md:37-40](size-advisory.md#L37)).
 
 ## How to read this
 

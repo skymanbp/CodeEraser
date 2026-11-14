@@ -141,7 +141,7 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
 [seams.rs:241-269](../../../cli/src/structure/seams.rs#L241),
-[size-advisory.md:96-99](../size-advisory.md#L96). The body is searched with every literal and
+[size-advisory.md:97-100](../size-advisory.md#L97). The body is searched with every literal and
 comment blanked to spaces first — the exact tree-sitter spans, through the one masker the
 tombstone's literal blanking shares ([opaque.rs:1-14](../../../cli/src/scan/opaque.rs#L1),
 [opaque.rs:27-38](../../../cli/src/scan/opaque.rs#L27)) — so a name inside a string or a comment is no
@@ -153,7 +153,7 @@ dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:261](../../../cli/src/structure/seams.rs#L261). What the proxy measures is therefore a
 word-bounded spelling of the unit's name in the neighbour's code — a same-named local or field
 counts as one, since no symbol table stands behind it; the advisory face is non-binding
-[size-advisory.md:100-105](../size-advisory.md#L100).
+[size-advisory.md:101-106](../size-advisory.md#L101).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
@@ -171,7 +171,7 @@ a tree without git history prices the leg at zero rather than failing the adviso
 `CHURN_WINDOW_DAYS` reads the churn family's own default `DEFAULT_DAYS = 14` — the §4.1 two-week
 anchor, and deliberately a **measurement constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-38](../../../cli/src/structure/seams.rs#L36), [churn/mod.rs:50-51](../../../cli/src/churn/mod.rs#L50),
-[size-advisory.md:129](../size-advisory.md#L129).
+[size-advisory.md:130](../size-advisory.md#L130).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
 booklet names φ [Cost.hs:153-163](../../../core/app/CE/Structure/Cost.hs#L153). Defaults were sized so
@@ -182,26 +182,26 @@ a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing referen
 
 The v1.1 legs were calibrated by recompiling the `Cost.hs` price points and replaying
 `--split-candidates` over corpora, comparing candidate/exemption flips and best-seam movement
-[size-advisory.md:117-120](../size-advisory.md#L117).
+[size-advisory.md:118-121](../size-advisory.md#L118).
 
 - `roiCloneMilli = 500` (= 2 × ref): swept `{250, 500, 1000}` over four external corpora / 86
   candidates. Zero candidate flips across the fourfold price range — the price is a
   *seam-steering* term, not a candidate killer — with exactly one best-seam move per price
   point, each in the correct direction (cobra's `command_test` moves its seam off the clone
   block at the 1000 price point)
-  [size-advisory.md:121-124](../size-advisory.md#L121).
+  [size-advisory.md:122-125](../size-advisory.md#L122).
 - `roiChurnMilli = 150` (= 0.6 × ref, reflecting that historical correlation is weaker
   evidence than in-situ code coupling): swept `{150, 300, 600}` on the self repo only —
   external corpora tips are frozen outside the 14-day window, so their churn leg is honestly
   zero and only a live window can be calibrated. Zero label flips over the fourfold range,
   with cost scaling verified linear (`graph_ladder` 800 → 1100 → 1700)
-  [size-advisory.md:125-128](../size-advisory.md#L125).
+  [size-advisory.md:126-129](../size-advisory.md#L126).
 
 Self-repo first run at the `S = 294` calibration: `graph_ladder.rs` got a real seam after line
 318 (2120‰ benefit against 500‰ cost, ROI 4.2); `DEVELOPMENT_PLAN.md` and `main_cmds.rs` got
 machine-written cohesion exemptions (11‰ vs 500‰ and 0‰ vs 2000‰); `cli.md` crossed the line
 by one notch (507‰ vs 500‰) and flipped to a candidate
-[size-advisory.md:109-113](../size-advisory.md#L109).
+[size-advisory.md:110-114](../size-advisory.md#L110).
 
 ### The ROI auto-exemption
 
@@ -221,7 +221,7 @@ what lets the Rust side write the machine-generated *why*
 [Split.hs:6-8](../../../core/app/CE/Structure/Split.hs#L6), [Split.hs:166-170](../../../core/app/CE/Structure/Split.hs#L166). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
-[size-advisory.md:62-64](../size-advisory.md#L62). Since plan v2.32 step 4 the core lays the
+[size-advisory.md:63-65](../size-advisory.md#L63). Since plan v2.32 step 4 the core lays the
 structure document out (`CE.Structure.Document`): its statement names the universe every
 column points into, so each dense id is range-checked by the document contract before
 anything reads it [Document.hs:38-47](../../../core/app/CE/Structure/Document.hs#L38), and the
@@ -255,7 +255,7 @@ computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#
 The design contract §C once listed two benefit terms and one cost term beyond the four legs —
 benefit "dedup budget effect" and "hot/cold unit isolation", cost "baseline re-key noise" — and
 plan v2.30 step 5b retired them from the model with reasons, in place of a standing "not
-implemented" ([size-advisory.md:53-54](../size-advisory.md#L53), [size-advisory.md:57](../size-advisory.md#L57)):
+implemented" ([size-advisory.md:54-55](../size-advisory.md#L54), [size-advisory.md:58](../size-advisory.md#L58)):
 a clone block is judged on content fingerprints, and a seam either cuts it (priced by
 `roiCloneMilli`) or leaves it whole on one side, so no split lowers the dedup ledger by a line;
 a seam between hot and cold units is a seam severing no co-change pair, which the
