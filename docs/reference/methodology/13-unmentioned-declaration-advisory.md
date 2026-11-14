@@ -240,7 +240,7 @@ Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the
 seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
 `merge`, `query`) pass `Advisory::No`, each with its reason at the call site
 ([deadcode.rs:97-100](../../../cli/src/graph/deadcode.rs#L97),
-[deadcode.rs:297-303](../../../cli/src/graph/deadcode.rs#L297)). The reply is consumed once:
+[deadcode.rs:291-297](../../../cli/src/graph/deadcode.rs#L291)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -259,9 +259,10 @@ reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report
 and join the two across two snapshots), joins the two by file path (a rendering join on a
 shared string, never a verdict) and lists a selected file's rows with the root-level census
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
-([canvas.rs:17-40](../../../cli/src/graph/canvas.rs#L17),
-[graph.js:33-53](../../../gui/ui/graph.js#L33),
-[graph.js:186-257](../../../gui/ui/graph.js#L186), [i18n.js:106-115](../../../gui/ui/i18n.js#L106)).
+([canvas.rs:20-43](../../../cli/src/graph/canvas.rs#L20),
+[graph.js:50-70](../../../gui/ui/graph.js#L50),
+[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25),
+[graph_aside.js:134-148](../../../gui/ui/graph_aside.js#L134), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 

@@ -312,7 +312,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document,
   and `query` with `prelude: true` returns the `ce.query-prelude` document instead (`body` is not
   needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
-  ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
+  ([tools.rs:211](../../../cli/src/mcp/tools.rs#L211), [tools.rs:236](../../../cli/src/mcp/tools.rs#L236),
   [adapters.rs:188](../../../cli/src/mcp/adapters.rs#L188)).
 - **The GUI's Query screen** — the eighth of eleven tabs — takes a question in a box with a `why` switch
   and a rules-file box (`--file`), answers it as one table per goal under its own column names
@@ -354,7 +354,7 @@ The test suite carries three of its own, rooted at `cli/tests`: no unreferenced 
 tree and the unit tree never read each other ([ce.rules:7-13](../../../cli/tests/ce.rules#L7)).
 CI runs `ce rules` as the seventh dogfood gate on both roots, beside scan, the dedup ratchet,
 the check floor, deadcode, docdup and erase
-([ci.yml:284](../../../.github/workflows/ci.yml#L284), [ci.yml:312](../../../.github/workflows/ci.yml#L312)).
+([ci.yml:285](../../../.github/workflows/ci.yml#L285), [ci.yml:313](../../../.github/workflows/ci.yml#L313)).
 
 ### 11. The built-in rule pack
 

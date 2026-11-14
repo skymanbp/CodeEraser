@@ -137,7 +137,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:193](../../../
   document, 2 when the core could not judge or a path is not a measured file
   ([main_judge.rs:222](../../../cli/src/main_judge.rs#L222), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
-  same document ([adapters.rs:221](../../../cli/src/mcp/adapters.rs#L221), [tools.rs:258-259](../../../cli/src/mcp/tools.rs#L258)).
+  same document ([adapters.rs:221](../../../cli/src/mcp/adapters.rs#L221), [tools.rs:260-261](../../../cli/src/mcp/tools.rs#L260)).
 - **The GUI** renders it in the reports hub rather than a tab of its own — the header holds eleven
   tabs in one row at the default window, and the hub is where the report-only families live. The
   document nests, so the family registers its own renderer and an `impact` path box; the counts
