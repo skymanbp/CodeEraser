@@ -16,7 +16,10 @@ ce check .          # the before-score and the current ratchet state
 ```
 
 Record the score line. Every deletion below must leave `ce check`
-passing; the score should not fall.
+passing. The score is the share of lines no finding names, so removing
+a clean unreferenced file can lower it while the unreferenced axis is
+off (the default); compare the `findings on E of L lines` part of the
+line: E must not grow.
 
 ## 1. The deterministic pass FIRST — `ce erase`
 
@@ -85,8 +88,10 @@ For every candidate pair or unreferenced file:
    claims liveness for a whole file) and by the unmentioned advisory
    (`ce:allow(unmentioned)`); a bare marker with no why claims
    nothing, and dedup exemptions go through `.ceignore`.
-4. An unreferenced file with an `entry_globs` match or exported surface
-   may be a public API — confirm before removing.
+4. An unreferenced file whose verdict is `unref_public` /
+   `unreach_public` (it exports names) may be a public API: confirm
+   before removing; if it is an entry, declare it in
+   `[graph] entry_globs` instead of deleting it.
 5. Act on roots: a dependent (its `under` names its roots) falls with
    them, so judge the root first. Every unreferenced file has a
    `state`, root or dependent: `born` or `orphaned` is this change's
@@ -105,14 +110,15 @@ For every candidate pair or unreferenced file:
 ## 4. Delete in small batches, re-gate each batch
 
 ```sh
-ce dedup . --check    # the clone budget must not grow
+ce dedup . --check    # when [dedup] budget is declared: the clone budget must not grow
+ce dedup .            # without one: compare the block count with step 2's
 <project test suite>  # the code must still work
 ```
 
 ## 5. Prove convergence
 
 ```sh
-ce check .            # must pass; compare against the step-0 score
+ce check .            # must pass; E (findings on E of L lines) must not exceed step 0
 ```
 
 If the ratchet reports `removed`, run `ce baseline` to bank the

@@ -12,7 +12,7 @@ LLM 协作的代码库都往同一个方向漂：同一个函数写两遍、同�
 
 - 复制了树里已有代码的写入会被拒绝，拒绝理由指名它重复的是哪一块。
 - 让文件长过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行的写入同样被拒绝（已超线的文件不变长的写入照常通过，可以一步步拆分）。
-- 其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 拒绝提交，CI 拒绝合入。
+- 其余一切都是报告或门：CI 拒绝合入；在 `[guard] mode = "deny"` 下 Stop 审计拒绝结束本轮、`ce precommit` 拒绝提交（默认两者只记录、不拒绝）。
 
 **判决** Python、TypeScript/TSX、Rust、Go、Haskell、C、C++、Java、Lua、R、Markdown、HTML（<!--ce:count:langs#word-->十三<!--/ce-->个语言码，<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法）；JS、CSS、Vue、Svelte、shell、YAML 只查尺寸；`.txt` 只查文档重复。
 
@@ -41,7 +41,7 @@ LLM 协作的代码库都往同一个方向漂：同一个函数写两遍、同�
 
 ```console
 $ Write invoicer/discount.py
-✗ ce：<work>/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18 (83 tokens)。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。
+✗ ce：<work>/invoicer/discount.py 的内容与 1 处已索引区域重复：invoicer/money.py:1-18（83 个记号）。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。
 ```
 
 **一条线，两张嘴。** `ce.toml` 给 `invoicer/**` 定下 `file_lines_fail = 40`。写入时守卫拒绝会越线的那次写入，`ce scan` 用同一个数给同一棵树评级——一处声明，钩子与 CI 同读。
@@ -60,11 +60,11 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 工作原理
 
-![一个判决如何产生：Rust 度量语法单元、token 指纹与每个单元的词袋事实、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除，以及控制流、合并与架构，每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
+![一个判决如何产生：Rust 度量语法单元、记号指纹与每个单元的词袋事实、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除，以及控制流、合并与架构，每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
 <sub>在 [codeeraser.dev/zh/how/#verdict](https://codeeraser.dev/zh/how/#verdict) 可缩放、拖动查看此图。</sub>
 
-- **写入时克隆守卫：** 规范化 token 以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段都逃不掉；导入与加载语句（包声明与 Haskell 的模块头在内）不出 token，报告只保留自己有 50 个 token 的片段（核的覆盖规则）；只计**新引入**的重复（[FPR-REPLAY](docs/FPR-REPLAY.md)）。
+- **写入时克隆守卫：** 规范化记号以 k = 25、w = 26 做 winnowing，任何 50 个以上记号的共享片段都逃不掉；导入与加载语句（包声明与 Haskell 的模块头在内）不出记号，报告只保留自己有 50 个记号的片段（核的覆盖规则）；只计**新引入**的重复（[FPR-REPLAY](docs/FPR-REPLAY.md)）。
 - **近似（T3）克隆：** MinHash/LSH 出候选，核以树编辑距离判定，TSED ≥ 0.85。
 - **改过措辞也逃不掉的文档重复：** 5 词 shingle，Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **存活性：** 逐语言的解析阶梯喂出引用图，四态判决带置信码返回；每个无引用文件列在它所随的根之下。
@@ -78,7 +78,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包（NSIS / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`；Windows 安装包会运行 `ce setup` 接入 Claude Code（AppImage / dmg 用户自己跑一次）。<!--ce:count:binaries#word-->十五<!--/ce-->件产物按裁定不签名；用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
 - **Homebrew / winget。** `brew install skymanbp/codeeraser/codeeraser`；`winget install skymanbp.CodeEraser` 须等 winget-pkgs 合并之后。
 - **Claude Code 插件。** `/plugin marketplace add skymanbp/CodeEraser@release`，再 `/plugin install codeeraser@codeeraser`。
-- **只要 CLI，或从源码。** 把 `ce` 与 `ce-core` 并排放上 PATH，或 `cargo install codeeraser`，或用 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 构建；核按 `CE_CORE_BIN` → 旁边的 `ce-core` → PATH 解析，`--core <路径>` 最优先。
+- **只要 CLI，或从源码。** 把 `ce` 与 `ce-core` 并排放上 PATH；`cargo install codeeraser` 只构建 `ce`，`ce-core` 从发布里取，或用 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 构建；核按 `CE_CORE_BIN` → 旁边的 `ce-core` → PATH 解析，`--core <路径>` 最优先。
 - **更新。** `ce update` 按两段式 pin 对比最新发布，`--yes` 替换二进制（[RELEASE](docs/RELEASE.md)）。
 
 ### 命令
@@ -164,14 +164,14 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。
+PreToolUse 塑造行为，不是安全墙（shell 写入绕过它；CI 是兜底，在 `[guard] mode = "deny"` 下 Stop 审计也是）。钩子遇内部错误、或钩子信封超过 4 MiB（最大的那些写入不经判决就通过）时失败开放，并记录降级。
 
-- **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown、HTML 与 `.txt` 由文档与图规则判决；不承诺 T4 克隆。
+- **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown 与 HTML 由文档与图规则判决，`.txt` 只判文档重复；不承诺 T4 克隆。
 - **只当顾问，永不是判决。** 符号层存活性、`ce similar`、`ce merge` 与 `ce arch` 从不让门变红；守卫类拿出自己的误报记录之前一律停在 `observe`。
-- **数的是行，不是发现。** 分数数的是被某条发现点名的行，一行无论被几条发现点名都只算一次：一个长的重复文件比许多短文件分量重，已被点名的行上再多一条发现，分数不再往下走。
-- **片段从首 token 到末 token。** 克隆块印出的行段从它第一个 token 的行到最后一个 token 的行，所以会点名夹在中间、不出 token 的注释行与导入行（头部声明从不作片段的首尾）；分数把这些行和块点名的其他行一样计数。
+- **数的是行，不是发现。** 分数数的是被某条发现点名的行，一行无论被几条发现点名都只算一次：一个长的重复文件比许多短文件分量重，已被点名的行上再多一条发现，分数不再往下走。死文件轴关着时（默认），无引用文件就是普通的干净文件：删掉一个会让 L 变小、分数可能下降；`[score.weights] deadcode = 1` 让它的行重新算作问题行。
+- **片段从首记号到末记号。** 克隆块印出的行段从它第一个记号的行到最后一个记号的行，所以会点名夹在中间、不出记号的注释行与导入行（头部声明从不作片段的首尾）；分数把这些行和块点名的其他行一样计数。
 - **不替你画的线。** `cognitive_fail` 默认 0（复杂度只 warn），`ce structure` 不设分数地板。
-- **只认文本写出的引用。** 存活性只读文件写出的引用。目标靠计算得出的加载（`require(prefix .. name)`、`import("./lib/" + name)`），或 `__all__` 不全是字面量的星号导入，没写出的那部分不连边：文件仍无引用，它的语言不能为它作保。无引用不等于没用，所以默认只列出、什么检查都不拦；想拦新出现的，项目在 ce.toml 声明 `[deadcode] block` 并提交基线。它也不是删除许可：没有引用指向的文件仍可能被按名字运行、被工具按约定找到（死文件考题过关的八条工具约定是入口，如 `setup.py`、Sphinx 的 `conf.py`、`package-info.java`、Next.js `app/` 下的页面；产品没有列出的约定不是），所以 `ce erase` 不删任何整文件，只擦逐字节相同的文档段。`setup.cfg` 与非根目录 `pyproject.toml` 声明的入口不读。
+- **只认文本写出的引用。** 存活性只读文件写出的引用。目标靠计算得出的加载（`require(prefix .. name)`、`import("./lib/" + name)`），或 `__all__` 不全是字面量的星号导入，没写出的那部分不连边：文件仍无引用，它的语言不能为它作保。无引用不等于没用，所以默认只列出、什么检查都不拦；想拦新出现的，项目在 ce.toml 声明 `[deadcode] block` 并提交基线。它也不是删除许可：没有引用指向的文件仍可能被按名字运行、被工具按约定找到（死文件考题过关的八条工具约定是入口，如 `setup.py`、Sphinx 的 `conf.py`、`package-info.java`、Next.js `app/` 下的页面；产品没有列出的约定不是），所以 `ce erase` 不删任何整文件，只擦逐字节相同的文档段。`setup.cfg` 与非根目录 `pyproject.toml` 声明的入口不读；图不读的其他引用形式与入口族（只被 `include!` 引入的文件、按路径运行的脚本、用 `new URL(...)` 加载的 worker 等）列在[方法学册 06](docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md)，各附补救：`[graph] entry_globs`，或在文件里写 `ce:allow(deadcode) -- <why>`。
 - **分发。** 一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标；提权账户不是登录用户时 `ce setup` 什么都不接（退出码 13）；判决本仓需要 `cli/tests` submodule 就位。
 - **协议一行。** 送核的一行请求至多 <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> 字节；更大的请求分批送，单独超线的一项按名拒绝，从不截断。
 

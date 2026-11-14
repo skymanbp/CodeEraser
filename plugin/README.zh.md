@@ -1,0 +1,124 @@
+# codeeraser plugin
+
+**[English](README.md)** | 中文
+
+被动 guard <!--ce:count:hooks#word-->四<!--/ce-->钩（全部 fail-open，内部失败一律放行）+ <!--ce:count:skills#word-->一<!--/ce-->个主动 skill + <!--ce:count:commands#word-->一<!--/ce-->条命令：
+
+| hook | 命令 | 行为 |
+|---|---|---|
+| SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
+| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后超过本文件那条硬线且比写前更长；不变长的写入只记账不拒）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声；函数内死代码类按自己的 `[flow] tier`（出厂 observe）只在这次写入带来新的被判决发现时出声 |
+| PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录。daemon 在跑时另请它把刚落盘的这一个文件在共享索引里重量一次，下一次写入的重复探针就能看见本会话自己刚写的代码；只量指纹语言、作用域内、本项目自己的文件，只在索引存在且是当前这一代时，从不建索引、从不起 daemon，失败只在 `settled` 行上记 `reindex.degraded` |
+| Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
+
+拒写理由与 Stop / precommit / commitmsg 的每一行都由核按当时的语言写出（钩子经 daemon 的核链、审计经自己的核链问一次）；核说不出时决定照旧，句子换成一句英文兜底 `ce: rule … fired; the core could not phrase the reason: …`——只点名触发的规则、不说决定，各档位同一拼写（审计面是 `ce <面>: rule … fired; the core could not phrase the verdict: …`，本地规则不拦时没有 `rule … fired; ` 这一段）。
+
+skill：[`skills/erase/`](skills/erase/SKILL.md)，把 dedup/deadcode/join
+的发现引导成安全删除（先读全文、查引用、查文件名有没有被命令或工具约定用到、小批删、重跑门证收敛），
+用户说"清理重复/死码"时由 Claude 自动调用。`ce erase` 自己只擦逐字节相同的文档段；无引用文件与无引用文件里的整单元孪生
+一律是顾问行（9.1.0 起理由 `reachable_by_name`：树里没有引用指向它，不等于没有东西在用它），归 skill 的判断那一半；`ce deadcode` 默认只列出它们、不拦，项目声明 `[deadcode] block` 才拦新出现的无引用文件（依附与根一样）。
+
+命令：[`/codeeraser:update`](commands/update.md)，跑 `ce update` 并转述判定
+（退出码 0 最新 / 1 有更新 / 2 未知）。插件绑定的副本由清单 pin 决定，
+所以它的更新动作永远是 `/plugin update codeeraser`（新清单带新 pin，下一会话
+启动器重验重下载）；`ce update --yes` 只替换手工放置或安装包随附的副本。
+
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个工具随插件
+一起到位：装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
+由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
+`erase` 工具只到**计划**为止、`erase_log` 只读它的审计轨迹：`apply` 没有 face、也不会有，因为一个能凭自己
+的权限删文件的机器面，是橡皮擦唯一不能出的东西；计划行数超过核的上限（`limits.caps.erase_rows`）时按路径分批
+送核，结果与一次送完逐字节相同；计划从不提议删整个文件，目标靠计算得出的加载与 `__all__` 不全是字面量的星号导入
+另让该语言不能为无引用文件作保（理由 `language_unresolved`）；`update_check` 同理只到检查；
+`similar_units` 是同角色顾问（`ce similar` 的同一份文档），只当顾问不判决；
+`query` / `rules` 是代码查询家族（`ce query` / `ce rules` 的同一份文档，问题或规则文件在核的 `query/1`
+上判决），这里只出报告，退出码是 CLI 的事（读核的否决位：`ce rules` 有违规退 1，程序错误或核判不了退 2）；`query` 带 `prelude: true` 时不问问题，
+答前奏与核从 `ce.toml` `[rules.pack]` 渲染出的规则包原文（`ce.query-prelude/0.1.0`，与 `ce query --prelude`、
+GUI 查询屏「前奏」按钮同一份文档；没声明规则包时 `pack` 为 null）；
+`merge_suggestions` 是克隆合并建议（`ce merge` 的同一份文档：每个克隆组合并成一个函数要几个参数、保留哪个成员、
+省几行、可不可行及原因，在核的 `merge/1` 上判决），只当顾问；
+`architecture` 是架构分析（`ce arch` 的同一份文档：分层、拆环切边、簇与错位文件、目录度量，`impact`
+给出一处改动波及的文件，在核的 `arch/1` 上判决），只当顾问。
+
+## 安装
+
+公开 marketplace 一键装（清单在仓根 `.claude-plugin/marketplace.json`；注册的是
+`release` 分支，verify-publish 每次 publish 后把它快进到 tag 提交，装机跟发布不跟 main）：
+
+1. `/plugin marketplace add skymanbp/CodeEraser@release`
+2. `/plugin install codeeraser@codeeraser`
+
+v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/src/setup/`）：找到 Claude Code
+→ 已注册则保留、否则注册 → 安装并刷新 → 只在本次注册时写 `claude-plugin-wired` 标记
+→ 报告本二进制所在目录是否在 PATH 上；运行账户 ≠ 登录用户时按名拒绝、退 13 什么都不接；
+`--unwire` 以标记为凭只拆它自己接的。Windows 安装包装机 / 卸载时各调一次
+（`gui/src-tauri/windows/hooks.nsh` 只印退出码图例，失败一律降级为提示行），AppImage / dmg /
+纯 CLI 底座自己跑一次。本地开发 clone 则注册**仓根目录**为 marketplace
+（`claude plugin marketplace add <repo根>`）；注册 `plugin/` 子目录是 9f86d58 之前的旧位，
+清单已不在那里，会以 cache-miss 静默掉钩。
+
+`ce` 与判决核 `ce-core` 两个真身均由 `bin/ce.sh` 三级解析（ADR-007）：
+已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（清单每目标钉三枚：`ce` / `ce-core` / GUI 安装包，
+共<!--ce:count:platforms#word-->五<!--/ce-->目标<!--ce:count:binaries#word-->十五<!--/ce-->枚；启动器只取前两枚，v1.7.0 前的清单只钉前三个目标）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
+路径记在 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，同会话后续 hook 直接 exec；
+戳里记的核是磁盘上真有的那个文件（Windows 上 Git Bash 的 `command -v` 答的路径不带 `.exe`，启动器补上再绑定）；
+清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
+`CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，
+不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
+副本与戳只放在本插件自己的数据目录里：`CLAUDE_PLUGIN_DATA` 的末段须是插件名 `codeeraser`
+或以 `codeeraser-` 开头。插件参考页（https://code.claude.com/docs/en/plugins-reference，「Environment variables」节）说这个目录是 `~/.claude/plugins/data/<id>/`，`<id>` 是插件标识符里字母、数字、`_`、`-` 以外的每个字符都换成 `-`；`claude plugin install` 收的标识符是 `<插件>@<市场>`，本插件装好的目录是 `codeeraser-codeeraser`。
+经 Bash 工具跑的命令（如 `/codeeraser:update`）可能带着别的插件的目录：那时只用它旁边恰好一个
+属于本插件的目录（在 stderr 说一行），一个都没有或不止一个就当这个变量没设；别的插件的目录从不读写。
+源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
+
+**Windows 前置：`sh` 要在 Windows PATH 上。** 四个钩子与 `.mcp.json` 都以裸 `sh`
+起头去跑 `bin/ce.sh`，而 Claude Code 是原生 Windows 进程，按 Windows PATH 找命令行的
+第一个词。Git for Windows 默认只把 `Git\cmd` 放进 PATH，那里有 `git.exe` 没有 `sh.exe`；
+`sh.exe` 在 `Git\bin` 与 `Git\usr\bin`。PATH 上没有 `sh` 时钩子与 MCP 面都起不来，
+且这个失败不出声：起不来的正是本该报错的那个脚本，症状是没有健康行、没有 `.ce/`、
+`/mcp` 里那条 server 连不上。把 `Git\bin` 追加到用户 PATH 即可（只有
+`bash.exe` / `git.exe` / `sh.exe` 三个文件，不会遮蔽 `find` / `sort` 这些同名 Windows
+工具，那些在 `Git\usr\bin`）；追加而非前置，则 `bash` 仍解析到 system32 的 WSL 那只。
+改完 PATH 要重启 Claude Code：钩子配置在会话启动时读取。
+
+## 配置
+
+项目里可选 `ce.toml`：
+
+```toml
+[guard]
+mode = "observe"   # 全局覆盖（可选）：observe | warn | ask | deny
+                   # 不写 = 计划 §4.2 路线默认（见下）
+
+[[rules.class]]    # 可选：路径类分参（计划 v2.13）——声明序首中，无命中 = 全局表
+name  = "generated"
+globs = ["gen/**"]
+[rules.class.knobs]
+file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒；至多 64 类，类名与 glob 永不过线
+```
+
+默认档位 = §4.2 路线第 3 级（2026-08-17 1.0 档位切换生效，依据见根目录
+[CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
+（写入让文件长过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for` 读 `scan::classes::Classes::thresholds_for`，`ce scan` 送每行的类号（`Classes::class_of`）、由核按 `gradeOverrides` 分级——两面读的是同一张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
+precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
+重复写入只拦新引入的部分：被替换的内容（Write 是盘上的原文件、Edit 是 `old_string`）里已有的副本照放；1.10.0 起按份数扣减——探针按来源段报出新内容里不相交的份数，被替换内容里有几份就免几份，在已带着一份副本的文件里再写进第二份照拦（此前第二份蹭第一份的放行）。规则与三条性质见方法学册 09，重放读数见 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)。
+分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
+这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`；v2.35 按钩子自己的总体、只在变长时出档复冻，自仓 184/9707 = 1.8955 %、requests 5/448 = 1.1160 %，两份都超 1 %，默认不变。硬预算自己的台账在同页「硬预算的台账」节。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
+观察档数据在 `<project>/.ce/observe.ndjson`（`.ce/` 里缺 `.gitignore` 时 ce 写一份内容为 `*` 的，整个目录不进版本库；已有的不改），
+每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`，版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
+`tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
+写回成「无 X」时才落一行，只记名字的哈希）、`settled` 事件行（PostToolUse 腿：PreToolUse 答 `ask` 后工具真跑了才落一行，只带 `file` 与 `tool_use_id`；同一次工具调用的各行都带 `tool_use_id`，`probe` 行另带钩子对这次事件的决定 `decision`，墓碑行的 `applied` 为 null 时按有无对应的 `settled` 行读）与 Stop / precommit / commitmsg 行上的 `tombstone` 对象
+（本次改动集的度量：删掉的名字数、候选面数 `rows`、changelog 定位豁免（整文件按路径、台账形或 `[tombstone] ledger` 声明，或只豁免一段而段条目带起始 `line`）与核的判决 `judged`：前几处站点 `file:line kind`、标签 / 散文分账、`over`）
+按类自己的 `[tombstone] tier`（默认 observe）出声，且只在核答 `over`（站点数超过 `[tombstone] budget`）时；observe 只记不拦，FPR 账本见 [docs/FPR-TOMBSTONE.md](../docs/FPR-TOMBSTONE.md)；
+`fourclass` 对象（跨文件搬迁与堆叠嫌疑）永不出声：它不属于任何档位，其改动集级
+FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格 0/125、宽读法 0/820；唯一 copy 正例 `1035f6b1` 漏过（召回 0/1），本批无默认档位变更；
+`similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
+`flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
+核的定义包读不到（没有核、核的协议 major 与本构建不同）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
+feed 0.14.0 起加性出现：`budget` 行的 `before_lines` 与 `kind`（`crossing` 越线 / `growth` 增长）或 `carried: true`（已超线而不变长，放行），写前行数读不到时 `before_unread` 加一个 `degraded` 戳；`zone` 行的 `before_lines` 与不变长时的 `carried`；`probe` 行的 `unapplied`（Edit 套不上：`absent` / `unreadable` / `no_match` / `ambiguous`，`unreadable` 另带 `apply.degraded`）与 `relocated`（多少条匹配是搬移、按 HEAD 与写后树的计数由核 `relocate/1` 判），没有搬移信用时 `relocation` 写明原因；`settled` 行的 `reindex`（重量失败时）；读不成 JSON 的钩子信封、或没写工作目录的信封不判决，照样落一行 `degraded` 并写明原因（此前静默放行）；
+`session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
+不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
+（计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。
+
+> hooks 配置在会话启动时加载，安装/改档后重启会话生效
+> （2026-08-07 hook payload 实采会话的实测结论）。

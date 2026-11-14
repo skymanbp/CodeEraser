@@ -10,8 +10,8 @@ Get the real thing:
 - **Cargo** — `cargo install codeeraser` (binary name: `ce`); every
   measuring command also needs the `ce-core` judgment core beside it
   (shipped in the release archives and installers, or built with GHC)
-- **Claude Code plugin** — marketplace `skymanbp/CodeEraser`, with
-  SHA256-pinned binary bootstrap
+- **Claude Code plugin** — `/plugin marketplace add skymanbp/CodeEraser@release`,
+  then `/plugin install codeeraser@codeeraser` (SHA256-pinned binary bootstrap)
 
 CodeEraser erases LLM-induced code & document entropy: T1/T2/T3 clone
 judgment, dead-code liveness, doc duplication, structural entropy and a
