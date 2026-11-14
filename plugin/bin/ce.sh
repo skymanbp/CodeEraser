@@ -52,6 +52,40 @@ case $0 in */*) here=${0%/*} ;; *) here=. ;; esac
 manifest="${CE_MANIFEST_FILE:-$here/manifest.env}"
 . "$manifest"
 data="${CLAUDE_PLUGIN_DATA:-}"
+# THE DATA FOLDER MUST BE THIS PLUGIN'S OWN. Claude Code sets
+# CLAUDE_PLUGIN_DATA for this plugin's hooks and MCP server, a folder
+# named after the plugin's id, `<plugin>-<marketplace>` (the plugins
+# reference, https://docs.claude.com/en/docs/claude-code/plugins-reference,
+# on persistent data; the installed folders read that way, this plugin's
+# `codeeraser-codeeraser`). A command run through the Bash tool does not get that:
+# its shell carries whatever an earlier hook exported, which can be another
+# plugin's folder. So the folder counts as ours only when its last path
+# segment (after a trailing separator, either separator: the value may be a
+# native Windows path) is the plugin's name or begins with it and `-`. A
+# folder that is not ours is never read from or written into: exactly one
+# folder of ours beside it is used instead (said once on stderr, on the
+# slow path only); none or several leave no data folder at all (the PATH
+# legs below, as when the variable is unset). Builtins only: the fast path
+# still forks nothing.
+plugin=codeeraser
+borrowed=""
+leaf() { l=${1%/}; l=${l%\\}; l=${l##*/}; l=${l##*\\}; }
+leaf "$data"
+case "$l" in
+    "$plugin" | "$plugin"-* | "") ;;
+    *)
+        parent=${data%/}; parent=${parent%\\}; parent=${parent%"$l"}
+        found=""
+        # a bare name has no parent to look beside (never the cwd)
+        [ -n "$parent" ] && for cand in "$parent$plugin" "$parent$plugin"-*; do
+            [ -d "$cand" ] || continue
+            if [ -n "$found" ]; then found=""; break; fi
+            found=$cand
+        done
+        borrowed=$data
+        data=$found
+        ;;
+esac
 # The version names the stamp and the artifacts; an unset, empty or
 # odd one (a broken manifest) builds no stamp path at all — neither
 # read nor written — and the artifact names below stay well-formed.
@@ -78,6 +112,9 @@ if [ -n "$data" ] && [ -n "$stamp" ] && [ "${1:-}" != "health" ] && [ -f "$stamp
         fi
         exec "$BOUND_CE" "$@"
     fi
+fi
+if [ -n "$borrowed" ] && [ -n "$data" ]; then
+    echo "codeeraser: CLAUDE_PLUGIN_DATA names another plugin's folder ($borrowed); using this plugin's own ($data)" >&2
 fi
 
 plat_key() {

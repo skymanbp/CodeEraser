@@ -63,6 +63,10 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
 `CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，
 不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
+副本与戳只放在本插件自己的数据目录里：`CLAUDE_PLUGIN_DATA` 的末段须是插件名 `codeeraser`
+或以 `codeeraser-` 开头（Claude Code 以 `<插件>-<市场>` 命名，如 `codeeraser-codeeraser`）。
+经 Bash 工具跑的命令（如 `/codeeraser:update`）可能带着别的插件的目录：那时只用它旁边恰好一个
+属于本插件的目录（在 stderr 说一行），一个都没有或不止一个就当这个变量没设；别的插件的目录从不读写。
 源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
 **Windows 前置：`sh` 要在 Windows PATH 上。** 四个钩子与 `.mcp.json` 都以裸 `sh`
