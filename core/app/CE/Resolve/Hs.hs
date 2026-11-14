@@ -8,7 +8,8 @@
 --      one candidate per root; distinct files from different roots is
 --      ambiguous_root, never a pick. No cabal owning the importer
 --      anchors at the tree root — bare `ghc Main.hs` search semantics.
---   R2 a module another in-corpus package exposes — the package the
+--   R2 a module an in-corpus package exposes (the owner's own among
+--      them, when its build-depends names itself) — the package the
 --      import names under PackageImports (`import "pkg" M`: the spec
 --      keeps the quoted package), else any package the owner's
 --      build-depends declares — under that package's library roots;
@@ -93,18 +94,26 @@ sourceRoots (Just c) from = Set.toList (Set.fromList (concatMap stRoots picked))
   picked = if null owning then cStanzas c else owning
   holds r = null r || (r <> "/") `isPrefixOf` from
 
--- | `depended_rung`: the module under the library roots of another
--- in-corpus package that exposes it — the package the import names,
--- else any package the owner's build-depends declares. One package
--- answers (its one file, two roots ambiguous_root, none out of scope —
--- an exposed module is never External); two refuse; none says nothing.
+-- | `depended_rung`: the module under the library roots of an in-corpus
+-- package that exposes it — the package the import names, else any
+-- package the owner's build-depends declares, the owner's own package
+-- among them: a component that lists its own package in build-depends
+-- depends on that package's library and sees its exposed modules
+-- (release 1.10.0; the owner was left out before, so an executable's
+-- `import Lib` of its own library resolved nowhere). One package answers
+-- (its one file, two roots ambiguous_root, none out of scope — an
+-- exposed module is never External); two refuse; none says nothing.
+-- The build-depends set is the cabal FILE's (CabalWalk unions every
+-- stanza's), so once any stanza names its own package, a library module
+-- importing an exposed module of its own library whose file is absent
+-- answers out of scope here instead of reaching the External rung.
 dependedRung :: World -> [Cabal] -> String -> Maybe String -> Maybe Cabal -> String -> Maybe Answer
 dependedRung w cabals modl package o rel = case packages of
   [] -> Nothing
   [one] -> Just (fromMaybe (AUnresolved OutOfScope) (oneOf (found one) 2))
   _ -> Just (AUnresolved AmbiguousWorkspace)
  where
-  packages = [c | c <- cabals, not (null (cName c)), maybe True ((/= cDir c) . cDir) o, wanted c, exposes c modl]
+  packages = [c | c <- cabals, not (null (cName c)), wanted c, exposes c modl]
   wanted c = case package of
     Just p -> cName c == p
     Nothing -> maybe False ((cName c `elem`) . cDeps) o

@@ -1,7 +1,8 @@
 -- | The Markdown rungs (plan v2.33 W2-text stage G; once
 -- cli/src/graph/ladder/md.rs; design §4 row 5): doc targets resolve at
--- file and section granularity. R1 joins a relative target, decoded
--- after the split at `#` (an encoded `%23` is a literal `#` of the
+-- file and section granularity. R1 joins a relative target — what
+-- precedes `?` and `#` — decoded after the split (an encoded `%23` is a
+-- literal `#` of the
 -- name), against the linking file's directory — a walked file, or a
 -- walked asset the index never parsed; a directory holding walked files
 -- resolves as a package (a tree reference collapsed to one file would
@@ -83,9 +84,12 @@ link env from spec
   | null path = fragment from frag
   | otherwise = maybe (AUnresolved OutOfScope) (located env frag) (joinRel (parentDir from) (percentDecode path))
  where
+  -- URL syntax (RFC 3986 §3): the path is what precedes `?` and `#`; a
+  -- query, stored as a bare `?` (graph/stored.rs), is nobody's here
+  -- (release 1.10.0: `docs/a.md?plain=1` left its target unreferenced)
   (path, frag) = case break (== '#') spec of
-    (p, '#' : f) -> (p, Just f)
-    _ -> (spec, Nothing)
+    (p, '#' : f) -> (takeWhile (/= '?') p, Just f)
+    _ -> (takeWhile (/= '?') spec, Nothing)
 
 -- | R1 / R2 for a joined target: a walked Markdown file with a fragment
 -- checks its anchor, a walked file or asset is the file, else a

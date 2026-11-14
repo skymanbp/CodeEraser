@@ -11,7 +11,7 @@ module ResolveProps (battery) where
 import CE.Resolve (respond)
 import CE.Resolve.Contract (overCap, requestSize)
 import CE.Resolve.Cost (Reason (..), langHtml, langLua, langMd, langPy, langR, langTs, resolveCap)
-import CE.Resolve.Tables (kindDynamic, kindRefLink)
+import CE.Resolve.Tables (kindDynamic, kindLink, kindRefLink)
 import CE.Resolve.Request (CReq (..), ResolveReq (..), Site (..))
 import Data.Aeson (Value (..), decodeStrict, encode, object, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
@@ -19,6 +19,7 @@ import qualified Data.ByteString.Lazy as BL
 import Data.Aeson.Types (parseMaybe, parseJSON)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe)
+import ReferenceHsGen (Cabal (..), HCase (..), Stanza (..), hsRequest)
 import ReferenceResolveGen
 import WireHarness (field, refusedBy, runLegs, setKey)
 
@@ -43,6 +44,13 @@ battery = runLegs names probes
     , "resolve: the cap counts the request's text"
     , "resolve: a dynamic site is refused as dynamic though its spec names a walked file, and draws no also row"
     , "resolve: package.json main / bin / exports patterns and pyproject entry points name their walked files as entries"
+    , "resolve: an executable naming its own package in build-depends reaches the package's library"
+    , "resolve: a test suite naming its own package in build-depends reaches the package's library"
+    , "resolve: an internal import inside the library still answers from the library's own roots"
+    , "resolve: a PackageImports import naming the own package reaches its library"
+    , "resolve: an own package's hidden other-modules stay out of the depended rung"
+    , "resolve: an exposed module of the own library whose file is absent answers out of scope, External without the self-dependency"
+    , "resolve: a Markdown link's target is what precedes `?` and `#`"
     ]
   probes =
     [ all reversible (take 40 cases)
@@ -63,6 +71,8 @@ battery = runLegs names probes
     , dynamicRefused
     , entriesNamed
     ]
+      <> ownPackage
+      <> [queryLinks]
   base = request firstCase
   -- one site `[lang, kind, file, "x"]` in place of the base request's sites
   siteRefused :: Integer -> Integer -> Integer -> String -> Bool
@@ -157,3 +167,42 @@ entriesNamed = (askCore req >>= replyKey "entries") == Just want
   libPkg = "{\"exports\": {\"./feat-*\": \"./src/feat-*.ts\"}}"
   py = object ["project" .= object ["scripts" .= object ["app" .= ("app.cli:main" :: String)], "entry-points" .= object ["g" .= object ["p" .= ("app.plug" :: String)]]]]
   req = siteRequest langTs files [] (const ["ts" .= object ["packages" .= ["lib/package.json", "package.json", "web/package.json" :: String], "facts" .= [pkg "lib/package.json" libPkg, pkg "package.json" rootPkg, pkg "web/package.json" webPkg]], "py" .= object ["pyproject" .= py]])
+
+-- | The own-package rule (release 1.10.0): one cabal holding a library
+-- (`hs-source-dirs: src`, exposing Lib and Data.List, hiding Hidden), an
+-- executable and a test suite whose build-depends name the package itself
+-- (`selfDep`), or only base (`noSelf`). Each leg is one site's answer.
+ownPackage :: [Bool]
+ownPackage =
+  [ ask selfDep "app/Run.hs" "Lib" == Just [RFile "src/Lib.hs" 2]
+  , ask selfDep "test/T.hs" "Lib" == Just [RFile "src/Lib.hs" 2]
+  , ask selfDep "src/Lib.hs" "Hidden" == Just [RFile "src/Hidden.hs" 1]
+  , ask selfDep "app/Run.hs" "\"pkg\" Lib" == Just [RFile "src/Lib.hs" 2]
+  , ask selfDep "app/Run.hs" "Hidden" == Just [RUnres OutOfScope]
+  , ask selfDep "src/Lib.hs" "Data.List" == Just [RUnres OutOfScope] && ask noSelf "src/Lib.hs" "Data.List" == Just [RExt 3]
+  ]
+ where
+  selfDep = tree ["base", "pkg"]
+  noSelf = tree ["base"]
+  tree deps =
+    Cabal
+      ""
+      "p.cabal"
+      (Just "pkg")
+      [ Stanza "library" ["src"] ["Lib", "Data.List"] ["Hidden"] ["base"] Nothing
+      , Stanza "executable e" ["app"] [] [] deps (Just "Run.hs")
+      , Stanza "test-suite t" ["test"] [] [] deps Nothing
+      ]
+      False
+  ask cabal from spec =
+    askCore (hsRequest (HCase ["app/Run.hs", "src/Hidden.hs", "src/Lib.hs", "test/T.hs"] [cabal] [(from, spec)])) >>= answers
+
+-- | A Markdown link with a query (release 1.10.0): the index stores the
+-- query as a bare `?` (graph/stored.rs), and the target is what precedes
+-- `?` and `#` (URL syntax) — the file with its fragment checked, the file
+-- alone, and a pure query is the linking page itself.
+queryLinks :: Bool
+queryLinks = (askCore req >>= answers) == Just [RSection "docs/h.md" Nothing 2, RFile "docs/h.md" 1, RFile "README.md" 4]
+ where
+  sites = [(kindLink, "README.md", "docs/h.md?#L3"), (kindLink, "README.md", "docs/h.md?"), (kindLink, "README.md", "?")]
+  req = siteRequest langMd ["README.md", "docs/h.md"] sites (const ["md" .= object ["slugs" .= [("docs/h.md" :: String, ["h" :: String])]]])

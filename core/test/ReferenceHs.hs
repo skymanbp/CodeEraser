@@ -126,7 +126,9 @@ refSite c (from, written)
   rootsHolding (Just p) =
     let holding = [rs | rs <- pRoots p, any (\r -> null r || (r <> "/") `isPrefixOf` from) rs]
      in concat (if null holding then pRoots p else holding)
-  r2 o = case [p | p <- pkgs c, not (null (pName p)), maybe True ((/= pDir p) . pDir) o, wanted o p, pLibrary p, Set.member modl (pExposed p)] of
+  -- the owner's own package among them: a component naming itself in
+  -- build-depends sees its library (release 1.10.0)
+  r2 o = case [p | p <- pkgs c, not (null (pName p)), wanted o p, pLibrary p, Set.member modl (pExposed p)] of
     [] -> Nothing
     [p] -> Just $ case Set.toList (Set.fromList (concatMap inTree (pLibRoots p))) of
       [f] -> RFile f 2
