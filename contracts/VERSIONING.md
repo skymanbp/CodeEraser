@@ -15,7 +15,7 @@
 > 应答加性 `extent` `{tenths, lines}`：`tenths` = E 乘十后四舍五入（half up），一个整数，至多为 `lines` 的十倍，由核在 E 精确的那一处算出；精确的 E 不出核（它的约分分母是各函数 c 与各文件改写行数的最小公倍数，没有 64 位上界），`tenths` > 10·`lines` 的应答测量侧按名拒绝；`axes` 每行改为该轴自己的行占比 ⌊scale·E(该轴)/L⌋（不加权、不乘 k）。
 > 不再读：9.x 的密度定律（各轴 v/(v+n) 与机会表）、`docOwners`（9.1.0 未发布）、2B 的 `trial` 键——三者在请求里出现也被忽略，不判。
 > 旋钮码不改号退役：ceilings 码 3（`sizePMax`）与 thresholds 码 0（`deadIndegCeil`）按名拒绝，其余码保持原号；定义包 `limits.score_defaults` 由 17 键变 15 键（去 `sizePMax` 与 `deadIndegCeil`）。
-> ce.toml 的 `[score] size_penalty_max` 与 `[score] dead_indeg_ceil` 在加载时按名拒绝（「ce.toml [score] <键>: retired with the density law (v2.35); remove the key」）；
+> ce.toml 的 `[score] size_penalty_max` 与 `[score] dead_indeg_ceil` 在加载时按名拒绝（「ce.toml [score] <键>: retired in 1.10.0 (the score no longer reads it); remove the key」）；
 > 拆分建议的 P_max 成为核常量（结构旋钮 14 照旧在线上，与 15–18 同）。文档：`ce.check-report` 0.6.0 加性 `extent` `{tenths, lines}`（请求行 `[tenths, lines]`，
 > 与应答同形；`tenths` > 10·`lines` 按名拒绝），每个读者都读这同一个形。趋势表的可比性键不另加定律标记：戳里本就带 `proto<版本>`，
 > 同一协议版本下定律不会变。golden：全部 request 行随 major 重锚到 10.0.0；`handshake/wire-errors` 第 3 对的 major 偏斜探针改为按 server 的 major 加一派生

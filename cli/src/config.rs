@@ -87,7 +87,7 @@ pub struct ScoreCfg {
 }
 
 impl ScoreCfg {
-    /// The two keys retired with the density law (v2.35), refused by
+    /// The two keys retired in 1.10.0 (the score no longer reads them), refused by
     /// name whatever their value; then the three threshold numerators
     /// the core refuses below 1 (9.0.0,
     /// `CE.Verdict.Table.thresholdsOffence` codes 1 / 3 / 4), named at
@@ -101,7 +101,7 @@ impl ScoreCfg {
         ];
         if let Some((key, _)) = retired.into_iter().find(|(_, v)| v.is_some()) {
             return Some(format!(
-                "ce.toml [score] {key}: retired with the density law (v2.35); remove the key"
+                "ce.toml [score] {key}: retired in 1.10.0 (the score no longer reads it); remove the key"
             ));
         }
         [

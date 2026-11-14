@@ -63,7 +63,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | `tol_abs` | *(absent)* | Ratchet absolute leg on the file-lines rows: or by this many lines, whichever is larger |
 | `tol_abs_coc` | *(absent)* | Ratchet absolute leg on the function cognitive-complexity rows: or by this many points, whichever is larger (9.0.0; default 1 — the +10 lines leg never applied to a complexity row) |
 
-`size_penalty_max` and `dead_indeg_ceil` retired with the density law (v2.35): the score is the extent law, and the split advisory's P_max is a constant of the core. A `ce.toml` that declares either is refused at load by name: `ce.toml [score] <key>: retired with the density law (v2.35); remove the key`.
+`size_penalty_max` and `dead_indeg_ceil` retired in 1.10.0: the score is the extent law, and the split advisory's P_max is a constant of the core. A `ce.toml` that declares either is refused at load by name: `ce.toml [score] <key>: retired in 1.10.0 (the score no longer reads it); remove the key`.
 
 ## [structure]
 

@@ -14,7 +14,7 @@ score = ⌊1000·(1 − k·E/L)⌋，E 是被某条发现点名的行数（一�
 `ce.check-report` 0.6.0 加性 `extent` `{tenths, lines}`（`tenths` = E 乘十后四舍五入，由核算出）。迁移须知，每条都实测过：
 (a) **分数与 1.9.x 不可比**：本仓库 v1.9.2 那棵树，1.9.2 的 pin 提交 4f2f52ef 记的是 check 925，这一版判 931；按旧分数定的 `--fail-under` 要重读一次。
 (b) **两个 ce.toml 键退役、加载即按名拒绝**：声明 `[score] size_penalty_max` 或 `[score] dead_indeg_ceil`（任何值）时 `ce check` / `ce scan` 退 2，打印
-`ce check: ce.toml [score] size_penalty_max: retired with the density law (v2.35); remove the key`（`dead_indeg_ceil` 同形）；删掉该行即可。拆分建议的 P_max 成为核常量 10。
+`ce check: ce.toml [score] size_penalty_max: retired in 1.10.0 (the score no longer reads it); remove the key`（`dead_indeg_ceil` 同形）；删掉该行即可。拆分建议的 P_max 成为核常量 10。
 (c) **1.9.2 写下的基线照常可用**：v1.9.2 那棵树带着 1.9.2 写的 `ce-baseline.json`，这一版的 `ce check` 判 `ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -> pass`，退 0，
 没有任何失败条件成立——棘轮与围栏读的是尺寸与复杂度行、离散成员和旋钮指纹，都不随评分定律变；不需要重立基线。
 

@@ -91,7 +91,7 @@ class, and a classed file is priced on its class's opening edge and hard line
 (`Zone.classedZone`); until then the advisory was class-blind while `verdict/1` (since 3.1.0)
 measured a classed row against its `[[rules.class]]` lines. `P_max` is the advisory's exchange
 rate against its four prices (codes 15..18) and, like them, a constant of the core: no ce.toml
-key reaches it since `[score] size_penalty_max` retired with the density law (v2.35) and is
+key reaches it since `[score] size_penalty_max` retired in 1.10.0 and is
 refused by name at load; knob 14 stays on the wire as 15..18 do
 ([judge.rs:170-193](../../../cli/src/structure/judge.rs#L170),
 [Cost.hs:133-143](../../../core/app/CE/Structure/Cost.hs#L133),
