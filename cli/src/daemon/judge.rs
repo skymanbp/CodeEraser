@@ -22,7 +22,7 @@
 use crate::corelink::Link;
 use crate::fourclass::batch::{BatchClassification, PairInput, classify_batch};
 use crate::fourclass::session;
-use crate::scan::lang::Lang;
+use crate::tombstone::texts::{self, Side};
 use std::path::Path;
 use std::time::{Duration, Instant};
 
@@ -88,30 +88,40 @@ impl Judge {
     /// Classify the given (before, after) path pairs of `root`'s
     /// working tree vs HEAD. Always returns a report; every failure
     /// shape is a degraded report, never an error (fail-open, A9f).
+    ///
+    /// The texts come through the shared loader (tombstone::texts: one
+    /// `cat-file --batch` for the HEAD sides, the working tree read
+    /// bounded by READ_CAP and confined to the root — the after path
+    /// arrives over the unauthenticated socket — and at most PAIR_CAP
+    /// pairs). A judged pair it could not read (a side missing, binary
+    /// or past the cap, a pair past PAIR_CAP, or git not answering) is
+    /// COUNTED: the report carries `unread_pairs` (DAEMON 2.4.0,
+    /// additive) and the pair is never read as clean.
     pub fn classify(
         &mut self,
         root: &Path,
         pairs: &[(Option<String>, Option<String>)],
     ) -> serde_json::Value {
         // ONE index space: reply indices point into what we SENT, and
-        // load_pair DROPS pairs — the unfiltered list misnamed them.
-        let kept: Vec<(session::PathPair, (String, String, Lang))> = pairs
+        // the loader leaves pairs out — the unfiltered list misnamed them.
+        let (loaded, unread) = texts::load(root, pairs, Side::Rev("HEAD"), Side::Worktree)
+            .unwrap_or_else(|| (Vec::new(), judged_count(pairs)));
+        let sent: Vec<session::PathPair> = loaded.iter().map(|l| l.pair.clone()).collect();
+        let inputs: Vec<PairInput> = loaded
             .iter()
-            .filter_map(|p| load_pair(root, p.0.as_deref(), p.1.as_deref()).map(|t| (p.clone(), t)))
-            .collect();
-        let sent: Vec<session::PathPair> = kept.iter().map(|(p, _)| p.clone()).collect();
-        let inputs: Vec<PairInput> = kept
-            .iter()
-            .map(|(_, (b, a, lang))| PairInput {
-                before: b,
-                after: a,
-                lang: *lang,
+            .map(|l| PairInput {
+                before: &l.before,
+                after: &l.after,
+                lang: l.lang,
             })
             .collect();
         let batch = self.judge_changeset(&inputs);
         let mut report = session::report_json(&batch, &sent);
         if let Some(n) = self.recovered.take() {
             report["recovered"] = serde_json::json!(n);
+        }
+        if unread > 0 {
+            report["unread_pairs"] = serde_json::json!(unread);
         }
         report
     }
@@ -273,33 +283,18 @@ pub(crate) fn core_bin() -> Option<String> {
     Some("ce-core".into())
 }
 
-/// Before = HEAD content, after = working tree; a side with no path
-/// (created/deleted) is empty. Pairs outside the supported languages
-/// (or unreadable) are skipped — they carry no classifiable lines.
-///
-/// The after path comes off the unauthenticated DAEMON SOCKET, so it
-/// is CONFINED before any read (fail-closed); git confines the before.
-fn load_pair(
-    root: &Path,
-    before: Option<&str>,
-    after: Option<&str>,
-) -> Option<(String, String, Lang)> {
-    // judged_path: the scan-only arm (plan v2.5) is never classified
-    let lang = Lang::judged_path(Path::new(after.or(before)?))?;
-    let before_text = match before {
-        None => String::new(),
-        Some(p) => head_content(root, p)?,
-    };
-    let after_text = match after {
-        None => String::new(),
-        Some(p) => std::fs::read_to_string(crate::scan::walk::contained(root, p)?).ok()?,
-    };
-    Some((before_text, after_text, lang))
-}
-
-fn head_content(root: &Path, path: &str) -> Option<String> {
-    // `./`: root-relative, not toplevel-relative (proc.rs, v2.35 G1)
-    crate::churn::git(root, &["show", &format!("HEAD:./{path}")]).ok()
+/// The judged pairs of a changeset (the loader's own population: a
+/// pair outside the judged languages carries no classifiable lines),
+/// all unread when git could not answer the batch.
+fn judged_count(pairs: &[session::PathPair]) -> usize {
+    pairs
+        .iter()
+        .filter(|(b, a)| {
+            a.as_deref()
+                .or(b.as_deref())
+                .is_some_and(|p| crate::scan::lang::Lang::judged_path(Path::new(p)).is_some())
+        })
+        .count()
 }
 
 #[cfg(test)]

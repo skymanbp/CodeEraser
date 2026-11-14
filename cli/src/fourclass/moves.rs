@@ -157,7 +157,8 @@ fn packed(
         .zip(measured)
         .zip(&pairs)
         .map(|((p, m), v)| {
-            let n_lines = p.before.lines().count() + p.after.lines().count();
+            let count = |t: &str| crate::scan::metrics::size::total_lines(t.as_bytes());
+            let n_lines = count(p.before) + count(p.after);
             [
                 n_lines,
                 m.units[0].len() + m.units[1].len(),

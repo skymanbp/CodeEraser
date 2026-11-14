@@ -35,7 +35,7 @@ fn section_of(path: &str, text: &str, line: i64) -> Option<String> {
             .filter(|u| u.start_line <= line && line <= u.end_line)
             .max_by_key(|u| u.start_line)
             .and_then(|u| u.key.strip_prefix('#').map(str::to_string)),
-        Lang::Markdown => crate::graph::ladder::md::slug::heading_slugs(text)
+        Lang::Markdown => crate::graph::ladder::md_slug::heading_slugs(text)
             .into_iter()
             .take_while(|(row, _)| *row <= line)
             .last()

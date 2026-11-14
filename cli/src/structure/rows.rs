@@ -82,7 +82,7 @@ pub fn stale_docs(root: &Path, w: &GraphWire, days: u32) -> Result<StaleDocs> {
         // a foreign doc is READ (its links are edges) and never
         // measured: its staleness is its own tree's, and it has no
         // directory in this one to be placed in (plan v2.18 step #12)
-        if !s.foreign && s.path.ends_with(".md") && d.path != s.path {
+        if !s.foreign && crate::graph::md::is_md_path(&s.path) && d.path != s.path {
             targets.entry(s.path.as_str()).or_default().insert(&d.path);
         }
     }
@@ -113,14 +113,10 @@ pub fn stale_docs(root: &Path, w: &GraphWire, days: u32) -> Result<StaleDocs> {
 /// its first-parent diff, so a file changed on a side branch is dated
 /// by the merge that brought it.
 fn newest_in_window(root: &Path, days: u32) -> Result<BTreeMap<String, i64>> {
-    let since = format!("--since={days} days ago");
-    let args = [
-        "log",
-        &since,
-        "--first-parent",
-        "--format=%x01%ct",
-        "--name-only",
-    ];
+    let window = crate::churn::window_args(days);
+    let mut args = vec!["log"];
+    args.extend(window.iter().map(String::as_str));
+    args.extend(["--format=%x01%ct", "--name-only"]);
     let log = crate::churn::git(root, &args)?;
     let mut newest: BTreeMap<String, i64> = BTreeMap::new();
     let mut cur = 0i64;

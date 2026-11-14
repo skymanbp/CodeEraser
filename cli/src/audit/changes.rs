@@ -142,7 +142,9 @@ pub fn untracked(root: &Path, excludes: &[String]) -> Option<(i64, Vec<String>)>
 /// the file to know. The bounded reader is the tombstone leg's
 /// (tombstone::texts::read_capped): one reader, one cap.
 fn line_count(path: &Path) -> i64 {
-    crate::tombstone::texts::read_capped(path).map_or(0, |text| text.lines().count() as i64)
+    crate::tombstone::texts::read_capped(path).map_or(0, |text| {
+        crate::scan::metrics::size::total_lines(text.as_bytes()) as i64
+    })
 }
 
 #[cfg(test)]

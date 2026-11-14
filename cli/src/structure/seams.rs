@@ -37,13 +37,19 @@ const NAME_FLOOR: usize = 3;
 /// (a measurement constant, not a wire knob — prices are the knobs).
 const CHURN_WINDOW_DAYS: u32 = crate::churn::DEFAULT_DAYS;
 
-/// Where a file's seams open and which class owns it (9.0.0): a file
-/// whose class declares its own `file_lines_warn` is past THAT line —
-/// the row the verdict's class code 0 reads — and every other file is
-/// past the committed soft line. The class index rides as seamFiles'
-/// third column, so the core prices the seam on the same curve.
+/// Where a file's seams open and which class owns it (9.0.0). The rule
+/// is the core's (CE.Structure.Zone: the curve opens at s = min s0 h):
+/// s0 is the class's own `file_lines_warn` (the row the verdict's class
+/// code 0 reads) or the committed soft line, h the class's own
+/// `file_lines_fail` (code 2) or the global hard line, so a class whose
+/// hard line sits below the soft line sends the files between the two.
+/// The class index rides as seamFiles' third column, so the core prices
+/// the seam on the same curve.
 pub struct Owners<'a> {
     pub soft: u64,
+    /// The global hard line (`[thresholds] file_lines_fail`); None = no
+    /// hard line declared (`0`, the grade table's "no line").
+    pub hard: Option<u64>,
     pub classes: &'a crate::scan::classes::Classes,
     pub rules: &'a crate::config::RulesCfg,
 }
@@ -51,14 +57,15 @@ pub struct Owners<'a> {
 impl Owners<'_> {
     fn of(&self, rel: &str) -> (u64, u64) {
         let class = self.classes.class_of(rel);
-        let line = match class {
-            0 => self.soft,
-            c => self.rules.class[c as usize - 1]
-                .knobs
-                .file_lines_warn
-                .map_or(self.soft, |w| w as u64),
-        };
-        (line, class)
+        let knobs = (class > 0).then(|| &self.rules.class[class as usize - 1].knobs);
+        let soft = knobs
+            .and_then(|k| k.file_lines_warn)
+            .map_or(self.soft, |w| w as u64);
+        let hard = knobs
+            .and_then(|k| k.file_lines_fail.filter(|h| *h >= 1))
+            .map(|h| h as u64)
+            .or(self.hard);
+        (hard.map_or(soft, |h| soft.min(h)), class)
     }
 }
 
@@ -176,15 +183,10 @@ fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, St
 /// The churn window's own parent rule (churn/mod.rs header): first
 /// parent, merges included, a merge read by its first-parent diff.
 fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
-    let since = format!("{CHURN_WINDOW_DAYS} days ago");
-    let mut args = vec![
-        "log",
-        "--since",
-        &since,
-        "--first-parent",
-        "--format=%H",
-        "--",
-    ];
+    let window = crate::churn::window_args(CHURN_WINDOW_DAYS);
+    let mut args = vec!["log"];
+    args.extend(window.iter().map(String::as_str));
+    args.extend(["--format=%H", "--"]);
     args.extend(files.iter().map(|(p, _)| p.as_str()));
     let stdout = crate::churn::git(root, &args)?;
     Ok(stdout.split_whitespace().map(str::to_string).collect())
@@ -270,9 +272,10 @@ fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, la
 }
 
 /// Word-bounded containment: the name with no identifier character
-/// on either side.
+/// on either side — the mention tokenizer's identifier characters
+/// (mention::token::continues), so `$` binds as it does there.
 fn mentions(body: &str, name: &str) -> bool {
-    let ident = |c: char| c.is_alphanumeric() || c == '_';
+    let ident = crate::mention::token::continues;
     let mut from = 0;
     while let Some(pos) = body[from..].find(name) {
         let at = from + pos;

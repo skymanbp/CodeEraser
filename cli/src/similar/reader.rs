@@ -52,8 +52,6 @@ const SEATS: &str = "SELECT f.path, u.id, u.key, u.nth, s.start_line, s.end_line
 
 const LENS: &str = "SELECT unit, SUM(tf) FROM bag GROUP BY unit";
 
-const WORD_CHANNELS: [Channel; 3] = [Channel::Name, Channel::Callee, Channel::Doc];
-
 impl<'c> Reader<'c> {
     /// Open over an index: the seats and their lengths are read once;
     /// a unitsig row without its symbols twin, or a bag unit outside
@@ -239,11 +237,23 @@ impl Cooc for Reader<'_> {
     /// `a`, and rank::cooc_rows never asks for a word the package's
     /// neighbour ratio rules out.
     fn pairs(&self, a: u64) -> Result<Vec<(u64, u32)>> {
-        let ch = WORD_CHANNELS.map(|c| c.index() as i64);
+        // the word channels, read off Channel::is_words (three today:
+        // the query below binds three)
+        let ch: Vec<i64> = Channel::ALL
+            .iter()
+            .filter(|c| c.is_words())
+            .map(|c| c.index() as i64)
+            .collect();
+        let [c0, c1, c2] = ch[..] else {
+            anyhow::bail!(
+                "similar: {} word channels, the co-occurrence query binds 3",
+                ch.len()
+            );
+        };
         let rows = self.two_columns(
             "SELECT b.unit, b.term_hash FROM bag a JOIN bag b ON b.unit = a.unit
              WHERE a.term_hash = ?1 AND b.channel IN (?2, ?3, ?4) ORDER BY b.unit",
-            (a as i64, ch[0], ch[1], ch[2]),
+            (a as i64, c0, c1, c2),
         )?;
         let mut units: Vec<(i64, Vec<u64>)> = Vec::new();
         for (unit, term) in rows {

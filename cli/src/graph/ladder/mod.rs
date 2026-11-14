@@ -39,7 +39,13 @@ pub mod html_head;
 // pub: the walk reads every Lua file's package.path templates with it
 // (dedup/walkidx.rs)
 pub mod lua_path;
-pub mod md;
+// the Markdown documents' heading reader and anchor set: the section
+// units (fourclass/units.rs), the erase plan's links (erase/section.rs),
+// the walk's slug hash (dedup/walkidx.rs) and the request's anchor sets
+// (graph/resolve/markdown.rs) read them; the Markdown rungs themselves
+// are the core's (CE.Resolve.Md)
+pub(crate) mod md_head;
+pub(crate) mod md_slug;
 // pub: the walk reads every package's `__all__` with it (dedup/walkidx.rs)
 pub mod py_all;
 // pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
@@ -200,9 +206,7 @@ pub fn resolve_all_also(
     names: &[&[String]],
     scope: &Scope,
 ) -> Result<Vec<(Outcome, Also)>, String> {
-    let empty = |lang: Lang, site: &Site| {
-        site.spec.is_empty() && !lang.document()
-    };
+    let empty = |lang: Lang, site: &Site| site.spec.is_empty() && !lang.document();
     let held = |(lang, site): &(Lang, &Site)| !empty(*lang, site) && super::resolve::in_core(*lang);
     let core: Vec<(Lang, &Site)> = sites.iter().filter(|s| held(s)).copied().collect();
     let core_names: Vec<&[String]> = sites

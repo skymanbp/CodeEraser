@@ -257,7 +257,10 @@ fn lang_fact(
 ) {
     let text = String::from_utf8_lossy(src);
     match lang {
-        Lang::Markdown => facts.push((rel.to_string(), crate::graph::ladder::md::slug_hash(&text))),
+        Lang::Markdown => facts.push((
+            rel.to_string(),
+            crate::graph::ladder::md_slug::slug_hash(&text),
+        )),
         Lang::Html => facts.push((
             rel.to_string(),
             crate::graph::ladder::html_head::id_hash(&text),

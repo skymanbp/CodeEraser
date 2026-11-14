@@ -11,8 +11,8 @@
 use super::frames::words;
 use crate::docdup::segments;
 use crate::fourclass::units;
-use crate::graph::ladder::md::head::atx_heading;
-use crate::graph::ladder::md::slug::render_text;
+use crate::graph::ladder::md_head::atx_heading;
+use crate::graph::ladder::md_slug::render_text;
 use crate::graph::md::{content_lines, merge_code_spans};
 use crate::mention::token::runs;
 use crate::scan::lang::Lang;

@@ -29,7 +29,9 @@ fn opens(c: char) -> bool {
     c.is_alphabetic() || c == '_' || c == '$'
 }
 
-fn continues(c: char) -> bool {
+/// An identifier's continuing character — the one predicate the seam
+/// measurement's word boundary reads too (structure/seams.rs).
+pub(crate) fn continues(c: char) -> bool {
     c.is_alphanumeric() || c == '_' || c == '$'
 }
 

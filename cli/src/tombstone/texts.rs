@@ -34,8 +34,10 @@ pub enum Side<'a> {
     Worktree,
 }
 
-/// One pair with both texts (an absent side is empty).
+/// One pair with both texts (an absent side is empty), and the pair it
+/// was read for (the daemon's reply indexes what it sent).
 pub struct Loaded {
+    pub pair: PathPair,
     pub rel: String,
     pub before: String,
     pub after: String,
@@ -86,6 +88,7 @@ pub fn load(
             .unwrap_or_default()
             .to_string();
         out.push(Loaded {
+            pair: (b.clone(), a.clone()),
             rel,
             before,
             after,

@@ -21,7 +21,7 @@
 //! CE.Resolve.HtmlHead).
 
 use crate::graph::ladder::html_head;
-use crate::graph::ladder::md::slug::slug_set;
+use crate::graph::ladder::md_slug::slug_set;
 use crate::graph::ladder::{Scope, Site};
 use crate::graph::md::{content_lines, detect, is_md_path, ref_definition};
 use crate::scan::lang::Lang;

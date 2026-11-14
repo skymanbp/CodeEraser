@@ -48,24 +48,14 @@ use std::path::Path;
 pub const CAP: &str = "resolve/1";
 pub const KIND: &str = "resolve";
 
-/// Whether the core holds this language's ladder.
+/// Whether the core holds this language's ladder: every judged
+/// language (the package's `judged` column). The core's own list of the
+/// languages it resolves is CE.Resolve.Cost `resolvedLangs`; a site of a
+/// judged language missing from it is refused by the core's contract
+/// (`site <i>: language this family does not resolve`, CE.Resolve.Contract)
+/// and the whole request with it — never answered with a guess.
 pub fn in_core(lang: Lang) -> bool {
-    matches!(
-        lang,
-        Lang::Python
-            | Lang::TypeScript
-            | Lang::Tsx
-            | Lang::Rust
-            | Lang::Go
-            | Lang::Markdown
-            | Lang::Html
-            | Lang::Haskell
-            | Lang::C
-            | Lang::Cpp
-            | Lang::Lua
-            | Lang::R
-            | Lang::Java
-    )
+    crate::tables::get().languages.rows[lang as usize].judged
 }
 
 /// The sites' outcomes, in order — every site a language `in_core` —

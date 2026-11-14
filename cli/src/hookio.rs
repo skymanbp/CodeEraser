@@ -47,7 +47,11 @@ use std::path::Path;
 /// record alone). An envelope the hook cannot read leaves the same
 /// `degraded` / `reason` line the inert hook writes, in the feed of the
 /// project the hook runs in: over the cap, not JSON, a cwd that is not
-/// a native path, or no cwd at all. Every prior key keeps its shape.
+/// a native path, or no cwd at all. The `fourclass` object on a
+/// `stop_audit` line may carry `unread_pairs`: the changed pairs the
+/// daemon's loader could not read (a side missing, binary or past the
+/// read cap, a pair past the pair cap), never read as clean. Every
+/// prior key keeps its shape.
 ///
 /// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
 /// unreadable definition package writes one line — `probe` /

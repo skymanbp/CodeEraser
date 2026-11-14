@@ -173,7 +173,7 @@ fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {
 /// and the section the register keys are one reading.
 fn markdown_segments(text: &str) -> Vec<Unit> {
     let mut out: Vec<Unit> = Vec::new();
-    for heading in crate::graph::ladder::md::head::headings(text) {
+    for heading in crate::graph::ladder::md_head::headings(text) {
         if let Some(prev) = out.last_mut() {
             prev.end_line = heading.line - 1; // previous section ends above this heading
         }
@@ -187,7 +187,7 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
         });
     }
     if let Some(last) = out.last_mut() {
-        last.end_line = text.lines().count();
+        last.end_line = crate::scan::metrics::size::total_lines(text.as_bytes());
     }
     out
 }

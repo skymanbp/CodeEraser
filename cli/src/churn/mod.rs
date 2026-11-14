@@ -159,12 +159,24 @@ fn sorted_rows(ledger: Ledger) -> Vec<UnitRow> {
     rows
 }
 
+/// The churn window's git arguments (the header's rule: committer-dated
+/// `--since`, first parent, merges included by their first-parent
+/// diff) — the one spelling the window's three readers splice into
+/// their `git log` (window_commits here; structure's seams and rows).
+pub(crate) fn window_args(days: u32) -> [String; 3] {
+    [
+        "--since".into(),
+        format!("{days} days ago"),
+        "--first-parent".into(),
+    ]
+}
+
 fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
-    let since = format!("{days} days ago");
-    let out = git(
-        root,
-        &["log", "--since", &since, "--first-parent", "--format=%H"],
-    )?;
+    let window = window_args(days);
+    let mut args = vec!["log"];
+    args.extend(window.iter().map(String::as_str));
+    args.push("--format=%H");
+    let out = git(root, &args)?;
     Ok(out.split_whitespace().map(str::to_string).collect())
 }
 

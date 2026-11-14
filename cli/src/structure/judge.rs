@@ -42,6 +42,8 @@ pub fn run(
             .map_err(anyhow::Error::msg)?;
         let owners = super::seams::Owners {
             soft: committed_soft(root),
+            hard: (config.thresholds.file_lines_fail >= 1)
+                .then_some(config.thresholds.file_lines_fail as u64),
             classes: &classes,
             rules: &config.rules,
         };
@@ -87,8 +89,9 @@ pub(crate) fn committed_soft(root: &Path) -> u64 {
         .filter(|s| *s >= 1);
     stored.unwrap_or_else(|| {
         crate::config::Config::load(root)
-            .map(|c| c.thresholds.file_lines_warn as u64)
-            .unwrap_or(300)
+            .map_or(crate::config::Thresholds::default().file_lines_warn, |c| {
+                c.thresholds.file_lines_warn
+            }) as u64
     })
 }
 

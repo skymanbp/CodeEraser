@@ -9,8 +9,8 @@
 use super::applied::{self, Applied};
 use super::envelope::Envelope;
 use super::speech::Said;
+use super::zone::Budget;
 use super::zone::Fence;
-use super::zone::{Budget, GROWTH_TIER, GrowthTier};
 use crate::config::{Config, Thresholds};
 use std::path::Path;
 
@@ -58,7 +58,9 @@ fn sized_write(root: &Path, cfg: &Config, env: &Envelope, applied: &Applied) -> 
     if !crate::scan::walk::in_scope(root, path, &cfg.exclude) {
         return None;
     }
-    Some(applied.text.lines().count())
+    Some(crate::scan::metrics::size::total_lines(
+        applied.text.as_bytes(),
+    ))
 }
 
 /// The size before this write, read only when a rule needs it (a write
@@ -95,8 +97,7 @@ fn over_budget(
 /// (a budget line, or a zone line — the hook writes them after the
 /// probe's, 0.11.0), the budget reason at the class tier unless the
 /// breach was warned this session already, and the firings that speak
-/// at their own tier (the armed zone; a growth when GROWTH_TIER names
-/// one).
+/// at their own tier (the armed zone).
 pub(super) struct SizeClasses {
     pub lines: Vec<serde_json::Value>,
     pub budget: Option<Said>,
@@ -137,11 +138,8 @@ pub(super) fn size_classes(
         if kind == Budget::Carried || budget_seen {
             return out;
         }
-        let said = over_budget(env, kind, &p, lines, cap, *fence);
-        match (kind, GROWTH_TIER) {
-            (Budget::Growth, GrowthTier::Named(tier)) => out.tiered.push((tier, said)),
-            _ => out.budget = Some(said),
-        }
+        // a growth speaks at the class tier, like a crossing
+        out.budget = Some(over_budget(env, kind, &p, lines, cap, *fence));
         return out;
     }
     // under the hard line: the zone observer, plus the v2.7 ① OPT-IN

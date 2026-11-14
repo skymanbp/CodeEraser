@@ -136,8 +136,8 @@
   进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
   销毁；任何 token 值不落对话/不落库/不打印。wrangler 退 0 后它自己串跑
-  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），10/10 才退 0——上线以此为准；
-  该读者也可单独跑：它把十页逐个与 `git show HEAD:<page>`
+  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），脚本先印它查的页数 N（`site/` 下每个被跟踪的
+  `index.html`），N/N 才退 0——上线以此为准；该读者也可单独跑：它把这 N 页逐个与 `git show HEAD:<page>`
   的 blob 对拍。判据**不是**「剥完摘要相同」——那样会连第二处真差异一起吞掉——
   而是「至多一处 Cloudflare 边缘注入的 beacon，剥掉它之后与 blob 逐字节相等」；
   beacon 带属性且连它所在那行的换行一起注入，两点都在脚本头注里写明。

@@ -31,7 +31,9 @@
 - 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.4.0<!--/ce-->**：
   2.4.0 = 加性 `relocate{rows}` 请求与 `relocate_report{reply}` 应答、加性 `reindex{file_path}` 请求与 `reindex_report{report}` 应答，
   `probe_report.matches` 每条加性 `at`（片段一侧的起始 token；有多份副本时取第一份的起点）与 `copies`（片段里这一段源码的副本数：
-  延伸后恰为同一段源码的起点里两两不相交的最多几份，1.10.0；钩子按副本数做减法）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
+  延伸后恰为同一段源码的起点里两两不相交的最多几份，1.10.0；钩子按副本数做减法）、`four_class_report.report` 加性 `unread_pairs`（读不到的变更对数：
+  一侧缺失、二进制、过读取上限，或过 256 对的上限；1.10.0 起 daemon 经共享读取器 `tombstone::texts::load` 读两侧——HEAD 一侧一个 `cat-file --batch`、
+  工作树一侧有界读且先按根约束路径——读不到的对计数，不再无声丢弃；钩子把它原样记进 feed 的 `fourclass` 对象）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
   数出每条匹配的 `[occHead, occNow]` 整数行，daemon 原样送核（relocate/1）；`reindex` 是 PostToolUse 腿请正在跑的 daemon 把刚落盘的一个文件在共享索引里重量一次
   ——只量指纹语言、作用域内、本项目自己的文件，只在索引存在且是当前这一代时，从不建索引；2.4.0 客户端遇 2.3.0 daemon 同走 §2 回执校验的 stale 路〕；
   2.3.0 = 加性 `document{body}` 请求与 `document_report{reply}` 应答〔计划 v2.32 步 5；`body` 是钩子拼好的整份
@@ -164,7 +166,7 @@
   `dedup::report::answer`，核 `CE.Dedup.Document` 排版；report_schema
   golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
   report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
-  索引钉；7.0.0 起核链退避恢复后的首份报告可带加性 `recovered: n`，daemon/judge.rs）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
+  索引钉；7.0.0 起核链退避恢复后的首份报告可带加性 `recovered: n`，1.10.0 起读不到的变更对带加性 `unread_pairs: n`，daemon/judge.rs）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
   ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）、flow reply =
   ce-core 的 `flow.result`（wire golden `fixtures/flow/` + `flow::wire::consume`，经 daemon 一腿 `daemon_flow`）、document
   body / reply = ce-core 的 `document.request` / `document.result`（wire golden `fixtures/document/` + `document::lines::bind_lines`

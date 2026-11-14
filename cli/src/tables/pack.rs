@@ -223,9 +223,10 @@ impl TryFrom<serde_json::Value> for DocCatalogueOwned {
             ));
         };
         let word = |key: &str| {
-            v["erase-trail"][key].as_str().map(String::from).ok_or_else(|| {
-                serde::de::Error::custom(format!("document.erase-trail: no {key}"))
-            })
+            v["erase-trail"][key]
+                .as_str()
+                .map(String::from)
+                .ok_or_else(|| serde::de::Error::custom(format!("document.erase-trail: no {key}")))
         };
         Ok(DocCatalogueOwned {
             trail_log: word("log")?,

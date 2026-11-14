@@ -92,7 +92,7 @@ pub(super) fn apply(env: &Envelope) -> Result<Applied, Unapplied> {
         std::io::ErrorKind::NotFound => Unapplied::Absent,
         kind => Unapplied::Unreadable(kind),
     })?;
-    let before = raw.lines().count();
+    let before = crate::scan::metrics::size::total_lines(raw.as_bytes());
     let on_disk = raw.replace("\r\n", "\n");
     let (old, new) = (
         t.old_string.replace("\r\n", "\n"),
@@ -126,7 +126,7 @@ pub(super) fn before_lines(
         return Ok(Some(n));
     }
     match applied.prior(env) {
-        Ok(bytes) => super::zone::count_lines_in(bytes)
+        Ok(bytes) => crate::scan::metrics::size::count_lines_in(bytes)
             .map(Some)
             .map_err(|e| e.kind()),
         Err(std::io::ErrorKind::NotFound) => Ok(None),

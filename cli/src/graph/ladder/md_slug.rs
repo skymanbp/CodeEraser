@@ -14,7 +14,7 @@
 //! lines are headings and which tags are anchors is md_head.rs's one
 //! reading, shared with the section units.
 
-use super::head::{anchors, headings};
+use super::md_head::{anchors, headings};
 use crate::graph::md::matching_close;
 use std::collections::BTreeMap;
 
@@ -205,3 +205,7 @@ fn slugify(text: &str) -> String {
     }
     out
 }
+
+#[cfg(test)]
+#[path = "../../../tests/unit/graph/ladder/md_tests.rs"]
+mod tests;

@@ -23,19 +23,13 @@ const path = require("path");
 const ROOT = path.join(__dirname, "..");
 const BASE = "https://codeeraser.dev";
 
-/** Committed page -> the path it is served at. */
-const PAGES = [
-  ["site/index.html", "/"],
-  ["site/how/index.html", "/how/"],
-  ["site/how/analysis/index.html", "/how/analysis/"],
-  ["site/math/index.html", "/math/"],
-  ["site/stack/index.html", "/stack/"],
-  ["site/zh/index.html", "/zh/"],
-  ["site/zh/how/index.html", "/zh/how/"],
-  ["site/zh/how/analysis/index.html", "/zh/how/analysis/"],
-  ["site/zh/math/index.html", "/zh/math/"],
-  ["site/zh/stack/index.html", "/zh/stack/"],
-];
+/** Committed page -> the path it is served at: every tracked
+ *  `index.html` under site/ (the site has no not-found page), so a page
+ *  added or retired moves this list with it. */
+const PAGES = execFileSync("git", ["-C", ROOT, "ls-files", "site"], { encoding: "utf8" })
+  .split("\n")
+  .filter((rel) => rel === "site/index.html" || rel.endsWith("/index.html"))
+  .map((rel) => [rel, rel.slice("site".length, -"index.html".length)]);
 
 const BEACON =
   /<script[^>]*static\.cloudflareinsights\.com[^>]*>\s*<\/script>\n?/g;
@@ -88,6 +82,8 @@ async function verdict(rel, urlPath) {
 }
 
 async function main() {
+  if (PAGES.length === 0) throw new Error("no tracked page under site/");
+  console.log(`checking ${PAGES.length} pages`);
   let bad = 0;
   for (const [rel, urlPath] of PAGES) {
     const [ok, line] = await verdict(rel, urlPath);

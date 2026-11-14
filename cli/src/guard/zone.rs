@@ -102,20 +102,6 @@ pub enum Budget {
     Unread,
 }
 
-/// The tier a GROWTH refusal speaks at: the class tier, like a
-/// crossing (the rule as shipped). One literal, pinned by the budget
-/// ledger's gate (fpr_budget_gate), so the tier cannot move without the
-/// gate and the ledger moving with it.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum GrowthTier {
-    /// The class mode (`[guard] mode`, or the route default).
-    Class,
-    /// A named tier of its own.
-    Named(&'static str),
-}
-
-pub const GROWTH_TIER: GrowthTier = GrowthTier::Class;
-
 /// The rule over one write. `before` = the file's line count before
 /// the write (0 for a new file), `Err` when it could not be read.
 /// `None` = under the line, or no line (`cap == 0`, the P3 grade-table
@@ -137,28 +123,6 @@ pub fn budget_kind(before: Result<usize, ()>, after: usize, cap: usize) -> Optio
 /// tier fires only on a growing write (GD1), the hard budget likewise.
 pub fn grows(before: Result<usize, ()>, after: usize) -> bool {
     !before.is_ok_and(|b| after <= b)
-}
-
-/// A line count from BYTES, streamed: the number of `\n`, plus one when
-/// the input is non-empty and does not end in `\n` — the value
-/// `str::lines().count()` gives on the same bytes, LF or CRLF. No size
-/// cap and no UTF-8 requirement: a line count is not a text, so only a
-/// real I/O failure leaves `before` unread (REVIEW-1 Q10). The replay
-/// instruments count blobs through the same function.
-pub fn count_lines_in(mut r: impl std::io::Read) -> std::io::Result<usize> {
-    let mut buf = [0u8; 64 * 1024];
-    let (mut newlines, mut last) = (0usize, None);
-    loop {
-        let n = match r.read(&mut buf) {
-            Ok(0) => break,
-            Ok(n) => n,
-            Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
-            Err(e) => return Err(e),
-        };
-        newlines += buf[..n].iter().filter(|b| **b == b'\n').count();
-        last = Some(buf[n - 1]);
-    }
-    Ok(newlines + usize::from(last.is_some_and(|b| b != b'\n')))
 }
 
 /// The zone's two core-authored inputs as a committed baseline
