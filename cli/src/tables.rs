@@ -21,6 +21,7 @@
 //! does not hold.
 
 mod cache;
+mod catalogue;
 mod fetch;
 pub mod leak;
 mod limits;

@@ -113,11 +113,7 @@ pub fn stale_docs(root: &Path, w: &GraphWire, days: u32) -> Result<StaleDocs> {
 /// its first-parent diff, so a file changed on a side branch is dated
 /// by the merge that brought it.
 fn newest_in_window(root: &Path, days: u32) -> Result<BTreeMap<String, i64>> {
-    let window = crate::churn::window_args(days);
-    let mut args = vec!["log"];
-    args.extend(window.iter().map(String::as_str));
-    args.extend(["--format=%x01%ct", "--name-only"]);
-    let log = crate::churn::git(root, &args)?;
+    let log = crate::churn::window_log(root, days, &["--format=%x01%ct", "--name-only"])?;
     let mut newest: BTreeMap<String, i64> = BTreeMap::new();
     let mut cur = 0i64;
     for line in log.lines() {

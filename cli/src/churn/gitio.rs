@@ -18,6 +18,18 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }
 
+/// One `git log` over the churn window (mod.rs header's rule:
+/// committer-dated `--since`, first parent, merges included by their
+/// first-parent diff), `tail` its format and path arguments: the one
+/// spelling the window's three readers run (window_commits in mod.rs;
+/// structure's seams and rows).
+pub(crate) fn window_log(root: &Path, days: u32, tail: &[&str]) -> Result<String> {
+    let since = format!("{days} days ago");
+    let mut args = vec!["log", "--since", since.as_str(), "--first-parent"];
+    args.extend_from_slice(tail);
+    git(root, &args)
+}
+
 /// A diff base: `rev` itself when it resolves, else git's empty tree —
 /// an unborn HEAD (a brand-new project, this product's headline
 /// scenario) or a root commit's missing parent (attack review

@@ -8,7 +8,7 @@
 
 use super::{Params, index, pairs, tokens};
 use crate::config::Config;
-use crate::graph::ladder::{c_head, java_header, lua_path, py_all};
+use crate::graph::ladder::{c_head, html_head, java_header, lua_path, md_slug, py_all, rs_cst};
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
@@ -257,18 +257,9 @@ fn lang_fact(
 ) {
     let text = String::from_utf8_lossy(src);
     match lang {
-        Lang::Markdown => facts.push((
-            rel.to_string(),
-            crate::graph::ladder::md_slug::slug_hash(&text),
-        )),
-        Lang::Html => facts.push((
-            rel.to_string(),
-            crate::graph::ladder::html_head::id_hash(&text),
-        )),
-        Lang::Rust => facts.push((
-            rel.to_string(),
-            crate::graph::ladder::rs_cst::pubuse_hash(&text),
-        )),
+        Lang::Markdown => facts.push((rel.to_string(), md_slug::slug_hash(&text))),
+        Lang::Html => facts.push((rel.to_string(), html_head::id_hash(&text))),
+        Lang::Rust => facts.push((rel.to_string(), rs_cst::pubuse_hash(&text))),
         Lang::Java => {
             let header = java_header::read(&text);
             facts.push((rel.to_string(), tokens::fnv1a(header.package.as_bytes())));

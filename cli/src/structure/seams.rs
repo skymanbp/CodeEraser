@@ -183,12 +183,9 @@ fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, St
 /// The churn window's own parent rule (churn/mod.rs header): first
 /// parent, merges included, a merge read by its first-parent diff.
 fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
-    let window = crate::churn::window_args(CHURN_WINDOW_DAYS);
-    let mut args = vec!["log"];
-    args.extend(window.iter().map(String::as_str));
-    args.extend(["--format=%H", "--"]);
-    args.extend(files.iter().map(|(p, _)| p.as_str()));
-    let stdout = crate::churn::git(root, &args)?;
+    let mut tail = vec!["--format=%H", "--"];
+    tail.extend(files.iter().map(|(p, _)| p.as_str()));
+    let stdout = crate::churn::window_log(root, CHURN_WINDOW_DAYS, &tail)?;
     Ok(stdout.split_whitespace().map(str::to_string).collect())
 }
 

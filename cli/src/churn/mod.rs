@@ -45,7 +45,7 @@ mod report;
 mod survival;
 
 // the leaf owns the face; re-exported so callers keep crate::churn::git
-pub(crate) use gitio::{git, gitlinks, rev_or_empty_tree};
+pub(crate) use gitio::{git, gitlinks, rev_or_empty_tree, window_log};
 
 /// The churn window's default in days, every face's: the §4.1 two-week anchor.
 pub const DEFAULT_DAYS: u32 = 14;
@@ -159,24 +159,8 @@ fn sorted_rows(ledger: Ledger) -> Vec<UnitRow> {
     rows
 }
 
-/// The churn window's git arguments (the header's rule: committer-dated
-/// `--since`, first parent, merges included by their first-parent
-/// diff) — the one spelling the window's three readers splice into
-/// their `git log` (window_commits here; structure's seams and rows).
-pub(crate) fn window_args(days: u32) -> [String; 3] {
-    [
-        "--since".into(),
-        format!("{days} days ago"),
-        "--first-parent".into(),
-    ]
-}
-
 fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
-    let window = window_args(days);
-    let mut args = vec!["log"];
-    args.extend(window.iter().map(String::as_str));
-    args.push("--format=%H");
-    let out = git(root, &args)?;
+    let out = window_log(root, days, &["--format=%H"])?;
     Ok(out.split_whitespace().map(str::to_string).collect())
 }
 
