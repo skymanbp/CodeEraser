@@ -78,7 +78,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "410"
+      "value": "411"
     },
     {
       "id": "count:grammars#word",
