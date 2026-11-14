@@ -340,7 +340,7 @@ permille = (lines - S) * 1000 / (H - S)
   </div>
   <p class="note">确定性来自<em>重放这次写</em>，每次钩子调用只算一次：精确的写后文本与行数，以及写前行数。已超线的文件只拒让它变长的写入，所以拆分可以一步步做；不变长的写入记作 <code>carried</code>。本就会失败的调用（文件不存在、匹配不到、非 <code>replace_all</code> 的匹配不唯一）让规则保持沉默，探针那行写明原因。无法识别的 <code>[guard] mode</code> 解析成 <code>observe (ce.toml ERROR: …)</code>，绝不透传。</p>
   <p class="note"><strong>规则类凭记录挣到 deny。</strong>M3：<strong>500 次真实正常编辑中误拦 ≤ 1 次</strong>，不许拿 <code>N=1</code> 演示充数。M4：<strong>500 次真实正常编辑上 FPR ≤ 1%</strong>，评估集在实现之前预注册，≥ 200 个编辑样本、≥ 50% 取自真实 agent 记录，只从 observe 模式与无守卫时期的会话采样，守卫无法自我背书。付清的只有两类：T1/T2 精确重复写入，以及让文件长过自己那条硬线的写入（默认 750，或该文件 <code>[[rules.class]]</code> 声明的那条），所以钩子拒的位置正是 CI 墙会红的位置。<em>其余规则都因没有自己的记录而停在 observe。</em></p>
-  <p class="note"><strong>CodeEraser 1.2.0 起，重复写入规则只计新引入的重复</strong>：K 轮在 2,761 个真实编辑事件（本仓全史加钉定的 <code>requests</code> 尾段）上重放，把真实落地与带预算内债文件上的复燃、拆叶/并叶中间态分开，于是减去<em>被替换</em>内容本就携带的匹配（Write 是盘上文件、Edit 是 <code>old_string</code>）。携债重写保持沉默；真引入或拆到新文件的写照拒，并教出能通过的次序（先削源）。两种口径见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>。</p>
+  <p class="note"><strong>CodeEraser 1.2.0 起，重复写入规则只计新引入的重复</strong>：K 轮在 2,761 个真实编辑事件（本仓全史加钉定的 <code>requests</code> 尾段）上重放，把真实落地与带预算内债文件上的复燃、拆叶/并叶中间态分开，于是减去<em>被替换</em>内容本就携带的匹配（Write 是盘上文件、Edit 是 <code>old_string</code>）。1.10.0 起按份数扣减：被替换的内容里有几份就免几份，在带着一份副本的旁边再写第二份照拒。携债重写保持沉默；真引入或拆到新文件的写照拒，并教出能通过的次序（先削源）。两种口径见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>。</p>
   <p class="note">把 git 线性历史当编辑流重放，出厂档 <code>t = 50</code>、<code>min_distinct = 7</code>：<strong>630 个事件、35 个块、仲裁后假阳 0 → 每 500 次 0.00</strong>（M3），这 35 块已清理，克隆块预算同步下棘 251 → 211 → 209 → 205 → 202。常设仪器（<code>cli/tests/it/fpr_replay.rs</code>，2026-09-05）：requests 365 事件 0 拦截；自仓 3164 事件里 178 次真落地引入加 79 次先写后削的中间态。</p>
   <p class="note">区的 <code>S</code> 与 <code>H</code> 取自硬预算那张逐文件表。<code>[guard] zone_tiers</code> <strong>默认关闭</strong>：预定规则要每份语料都 ≤ 1 % 才翻档，首测自仓 0.54 %、requests 2.46 %（变体 B）；2026-11 复冻按钩子自己的总体、只在变长时出档，读数自仓 1.90 %、requests 1.12 %，由 <code>fpr_zone_gate.rs</code> 钉住。告警按（规则、文件、会话）限一次并按 token 预算裁剪；deny 不限。</p>
   <ul class="consts">
@@ -364,11 +364,12 @@ permille = (lines - S) * 1000 / (H - S)
          3 dead_file（置信度路，2.32.0）
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
-         6 public_surface (6.1.0) | 7 reachable_by_name (9.1.0)</pre>
-  <p class="note rule">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。proto 2.32.0 起 class 3 信任 graph 家族的逐行置信；proto 6.1.0 起公开死件判决（2 unref_public / 4 unreach_public）在权衡置信<em>之前</em>即以 public_surface 拒绝，导出的 API 永不可擦，此后未担保的置信才拒行。9.1.0 起两个整文件类没有可擦结局：过了其余每道关的行以 reachable_by_name 拒绝——图说的是没有引用点位落在这个文件上，而凭名字运行的脚本、被工具按约定找到的文件都不留这样的点位。</p><details class="more"><summary>推导与常数</summary><p class="note">class 0（本地计数老路）已于 proto 4.0.0 退役，核按名拒绝。超上限的降级应答不授权任何擦除，安全谓词没有旋钮。</p>
+         6 public_surface (6.1.0) | 7 reachable_by_name (9.1.0)
+         8 linked_section (10.0.0)</pre>
+  <p class="note rule">Rust 从三个来源家族组装整数事实；Haskell 执行固定的首个失败谓词。proto 2.32.0 起 class 3 信任 graph 家族的逐行置信；proto 6.1.0 起公开死件判决（2 unref_public / 4 unreach_public）在权衡置信<em>之前</em>即以 public_surface 拒绝，导出的 API 永不可擦，此后未担保的置信才拒行。9.1.0 起两个整文件类没有可擦结局：过了其余每道关的行以 reachable_by_name 拒绝——图说的是没有引用点位落在这个文件上，而凭名字运行的脚本、被工具按约定找到的文件都不留这样的点位。10.0.0 起有链接片段落在其所在小节的重复文档段以 linked_section 拒绝；两份副本里被链接得少的那份才是候选。</p><details class="more"><summary>推导与常数</summary><p class="note">class 0（本地计数老路）已于 proto 4.0.0 退役，核按名拒绝。超上限的降级应答不授权任何擦除，安全谓词没有旋钮。</p>
   <ul class="consts">
     <li><b>类别数</b> 4</li>
-    <li><b>理由代码数</b> 8</li>
+    <li><b>理由代码数</b> 9</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>入 wire 版本</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>

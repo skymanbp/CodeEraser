@@ -470,7 +470,9 @@ permille = (lines - S) * 1000 / (H - S)
   duplication only</strong>: the K-round replay of 2,761 real edit events (this repository's history plus the
   pinned <code>requests</code> tail) separated genuine landings from re-fires on already-budgeted files
   and split/fold mid-states, so matches the <em>replaced</em> content already carried (Write: the
-  on-disk file; Edit: <code>old_string</code>) are subtracted. A rewrite carrying its debt is silent; an
+  on-disk file; Edit: <code>old_string</code>) are subtracted. Since 1.10.0 the subtraction counts copies:
+  the replaced content carries as many copies as it held, so a second copy written beside a carried
+  one denies. A rewrite carrying its debt is silent; an
   introduction, or a split to a new file, denies and teaches the ordering that passes (trim the source
   first). Both framings: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>.</p>
   <p class="note">Replaying linear git history as an edit stream at the shipped knobs
@@ -509,7 +511,8 @@ permille = (lines - S) * 1000 / (H - S)
          3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
-         6 public_surface (6.1.0) | 7 reachable_by_name (9.1.0)</pre>
+         6 public_surface (6.1.0) | 7 reachable_by_name (9.1.0)
+         8 linked_section (10.0.0)</pre>
   <p class="note rule">Rust assembles integer facts from the three source families; Haskell applies
   a fixed first-failure predicate. Since proto 2.32.0 class 3 trusts the graph family's per-row
   confidence; since proto 6.1.0 a public dead verdict (2 unref_public, 4 unreach_public) is refused as
@@ -517,11 +520,13 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
   then does an unvouched confidence refuse the row. Since 9.1.0 the two whole-file classes have no
   eraseable outcome: a row past every other bar is refused as reachable_by_name, because the graph
   says no reference site lands on the file, and a script run by name or a file a tool finds by
-  convention leaves no such site.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Class 0, the local-count road, retired at proto 4.0.0; the core refuses
+  convention leaves no such site. Since 10.0.0 a duplicated doc segment whose section a link's
+  fragment lands on is refused as linked_section; of two copies the one fewer links reach is the
+  candidate.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Class 0, the local-count road, retired at proto 4.0.0; the core refuses
   it by name. A degraded over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
   <ul class="consts">
     <li><b>classes</b> 4</li>
-    <li><b>reason codes</b> 8</li>
+    <li><b>reason codes</b> 9</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>
