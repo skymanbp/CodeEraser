@@ -14,7 +14,7 @@ Before any arithmetic, the first offender in request order is named and the requ
 
 - row must be exactly `[ts, score, scale]`, with `ts >= 0`, `scale > 0`, and `0 <= score <= scale` ([Trend.hs:39-47](../../../core/app/CE/Trend.hs#L39));
 - knob must be `[code, value]` with `code ∈ {0, 1}`, `value >= 0`, and — for `code == 0` — `value >= 2` ([Trend.hs:51-57](../../../core/app/CE/Trend.hs#L51));
-- knob codes must be strictly ascending — one knob-table contract every knobbed family reads ([Rows.hs:74-81](../../../core/app/CE/Wire/Rows.hs#L74)).
+- knob codes must be strictly ascending — one knob-table contract every knobbed family reads ([Rows.hs:80-87](../../../core/app/CE/Wire/Rows.hs#L80)).
 
 Row **order is deliberately unconstrained**: the judged view sorts by timestamp, and first-parent order is topological rather than chronological, so rebased or backdated commits are legal input. The property `orderFree` pins that a shuffled window states the same slope, verdict and fail — and the same cliff FACT: the request index moves with the request, the timestamp it points at must not ([TrendProps.hs:247](../../../core/test/TrendProps.hs#L247)).
 

@@ -145,7 +145,7 @@ wraps onto another — `"18446744073709551617"` read as table 1 until v2.35), wr
 negative fact value, a table not strictly ascending, a negative prelude count, texts that do not
 lex, a `lex` request without texts, a directory table sent beside the `tree` form
 ([Contract.hs:5-13](../../../core/app/CE/Query/Contract.hs#L5), [Contract.hs:118](../../../core/app/CE/Query/Contract.hs#L118),
-[Contract.hs:139](../../../core/app/CE/Query/Contract.hs#L139)).
+[Contract.hs:146](../../../core/app/CE/Query/Contract.hs#L146)).
 
 ### 5. The checks — arity, sorts, safety, stratification
 
@@ -247,7 +247,7 @@ derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:36](../../../core/app/CE/Query/Proof.hs#L36)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:50](../../../core/app/CE/Query/Lines.hs#L50),
-[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:183-199](../../../core/app/CE/Query/Document.hs#L183)).
+[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:184-200](../../../core/app/CE/Query/Document.hs#L184)).
 
 ### 8. Caps and degradation
 
@@ -279,7 +279,7 @@ and the named reason when the core did not judge. The core lays the document out
 since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
-([Document.hs:105](../../../core/app/CE/Query/Document.hs#L105), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+([Document.hs:106](../../../core/app/CE/Query/Document.hs#L106), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
 [face.rs:265](../../../cli/src/query/face.rs#L265), [mod.rs:48](../../../cli/src/query/facts/mod.rs#L48)). A question is wrapped once into query form —
 `?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
@@ -391,7 +391,7 @@ an item declared twice (`forbid` excepted), fewer than two layers, a negative or
 count, a glob holding a quote or a newline, a pack without texts — and the two lists past their
 ceilings, `layers` above 16 globs and `forbid` above 64 pairs; the rendered text counts against
 the token cap like any other ([Cost.hs:90](../../../core/app/CE/Query/Cost.hs#L90),
-[Contract.hs:132](../../../core/app/CE/Query/Contract.hs#L132)). The lex reply carries the text
+[Contract.hs:139](../../../core/app/CE/Query/Contract.hs#L139)). The lex reply carries the text
 back as `packText`, and `ce query --prelude` prints it after the prelude, so a reader sees what was
 judged ([face.rs:97](../../../cli/src/query/face.rs#L97)). Like `[rules] file` the table is never a
 knob: the knob fingerprint drops it, so switching a check on touches no baseline

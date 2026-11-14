@@ -260,7 +260,7 @@ inside u64 and no id twice; `deadPoint` its two lists strictly ascending inside 
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
   ([Contract.hs:223-229](../../../core/app/CE/Graph/Contract.hs#L223));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Contract.hs:106](../../../core/app/CE/Graph/Contract.hs#L106), [Rows.hs:49-59](../../../core/app/CE/Wire/Rows.hs#L49));
+  ([Contract.hs:106](../../../core/app/CE/Graph/Contract.hs#L106), [Rows.hs:55-65](../../../core/app/CE/Wire/Rows.hs#L55));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
   ([Contract.hs:107-111](../../../core/app/CE/Graph/Contract.hs#L107),

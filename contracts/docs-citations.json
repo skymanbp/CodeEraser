@@ -5547,8 +5547,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire/Rows.hs|036e83ff15d9b3a7|0": {
     "target": "../../../core/app/CE/Wire/Rows.hs",
-    "line": 49,
-    "end": 59,
+    "line": 55,
+    "end": 65,
     "text": "-- | Whole-table strictly-ascending pass on a PROJECTION of each row —"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/test/GraphWireProps.hs|13d8ff795a63a163|0": {
@@ -7811,8 +7811,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire/Rows.hs|b25cf6f05476064a|0": {
     "target": "../../../core/app/CE/Wire/Rows.hs",
-    "line": 74,
-    "end": 81,
+    "line": 80,
+    "end": 87,
     "text": "-- | A [code, value] knob table: each row two wide (else the family's"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/test/TrendProps.hs|05522fba8966ee03|0": {
@@ -11126,7 +11126,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|371efeb6a4cd9919|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 132,
+    "line": 139,
     "text": "packShape req = case (packOf req, lexedOf req) of"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|3cb2149f4ff674fa|0": {
@@ -11136,7 +11136,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|6c09cf6a62d51fac|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 139,
+    "line": 146,
     "text": "textsShape :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|9551146ad3aeee22|0": {
@@ -11201,13 +11201,13 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 105,
+    "line": 106,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|a8c875d1ab83f2a3|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 183,
-    "end": 199,
+    "line": 184,
+    "end": 200,
     "text": "data Grouped = Grouped (Integer -> [Int]) [Integer] ((Integer, Integer) -> [Int]) [Integer]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|fe52c0c47102882d|0": {
