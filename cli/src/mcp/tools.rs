@@ -12,7 +12,7 @@ use super::adapters::{
     structure, trend, update_check,
 };
 use anyhow::Result;
-use serde_json::{Value, json};
+use serde_json::Value;
 use std::path::Path;
 
 pub struct Tool {
@@ -275,27 +275,6 @@ pub const TOOLS: &[Tool] = &[
          applying is a human act at the CLI or the GUI."
     ),
 ];
-
-/// tools/list descriptor for one row — `path` rides every schema.
-pub fn descriptor(t: &Tool) -> Value {
-    let mut props = serde_json::Map::new();
-    props.insert(
-        "path".into(),
-        json!({"type": "string", "description": "subpath (default: project root)"}),
-    );
-    for (name, ty, desc) in t.extra {
-        let mut prop = json!({"type": ty, "description": desc});
-        if *ty == "array" {
-            prop["items"] = json!({"type": "string"});
-        }
-        props.insert((*name).into(), prop);
-    }
-    json!({
-        "name": t.name,
-        "description": t.desc,
-        "inputSchema": {"type": "object", "properties": props},
-    })
-}
 
 #[cfg(test)]
 #[path = "../../tests/unit/mcp/tools.rs"]

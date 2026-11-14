@@ -261,8 +261,7 @@ shared string, never a verdict) and lists a selected file's rows with the root-l
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:20-43](../../../cli/src/graph/canvas.rs#L20),
 [graph.js:50-70](../../../gui/ui/graph.js#L50),
-[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25),
-[graph_aside.js:134-148](../../../gui/ui/graph_aside.js#L134), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
+[graph_aside.js:25-46](../../../gui/ui/graph_aside.js#L25), [graph_aside.js:134-148](../../../gui/ui/graph_aside.js#L134), [i18n.js:123-132](../../../gui/ui/i18n.js#L123)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 

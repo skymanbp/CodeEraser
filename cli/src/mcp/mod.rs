@@ -123,7 +123,28 @@ fn initialize_result() -> Value {
 }
 
 fn tools_list() -> Value {
-    json!({"tools": tools::TOOLS.iter().map(tools::descriptor).collect::<Vec<_>>()})
+    json!({"tools": tools::TOOLS.iter().map(descriptor).collect::<Vec<_>>()})
+}
+
+/// tools/list descriptor for one row — `path` rides every schema.
+fn descriptor(t: &tools::Tool) -> Value {
+    let mut props = serde_json::Map::new();
+    props.insert(
+        "path".into(),
+        json!({"type": "string", "description": "subpath (default: project root)"}),
+    );
+    for (name, ty, desc) in t.extra {
+        let mut prop = json!({"type": ty, "description": desc});
+        if *ty == "array" {
+            prop["items"] = json!({"type": "string"});
+        }
+        props.insert((*name).into(), prop);
+    }
+    json!({
+        "name": t.name,
+        "description": t.desc,
+        "inputSchema": {"type": "object", "properties": props},
+    })
 }
 
 /// The tools that answer about the machine, not a project: they run
