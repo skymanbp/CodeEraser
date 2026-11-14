@@ -29,6 +29,7 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod advisory;
+mod arcs;
 mod convention;
 pub mod cycles;
 mod document;
@@ -40,7 +41,6 @@ mod targets;
 pub use advisory::{Advised, Named};
 pub use convention::Position;
 pub use cycles::self_loop_nodes;
-pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;
 pub use gate::{Gate, Gated, committed_point};
@@ -120,13 +120,14 @@ pub fn answer(root: &Path, db: Option<PathBuf>, core: &str, check: bool) -> Resu
     Ok(said(root, core, &face_wire(root, db)?, check)?.0)
 }
 
-/// The deadcode face's wire, the one both its doors judge (`run`, the
-/// library's, and `answer`, the console's, the MCP tool's and the
-/// GUI's): the advisory asked, and the dead-file gate (plan v2.35, 5B)
-/// — the committed point and the declared mask. The erase, score,
+/// The deadcode face's wire, the one its doors and the graph screen
+/// judge (`run`, the library's; `answer`, the console's, the MCP tool's
+/// and the GUI's deadcode command; graph::canvas, the screen, since plan
+/// v2.35 5C): the advisory asked, and the dead-file gate (plan v2.35,
+/// 5B) — the committed point and the declared mask. The erase, score,
 /// structure and join roads send no gate here (score::run sends its
 /// own).
-fn face_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
+pub(crate) fn face_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
     let (idx, db_path) = dedup::refreshed_index(root, db)?;
     let mut w = wire_of(root, &idx, &db_path, Advisory::Yes)?;
     let block = Config::load(root)
@@ -140,12 +141,25 @@ fn face_wire(root: &Path, db: Option<PathBuf>) -> Result<GraphWire> {
 /// The judgment, then its document and lines over the judgment's link.
 fn said(root: &Path, core: &str, w: &GraphWire, check: bool) -> Result<(Answer, Judged)> {
     let (j, _, held) = judged(root, core, w, &[])?;
-    let req = reply::on_request(
-        document::request(("deadcode", check), w, &j)?,
-        &j,
-        w.gate.as_ref(),
-    );
+    let req = face_request(("deadcode", check), w, &j)?;
     Ok((crate::document::assemble_over(core, held, req)?, j))
+}
+
+/// The deadcode document's request over one judgment: the tables, then
+/// the grouping and the gate the reply carried (reply::on_request) — the
+/// one request the deadcode face and the graph screen's deadcode half
+/// both send, so the screen's half is the face's document (plan v2.35
+/// 5C). `face` is the family asked and the console's `--check`.
+pub(crate) fn face_request(
+    face: (&'static str, bool),
+    w: &GraphWire,
+    j: &Judged,
+) -> Result<crate::document::Request> {
+    Ok(reply::on_request(
+        document::request(face, w, j)?,
+        j,
+        w.gate.as_ref(),
+    ))
 }
 
 /// The judgment alone, answering position rows too — the canvas
@@ -264,35 +278,15 @@ pub fn wire_of(
         );
     }
     let config = Config::load(root).map_err(anyhow::Error::msg)?;
-    // [graph] entry_globs compile ONCE, through the one ce.toml glob
-    // dialect (scan::globs; the hand-rolled three-form matcher retired
-    // in plan v2.18 step #14) — a pattern the dialect cannot read is a
-    // named error here, never a silent no-match
-    let entries = crate::scan::globs::compile_inclusions(
-        root,
-        &config.graph.entry_globs,
-        "[graph] entry_globs",
-    )
-    .map_err(anyhow::Error::msg)?;
+    let entries = arcs::entry_set(root, &config)?;
     // identity assignment + containment live in the nodes.rs throat
     // (F19) — the M5-3 join consumes the SAME functions, so both
     // verdicts stand on one id space by construction; the foreign
     // mark is the index's own per-file fact (walk::Walked)
     let nodes = nodes::nodes_of(&files, &edges, &idx.foreign_paths()?);
     let ids = nodes::ids(&nodes);
-    let file_set: BTreeSet<String> = files.iter().cloned().collect();
-    let declared = targets::Declared::gather(root, &file_set, &config.graph.declared_roots())
-        .map_err(anyhow::Error::msg)?;
-    let rows: Vec<Value> = nodes
-        .iter()
-        .map(|n| node_row(root, n, &entries, &declared))
-        .collect();
-    let mut wire = edge_wire(&edges, &ids)?;
-    nodes::contain(&nodes, &ids, declared.package_code_by_root(), &mut wire);
-    // a build's forced includes (`-include x.h`) are arcs the source
-    // text never spells: unit → header, beside the containment arcs
-    // (plan v2.30 step 5b, item 14; the core's resolve/1 since v2.33 W2a)
-    super::resolve::forced_wire(root, &file_set, &ids, &mut wire).map_err(anyhow::Error::msg)?;
+    let (rows, wire) =
+        arcs::rows_and_arcs(root, (&config, &entries), (&files, &edges), (&nodes, &ids))?;
     let symbols = super::symwire::export_surface(idx, &ids)?;
     let (unmentioned, mounts) = match advisory {
         Advisory::No => (None, None),

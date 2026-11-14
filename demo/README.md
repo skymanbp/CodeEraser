@@ -30,7 +30,7 @@ what the plan proves safe. Both trees are then measured; that is the CI face.
 <!-- demo:begin -->
 | | Without CodeEraser | With CodeEraser |
 |---|---|---|
-| The seed, by the same six gates: clone blocks · doc twins · dead files | 0 · 0 · 0 | 0 · 0 · 0 |
+| The seed, by the same six gates: clone blocks · doc twins · unreferenced files | 0 · 0 · 0 | 0 · 0 · 0 |
 | Writes that landed | 7 of 7 | 5 of 7 |
 | Denied at PreToolUse | 0 | 2 |
 | Stop audit | not in the loop | **blocked** — `this session's edits leave 2 duplicate block(s) touching changed files (net +105 LOC)…` |
@@ -40,12 +40,12 @@ what the plan proves safe. Both trees are then measured; that is the CI face.
 | T1/T2 clone blocks (`ce dedup --check`, budget 0) | 4 (**FAIL**) | 0 (**pass**) |
 | near-miss clone pairs (`ce clone`) | 4 | 0 |
 | duplicated doc segments (`ce docdup --check`) | 1 (**FAIL**) | 0 (**pass**) |
-| dead files (`ce deadcode --check`) | 3 (**pass**) | 2 (**pass**) |
+| unreferenced files, listed and not blocked (`ce deadcode --check`) | 3 (**pass**) | 2 (**pass**) |
 | provably-safe removals still planned (`ce erase --check`) | 1 (**FAIL**) | 0 (**pass**) |
 <!-- demo:end -->
 
 ![Without CodeEraser: seven writes land, and the measured tree carries four
-exact clones, a pasted paragraph and three dead files](out/without-codeeraser.svg)
+exact clones, a pasted paragraph and three unreferenced files](out/without-codeeraser.svg)
 
 ![With CodeEraser: two writes are denied at PreToolUse with the region they
 duplicate named, the Stop audit then refuses to end the turn over the two
@@ -145,7 +145,7 @@ invisible to every gate in this repository and visible to every reader of it.
 | 3 | `docs/DISCOUNTS.md` | opens by pasting the pricing paragraph | lands: doc duplication is judged by `ce docdup`, not at write time (no false-positive record yet) |
 | 4 | `invoicer/invoice.py` | CSV export appended to the busiest module | lands: growth inside the hard line is the ratchet's business (`ce check`: `ratchet_over`) |
 | 5 | `invoicer/report_json.py` | a JSON renderer, written fresh | lands: genuinely new |
-| 6 | `invoicer/cli.py` | switches the CLI to JSON; `report.py` is left behind | lands: `ce deadcode` names the orphan |
+| 6 | `invoicer/cli.py` | switches the CLI to JSON; `report.py` is left behind | lands: `ce deadcode` lists `report.py` as an `orphaned` root |
 | 7 | `web/api.ts` | a local copy of `format.ts`'s `formatCents` | **denied**: the TypeScript twin of move 1 |
 | 8 | `invoicer/report.py` | not the task's: the repair the Stop audit named: one renderer, the compact variant differing only where it really differs | lands, and the audit falls silent |
 
@@ -157,10 +157,13 @@ copies its own blocks introduces none, so the next layer, the Stop audit,
 refuses to end the turn over exactly those two blocks, which is what move 8
 answers.
 
-Two gates are still red when the loop converges, and both are asking a person
-for a decision rather than reporting a defect: `invoicer/invoice.py` stands at
-93 lines against a tolerated ceiling of 61 (move 4), which ADR-006 keeps open
-for a named re-establish instead of absorbing, and two files are unreferenced:
-`docs/DISCOUNTS.md`, which nothing links, and `invoicer/report.py`, orphaned
-by move 6. A demo that scripted those away would be scripting the human out of
-a judgement only a human makes.
+One gate is still red when the loop converges, and it is asking a person for
+a decision rather than reporting a defect: `invoicer/invoice.py` stands at 93
+lines against a tolerated ceiling of 61 (move 4), which ADR-006 keeps open for
+a named re-establish instead of absorbing. Two files are unreferenced —
+`docs/DISCOUNTS.md`, which nothing links (a `born` root), and
+`invoicer/report.py`, `orphaned` by move 6 — and they are listed, not failed:
+the seed declares no `[deadcode] block`, and its check line prints the
+unreferenced axis with its `(off)` mark, a share that is not charged. A demo
+that scripted those away would be scripting the human out of a judgement only
+a human makes.

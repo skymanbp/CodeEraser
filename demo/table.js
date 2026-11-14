@@ -58,7 +58,7 @@ function failed(s) {
 
 const LABELS = {
   en: {
-    seed: "The seed, by the same six gates: clone blocks · doc twins · dead files",
+    seed: "The seed, by the same six gates: clone blocks · doc twins · unreferenced files",
     landed: "Writes that landed", denied: "Denied at PreToolUse", stop: "Stop audit",
     notInLoop: "not in the loop", blocked: "**blocked** — ", mayEnd: "the turn may end",
     repaired: "The repair the audit named", auditSilent: "written, and the audit goes silent",
@@ -66,10 +66,10 @@ const LABELS = {
     of: "of", fail: "**FAIL**", pass: "**pass**", dash: "—",
     score: "`ce check` score (ratchet)", blocks: "T1/T2 clone blocks (`ce dedup --check`, budget 0)",
     near: "near-miss clone pairs (`ce clone`)", docs: "duplicated doc segments (`ce docdup --check`)",
-    dead: "dead files (`ce deadcode --check`)", erase: "provably-safe removals still planned (`ce erase --check`)",
+    dead: "unreferenced files, listed and not blocked (`ce deadcode --check`)", erase: "provably-safe removals still planned (`ce erase --check`)",
   },
   zh: {
-    seed: "种子树，同样六道门实测：克隆块 · 文档孪生 · 死文件",
+    seed: "种子树，同样六道门实测：克隆块 · 文档孪生 · 无引用文件",
     landed: "落地的写入", denied: "PreToolUse 当场拒绝", stop: "Stop 审计",
     notInLoop: "不在环内", blocked: "**拦停** — ", mayEnd: "允许结束",
     repaired: "审计点名的那处修复", auditSilent: "写下之后，审计转为沉默",
@@ -77,7 +77,7 @@ const LABELS = {
     of: "/", fail: "**FAIL**", pass: "**pass**", dash: "—",
     score: "`ce check` 分数（棘轮）", blocks: "T1/T2 克隆块（`ce dedup --check`，预算 0）",
     near: "近似克隆对（`ce clone`）", docs: "重复文档段（`ce docdup --check`）",
-    dead: "死文件（`ce deadcode --check`）", erase: "仍待执行的可证安全删除（`ce erase --check`）",
+    dead: "无引用文件，只列出、不拦（`ce deadcode --check`）", erase: "仍待执行的可证安全删除（`ce erase --check`）",
   },
 };
 

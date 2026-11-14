@@ -207,7 +207,9 @@ S = clamp(floor(m * r^k), [softMin, min softMax H])</pre>
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
   <p class="note rule">A file's <code>T</code> is the union of the lines its findings name — duplicate
-  member spans, every line of a dead file, reference lines inside a cycle, and for a function over
+  member spans, every line of an unreferenced file (that axis weighs 0 unless
+  <code>[score.weights] deadcode</code> names it, so by default such a file is an ordinary file to the score:
+  its lines count in <code>L</code> and none is charged), reference lines inside a cycle, and for a function over
   its cognitive ceiling <code>C</code> at complexity <code>c</code> its lines times <code>1 − C/c</code> —
   <code>n − S</code> its lines past the soft line, <code>churn</code> a rewrite-heavy file's excess; a line
   two findings name counts once. Exact <code>Rational</code>, one floor. The soft line <code>S</code> is the repository's own frozen
@@ -215,7 +217,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   taken, derived at establish and frozen into the baseline. The fail bit is a disjunction of
   <!--ce:count:fail_conditions#word-->seven<!--/ce--> <em>named</em> conditions, <code>ratchet_over</code>,
   <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>,
-  <code>knobs_digest</code>, <code>rows_dropped</code>, printed after <code>FAIL</code> in that order.</p><details class="more"><summary>Derivation and constants</summary>
+  <code>knobs_digest</code>, <code>rows_dropped</code>, <code>dead_added</code>, printed after <code>FAIL</code> in that order.</p><details class="more"><summary>Derivation and constants</summary>
   <p class="note">Since proto 3.1.0 a continuous row may carry its <em>path class</em>, the
   1-based index of the first matching <code>[[rules.class]]</code> (<code>0</code> for none), and is
   measured against that class's soft line and CoC ceiling, the global line as fallback.
@@ -255,13 +257,26 @@ referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
 judged     = i <span class="op">∉</span> reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
   <p class="note rule"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes keep an
-  exported-but-unreferenced API from collapsing into plain dead: <code>1 unref_private</code>,
+  exported-but-unreferenced API from collapsing into a private verdict: <code>1 unref_private</code>,
   <code>2 unref_public</code>, <code>3 unreach_private</code>, <code>4 unreach_public</code>. A site walks
   its language's rungs in order and the first rung yielding <em>exactly one</em> in-scope candidate
   wins; more is <code>Unresolved</code>, and <code>External</code> is a correct answer, not a miss.
-  Cycles are reported, never judged; a cyclic island with no entry seed is dead by reachability alone.</p><details class="more"><summary>Derivation and constants</summary><p class="note"><code>inert</code> = {3 asset, 5 unused ref-def}, excluded by the core:
+  Cycles are reported, never judged; a cyclic island with no entry seed is in the dead set by reachability alone.</p>
+  <p class="note rule">The files no entry reaches are the dead set, and a face calls each one
+  <em>unreferenced</em>: no reference was found, which is not the claim that it is unused. A dead file
+  <code>g</code> supports <code>f</code> when a kept path leads from <code>g</code> to <code>f</code>;
+  <code>f</code> is a <em>root</em> when every dead file supporting it is supported by it, otherwise a
+  <em>dependent</em> under the roots that support it. The committed baseline's <code>deadPoint</code> gives a
+  root its state — <code>standing</code> (unreferenced then), <code>orphaned</code> (there and referenced
+  then), <code>born</code> (not there then); a dependent has none, and the point is keyed by path, so a
+  renamed file reads <code>born</code>. By default every unreferenced file is listed and fails nothing.
+  <code>[deadcode] block</code>, out of <code>"orphaned"</code> and <code>"born"</code>
+  (<code>"standing"</code> is refused: the inventory never blocks), fails <code>ce deadcode --check</code>
+  and <code>ce check</code>'s <code>dead_added</code> on a root in a named state; a declared block with no
+  point refuses with exit 2. Two blind audits back the default: 392 of 424 existing unreferenced files
+  were in use, and new ones were too few to judge (21 orphaned, 90 born, under the 100 a class needs).</p><details class="more"><summary>Derivation and constants</summary><p class="note"><code>inert</code> = {3 asset, 5 unused ref-def}, excluded by the core:
   an image link renders bytes and an unused reference definition renders nothing. Since proto 2.32.0
-  each dead row carries a confidence judged from the per-language site ledger (0 unvouched, 1 vacuous,
+  each unreferenced row carries a confidence judged from the per-language site ledger (0 unvouched, 1 vacuous,
   2 vouched), the erase family's trust boundary. Import-edge precision: <strong>38/40 = 0.95</strong>
   over five pinned corpora against a ≥ 0.90 gate, on a sample frozen before any resolver existed. The six
   languages plan v2.30 added each passed a frozen, blind-audited exam: C 73/73, C++ 15/15, Java 36/36,
@@ -275,6 +290,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
     <li><b>sccFloor</b> 2</li>
     <li><b>nodeCap</b> 131072</li>
     <li><b>edgeCap</b> 524288</li>
+    <li><b>underCap</b> 131072</li>
     <li><b>GRAPH_REV</b> 28</li>
     <li><b>tsconfig extends</b> unbounded, cycle-checked</li>
     <li><b>precision gate</b> ≥ 0.90</li>

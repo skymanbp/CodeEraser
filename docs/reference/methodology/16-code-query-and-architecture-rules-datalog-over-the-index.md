@@ -2,8 +2,8 @@
 
 [index](../methodology.md) · [← 15 Same-role advisor — sparse retrieval and in-repo association](15-same-role-advisor-sparse-retrieval-and-in-repo-association.md) · [→ 17 Intra-function dead code — the flow graph, reachability and liveness](17-intra-function-dead-code-flow-graph-reachability-and-liveness.md)
 
-Every family before this one judges one shape of entropy the tree already carries: a clone, a
-dead file, a duplicated paragraph, a unit that plays another's part. This family lets the reader
+Every family before this one judges one shape of entropy the tree already carries: a clone, an
+unreferenced file, a duplicated paragraph, a unit that plays another's part. This family lets the reader
 *ask*. A question in CE Datalog — `dead(F)`, `depends(A, B), not same_dir(A, B)`, `N = count(F :
 in(F, "src/**"))` — is answered over facts the index already holds, and every answer comes back
 with the derivation that produced it. Written as `assert`, the same question is a rule: its
@@ -343,13 +343,14 @@ the day's facts and green before it entered ([ce.rules:1-6](../../../ce.rules#L1
 - the product never depends on its integration tests, and the GUI crate reads no test at all
   (the unit tree is mounted from `cli/src` by `#[path]`, the one exception)
   ([ce.rules:21-22](../../../ce.rules#L21));
-- no dead file — the deadcode gate restated as a rule ([ce.rules:26](../../../ce.rules#L26));
+- no unreferenced file — `dead(F)` empty, stricter than the `[deadcode] block` gate `ce.toml` declares,
+  which fails new roots only ([ce.rules:26](../../../ce.rules#L26));
 - every page of the site is referenced by some other page or document
   ([ce.rules:29](../../../ce.rules#L29));
 - no two top-level directories reference each other both ways
   ([ce.rules:32](../../../ce.rules#L32)).
 
-The test suite carries three of its own, rooted at `cli/tests`: no dead file, and the integration
+The test suite carries three of its own, rooted at `cli/tests`: no unreferenced file, and the integration
 tree and the unit tree never read each other ([ce.rules:7-13](../../../cli/tests/ce.rules#L7)).
 CI runs `ce rules` as the seventh dogfood gate on both roots, beside scan, the dedup ratchet,
 the check floor, deadcode, docdup and erase

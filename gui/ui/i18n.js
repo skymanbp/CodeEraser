@@ -59,7 +59,13 @@ const CE_I18N = {
     deviation: "deviation",
     undeclared: "undeclared territory", declaredEmpty: "declared but empty",
     axisNames: ["geometry", "naming", "mixing", "misplaced", "docs", "stale-docs", "redundancy", "modularity"],
-    checkAxisNames: ["size", "complexity", "clones", "docdup", "deadcode", "churn", "cycles"],
+    checkAxisNames: ["size", "complexity", "clones", "docdup", "unreferenced", "churn", "cycles"],
+    // the console's mark for an axis whose effective weight is 0 (its
+    // share is printed, not charged) and the hint under a failed
+    // dead_added — copies of the core's sentences (CE.Text.Check), held to
+    // the console by it/gui_core_words.rs
+    axisOff: (p) => `${p} (off)`,
+    deadAddedHint: (n) => `${n} unreferenced root(s) in a state [deadcode] block names — ce deadcode --check lists them`,
     filePairs: "similar file pairs", unitPairs: "similar unit pairs",
     cloneBlocks: "clone blocks", selfPair: "(intra-file)",
     pairsHead: (n, d, c) => `similar file pairs — ${n} (${d}d window, ${c} commits)`,
@@ -92,15 +98,26 @@ const CE_I18N = {
     emptyStructure: "point the field above at a repository, then scan — map and tree render the same judgment",
     emptyTrend: "load to measure the score trajectory over mainline history",
     emptyCandidates: "load to join the three deletion signals over this repository",
-    emptyGraph: "load to draw the file reference graph — dead files and cycles from the canvas judgment, the unmentioned-declaration advisory from the deadcode report the CLI prints",
-    graphCounts: (f, e, d, c) => `${f} files, ${e} edges — ${d} dead, ${c} cycles`, graphAlive: "alive",
+    emptyGraph: "load to draw the file reference graph — unreferenced files, their roots and the gate from the same deadcode report the CLI prints, cycles from the canvas judgment",
+    graphCounts: (f, e, r, d, c) => `${f} files, ${e} edges — ${r} unreferenced roots, ${d} that fall with them, ${c} cycles`, graphAlive: "alive",
     graphInOut: (i, o) => `${i} in / ${o} out`, graphCycleOf: (n) => `in a cycle of ${n} files`,
     graphUnresolved: (n) => `${n} unresolved sites — the graph refuses to know them`,
-    // the dead row's reason BY CODE (ce.graph-canvas 0.4.0, plan v2.25
-    // O23): the sentence rode the wire in English and this pane showed
-    // it to both audiences. A document older than the code falls back
-    // to its English sentence in graph.js, never to "undefined".
-    deadWhy: { 0: "no kept in-edge and no entry flag", 1: "referenced only from dead code; no entry flag" },
+    // the unreferenced row's reason BY CODE (ce.graph-canvas 0.4.0, plan
+    // v2.25 O23): the sentence rode the wire in English and this pane
+    // showed it to both audiences; an unknown code shows as its number.
+    // These, the state words, the fall / under words and the gate row's
+    // sentences are copies of the core's console sentences
+    // (CE.Text.Deadcode), held to the console by it/gui_core_words.rs.
+    deadWhy: { 0: "no kept in-edge and no entry flag", 1: "referenced only from unreferenced files; no entry flag" },
+    stateWords: { standing: "standing", orphaned: "orphaned", born: "born" },
+    rootState: "state", rootBlocks: "blocks the gate",
+    graphFalls: (n) => `${n} file(s) fall with it`, graphUnder: "under",
+    moreFiles: (n) => `+${n} more`,
+    graphLegend: "filled: blocked by the gate · hollow: listed, not blocked · dashed ring: falls with a root",
+    gateListed: (n) => `${n} unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml [deadcode] block = ["orphaned", "born"] and a committed baseline`,
+    gateNoneBlocked: (n, s) => `${n} unreferenced file(s) listed; none in a blocked state (${s})`,
+    gateBlocked: (n, s) => `${n} root(s) blocked (${s})`,
+    gateUnanswered: (s) => `[deadcode] block (${s}) is declared but cannot be answered — no committed baseline records which files were unreferenced (from the project root: CE_ACCEPT_BASELINE=1 ce baseline .)`,
     // the symbol-level advisory (ce.deadcode-report 0.3.0, plan v2.17
     // L round): declarations no other file spells, by the core's code
     advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? "" : "s"} in ${f} file${f === 1 ? "" : "s"} — advisory, never a verdict`,
@@ -258,7 +275,9 @@ const CE_I18N = {
     deviation: "偏差",
     undeclared: "未声明领土", declaredEmpty: "已声明但为空",
     axisNames: ["几何", "命名", "混流", "错位", "文档", "陈旧文档", "冗余", "模块度"],
-    checkAxisNames: ["尺寸", "复杂度", "克隆", "文档重复", "死代码", "变动", "循环"],
+    checkAxisNames: ["尺寸", "复杂度", "克隆", "文档重复", "无引用", "变动", "循环"],
+    axisOff: (p) => `${p}（不计）`,
+    deadAddedHint: (n) => `${n} 个无引用的根处于 [deadcode] block 点名的状态——ce deadcode --check 会列出它们`,
     filePairs: "相似文件对", unitPairs: "相似单元对",
     cloneBlocks: "克隆块", selfPair: "（文件内部）",
     pairsHead: (n, d, c) => `相似文件对 — ${n}（${d} 天窗口，${c} 个提交）`,
@@ -269,7 +288,7 @@ const CE_I18N = {
     tedNodes: (t, a, b) => `T3 · ted ${t} · 节点 ${a}/${b}`, tedRow: "ted / 节点", kind: "家族",
     graphA: "图位 a", graphB: "图位 b", churnA: "变动 a", churnB: "变动 b",
     graphNull: "图位", graphNullWhy: {
-      1: "null——图判的是文件不是单元；单元的符号层读数是引用图屏的死码顾问，不是入度",
+      1: "null——图判的是文件不是单元；单元的符号层读数是引用图屏的 deadcode 顾问，不是入度",
     },
     cochange: "共变", belowTable: "低于报告表阈值",
     posNull: "null（未作答）", cloneBlock: "克隆块",
@@ -284,11 +303,20 @@ const CE_I18N = {
     emptyStructure: "在上方输入仓库路径，点扫描——热图与树状渲染同一份判决",
     emptyTrend: "点加载，测量主线历史上的分数轨迹",
     emptyCandidates: "点加载，对本仓库联结三路删除信号",
-    emptyGraph: "点加载绘制文件引用图——死文件与环来自画布判决，未提及声明顾问来自 CLI 打印的 deadcode 报告",
-    graphCounts: (f, e, d, c) => `${f} 文件，${e} 边——${d} 死，${c} 环`, graphAlive: "存活",
+    emptyGraph: "点加载绘制文件引用图——无引用文件、它们的根与门来自 CLI 打印的同一份 deadcode 报告，环来自画布判决",
+    graphCounts: (f, e, r, d, c) => `${f} 文件，${e} 边——${r} 个无引用的根，${d} 个随之无引用，${c} 环`, graphAlive: "存活",
     graphInOut: (i, o) => `入 ${i} / 出 ${o}`, graphCycleOf: (n) => `处于 ${n} 文件环`,
     graphUnresolved: (n) => `${n} 个未解析点位——图拒绝臆测它们`,
-    deadWhy: { 0: "无保留入边且无入口标记", 1: "仅被死代码引用且无入口标记" },
+    deadWhy: { 0: "无保留入边且无入口标记", 1: "仅被无引用的文件引用且无入口标记" },
+    stateWords: { standing: "存量", orphaned: "失去引用", born: "新出现" },
+    rootState: "状态", rootBlocks: "被门拦下",
+    graphFalls: (n) => `另有 ${n} 个文件随它无引用`, graphUnder: "随根",
+    moreFiles: (n) => `另 ${n} 个`,
+    graphLegend: "实心：被门拦下 · 空心：只列出、不拦 · 虚线圈：随根无引用",
+    gateListed: (n) => `${n} 个无引用文件只列出、不拦——项目可在 ce.toml 写 [deadcode] block = ["orphaned", "born"] 并提交基线，拦新出现的`,
+    gateNoneBlocked: (n, s) => `${n} 个无引用文件只列出；无一处于被拦状态（${s}）`,
+    gateBlocked: (n, s) => `${n} 个根被拦（${s}）`,
+    gateUnanswered: (s) => `已声明 [deadcode] block（${s}），但无从回答——已提交的基线没有记下当时哪些文件无引用（在项目根目录：CE_ACCEPT_BASELINE=1 ce baseline .）`,
     advisoryHead: (n, f) => `${n} 个未提及声明分布于 ${f} 个文件——仅建议，永不判决`,
     advisoryHover: (n) => `${n} 个未提及`,
     advisoryWords: {
@@ -381,7 +409,7 @@ const CE_I18N = {
     minTokens: "最少记号", minDistinct: "最少互异记号", cloneUnits: "单元宇宙",
     hubFamily: (n) => ({
       scan: "度量", dedup: "T1/T2 克隆", clone: "T3 近似克隆", docdup: "文档重复",
-      deadcode: "死代码", churn: "变动", sites: "引用站点", flow: "函数内死代码", merge: "合并建议", arch: "架构",
+      deadcode: "无引用文件（deadcode）", churn: "变动", sites: "引用站点", flow: "函数内死代码", merge: "合并建议", arch: "架构",
     })[n] ?? n,
     guardClass: (c, key) => `守卫类 ${c}（${key}）`,
     emptyQuery: "用 CE Datalog 输入一个问题（`dead(F)`、`depends(A, B), not same_dir(A, B)`、`N = count(F : in(F, \"src/**\"))`）后点提问——与 `ce query` 打印的是同一份文档：每个答案回标成路径与名字，勾选推导链看每个答案怎么推出来；「判 ce.rules」按 `ce rules` 的方式跑仓库自己的规则文件",

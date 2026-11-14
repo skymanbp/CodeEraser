@@ -254,8 +254,9 @@ jobs:
       # The extent law (v2.35, protocol 10.0.0) re-priced the self score
       # to 932; the floor re-anchors at 917, the margin it had on main
       # before the law (926 over 911).
-      # Also the deadcode zero-dead
-      # gate and the docdup zero-report gate (audit D6/D9: the
+      # Also the deadcode gate (this repository declares the strict rule in
+      # its own ce.toml: [deadcode] block = ["orphaned", "born"]; plan
+      # v2.35) and the docdup zero-report gate (audit D6/D9: the
       # "全处置" acceptance rows were discipline-only before), and the
       # erase zero-row gate (erase.md acceptance: this repository
       # keeps itself clean — a non-empty self-plan is a red gate).

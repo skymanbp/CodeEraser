@@ -1,9 +1,12 @@
 //! The graph screen's document (plan v2.30 step 5b item 31; laid out
 //! by the core since plan v2.32 step 4, CE.Graph.Screen): the canvas
 //! the GUI draws and the deadcode document off ONE judgment. One
-//! refreshed index, one wire with the advisory, one graph reply with
-//! the full file-tier position request; this side sends the deadcode
-//! tables (graph/deadcode/document.rs) and, beside them, each node's
+//! refreshed index, the deadcode face's own wire (the advisory and the
+//! dead-file gate, plan v2.35 5C), one graph reply with the full
+//! file-tier position request; this side sends the deadcode face's
+//! request — its tables, the grouping and the gate, so the screen's
+//! deadcode half is the document `ce deadcode --format json` prints for
+//! the same tree — and, beside it, each node's
 //! kind and the canvas row its path names, the wire's edges, the
 //! reply's positions and its cycle members — the core collapses the
 //! edges onto files, places the verdicts and counts the cycles that
@@ -15,9 +18,7 @@ use serde_json::Value;
 use std::collections::HashMap;
 
 pub fn screen(root: &std::path::Path, core: &str) -> Result<Value> {
-    let (idx, db_path) = crate::dedup::refreshed_index(root, None)?;
-    let w = deadcode::wire_of(root, &idx, &db_path, deadcode::Advisory::Yes)?;
-    drop(idx);
+    let w = deadcode::face_wire(root, None)?;
     let pos_req: Vec<i64> = file_nodes(&w).iter().map(|x| x.0).collect();
     let (judged, reply, held) = deadcode::judged(root, core, &w, &pos_req)?;
     document((core, held), &w, &judged, &reply)
@@ -31,7 +32,7 @@ fn document(
     judged: &Judged,
     reply: &Value,
 ) -> Result<Value> {
-    let req = deadcode::doc_request(("graphscreen", false), w, judged)?;
+    let req = deadcode::face_request(("graphscreen", false), w, judged)?;
     let pos: Vec<[i64; 6]> = serde_json::from_value(reply["pos"].clone()).context("pos rows")?;
     let req = req
         .rows("graph", graph_rows(w))

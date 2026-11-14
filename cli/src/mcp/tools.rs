@@ -91,8 +91,10 @@ pub const TOOLS: &[Tool] = &[
     tool!(
         "deadcode",
         deadcode,
-        "Liveness verdicts over the reference graph, plus the symbol-level advisory of \
-         declarations no other file spells — never a verdict (ce.deadcode-report schema)."
+        "Liveness verdicts over the reference graph — the unreferenced files grouped under \
+         their roots, each root's state and the gate's answer — plus the symbol-level \
+         advisory of declarations no other file spells, never a verdict \
+         (ce.deadcode-report schema)."
     ),
     tool!(
         "clone",

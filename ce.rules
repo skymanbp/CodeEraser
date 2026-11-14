@@ -21,8 +21,8 @@ assert scan_reads_graph(F, G) :- in(F, "cli/src/scan/**"), ref(F, G, _, _), in(G
 assert product_reads_tests(F, G) :- in(F, "cli/src/**"), ref(F, G, _, _), in(G, "cli/tests/it/**").
 assert gui_reads_tests(F, G) :- in(F, "gui/**"), ref(F, G, _, _), in(G, "cli/tests/**").
 
-# No dead file: `dead` is the prelude's mirror of `ce deadcode`'s
-# file tier, so this is that gate restated as a rule.
+# No unreferenced file: `dead` is the prelude's mirror of `ce deadcode`'s
+# file tier; stricter than ce.toml's [deadcode] block, which fails new roots only.
 assert dead_file(F) :- dead(F).
 
 # Every page of the site is reached from some other page or document.

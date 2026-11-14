@@ -69,11 +69,17 @@ function renderCheck() {
     (d.extent ? `<small class="extent">${esc(tr("extentLines", tenthsText(d.extent.tenths), d.extent.lines))}</small>` : "");
   // the CHECK axes are the verdict family's seven (size…cycles), a
   // DIFFERENT vocabulary from structure's screen axes — the first
-  // live run shipped "geometry 12" for what was the size axis
+  // live run shipped "geometry 12" for what was the size axis. An axis
+  // whose effective weight is 0 (the document's top-level `weights`,
+  // present on a judged run only) prints its share with the console's
+  // off mark: the number is its own share, not a charge (plan v2.35:
+  // the unreferenced axis is off unless a project names its weight)
+  const off = new Set((d.weights ?? []).filter(([, w]) => w === 0).map(([a]) => a));
   $("check-axes").innerHTML = `<span>${esc(tr("perMilleLines"))}</span>` + d.axes
     .map(
       ([c, p]) =>
-        `<span${p === 0 ? ' class="zero"' : ""}>${esc(tr("checkAxisNames")[c] ?? String(c))} <b>${p}</b></span>`,
+        `<span${p === 0 || off.has(c) ? ' class="zero"' : ""}>${esc(tr("checkAxisNames")[c] ?? String(c))} ` +
+        `<b>${esc(off.has(c) ? tr("axisOff", p) : String(p))}</b></span>`,
     )
     .join("");
   const regs = [
@@ -101,8 +107,11 @@ function renderCheck() {
       tally.map(([code, n]) => row(names[code] ?? String(code), n)).join("")
     : "";
   // `failed` is the ratchet's NAMED register (the dense over rows are
-  // wire identities, not prose) — the actionable half of the verdict
+  // wire identities, not prose) — the actionable half of the verdict;
+  // `dead_added` carries the console's one-line hint (the blocking roots'
+  // count, and the command that lists them)
   $("check-named").innerHTML = (rt.failed || [])
-    .map((name) => `<div class="row">▲ <b>${esc(String(name))}</b></div>`)
+    .map((name) => `<div class="row">▲ <b>${esc(String(name))}</b></div>` +
+      (name === "dead_added" ? `<div class="row zero">${esc(tr("deadAddedHint", (rt.deadAdded ?? []).length))}</div>` : ""))
     .join("");
 }

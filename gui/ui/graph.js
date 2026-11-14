@@ -1,24 +1,29 @@
 // CodeEraser GUI — the graph screen (batch 9 P18, user-ruled): the
 // ce.graph-canvas document as a drawn map. File tier only; the
 // layout is deterministic (no random seed — the same document draws
-// the same picture); dead files and cycle members ride the alarm ramp;
-// teal is selection only; magnitude is geometry (node radius =
-// degree), never a printed number. Rendering only: every verdict on
-// this screen came from the one core judgment the CLI also prints.
+// the same picture); a root the project's gate blocks and cycle members
+// ride the alarm ramp, every other unreferenced file is drawn hollow (a
+// root's ring solid, a dependent's dashed); teal is selection only;
+// magnitude is geometry (node radius = degree), never a printed number.
+// Rendering only: every verdict on this screen came from the one core
+// judgment the CLI also prints.
 //
-// The symbol-level drill-down (plan v2.17 L round piece (7)) reads
-// the ce.deadcode-report's `unmentioned` advisory rows beside the
-// canvas, grouped here by file path — a rendering join on a string
-// the two documents share, never a verdict. Both documents arrive in
-// ONE ce.graph-screen reply off one judgment (plan v2.30 step 5b item
-// 31), so the rows a file lists describe the tree the map draws; the
-// advisory has one home (that report), this screen only shows it
-// beside the file it names.
+// The deadcode half of the reply is the document `ce deadcode --format
+// json` prints for the same tree (plan v2.35 5C: the screen's judgment
+// carries the gate through the deadcode face's one wire): its rows give
+// each unreferenced file its root / dependent standing, a root's state
+// and whether it blocks, and its `unmentioned` advisory rows sit beside
+// the canvas. Both halves are joined here by path — a rendering join on
+// a string the two documents share, never a verdict. Both arrive in ONE
+// ce.graph-screen reply off one judgment (plan v2.30 step 5b item 31),
+// so the rows a file lists describe the tree the map draws.
 "use strict";
 
 let graphDoc = null;
-let advDoc = null;
+let deadDoc = null;
 let advByPath = new Map();
+let deadByPath = new Map();
+let fallsByRoot = new Map();
 let gpos = null, gsel = -1;
 
 (function bootGraph() {
@@ -30,19 +35,32 @@ let gpos = null, gsel = -1;
   redrawers.graph = () => graphDoc && drawGraph();
 })();
 
+// Rows keyed by the path a row names: the advisory rows of a file, the
+// unreferenced row of a file, and each root's dependents (the files
+// whose `under` names it).
+function groupBy(rows, key) {
+  const by = new Map();
+  for (const r of rows) {
+    if (!by.has(key(r))) by.set(key(r), []);
+    by.get(key(r)).push(r);
+  }
+  return by;
+}
+
 // One reply carries both documents off one judgment: the map and the
-// advisory commit together, so a failure never leaves the map on a new
-// run beside symbol rows from an old one. The status line names the
+// deadcode rows commit together, so a failure never leaves the map on a
+// new run beside rows from an old one. The status line names the
 // canvas schema (what `show` returns).
 function loadGraph() {
   return load("graph-load", tr("judging"), "graphscreen_report", { root: $("root").value }, (doc) => {
     graphDoc = doc.canvas;
-    advDoc = doc.deadcode;
-    advByPath = new Map();
-    for (const a of advDoc.unmentioned ?? []) {
-      if (!advByPath.has(a.name)) advByPath.set(a.name, []);
-      advByPath.get(a.name).push(a);
-    }
+    deadDoc = doc.deadcode;
+    advByPath = groupBy(deadDoc.unmentioned ?? [], (a) => a.name);
+    deadByPath = new Map((deadDoc.dead ?? []).map((d) => [d.name, d]));
+    // one push per (dependent, root) pair: the core lets up to underCap
+    // pairs through, so no per-pair copy of a root's list
+    const pairs = (deadDoc.dead ?? []).flatMap((d) => (d.under ?? []).map((r) => [r, d.name]));
+    fallsByRoot = new Map([...groupBy(pairs, (p) => p[0])].map(([r, ps]) => [r, ps.map((p) => p[1])]));
     $("empty-graph").hidden = true;
     gsel = -1;
     layoutGraph();
@@ -139,15 +157,37 @@ function nodeRadius(file) {
   return p == null ? 3 : Math.min(12, 3 + 2 * Math.sqrt(p[0] + p[1]));
 }
 
+// The paths the selection is grouped with: a root's dependents (the
+// files that fall with it), or a dependent's roots.
+function linkedPaths(i) {
+  if (i < 0) return new Set();
+  const path = graphDoc.files[i].path, d = deadByPath.get(path);
+  if (!d) return new Set();
+  return new Set(d.root === false ? d.under ?? [] : fallsByRoot.get(path) ?? []);
+}
+
+// A node's look: a blocking root filled on the alarm ramp; any other
+// unreferenced file hollow (panel fill, alarm ring), a root's ring
+// solid and a dependent's dashed; cycle members and live files as the
+// ramp has always drawn them.
+function nodeLook(file, colors) {
+  const d = deadByPath.get(file.path), cycle = file.cycle === true;
+  if (file.verdict == null) {
+    return { fill: cycle ? heat(1) : colors["--panel-2"], ring: cycle ? heat(2) : colors["--line"], dash: [] };
+  }
+  if (d && d.blocking === true) return { fill: heat(4), ring: heat(3), dash: [] };
+  return { fill: colors["--panel-2"], ring: heat(3), dash: d && d.root === false ? [3, 2] : [] };
+}
+
 function drawNodes(ctx, map, colors) {
+  const linked = linkedPaths(gsel);
   graphDoc.files.forEach((file, i) => {
-    // `cycle` is the core's membership bit off the document (0.3.0);
-    // this screen never re-derives the SCC floor from pos[3]
-    const p = map(gpos[i]), dead = file.verdict != null, cycle = file.cycle === true;
-    const radius = nodeRadius(file), fill = dead ? heat(4) : cycle ? heat(1) : colors["--panel-2"];
-    const ring = dead ? heat(3) : cycle ? heat(2) : colors["--line"];
-    ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, Math.PI * 2); ctx.fillStyle = fill; ctx.fill();
-    ctx.strokeStyle = ring; ctx.lineWidth = 1.5; ctx.stroke();
+    const p = map(gpos[i]), radius = nodeRadius(file), look = nodeLook(file, colors);
+    ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, Math.PI * 2); ctx.fillStyle = look.fill; ctx.fill();
+    ctx.setLineDash(look.dash);
+    ctx.strokeStyle = linked.has(file.path) ? colors["--focus"] : look.ring;
+    ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.setLineDash([]);
     if (i === gsel) {
       ctx.beginPath(); ctx.arc(p.x, p.y, radius + 3, 0, Math.PI * 2);
       ctx.strokeStyle = colors["--focus"]; ctx.lineWidth = 2; ctx.stroke();
@@ -177,81 +217,12 @@ function graphHover(evt) {
   c.classList.toggle("pick", i >= 0);
 }
 
-function graphClick(evt) {
-  gsel = graphHit(evt);
+function graphSelect(i) {
+  gsel = i;
   drawGraph();
   renderGraphAside(gsel);
 }
 
-// The advisory's two states the rows cannot show for themselves: the
-// core dropped the table (nothing judged at symbol level), or the
-// producer cut the candidate set (the rows are a prefix). Both come
-// off the report document's own flags, as the CLI prints them.
-function advisoryNotices() {
-  let html = "";
-  if (advDoc.unmentioned_dropped) html += `<div class="notice"><b>${esc(tr("advisoryDropped"))}</b></div>`;
-  if (advDoc.unmentioned_cut) html += `<div class="notice"><b>${esc(tr("advisoryCut"))}</b></div>`;
-  return html;
-}
-
-// The whole-tree census of the advisory, by the core's code: counting
-// is not judging, every code came off the wire.
-function advisoryCensus() {
-  const rows = advDoc.unmentioned ?? [];
-  const words = tr("advisoryWords");
-  const by = new Map();
-  for (const a of rows) by.set(a.code, (by.get(a.code) ?? 0) + 1);
-  let html = `<div class="row zero">${esc(tr("advisoryHead", rows.length, advByPath.size))}</div>`;
-  for (const [code, n] of by) html += row(words[code] ?? code, n);
-  return html + advisoryNotices();
-}
-
-function renderGraphAside(i) {
-  const d = graphDoc, el = $("graph-detail");
-  if (i < 0 || !d) {
-    const c = d ? d.counts : { files: 0, edges: 0, dead: 0, cycles: 0 };
-    let html = `<h2>${esc(tr("tabGraph"))}</h2>` +
-      `<div class="row">${esc(tr("graphCounts", c.files, c.edges, c.dead, c.cycles))}</div>`;
-    if (d && d.unresolvedSites > 0) html += `<div class="row zero">${esc(tr("graphUnresolved", d.unresolvedSites))}</div>`;
-    if (d && d.degraded) html += `<div class="notice"><b>${esc(tr("degradedRun"))}</b><small>${esc(String(d.degraded))}</small></div>`;
-    if (d) html += advisoryCensus();
-    el.innerHTML = html;
-    return;
-  }
-  const f = d.files[i], p = f.pos;
-  let html = `<h2>${esc(String(f.path))}</h2>`;
-  if (f.verdict != null) {
-    // the reason by code (ce.graph-canvas/0.4.0); an unknown code shows
-    // as its number rather than "undefined"
-    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(tr("deadWhy")[f.whyCode] ?? String(f.whyCode))}</div>`;
-    // The trust column (2.32.0) the console prints beside the verdict
-    // and this pane dropped. The same number decides whether `ce
-    // erase` may act on the row, so a verdict shown without it is a
-    // stronger claim than the core made.
-    if (f.conf != null) {
-      const word = tr("trustNames")[f.conf] ?? String(f.conf);
-      html += `<div class="row ${f.conf === 0 ? "bad" : "zero"}"><span>${esc(tr("trust"))}</span>${esc(word)}</div>`;
-    }
-  } else html += `<div class="row">${esc(tr("graphAlive"))}</div>`;
-  if (p != null) {
-    html += `<div class="row">${esc(tr("graphInOut", p[0], p[1]))}</div>`;
-    if (f.cycle === true) html += `<div class="row">${esc(tr("graphCycleOf", p[3]))}</div>`;
-  }
-  el.innerHTML = html + advisoryOf(f.path);
-}
-
-// The file's own unmentioned declarations (the symbol-level
-// drill-down): line, name and the core's code word, the code's
-// reading on the tooltip. A file with none says so in one quiet row
-// rather than showing nothing — "no advisory" and "not loaded" must
-// not look alike.
-function advisoryOf(path) {
-  const rows = advByPath.get(path) ?? [];
-  const words = tr("advisoryWords");
-  let html = `<div class="row zero">${esc(tr("advisoryHead", rows.length, rows.length ? 1 : 0))}</div>`;
-  for (const a of rows) {
-    html += `<div class="row" title="${esc(String(a.why))}"><span class="dir">${esc(String(a.line))}</span> ` +
-      `<b>${esc(String(a.symbol))}</b> <span class="dir">${esc(words[a.code] ?? String(a.code))}</span></div>`;
-  }
-  return html + advisoryNotices();
+function graphClick(evt) {
+  graphSelect(graphHit(evt));
 }

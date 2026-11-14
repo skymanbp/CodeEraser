@@ -235,13 +235,23 @@ pub fn body(r: &Request) -> Value {
         "baseline": r.baseline,
         "floor": r.floor,
     });
-    // every key that rides CONDITIONALLY rides one table (the loop
-    // below already did this for the four knob tables; the ifs around
-    // it were the same statement written eight more times). Absent is
-    // not null and not []: a repo without a feature must send the
-    // bytes it sent before the feature existed, which is what every
-    // "absent = byte-identical" counterfactual in VERSIONING rests on.
-    let optional = [
+    for (key, value) in optional(r).into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
+        o[key] = value;
+    }
+    for (key, rows) in unconditional(r) {
+        o[key] = rows;
+    }
+    o
+}
+
+/// Every key that rides CONDITIONALLY rides one table (the loop over
+/// the unconditional tables already did this for the four knob tables;
+/// the ifs around it were the same statement written eight more times).
+/// Absent is not null and not []: a repo without a feature must send
+/// the bytes it sent before the feature existed, which is what every
+/// "absent = byte-identical" counterfactual in VERSIONING rests on.
+fn optional(r: &Request) -> [(&'static str, Option<Value>); 11] {
+    [
         ("classKnobs", some_rows(&r.class_knobs)),
         // the fence rides whenever a rulepack is declared, even one
         // whose knobs are all defaults: what it fences is the
@@ -267,15 +277,15 @@ pub fn body(r: &Request) -> Value {
         // blocking roots when the graph answered the gate
         ("deadPoint", r.dead.point.clone()),
         ("deadAdded", r.dead.added.as_ref().map(|a| json!(a))),
-    ];
-    for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
-        o[key] = value;
-    }
-    // the four knob tables, judgedLoc and the four extent tables
-    // (10.0.0) ride unconditionally, so they keep their own loop
-    // rather than pretending to be optional
+    ]
+}
+
+/// The four knob tables, judgedLoc and the four extent tables (10.0.0)
+/// ride unconditionally, so they keep their own table rather than
+/// pretending to be optional.
+fn unconditional(r: &Request) -> [(&'static str, Value); 9] {
     let (spans, dups, refs, prose) = &r.extent;
-    for (key, rows) in [
+    [
         ("ceilings", json!(r.ceilings)),
         ("weights", json!(r.weights)),
         ("thresholds", json!(r.thresholds)),
@@ -285,10 +295,7 @@ pub fn body(r: &Request) -> Value {
         ("dupSpans", json!(dups)),
         ("refLines", json!(refs)),
         ("proseLines", json!(prose)),
-    ] {
-        o[key] = rows;
-    }
-    o
+    ]
 }
 
 /// One verdict.request over the open core link; a missing capability

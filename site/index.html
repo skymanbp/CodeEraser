@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser: erase LLM-induced code &amp; document entropy</title>
-<meta name="description" content="CodeEraser judges your repository: clone detection, dead-code liveness, doc duplication, structural entropy. Measurement in Rust, judgment in Haskell, one ratcheted score.">
+<meta name="description" content="CodeEraser judges your repository: clone detection, file liveness, doc duplication, structural entropy. Measurement in Rust, judgment in Haskell, one ratcheted score.">
 <meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://codeeraser.dev/">
 <meta property="og:title" content="CodeEraser: erase LLM-induced code &amp; document entropy">
-<meta property="og:description" content="CodeEraser judges your repository: clone detection, dead-code liveness, doc duplication, structural entropy. Measurement in Rust, judgment in Haskell, one ratcheted score.">
+<meta property="og:description" content="CodeEraser judges your repository: clone detection, file liveness, doc duplication, structural entropy. Measurement in Rust, judgment in Haskell, one ratcheted score.">
 <meta property="og:image" content="https://codeeraser.dev/icon-256.png">
 <meta name="twitter:card" content="summary">
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -44,7 +44,7 @@
   <div class="pitch">
     <img class="mark" src="/icon-256.png" width="64" height="64" alt="CodeEraser icon: an eraser mid-swipe through rows of code">
     <h1>CodeEraser<span class="tm">™</span></h1>
-    <p class="tag">LLMs write code that <em>accretes</em>: duplicated blocks, dead files,
+    <p class="tag">LLMs write code that <em>accretes</em>: duplicated blocks, unreferenced files,
     stale docs, structural sprawl. CodeEraser measures it, judges it, and gates it
     with a score that is only allowed to get better.</p>
     <div class="cta">
@@ -109,14 +109,14 @@ note: 0 blocks collapsed into existing members, 391 intra-file pairs off the sim
   <div class="card wide"><h3>ce check</h3><p>The gate: one 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p><a class="go" href="/how/#f05">05 · scoring and ratchet</a></div>
   <div class="card"><h3>ce dedup</h3><p>T1/T2 clones by winnowing fingerprints, under a clone-block budget that only ratchets down.</p><a class="go" href="/how/#f01">01 · T1/T2 clones</a></div>
   <div class="card"><h3>ce clone</h3><p>T3 near-clones, renamed and reshaped copies included, judged by tree edit distance in the Haskell core.</p><a class="go" href="/how/#f02">02 · T3 near-miss clones</a></div>
-  <div class="card"><h3>ce deadcode</h3><p>Liveness on the cached reference graph: no kept in-edge and no entry flag means dead; an unmentioned-declaration advisory beside it never reddens a gate.</p><a class="go" href="/how/#f06">06 · dead code</a></div>
+  <div class="card"><h3>ce deadcode</h3><p>Liveness on the cached reference graph: a file no entry reaches is listed as unreferenced, under the root it falls with, and fails nothing by default; a project blocks new roots with <code>[deadcode] block</code>. An unmentioned-declaration advisory beside it never reddens a gate.</p><a class="go" href="/how/#f06">06 · dead code</a></div>
   <div class="card"><h3>ce docdup</h3><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p><a class="go" href="/how/#f03">03 · documentation duplication</a></div>
   <div class="card"><h3>ce structure</h3><p>Tree-scale entropy over the whole repository: layout divergence, doc staleness, redundancy and modularity axes.</p><a class="go" href="/how/#f04">04 · structure judgment</a></div>
   <div class="card"><h3>ce scan</h3><p>Size, complexity and readability per file and function, core-graded against the global table or the file's own <code>[[rules.class]]</code> lines.</p><a class="go" href="/math/#m-recursion">Cognitive complexity</a></div>
   <div class="card"><h3>ce trend</h3><p>Your score across mainline history, cached per commit, rebuildable, honest about direction.</p><a class="go" href="/how/#f10">10 · trend slope</a></div>
-  <div class="card"><h3>ce erase</h3><p>Deterministic and two-phase: dead files, verbatim doc twins and whole-unit exact clones are planned; only byte-identical doc spans are erased, applied from a clean worktree, never by a model.</p><a class="go" href="/how/#f12">12 · deterministic erase</a></div>
+  <div class="card"><h3>ce erase</h3><p>Deterministic and two-phase: unreferenced files, verbatim doc twins and whole-unit exact clones are planned; only byte-identical doc spans are erased, applied from a clean worktree, never by a model.</p><a class="go" href="/how/#f12">12 · deterministic erase</a></div>
   <div class="card"><h3>ce churn</h3><p>Change heat over a git window, per unit: how much of a file is being rewritten rather than added to.</p><a class="go" href="/how/#f07">07 · three-signal join</a></div>
-  <div class="card"><h3>ce join</h3><p>Churn, duplication and liveness folded into one verdict, so a hot, duplicated, dead corner names itself.</p><a class="go" href="/how/#f07">07 · three-signal join</a></div>
+  <div class="card"><h3>ce join</h3><p>Churn, duplication and liveness folded into one verdict, so a hot, duplicated, unreferenced corner names itself.</p><a class="go" href="/how/#f07">07 · three-signal join</a></div>
   <div class="card"><h3>ce similar</h3><p>The same-role advisor: offline integer BM25 over the index's term bags, the core deciding which candidates play the query's role. Advice only.</p><a class="go" href="/how/#f15">15 · sparse retrieval</a></div>
   <div class="card wide"><h3>ce query · ce rules</h3><p>Datalog over the index’s own facts, judged in the core, every answer with its derivation; written as assertions, architecture constraints make <code>ce rules</code> a gate that exits on the first violation.</p><a class="go" href="/how/analysis/#f16">16 · code query and architecture rules</a></div>
   <div class="card"><h3>ce flow</h3><p>Dead code inside one function (unreached statements, unread stores and locals) on the core's control-flow graph; a verdict only where the language's blind precision exam passed, unused parameters always advice.</p><a class="go" href="/how/analysis/#f17">17 · intra-function dead code</a></div>

@@ -565,7 +565,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   "pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],"cycles":[[sccId,[idx]]],
   "counts":{"nodes","edges","kept"},"degraded"(,"reason"∈{graph_too_large})}`——
   `dead` 只承载文件粒度判决，`reported` 承载 package/section 聚合判决；非降级时
-  `fail` 当且仅当 `dead` 非空，降级应答恒 true。两表 verdict ∈ {1 unref_private,
+  `fail` 当且仅当有被拦的根（`blocked` 非空；10.0.0 第 5B 部分起，此前为 `dead` 非空），降级应答恒 true。两表 verdict ∈ {1 unref_private,
   2 unref_public, 3 unreach_private, 4 unreach_public}（入度×可达两轴 + 公私隔离）；
   判定旋钮全在 `CE.Graph.Cost`：`minRung`(=5，边计为引用的 rung 上限)、
   `entryMask`(=126，flags 位 1-6 为入口根；位 0 exported 有意不入——公私是判决轴

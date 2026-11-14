@@ -87,7 +87,7 @@ function judgmentRows(j) {
   const name = j.verdict === null ? tr("unjudged") : tr("trendVerdictNames")[j.verdict] ?? String(j.verdict);
   const bad = j.verdict === 2 || j.fail;
   out.push(
-    `<div class="row"><span>${esc(tr("verdict"))}</span>` +
+    `<div class="row">${esc(tr("verdict"))}: ` +
     `<b class="pill ${bad ? "bad" : "ok"}">${esc(name)}</b></div>`
   );
   if (j.slopeMicroPerDay !== null) {

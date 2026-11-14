@@ -56,11 +56,13 @@ main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: va
 /* ---- erase screen (batch 4): plan rows read as a ledger — the
    kill mark is semantic (will act), advisory rows recede; the diff
    is the CLI's unified diff verbatim in mono ---- */
-#erase-summary, #query-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
-#erase-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#erase-summary .ok b, #query-summary .ok b { color: var(--ok); }
+/* the similar screen's summary chips share the idiom (they used to sit
+   in an unstyled .stat and run together) */
+#erase-summary, #query-summary, #similar-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
+#erase-summary b, #similar-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
+#erase-summary .ok b, #query-summary .ok b, #similar-summary .ok b { color: var(--ok); }
 #query-summary .bad b { color: var(--err); }
-#erase-summary .zero, #erase-summary .zero b, #query-summary .zero { color: var(--ink-min); }
+#erase-summary .zero, #erase-summary .zero b, #query-summary .zero, #similar-summary .zero { color: var(--ink-min); }
 .erow {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto;

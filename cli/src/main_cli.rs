@@ -98,8 +98,10 @@ pub(crate) enum Cmd {
         format: OutFormat,
     },
     /// Judge liveness over the cached reference graph: the ladder's
-    /// edges, the core's four-way verdicts, and the symbol-level
-    /// advisory (declarations no other file spells — never a verdict)
+    /// edges, the core's four-way verdicts, the unreferenced files
+    /// grouped under their roots (each root's state and the gate's
+    /// answer), and the symbol-level advisory (declarations no other
+    /// file spells — never a verdict)
     Deadcode {
         /// Directory to judge (default: current directory)
         root: Option<PathBuf>,
@@ -108,9 +110,12 @@ pub(crate) enum Cmd {
         db: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
-        /// Exit 1 when any file-tier dead verdict lands, or when the
-        /// judgment itself degraded (a gate that could not judge
-        /// never passes)
+        /// Exit 1 when an unreferenced root is in a state
+        /// `[deadcode] block` names or the judgment degraded (a gate
+        /// that could not judge never passes), exit 2 when a block is
+        /// declared and no committed baseline records a comparison
+        /// point; with nothing declared an unreferenced file is listed
+        /// and fails nothing
         #[arg(long)]
         check: bool,
     },

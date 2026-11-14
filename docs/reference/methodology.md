@@ -59,7 +59,7 @@ does not get an exemption from the rule it argues for.
 | 3 | [Documentation duplication — shingling + MinHash/LSH](methodology/03-documentation-duplication-shingling-minhash.md) | repeated paragraphs, comments, docstrings, HTML page text and plain text |
 | 4 | [Structure judgment — tree-scale entropy, eight axes](methodology/04-structure-judgment-tree-scale-entropy-seven.md) | tree-scale structure, axes S0-S7 |
 | 5 | [Scoring and the ADR-006 ratchet](methodology/05-scoring-and-the-adr-006-ratchet.md) | the composite score and the only-tightens baseline |
-| 6 | [Graph liveness and dead-code verdicts](methodology/06-graph-liveness-and-dead-code-verdicts.md) | import edges, in-degree, dead symbols |
+| 6 | [Graph liveness and dead-code verdicts](methodology/06-graph-liveness-and-dead-code-verdicts.md) | import edges, in-degree, unreferenced files under their roots, the dead-file gate |
 | 7 | [The three-signal join](methodology/07-the-three-signal-join.md) | similarity x graph position x history |
 | 8 | [Split-ROI seam pricing (four legs)](methodology/08-split-roi-seam-pricing-four-legs.md) | whether a long file is worth splitting |
 | 9 | [Edit four-classification (update supervision)](methodology/09-edit-four-classification-update-supervision.md) | matched / novel / moved / deleted |

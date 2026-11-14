@@ -20,7 +20,7 @@ Commands:
   scan       Measure size / complexity / readability metrics; levels graded by the core
   churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
   graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); --mentions refreshes the mention universe and reports its header; liveness lives under `ce deadcode`
-  deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, and the symbol-level advisory (declarations no other file spells — never a verdict)
+  deadcode   Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, the unreferenced files grouped under their roots (each root's state and the gate's answer), and the symbol-level advisory (declarations no other file spells — never a verdict)
   clone      T3 near-miss clone judgment: tree edit distance via the core's clone/1; --units lists the cached unit universe instead
   docdup     Documentation-duplication judgment: exact Jaccard via the core's docdup/1 over the cached live segments
   join       Three-signal join: similarity + graph position + per-unit churn, file and unit tiers (report-only). Costs a churn window plus a full index — minutes; progress rides stderr
@@ -132,7 +132,7 @@ Options:
 ## ce deadcode
 
 ```text
-Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, and the symbol-level advisory (declarations no other file spells — never a verdict)
+Judge liveness over the cached reference graph: the ladder's edges, the core's four-way verdicts, the unreferenced files grouped under their roots (each root's state and the gate's answer), and the symbol-level advisory (declarations no other file spells — never a verdict)
 
 Usage: ce deadcode [OPTIONS] [ROOT]
 
@@ -144,7 +144,7 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
-      --check            Exit 1 when any file-tier dead verdict lands, or when the judgment itself degraded (a gate that could not judge never passes)
+      --check            Exit 1 when an unreferenced root is in a state `[deadcode] block` names or the judgment degraded (a gate that could not judge never passes), exit 2 when a block is declared and no committed baseline records a comparison point; with nothing declared an unreferenced file is listed and fails nothing
   -h, --help             Print help
 ```
 

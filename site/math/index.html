@@ -179,7 +179,7 @@ E_f   = min(n, max(T, n - S, churn))                     -- T = the lines a find
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
-  <p class="note rule">The fail bit is a disjunction of <!--ce:count:fail_conditions#word-->seven<!--/ce--> <em>named</em> conditions: <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>.</p>
+  <p class="note rule">The fail bit is a disjunction of <!--ce:count:fail_conditions#word-->seven<!--/ce--> <em>named</em> conditions: <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>, <code>dead_added</code>.</p>
   <ul class="consts">
     <li><b>tolNum/tolDen</b> 102/100</li>
     <li><b>tolAbs</b> 10</li>
@@ -246,7 +246,7 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
 
 <div class="fam formula">
   <h3 id="m-liveness"><span class="n">06</span>Liveness</h3>
-  <p class="job">A file nothing live reaches is dead; cycles come from Kosaraju's strongly connected components, found once.</p>
+  <p class="job">A file nothing live reaches is unreferenced, listed under the root it falls with; cycles come from Kosaraju's strongly connected components, found once.</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
@@ -254,7 +254,7 @@ public     = testBit flags 0
 referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
 judged     = i <span class="op">∉</span> reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
-  <p class="note rule">Cycles are reported, never judged; a cyclic island with no entry seed is dead by reachability alone.</p>
+  <p class="note rule">Cycles are reported, never judged; a cyclic island with no entry seed is in the dead set by reachability alone. A dead file is a root when every dead file with a kept path to it is reached from it too; the rest fall with their roots. By default the list fails nothing.</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
     <li><b>entryMask</b> 126 (bits 1–6)</li>

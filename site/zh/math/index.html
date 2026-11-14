@@ -179,7 +179,7 @@ E_f   = min(n, max(T, n - S, churn))                     -- T = 发现点名的�
 
 added   = current \ baseline        -- 非空 <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- 只作告知；驱动收缩</pre>
-  <p class="note rule">fail 位是<!--ce:count:fail_conditions#word-->七<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、<code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、<code>knobs_digest</code>、<code>rows_dropped</code>。</p>
+  <p class="note rule">fail 位是<!--ce:count:fail_conditions#word-->七<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、<code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、<code>knobs_digest</code>、<code>rows_dropped</code>、<code>dead_added</code>。</p>
   <ul class="consts">
     <li><b>tolNum/tolDen</b> 102/100</li>
     <li><b>tolAbs</b> 10</li>
@@ -246,7 +246,7 @@ slope <span class="op">&gt;</span>  band  → 0  （变好）
 
 <div class="fam formula">
   <h3 id="m-liveness"><span class="n">06</span>可达性</h3>
-  <p class="job">活的入口都到不了的文件即死；环由 Kosaraju 强连通分量只找一次。</p>
+  <p class="job">活的入口都到不了的文件即无引用，列在它所随的根之下；环由 Kosaraju 强连通分量只找一次。</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
@@ -254,7 +254,7 @@ public     = testBit flags 0
 referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
 judged     = i <span class="op">∉</span> reach
 code       = 1 + public + 2*referenced    -- 以查找表为准</pre>
-  <p class="note rule">环只报不判；没有入口种子的环岛仅凭可达性即判死。</p>
+  <p class="note rule">环只报不判；没有入口种子的环岛仅凭可达性即落入死集。一个死文件是根，当且仅当每个有保留路径到它的死文件也从它可达；其余的随它们的根。默认这份清单什么都不拦。</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
     <li><b>entryMask</b> 126（bits 1–6）</li>

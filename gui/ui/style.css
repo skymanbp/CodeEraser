@@ -255,6 +255,10 @@ main aside h2 {
 }
 main aside .row { padding: var(--s1) 0; color: var(--ink-mid); overflow-wrap: anywhere; }
 main aside .row b { color: var(--ink); font-weight: 600; }
+/* a state row keeps its state colour through its bold value */
+main aside .row.bad b, main aside .row.ok b { color: inherit; }
+/* a name in the aside that selects its file (a dependent's roots) */
+main aside a { color: var(--focus); text-decoration: none; }
 .empty {
   position: absolute;
   inset: 0;

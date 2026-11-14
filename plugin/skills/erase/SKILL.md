@@ -34,8 +34,8 @@ leaves is the same document the MCP tool `erase_log` and the GUI erase
 screen's audit-log section show, and a record the reader cannot parse
 is named by line. Do NOT hand-delete anything the plan already
 covers. Everything it prints as `advisory` is YOUR half — that is
-where the judgment below begins. Dead files and whole-unit twins in
-dead files are always advisory (`reachable_by_name`,
+where the judgment below begins. Unreferenced files and whole-unit
+twins in them are always advisory (`reachable_by_name`,
 `language_unresolved` or `public_surface`): nothing in the tree
 references them, which is not proof that nothing uses them.
 
@@ -43,7 +43,7 @@ references them, which is not proof that nothing uses them.
 
 ```sh
 ce dedup . --format json      # T1/T2 clone blocks
-ce deadcode . --format json   # zero-liveness verdicts (graph-based)
+ce deadcode . --format json   # unreferenced files under their roots, each root's state
 ce join . --days 14 --format json   # similarity × position × churn
 ```
 
@@ -69,7 +69,7 @@ check a deletion against the architecture rules the project declared
 
 ## 3. Verify each candidate — no exceptions
 
-For every candidate pair or dead unit:
+For every candidate pair or unreferenced file:
 
 1. **Read both sides in full** (the whole function/section, not the
    matched span). Tool-reported similarity is a lead, not a verdict.
@@ -82,9 +82,14 @@ For every candidate pair or dead unit:
    claims liveness for a whole file) and by the unmentioned advisory
    (`ce:allow(unmentioned)`); a bare marker with no why claims
    nothing, and dedup exemptions go through `.ceignore`.
-4. Dead code with an `entry_globs` match or exported surface may be a
-   public API — confirm before removing.
-5. A dead FILE may be used by its name with no reference in the tree:
+4. An unreferenced file with an `entry_globs` match or exported surface
+   may be a public API — confirm before removing.
+5. Act on roots: a dependent (its `under` names its roots) falls with
+   them, so judge the root first. Read its `state`: `born` or
+   `orphaned` is this change's own; `standing` was there before
+   (inventory); `untold` means no committed baseline carried a point,
+   so it says nothing about whether the file is new. The listing fails nothing by default, and no row is a
+   deletion licence: an unreferenced FILE may be used by its name:
    run as a script or by a command (Makefile, CI workflow, package
    script, README instructions), found by a tool's convention
    (`setup.py`, `docs/conf.py`, `package-info.java`, a test data

@@ -18,6 +18,7 @@ pub mod located;
 pub mod model;
 mod pinned;
 pub(crate) mod provenance;
+mod request;
 pub mod wire;
 pub(crate) mod wire_check;
 
@@ -129,7 +130,7 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // face sent no kind-2 row and the score's docdup axis read a
     // constant zero — one of seven axes dead, unnoticed because a zero
     // charge is also what a clean repository earns
-    let (segs, dups, _) = crate::docdup::judge::rows_of(root, &snap, &opts.core)?;
+    let docdup = crate::docdup::judge::rows_of(root, &snap, &opts.core)?;
     // the T3 family over the same snapshot (plan v2.30 step 5b-9):
     // its verified pairs are the sim table's kind-1 rows — until then
     // kind 1 was dead on every live road, the table taking the free
@@ -146,24 +147,8 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let idx = row_index(&files);
     let ref_lines = located::ref_lines(&snap, &idx)?;
     drop(snap);
-    let dup_spans = located::dup_spans(
-        &located::members(
-            &found.blocks,
-            &t3,
-            &segs,
-            dups.iter().map(|&(a, b, _)| (a, b)),
-        ),
-        &idx,
-    );
-    let clones = Similar {
-        blocks: &found.blocks,
-        t3: &t3,
-    };
-    let dup_pairs = dups
-        .iter()
-        .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str()));
-    let (sim, skipped_self) = sim_table(&clones, dup_pairs, &idx);
-    let (members, collapsed) = member_set(&anchors, &found.blocks);
+    let (dup_spans, (sim, skipped_self), (members, collapsed)) =
+        clone_tables((&found.blocks, &t3), &docdup, &anchors, &idx);
     Ok(Measured {
         dup_spans,
         ref_lines,
@@ -179,6 +164,31 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         anchors,
         dead,
     })
+}
+
+/// `clone_tables`' three answers: the duplicate spans, the sim table with
+/// its self-pair count, the member set with its collapse count.
+type CloneTables = (Vec<[i64; 4]>, (Vec<[i64; 5]>, usize), (Vec<u64>, usize));
+
+/// The clone and docdup tables the verdict reads, built after the graph
+/// judgment over the universe's row index (split from measure at the
+/// E01 line, plan v2.35 5C): the extent law's duplicate spans, the sim
+/// table with its self pairs counted out, and the discrete member set
+/// with its collapse count.
+fn clone_tables(
+    (blocks, t3): (&[dedup::pairs::Block], &dedup::t3::Judged),
+    (segs, dups, _): &crate::docdup::judge::Rows,
+    anchors: &anchor::Anchors,
+    idx: &HashMap<&str, i64>,
+) -> CloneTables {
+    let pairs = dups.iter().map(|&(a, b, _)| (a, b));
+    let dup_spans = located::dup_spans(&located::members(blocks, t3, segs, pairs), idx);
+    let clones = Similar { blocks, t3 };
+    let dup_pairs = dups
+        .iter()
+        .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str()));
+    let sim = sim_table(&clones, dup_pairs, idx);
+    (dup_spans, sim, member_set(anchors, blocks))
 }
 
 /// The dead-file gate this run sends graph/1 (plan v2.35, 5B): every
@@ -253,73 +263,16 @@ fn baseline_of(
 /// the round trip).
 pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
     let m = measure(root, &opts)?;
-    let idx: HashMap<&str, i64> = m.idx.iter().map(|(k, v)| (k.as_str(), *v)).collect();
-    let (churn_t, cochange_t) = match opts.days {
-        Some(days) => churn_rows(root, days, &idx)?,
-        None => (Vec::new(), Vec::new()),
-    };
+    let (collapsed, skipped_self) = (m.collapsed, m.skipped_self);
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let (continuous, (homes, spans), judged_loc, classed) =
-        size_facts(root, &opts.core, &m.anchors)?;
-    // the provenance table (6.4.0, O40): every file entity on disk
-    // under the scope that owns no row this run — the core answers
-    // which committed rows they explain (`ratchet.dropped`)
-    let measured: BTreeSet<u64> = continuous
-        .iter()
-        .filter(|r| r[1] == 0)
-        .map(|r| r[0])
-        .collect();
-    let present = provenance::present(root, &measured)?;
-    let digest = cfg.knobs_digest();
-    let baseline = baseline_of(&opts, &continuous, &m.members, digest);
-    let req = wire::Request {
-        sim: m.sim,
-        pos: m.pos,
-        // the export surface (6.1.0): the candidates' RG10 guard has
-        // no other way to learn which flank is a public API, and a
-        // `delete` proposed for one is the exact false positive the
-        // four-way dead code was split to prevent
-        symbols: m.symbols,
-        present: Some(present),
-        // rides exactly at floor 1: the core requires it there and
-        // refuses it anywhere else (O59)
-        cycle_self_loops: (cfg.graph.scc_floor == Some(1)).then_some(m.self_loops),
-        churn: churn_t,
-        cochange: cochange_t,
-        continuous,
-        classed,
-        class_knobs: knobs::class_knob_rows(&cfg.rules),
-        knobs_digest: digest,
-        discrete: m.members,
-        baseline,
-        floor: opts.floor,
-        ceilings: knobs::ceiling_rows(&cfg.thresholds, &cfg.score),
-        weights: knobs::weight_rows(&cfg.score)?,
-        thresholds: knobs::threshold_rows(&cfg.score, cfg.graph.scc_floor),
-        tolerance: knobs::tolerance_rows(&cfg.score),
-        // the dedup pair is `ce dedup --check`'s leg alone (P2) —
-        // this road stays byte-identical
-        dedup: None,
-        dedup_distinct: Vec::new(),
-        dedup_min_distinct: None,
-        judged_loc,
-        doc_files: doc_file_indices(&m.files),
-        extent: (
-            located::cont_spans(&homes, &spans, &idx),
-            m.dup_spans,
-            m.ref_lines,
-            located::prose_lines(root, &m.files, &homes)?,
-        ),
-        files: m.files,
-        dead: m.dead,
-    };
+    let req = request::request(root, &opts, &cfg, m)?;
     let (reply, link) = wire::judge(&opts.core, &req)?;
     Ok(Outcome {
         files: req.files.len(),
         sim_pairs: req.sim.len(),
         members: req.discrete.len(),
-        collapsed: m.collapsed,
-        skipped_self: m.skipped_self,
+        collapsed,
+        skipped_self,
         floor: opts.floor,
         reply,
         held: Ok(link),
@@ -597,7 +550,12 @@ type SizeFacts = (
 /// and the never-measured survived rode unread by the core, and left.
 pub(crate) type ChurnTables = (Vec<[i64; 3]>, Vec<[i64; 3]>);
 
-fn churn_rows(root: &Path, days: u32, idx: &HashMap<&str, i64>) -> Result<ChurnTables> {
+/// The churn window's tables when asked; None = both stay empty (blame
+/// costs minutes — an honest absence, not a zero claim).
+fn churn_rows(root: &Path, days: Option<u32>, idx: &HashMap<&str, i64>) -> Result<ChurnTables> {
+    let Some(days) = days else {
+        return Ok((Vec::new(), Vec::new()));
+    };
     let ch = churn::run(root, days)?;
     Ok(churn_tables(&ch, idx))
 }

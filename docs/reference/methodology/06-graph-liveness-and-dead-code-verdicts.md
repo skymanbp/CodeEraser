@@ -8,7 +8,11 @@ the Haskell core for judgment. No text crosses the judgment wire (`graph/1`) —
 to the layout step `document/1` — and node identity **is** the row index
 ([Contract.hs:27-33](../../../core/app/CE/Graph/Contract.hs#L27)). Every number below is a constant in
 `CE.Graph.Cost` or a frozen storage code, so the computation is a pure function of the edge
-set and the flag column.
+set and the flag column. The files it does not reach form the **dead set** (§7); what a face says
+about each of them is that it is **unreferenced** — no reference was found, which is not the claim
+that the file is unused. Since plan v2.35 the dead set is grouped into roots and dependents, each root
+compared against the committed baseline, and by default an unreferenced file is listed and fails
+nothing; a project that wants a gate declares one (§10).
 
 ### 1. Pipeline
 
@@ -264,7 +268,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:65-85](../../../core/app/CE/Graph.hs#L65)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:474-488](../../../cli/src/graph/deadcode.rs#L474)) and `ce deadcode --check` relays the
-core's fail bit ([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
+core's fail bit — degraded, or a blocking root (§10) ([Lines.hs:163-164](../../../core/app/CE/Graph/Lines.hs#L163), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
 
 ### 5. Kept arcs and liveness
 
@@ -291,10 +295,10 @@ per-ceiling trade is published instead by the `cut` table of the precision instr
 
 A fragment link reaches the file. No arc relates a section node to the file that holds it, so an arc
 into a section alone never made its file reachable: until rev 28 a page a live page links to by one of
-its headings was reported dead, while a link with a broken fragment kept it alive. A site whose answer
+its headings was reported unreferenced, while a link with a broken fragment kept it alive. A site whose answer
 is a confirmed section of another file now also stores a file-granular `also` edge to that file (§2),
 so the file has an in-arc of its own: alive when the linking page is, a dependent (`unreach_*`) of it
-when it is dead.
+when the linking page is unreferenced.
 
 **Entry roots.** A node seeds reachability iff `flags .&. entryMask ≠ 0`
 ([Dead.hs:17-18](../../../core/app/CE/Graph/Dead.hs#L17)), with `entryMask = 126` = bits 1–6
@@ -302,7 +306,7 @@ when it is dead.
 4 dyn-referenced, 5 doc-entry, 6 `ce:allow(deadcode)`
 ([Cost.hs:110-114](../../../core/app/CE/Graph/Cost.hs#L110)). Bit 0 (exported) is **deliberately absent** —
 exported-ness is the public/private *verdict* axis, so a library's unreferenced API surfaces as
-`unref_public` rather than as plain dead or as silence
+`unref_public` rather than as a private unreferenced file or as silence
 ([Cost.hs:116-119](../../../core/app/CE/Graph/Cost.hs#L116)).
 
 Only file nodes carry entry facts; section and package rows get `0`
@@ -431,7 +435,7 @@ so they agree with `Position`'s `sccId` by construction
 
 **Cycles are reported, never judged** — the verdict pass does not read this list
 ([Cycles.hs:3-4](../../../core/app/CE/Graph/Cycles.hs#L3)). A cyclic island with no entry seed is
-therefore dead by reachability alone, without a special case.
+therefore in the dead set by reachability alone, without a special case (its files are roots, §10).
 
 The per-node join surface, computed only for the requested `pos` indices, is
 `[idx, indeg, outdeg, sccId, sccSize, reachIn]`
@@ -443,8 +447,8 @@ The per-node join surface, computed only for the requested `pos` indices, is
 
 ### 7. The four-way verdict
 
-Dead splits along **two independent axes** — indegree × reachability — with public structurally
-separated so an exported-but-unreferenced API can never collapse into plain dead
+The dead set splits along **two independent axes** — indegree × reachability — with public structurally
+separated so an exported-but-unreferenced API can never collapse into a private verdict
 ([Dead.hs:1-7](../../../core/app/CE/Graph/Dead.hs#L1)):
 
 ```
@@ -474,17 +478,18 @@ read at `code - 1` ([Document.hs:67-72](../../../core/app/CE/Graph/Document.hs#L
 Rust side, which sends the judgment's rows back as codes, refuses a code past the four as
 wire-version skew, not a panic ([reply.rs:68-74](../../../cli/src/graph/deadcode/reply.rs#L68)).
 The `why` string is a two-way split on the same axis: codes 1–2 read *"no kept in-edge and no
-entry flag"*, codes 3–4 read *"referenced only from dead code; no entry flag"*
+entry flag"*, codes 3–4 read *"referenced only from unreferenced files; no entry flag"*
 ([Document.hs:74-77](../../../core/app/CE/Graph/Document.hs#L74), placed at
 [Document.hs:252-257](../../../core/app/CE/Graph/Document.hs#L252)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
-separate `reported` table and are never called dead — aggregates are not code entities. Since
+separate `reported` table and are never in the dead set — aggregates are not code entities. Since
 proto 2.18.0 (batch-7 slice 4) the split is the CORE's: the reply partitions its verdicts on
 the node kind column it always received ([Graph.hs:173-175](../../../core/app/CE/Graph.hs#L173),
 `granFile` at [Cost.hs:130-139](../../../core/app/CE/Graph/Cost.hs#L130)), and carries the additive
-`fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
-contract, because `ce erase` builds its dead-file rows from the failing table (rows, not deletions —
+`fail` bit, since plan v2.35 the gate's own answer — a degraded run or a blocking root (§10). The Rust
+side keeps the split as a boundary
+contract, because `ce erase` builds its dead-file rows from the `dead` table (rows, not deletions —
 book 12 §2, `reachable_by_name`): an aggregate arriving in `dead` refuses as wire skew, never a directory row
 ([reply.rs:88-95](../../../cli/src/graph/deadcode/reply.rs#L88)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
@@ -492,7 +497,7 @@ core away, so the client's old fallback conjunction was unreachable and was reti
 step #15, O62; [reply.rs:42-45](../../../cli/src/graph/deadcode/reply.rs#L42)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document the core lays out
 ([Document.hs:171-187](../../../core/app/CE/Graph/Document.hs#L171)). The design's *"no entry rule ⇒ every doc trivially
-dies"* stance is deliberate: an unlinked doc **is** reported
+dies"* stance is deliberate: an unlinked doc **is** listed
 ([deadcode.rs:13-15](../../../cli/src/graph/deadcode.rs#L13)).
 
 ### 8. The dead-row confidence (2.32.0)
@@ -509,7 +514,7 @@ Since 2.32.0 the request carries a per-language site ledger (optional until 9.0.
 
 `vouched` says every reference site of the language is answered — in-corpus or External —
 which is a statement about sites, not about use: a file run by its name or found by a tool's
-convention leaves no site, so a vouched dead file can still be in use, and the erase family
+convention leaves no site, so a vouched unreferenced file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
 ([Cost.hs:180-195](../../../core/app/CE/Graph/Cost.hs#L180)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151-161](../../../cli/src/graph/load.rs#L151), [deadcode.rs:309](../../../cli/src/graph/deadcode.rs#L309), [deadcode.rs:318-331](../../../cli/src/graph/deadcode.rs#L318)), fences every returned index and bounds the column ([reply.rs:82-99](../../../cli/src/graph/deadcode/reply.rs#L82)), and the core renders the trust word beside each dead file ([Lines.hs:84-89](../../../core/app/CE/Graph/Lines.hs#L84)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
@@ -544,9 +549,10 @@ sample universe and the audit ground truth were both frozen *before any resolver
 the resolver cannot choose its own denominator
 ([eval_graph_precision.rs:1-6](../../../cli/tests/it/eval_graph_precision.rs#L1)); the sample is 100 sites
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
-The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
-`ce deadcode --check` exits non-zero on any dead file
-([Lines.hs:31](../../../core/app/CE/Graph/Lines.hs#L31), [Deadcode.hs:38](../../../core/app/CE/Text/Deadcode.hs#L38)).
+The "all findings dispositioned" criterion, honored by discipline at M5-2, became a gate, and since
+plan v2.35 it is a project's declaration: `ce deadcode --check` exits non-zero when a root's state is
+one `[deadcode] block` names (§10) — this repository blocks `orphaned` and `born`
+([Lines.hs:160-161](../../../core/app/CE/Graph/Lines.hs#L160), [Deadcode.hs:37](../../../core/app/CE/Text/Deadcode.hs#L37)).
 
 The six languages plan v2.30 added sit the same exam, each against a blind audit frozen before any
 scoring and registered in [EVAL-SET-LANGS.md](../../EVAL-SET-LANGS.md): the sample is frozen first,
@@ -579,3 +585,81 @@ per language — 400 commits of the first exam corpus each, both framings record
 `fpr_lang_gate.rs` executes the release gate against every bit of `Lang::judged_mask()`: a language is
 judged only while its own row admits it, and all six read 0 false intercepts by the standing ledger's
 criterion ([fpr_lang_gate.rs:1-9](../../../cli/tests/it/fpr_lang_gate.rs#L1)).
+
+### 10. Roots, dependents, states and the gate (plan v2.35)
+
+§7 answers *which files does nothing live reach*; it does not answer *which of them nobody uses*, and two
+generations of blind audit say an unreached file is often in use (below). Since plan v2.35, the dead-file
+amendment, such a file is listed as **unreferenced**, and by default it fails no check and charges no
+score.
+
+**Roots and dependents** — the core's definitions ([Roots.hs:1-31](../../../core/app/CE/Graph/Roots.hs#L1)).
+Write U for the nodes that kept arcs from the entry set never reach, and D for its file nodes — the dead
+set. When some kept path runs from one dead file g to another, f, then g **supports** f; such a path stays
+inside U, because a reached node on it would make f reached. A **root** is a dead file that supports back
+every file supporting it (no strict ancestor of its component in the condensation holds a dead file); the others
+are **dependents**, each falling with the roots that support it, of which there is always one or more. A
+file nothing references is a root; so is every file of a dead cycle that no
+dead file outside the cycle supports. The core reads the root set off the condensation the build already
+holds (`bScc`) in one pass and never drops it; the dependent → root pairs cost at most
+`underCap = 131072` units of work (root ids copied along condensation arcs plus pairs written) and past it
+are dropped whole, the reply saying so with `underDropped`
+([Cost.hs:77-85](../../../core/app/CE/Graph/Cost.hs#L77), [Graph.hs:115](../../../core/app/CE/Graph.hs#L115)).
+
+**The comparison point and the states** ([Point.hs:5-19](../../../core/app/CE/Graph/Point.hs#L5)). The
+committed baseline records the graph's own facts on the day it is written: `deadPoint = {files, dead}`,
+the entity ids of every file node the graph judged and of those in the dead set — a file's id is its size
+row's, `score::baseline::file_entity` of its project-relative path. graph/1 answers today's point
+(`deadNow`) and the verdict family copies it into every baseline it writes. A root's **state**: its id in
+the point's `dead` → `standing`; in `files` and not in `dead` → `orphaned`; not in `files` → `born`; no
+point rode → `untold` ([Cost.hs:87-91](../../../core/app/CE/Graph/Cost.hs#L87),
+[Point.hs:111-128](../../../core/app/CE/Graph/Point.hs#L111)). A dependent has no state. Two corners
+follow, both by these words:
+
+- *A dependent is not judged by its own history.* With `main.ts` importing `lib.ts` when the baseline was
+  written, replace that import and add `n.ts` importing `lib.ts`: `lib.ts` lost its last live reference,
+  but a new unreferenced file still refers to it, so it is a dependent under the `born` root `n.ts`, not
+  `orphaned`. A project that blocks `orphaned` alone is not failed by it; one that blocks `born` is, by
+  `n.ts`.
+- *The point is keyed by path.* A standing `s.ts` renamed to `t.ts` has an id the point never saw:
+  `t.ts` reads `born`.
+
+**The gate.** `ce.toml [deadcode] block` lists the states that fail, out of `"orphaned"` and `"born"` —
+`blockStates`, the states after `untold` and `standing`
+([Cost.hs:93-98](../../../core/app/CE/Graph/Cost.hs#L93)); the default is empty. `"standing"` is refused
+at load by name — the inventory never blocks: declare an entry or delete the file — and any other word
+by name ([config/deadcode.rs:33-47](../../../cli/src/config/deadcode.rs#L33)); the list enters
+`knobs_digest` (booklet 05). A root whose state the list names is **blocking**. `ce deadcode --check`
+exits 1 when a root blocks or the judgment degraded — the reply's `fail` bit is exactly that answer
+([Lines.hs:160-161](../../../core/app/CE/Graph/Lines.hs#L160)) — and `ce check` holds its seventh fail
+condition, `dead_added`, on the same roots ([Faces.hs:33](../../../core/app/CE/Verdict/Faces.hs#L33)). A
+declared `block` with no comparison point — no baseline, or one written before the amendment — cannot be
+answered: both commands refuse by name with exit 2 and the remedy, `CE_ACCEPT_BASELINE=1 ce baseline .`
+from the project root ([main_cmds.rs:140](../../../cli/src/main_cmds.rs#L140),
+[score/mod.rs:320](../../../cli/src/score/mod.rs#L320)). With nothing declared an unreferenced file is
+listed and fails nothing.
+
+**The document and the faces.** `ce.deadcode-report` 0.5.0 carries, on each `dead` row, `root`; on a
+root, `state` and `blocking`; on a dependent, `under` (its roots); in `counts`, `roots`, `dependents` and
+one count per state; at the top, `gate = {block, comparison, blocked, answered}` and, when the pairs were
+dropped, `under_dropped` ([Document.hs:203-221](../../../core/app/CE/Graph/Document.hs#L203)). The
+console prints the roots first, each with the files that fall with it, then the dependents naming their
+roots; a root's state is printed only when a comparison point rode. The GUI's graph screen and the MCP
+tool read the same document.
+
+**The score.** The dead axis keeps its law and weighs 0 unless `[score.weights] deadcode` names it
+(booklet 05).
+
+**The evidence.** Generation 1 of the dead-file exam read 424 of the 559 existing dead files of 13
+corpora: 392 were in use ([EVAL-SET-DEADFILE.md:243](../../EVAL-SET-DEADFILE.md#L243)). Generation 2
+replayed the histories of ten repositories the product had never run on: 21 `orphaned` events and 90
+`born` events, each fewer than the 100 a judged class needs, so neither is judged
+([EVAL-SET-DEADFILE-GEN2.md:190-193](../../EVAL-SET-DEADFILE-GEN2.md#L190),
+[EVAL-SET-DEADFILE-GEN2.md:245-248](../../EVAL-SET-DEADFILE-GEN2.md#L245)). No false-block rate is claimed
+for any state, and a class with no record of its own does not block: blocking is a project's declaration.
+This repository declares `block = ["orphaned", "born"]` and names the axis at weight 1, so its own gate is
+as strict as it was before the amendment.
+
+**What did not change**: which files are unreachable (the entry table, the ladders, the kept arcs);
+`ce erase`, for which a verdict here is no deletion licence (book 12 §2); and the advisory readers —
+`ce join`, the candidates, `ce structure`, the query prelude's `dead(F)`.

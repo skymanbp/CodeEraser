@@ -125,9 +125,11 @@ const esc = (s) =>
 
 // A row whose value carries state (the doctor and update screens):
 // `bad` when the fact itself is the finding, quiet otherwise. The words
-// are the backend's — no screen mints a diagnosis.
+// are the backend's — no screen mints a diagnosis. Printed in `row`'s
+// shape (label, colon, the value in bold): no stylesheet ever spaced a
+// bare label span, so label and value used to run together.
 const stateRow = (k, v, bad) =>
-  `<div class="row${bad ? " bad" : ""}"><span>${esc(k)}</span>${esc(String(v))}</div>`;
+  `<div class="row${bad ? " bad" : ""}">${esc(String(k))}: <b>${esc(String(v))}</b></div>`;
 
 // The one load road every screen takes: its button(s) disabled while
 // the backend works, a status word meanwhile (`said`, translated at the

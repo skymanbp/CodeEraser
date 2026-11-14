@@ -22,25 +22,27 @@ non-deterministic output, and an eraser that guesses would forfeit it.
 | class | source verdict | the erase | why |
 |---|---|---|---|
 | verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss whoever reads the file; the survivor is chosen deterministically, never judged "better" |
-| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) | **none** — an advisory row with its reason | the graph verdict answers "does any reference site of the corpus land on this file?", and a file is also used with no such site: run by its name (a script, a command in a Makefile, a CI file or a package script), found by a tool's convention the product does not list (a test runner's data directory; the eight the dead-file exam passed, among them `setup.py`, `docs/conf.py` and `package-info.java`, are entries, booklet 06 role 10), served or opened by its path. So the row is refused by name in this order: the PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — as `public_surface` (6.1.0, RG10: a library's exported API is unreferenced in-corpus by construction); an unvouched language (the graph family's confidence 0) as `language_unresolved`; every other row as `reachable_by_name` (9.1.0) — a `[vouched]` dead file is one whose language has every reference site answered (in-corpus or External), a statement about sites, not about use |
+| dead file | `deadcode` file tier: a file in the dead set, listed as unreferenced (no kept in-edge from a reached file, no entry flag) | **none** — an advisory row with its reason | the graph verdict answers "does any reference site of the corpus land on this file?", and a file is also used with no such site: run by its name (a script, a command in a Makefile, a CI file or a package script), found by a tool's convention the product does not list (a test runner's data directory; the eight the dead-file exam passed, among them `setup.py`, `docs/conf.py` and `package-info.java`, are entries, booklet 06 role 10), served or opened by its path. So the row is refused by name in this order: the PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — as `public_surface` (6.1.0, RG10: a library's exported API is unreferenced in-corpus by construction); an unvouched language (the graph family's confidence 0) as `language_unresolved`; every other row as `reachable_by_name` (9.1.0) — a `[vouched]` unreferenced file is one whose language has every reference site answered (in-corpus or External), a statement about sites, not about use |
 | whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical, and whose copy's file is graph-dead (the row carries the copy's dead verdict code, proto 7.0.0) | **none** — an advisory row with its reason | the copy is a whole file, so the dead file's question stands: refused as `unit_not_covered`, `bytes_differ`, `copy_not_dead`, `public_surface`, `language_unresolved` or, past all of them, `reachable_by_name` — the first that holds |
 
 README's permanent stance applies: a class acts only with its own
 measured record, and the two file-deleting classes have none — the
 precision docs measure where a reference site lands, not whether an
 unreferenced file is unused. The plan says what it will not touch and
-why. The blind audit that asked the second question of the dead files
+why. The blind audit that asked the second question of the unreferenced files
 of twelve corpora and this repository is recorded in
 [EVAL-SET-DEADFILE.md](../EVAL-SET-DEADFILE.md).
 Its second generation replays first-parent history and asks what
-became of each file that turned dead; its bars and design are
+became of each file that turned unreferenced; its bars and design are
 [deadfile-gen2-bars-v1.md](../../contracts/eval/deadfile-gen2-bars-v1.md)
 and [deadfile-gen2-design-v1.md](../../contracts/eval/deadfile-gen2-design-v1.md),
 and its record is [EVAL-SET-DEADFILE-GEN2.md](../EVAL-SET-DEADFILE-GEN2.md):
-on ten fresh repositories neither kind of newly dead file reached the
-100 events the bars ask before it may fail the gate by default, and
-most of those files turned out to be wanted. The gate is unchanged by
-that record.
+on ten fresh repositories neither kind of newly unreferenced file
+reached the 100 events the bars ask before it may fail the gate by
+default, and most of those files turned out to be wanted. That record
+is why, since plan v2.35, an unreferenced file is listed and fails no
+gate unless the project declares `[deadcode] block` (booklet 06 §10);
+the erase rows are unchanged by it.
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable
@@ -89,7 +91,7 @@ user files; it may create or refresh the `.ce/` cache):
    history (plan v2.18 follow-up). Since a declared submodule is a
    reader of this tree and never a measured part (plan v2.18 step #12),
    the superproject's plan holds no row under it and this refusal is
-   defence in depth against a hand-built plan; a dead file in the suite
+   defence in depth against a hand-built plan; an unreferenced file in the suite
    is reported and erased by the CI leg that runs `ce erase tests --check`
    inside the suite's own repository;
 4. every target file's content hash equal to the plan's (a file that
@@ -108,7 +110,7 @@ user files; it may create or refresh the `.ce/` cache):
 ## The target closure (proto 7.2.0)
 
 A target is one (path, span): the whole file, or one line span in it.
-Several candidate rows may name one target — a dead file that is also
+Several candidate rows may name one target — an unreferenced file that is also
 a byte-identical twin of a live unit names its path twice, once per
 class, and two doc pairs can name one later segment — and the plan
 holds ONE row per target. Which row stands is
@@ -140,7 +142,7 @@ path with more rows than a request holds is refused by name:
 
 Two rules of 7.2.0 went with 9.1.0 because no input can reach them:
 "an eraseable whole-file row owns its path" (there is none, so a span
-row on a dead file's path always stays) and the `licence` ranking
+row on an unreferenced file's path always stays) and the `licence` ranking
 among eraseable rows of one target (every eraseable row is a
 `verbatim_doc` row).
 
@@ -163,10 +165,10 @@ closed on this side would hold two rows per target.
 ## Acceptance (the gate this feature must pass)
 
 - plan-then-apply on a fixture tree erases one verbatim-doc span and
-  nothing else: the private dead file `orphan.md` and the private
-  dead twin `spare.py` (whose `_spare_total` duplicates the live unit
+  nothing else: the private unreferenced file `orphan.md` and the
+  private unreferenced twin `spare.py` (whose `_spare_total` duplicates the live unit
   in `__main__.py`; its `dead_file` row stands for the target) are
-  refused by name as `reachable_by_name`, and the public dead file
+  refused by name as `reachable_by_name`, and the public unreferenced file
   `copy.py` (which declares an exported `def`) as `public_surface` —
   all three survive the apply, not only the plan — and the re-run
   proves zero surviving source verdicts;
