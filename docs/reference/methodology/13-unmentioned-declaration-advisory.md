@@ -12,7 +12,7 @@ referenced name read as unmentioned) is the direction every rule is built agains
 the four-way verdicts: it never turns a gate red, never enters `ce erase`, and is
 rendered with that word on every surface
 ([Cost.hs:51-53](../../../core/app/CE/Graph/Cost.hs#L51),
-[Deadcode.hs:31-33](../../../core/app/CE/Text/Deadcode.hs#L31)). The plan calls it ADR-008
+[Deadcode.hs:30-32](../../../core/app/CE/Text/Deadcode.hs#L30)). The plan calls it ADR-008
 step 3b ([DEVELOPMENT_PLAN.md:240](../../DEVELOPMENT_PLAN.md#L240)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
@@ -86,12 +86,12 @@ run and none feeds another: (i) the whole run; (ii) the script split — the run
 ASCII-identifier pieces, so `调用$graph函数` yields `$graph` and never a bare `graph`;
 (iii) the `$` arm — the run's maximal `$`-free pieces, for every extension OUTSIDE the
 JS family and Java, whose identifiers take `$` too (`Outer$Inner` is not `Inner`)
-([token.rs:71-79](../../../cli/src/mention/token.rs#L71),
-[token.rs:96-102](../../../cli/src/mention/token.rs#L96)). A piece that does not open a run
+([token.rs:73-81](../../../cli/src/mention/token.rs#L73),
+[token.rs:98-104](../../../cli/src/mention/token.rs#L98)). A piece that does not open a run
 (digit-led) is dropped; a piece equal to the run is the run. The arm table is the core's
 `[languages] mention_whole_run_exts` (CE.Lang.Common, read off `tables/1` since plan v2.32
 step 2), looked up lower-cased, and no extension is the union arm
-([token.rs:91-107](../../../cli/src/mention/token.rs#L91)). The reason the arm exists is a
+([token.rs:93-109](../../../cli/src/mention/token.rs#L93)). The reason the arm exists is a
 cost the spec measured before sealing: in a `.ts` file `$ZodString` must stay whole (a
 bare `ZodString` would mention its twin), while `exec $ce_entry_main` in a shell script
 must keep `ce_entry_main`.
@@ -99,7 +99,7 @@ must keep `ce_entry_main`.
 Two hashes are stored per distinct token: the fnv1a64 of the token, and — for tokens
 of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` and `$`
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
-elsewhere ([token.rs:113-124](../../../cli/src/mention/token.rs#L113),
+elsewhere ([token.rs:115-126](../../../cli/src/mention/token.rs#L115),
 [mod.rs:291-298](../../../cli/src/mention/mod.rs#L291)). No plaintext token enters the
 database ([store.rs:34](../../../cli/src/mention/store.rs#L34)); the pass has its own
 version row and any change to a frozen input re-derives every row
@@ -116,11 +116,11 @@ The domain is every judged declaration whose key yields a **single-token** menti
 name — the name the veto can look for at all. Arity suffixes are stripped, Python dunders
 and multi-token keys (`foo'`, `(<+>)`, `r#type`, `"zod 3"`) are out of the domain on the
 safe side ([name.rs:38-53](../../../cli/src/mention/name.rs#L38),
-[name.rs:74](../../../cli/src/mention/name.rs#L74)); a C++ qualifier and a Lua table prefix
+[name.rs:75](../../../cli/src/mention/name.rs#L75)); a C++ qualifier and a Lua table prefix
 are stripped too (`K::b`, `M.f` and `M:f` are reached as `b` and `f`), an R member or dotted
 name (`x$f`, `print.foo`) stays whole and falls out on the token invariant, and an HTML `id` is
 an anchor like a heading, out with Markdown ([name.rs:9-27](../../../cli/src/mention/name.rs#L9),
-[name.rs:40-47](../../../cli/src/mention/name.rs#L40)); the unit is `(file, name)`, so a file
+[name.rs:41-49](../../../cli/src/mention/name.rs#L41)); the unit is `(file, name)`, so a file
 declaring one name twice is one candidate
 ([candidates.rs:166-194](../../../cli/src/mention/candidates.rs#L166)).
 
@@ -131,7 +131,7 @@ yes ([candidates.rs:91-113](../../../cli/src/mention/candidates.rs#L91)):
    declaring one ([store.rs:227-229](../../../cli/src/mention/store.rs#L227));
 2. **the fold second chance** — Rust only, and only for names with ≥ 2 segments
    (`_`/camel boundaries, an all-caps run one segment) and ≥ 7 characters
-   ([token.rs:131-148](../../../cli/src/mention/token.rs#L131),
+   ([token.rs:133-150](../../../cli/src/mention/token.rs#L133),
    [store.rs:233-235](../../../cli/src/mention/store.rs#L233));
 3. **the file's own exception regions spell it** — Go template actions, TS string and
    template literals, Python doctests, Rust macro definitions and fenced or indented doc
@@ -244,7 +244,7 @@ Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the
 seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
 `merge`, `query`) pass `Advisory::No`, each with its reason at the call site
 ([deadcode.rs:97-100](../../../cli/src/graph/deadcode.rs#L97),
-[deadcode.rs:291-297](../../../cli/src/graph/deadcode.rs#L291)). The reply is consumed once:
+[deadcode.rs:294-300](../../../cli/src/graph/deadcode.rs#L294)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -254,7 +254,7 @@ three keys, present only when the road was asked: `unmentioned` rows of five sca
 producer's cut, which the core cannot see — so Rust sends it as a fact beside one request row per
 name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and since plan v2.32 step 4
 the core's deadcode document lays the three keys out, naming each code and its reading
-([Document.hs:185-192](../../../core/app/CE/Graph/Document.hs#L185), [Document.hs:276-288](../../../core/app/CE/Graph/Document.hs#L276)). The console prints one line per row, a
+([Document.hs:184-191](../../../core/app/CE/Graph/Document.hs#L184), [Document.hs:275-287](../../../core/app/CE/Graph/Document.hs#L275)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
 ([Lines.hs:96-107](../../../core/app/CE/Graph/Lines.hs#L96)); the MCP `deadcode`
 tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI
@@ -313,8 +313,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1959 (2234 − 23 pattern-ignored − 3 oversize − 12 early-NUL − 237 signed) | haskell | 8259 (1818) | 1290 (5) | 15.6 % | 196 / 1290 = 15.2 % | 196 / 6969 |
-| | | rust | 3697 (2020) | 349 (5) | 9.4 % | 4 / 349 = 1.1 % | 4 / 3315 |
+| self @ this commit | 1965 (2240 − 23 pattern-ignored − 3 oversize − 12 early-NUL − 237 signed) | haskell | 8262 (1819) | 1293 (3) | 15.6 % | 192 / 1293 = 14.8 % | 192 / 6969 |
+| | | rust | 3705 (2020) | 344 (1) | 9.3 % | 6 / 344 = 1.7 % | 6 / 3329 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -328,7 +328,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->5<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1818<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.3<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->3<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1819<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.2<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

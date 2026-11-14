@@ -67,11 +67,11 @@ code back to the side that assembles the tables
 ([Schema.hs:19](../../../core/app/CE/Query/Schema.hs#L19), [Schema.hs:72](../../../core/app/CE/Query/Schema.hs#L72),
 [lexed.rs:109](../../../cli/src/query/lexed.rs#L109)). Sorts are node 0, dir 1, unit 2, int 3,
 sym 4, set 5; a position nothing constrained resolves to the open sort, −1
-([Cost.hs:170](../../../core/app/CE/Query/Cost.hs#L170)).
+([Cost.hs:171](../../../core/app/CE/Query/Cost.hs#L171)).
 
 | predicate | sorts | read off |
 |---|---|---|
-| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:32](../../../cli/src/query/facts/graph.rs#L32), [wire.rs:49](../../../cli/src/graph/wire.rs#L49), [legend.rs:34](../../../cli/src/query/legend.rs#L34)) |
+| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:32](../../../cli/src/query/facts/graph.rs#L32), [wire.rs:49](../../../cli/src/graph/wire.rs#L49), [legend.rs:25](../../../cli/src/query/legend.rs#L25)) |
 | `in_dir(N, D)` · `dir(D)` · `parent(D, P)` · `dir_name(D, S)` | node, dir, sym | the directory tree the core builds over every node path the measuring side sends (plan v2.33 W1 item 3), a package seated at its own directory; root is dir 0 and reads `.`, and `parent` has no row for it ([Tree.hs:41](../../../core/app/CE/Query/Tree.hs#L41)) |
 | `lang(F, L)` | node, sym | `Lang::name` of every file-shaped node, `unknown` where no language claims the path |
 | `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` / `convention` ([graph.rs:89](../../../cli/src/query/facts/graph.rs#L89), [flags.rs:57](../../../cli/src/graph/deadcode/flags.rs#L57)) |
@@ -89,14 +89,14 @@ sym 4, set 5; a position nothing constrained resolves to the open sort, −1
 Only the tables the program names are built, and the costly ones — a scan for the complexity
 numbers, the T3 and docdup judgments, the mention pass, a read of every file for its line count
 — only when their predicate is read; a table is a set, sorted and deduplicated before it goes up
-([mod.rs:1-7](../../../cli/src/query/facts/mod.rs#L1), [mod.rs:80](../../../cli/src/query/facts/mod.rs#L80),
-[mod.rs:159](../../../cli/src/query/facts/mod.rs#L159)). One hash serves every name-shaped
+([mod.rs:1-7](../../../cli/src/query/facts/mod.rs#L1), [mod.rs:83](../../../cli/src/query/facts/mod.rs#L83),
+[mod.rs:162](../../../cli/src/query/facts/mod.rs#L162)). One hash serves every name-shaped
 constant: `mention("foo", F)` meets the index's own rows because the core's lexer and the
 measuring side's mention table key by the same fnv1a64 (spelled once on each side; the
 differential leg holds the names they give equal), and the enum words a table spells (`entry_named`, `import`, `t3`) are
 name constants in the program, so `role(N, entry_named)` and `role(N, "entry_named")` are one
-token ([LexState.hs:170](../../../core/app/CE/Query/LexState.hs#L170), [legend.rs:23](../../../cli/src/query/legend.rs#L23),
-[Cost.hs:117](../../../core/app/CE/Query/Cost.hs#L117)).
+token ([LexState.hs:170](../../../core/app/CE/Query/LexState.hs#L170), [legend.rs:14](../../../cli/src/query/legend.rs#L14),
+[Cost.hs:118](../../../core/app/CE/Query/Cost.hs#L118)).
 
 ### 3. The prelude
 
@@ -129,11 +129,11 @@ themselves as `program`): 0 a predicate code, 1 a variable, 2
 an integer, 3 a set id, 4 a name hash, 6 an anonymous variable, and 10 to 33 the punctuation and
 keywords (`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/`
 `%` `count` `min` `max` `sum` `:`); 5 was an enum kind in the booklet's first draft and is
-deliberately unassigned ([Cost.hs:117](../../../core/app/CE/Query/Cost.hs#L117)). Variables number per clause by first
+deliberately unassigned ([Cost.hs:118](../../../core/app/CE/Query/Cost.hs#L118)). Variables number per clause by first
 appearance; program predicates number from 1000 by first appearance across every source —
 the prelude first, then the rule pack's rendered text (§11), then the rules file, then the ad hoc
 query — and codes below 1000 are the schema's ([Lex.hs:155](../../../core/app/CE/Query/Lex.hs#L155), [Lex.hs:35](../../../core/app/CE/Query/Lex.hs#L35),
-[Lex.hs:120](../../../core/app/CE/Query/Lex.hs#L120), [Cost.hs:110-111](../../../core/app/CE/Query/Cost.hs#L110)).
+[Lex.hs:120](../../../core/app/CE/Query/Lex.hs#L120), [Cost.hs:111-112](../../../core/app/CE/Query/Cost.hs#L111)).
 Every token keeps the line and column it came from, so an error the core reports at a token
 index reads back as `where line:column` through the lex reply's `at` table
 ([Front.hs:39](../../../core/app/CE/Query/Front.hs#L39), [lexed.rs:93](../../../cli/src/query/lexed.rs#L93)). A malformed
@@ -155,8 +155,8 @@ fault answers every error it found, each at a token; a program with an error ans
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
 redefined, 8 aggregate shape, 9 anonymous head, 10 fact predicate as rule head, 11 arity over the
 cap; 0 is the measuring side's own (a lexical fault, or a glob the exclude dialect cannot read),
-reported at its place ([Cost.hs:181-185](../../../core/app/CE/Query/Cost.hs#L181),
-[Document.hs:65](../../../core/app/CE/Query/Document.hs#L65)).
+reported at its place ([Cost.hs:187-191](../../../core/app/CE/Query/Cost.hs#L187),
+[Document.hs:67](../../../core/app/CE/Query/Document.hs#L67)).
 
 - **Heads.** No rule defines a fact predicate: a head that spells one of the schema's names is
   error 10 at the head's token. A fact predicate is the tables the measuring side sent; were a rule
@@ -166,7 +166,7 @@ reported at its place ([Cost.hs:181-185](../../../core/app/CE/Query/Cost.hs#L181
   `r(U) :- unit(U, F), not exported(U).` answered every unit). A program predicate takes at most
   `arityCap` = 16 arguments, error 11 past it at the atom's token: an index is keyed by a bitmask
   over the positions ([Check.hs:73-80](../../../core/app/CE/Query/Check.hs#L73),
-  [Cost.hs:91-98](../../../core/app/CE/Query/Cost.hs#L91)).
+  [Cost.hs:92-99](../../../core/app/CE/Query/Cost.hs#L92)).
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
   first appearance.
 - **Sorts.** A union-find over three kinds of node — a clause variable, a program predicate's
@@ -247,7 +247,7 @@ derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:36](../../../core/app/CE/Query/Proof.hs#L36)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:50](../../../core/app/CE/Query/Lines.hs#L50),
-[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:181-197](../../../core/app/CE/Query/Document.hs#L181)).
+[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:183-199](../../../core/app/CE/Query/Document.hs#L183)).
 
 ### 8. Caps and degradation
 
@@ -259,7 +259,7 @@ a rule stops reading its answers the moment its new tuples would carry the count
 round builds more than the ceiling and one tuple, and crossing it abandons the whole evaluation
 for the same degraded reply with the count it reached — never a partial answer
 ([Eval.hs:85-109](../../../core/app/CE/Query/Eval.hs#L85)). The proof ceiling (16,384 nodes) never degrades: it stops
-expanding and counts ([Cost.hs:78-82](../../../core/app/CE/Query/Cost.hs#L78),
+expanding and counts ([Cost.hs:79-83](../../../core/app/CE/Query/Cost.hs#L79),
 [Contract.hs:109](../../../core/app/CE/Query/Contract.hs#L109), [Query.hs:141](../../../core/app/CE/Query.hs#L141)).
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
@@ -279,8 +279,8 @@ and the named reason when the core did not judge. The core lays the document out
 since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
-([Document.hs:103](../../../core/app/CE/Query/Document.hs#L103), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
-[face.rs:265](../../../cli/src/query/face.rs#L265), [mod.rs:45](../../../cli/src/query/facts/mod.rs#L45)). A question is wrapped once into query form —
+([Document.hs:105](../../../core/app/CE/Query/Document.hs#L105), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+[face.rs:265](../../../cli/src/query/face.rs#L265), [mod.rs:48](../../../cli/src/query/facts/mod.rs#L48)). A question is wrapped once into query form —
 `?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
 ([face.rs:210](../../../cli/src/query/face.rs#L210)).
@@ -385,12 +385,12 @@ its place — `pack line:column` ([Pack.hs:154](../../../core/app/CE/Query/Pack.
 shipped clauses whose predicates no later rule may define, and any rule past them that defines a
 `pack_…` predicate is program error 7 whether or not a pack declared it, so switching an item on
 later never meets a user's own predicate of that name; reading one is ordinary
-([Cost.hs:104](../../../core/app/CE/Query/Cost.hs#L104), [Check.hs:50](../../../core/app/CE/Query/Check.hs#L50)).
+([Cost.hs:105](../../../core/app/CE/Query/Cost.hs#L105), [Check.hs:50](../../../core/app/CE/Query/Check.hs#L50)).
 What cannot be rendered is refused by name before any judging: an unknown item, a malformed row,
 an item declared twice (`forbid` excepted), fewer than two layers, a negative or out-of-range
 count, a glob holding a quote or a newline, a pack without texts — and the two lists past their
 ceilings, `layers` above 16 globs and `forbid` above 64 pairs; the rendered text counts against
-the token cap like any other ([Cost.hs:89](../../../core/app/CE/Query/Cost.hs#L89),
+the token cap like any other ([Cost.hs:90](../../../core/app/CE/Query/Cost.hs#L90),
 [Contract.hs:132](../../../core/app/CE/Query/Contract.hs#L132)). The lex reply carries the text
 back as `packText`, and `ce query --prelude` prints it after the prelude, so a reader sees what was
 judged ([face.rs:97](../../../cli/src/query/face.rs#L97)). Like `[rules] file` the table is never a

@@ -116,8 +116,8 @@ references under each cut arc (the `edges` and `pkgEdges` rows whose two directo
 arc's), and each cluster's majority directory, read by the rule the misplaced rows are judged by
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with the paths and
-directory names as text; the core orders them and spells them into the document ([Document.hs:95](../../../core/app/CE/Arch/Document.hs#L95), [Document.hs:121](../../../core/app/CE/Arch/Document.hs#L121),
-[face.rs:90](../../../cli/src/arch/face.rs#L90)).
+directory names as text; the core orders them and spells them into the document ([Document.hs:96](../../../core/app/CE/Arch/Document.hs#L96), [Document.hs:122](../../../core/app/CE/Arch/Document.hs#L122),
+[face.rs:84](../../../cli/src/arch/face.rs#L84)).
 
 ### 4. The faces and the document
 
@@ -125,7 +125,7 @@ One document, `ce.arch-report/0.1.0`: the counts, one layer row per directory, t
 their file references (a package target written as its directory with a trailing slash), the
 clusters with their files, the misplaced files with their directory and their cluster's majority,
 the impact rows and the metrics, instability `null` where the core answered −1
-([Document.hs:77](../../../core/app/CE/Arch/Document.hs#L77)). The arch reply is consumed
+([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
 id is in range and every focus file has its depth-0 row ([wire.rs:193](../../../cli/src/arch/wire.rs#L193),
@@ -146,7 +146,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:193](../../../
 
 All three faces, the CLI included, go through one library function, and the face cleans each
 `impact` path the same way whichever face sent it — `./x` and `a\b` name the same file
-([ask.rs:122](../../../cli/src/faces/ask.rs#L122), [face.rs:58](../../../cli/src/arch/face.rs#L58)).
+([ask.rs:122](../../../cli/src/faces/ask.rs#L122), [typed.rs:16](../../../cli/src/scan/walk/typed.rs#L16)).
 
 ### 5. Gates
 

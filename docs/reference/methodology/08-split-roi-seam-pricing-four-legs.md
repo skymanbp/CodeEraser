@@ -13,12 +13,14 @@ never contributes to the structure score or the fail bit. Measurement is Rust
 
 A file enters the seam tables only if it is in the **judged** language set and strictly
 exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and files with
-`total_lines <=` its opening line are skipped [seams.rs:76-81](../../../cli/src/structure/seams.rs#L76).
+`total_lines <=` its opening line are skipped [seams.rs:83-88](../../../cli/src/structure/seams.rs#L83).
 The opening line is the *committed* soft line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — or, for a file whose
-`[[rules.class]]` declares `file_lines_warn`, that class's warn line (proto 9.0.0,
-[seams.rs:40-62](../../../cli/src/structure/seams.rs#L40)); the class rides as `seamFiles`' third
+[judge.rs:84-95](../../../cli/src/structure/judge.rs#L84) — or, for a file whose
+`[[rules.class]]` declares `file_lines_warn`, that class's warn line — and wherever a hard
+line (the class's `file_lines_fail`, else the global one) sits below that line, the hard line,
+the core's `s = min s0 h` (`CE.Structure.Zone`; proto 9.0.0,
+[seams.rs:40-70](../../../cli/src/structure/seams.rs#L40)); the class rides as `seamFiles`' third
 column, so the advisory opens a classed file at the same class line the hook reads, and wherever a
 baseline is committed every other file at exactly the line the hook uses.
 
@@ -30,8 +32,8 @@ a degraded reply drops them with the rest of the facts
 
 Units on the wire are the **top-level** spans only: outermost, non-overlapping,
 start-ordered, so a nested helper always lands on its holder's side of every seam
-[seams.rs:213-227](../../../cli/src/structure/seams.rs#L213). Each unit's `end` is clamped to the
-file total [seams.rs:232](../../../cli/src/structure/seams.rs#L232).
+[seams.rs:212-226](../../../cli/src/structure/seams.rs#L212). Each unit's `end` is clamped to the
+file total [seams.rs:231](../../../cli/src/structure/seams.rs#L231).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
@@ -93,9 +95,9 @@ measured a classed row against its `[[rules.class]]` lines. `P_max` is the advis
 rate against its four prices (codes 15..18) and, like them, a constant of the core: no ce.toml
 key reaches it since `[score] size_penalty_max` retired in 1.10.0 and is
 refused by name at load; knob 14 stays on the wire as 15..18 do
-([judge.rs:170-193](../../../cli/src/structure/judge.rs#L170),
+([judge.rs:173-196](../../../cli/src/structure/judge.rs#L173),
 [Cost.hs:133-143](../../../core/app/CE/Structure/Cost.hs#L133),
-the declared lines' leg at [structure_knobs.rs:57-69](../../../cli/tests/it/structure_knobs.rs#L57)):
+the declared lines' leg at [structure_knobs.rs:62-74](../../../cli/tests/it/structure_knobs.rs#L62)):
 
 | knob | code | default | source |
 |---|---|---|---|
@@ -124,9 +126,9 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:159-160](../../../core/app/CE/Structure/Cost.hs#L159) | word-bounded mention edges [seams.rs:249-270](../../../cli/src/structure/seams.rs#L249) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:171-172](../../../core/app/CE/Structure/Cost.hs#L171) | T1/T2 dedup block spans [seams.rs:105-133](../../../cli/src/structure/seams.rs#L105) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:174-175](../../../core/app/CE/Structure/Cost.hs#L174) | 14-day commit ledger [seams.rs:141-170](../../../cli/src/structure/seams.rs#L141) |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:159-160](../../../core/app/CE/Structure/Cost.hs#L159) | word-bounded mention edges [seams.rs:248-269](../../../cli/src/structure/seams.rs#L248) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:171-172](../../../core/app/CE/Structure/Cost.hs#L171) | T1/T2 dedup block spans [seams.rs:112-140](../../../cli/src/structure/seams.rs#L112) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:174-175](../../../core/app/CE/Structure/Cost.hs#L174) | 14-day commit ledger [seams.rs:148-177](../../../cli/src/structure/seams.rs#L148) |
 | per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:162-163](../../../core/app/CE/Structure/Cost.hs#L162) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
@@ -138,34 +140,34 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 **Leg 1 — severed references.** The honest v1 proxy: true intra-file symbol co-reference
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
-[seams.rs:242-270](../../../cli/src/structure/seams.rs#L242),
+[seams.rs:241-269](../../../cli/src/structure/seams.rs#L241),
 [size-advisory.md:96-99](../size-advisory.md#L96). The body is searched with every literal and
 comment blanked to spaces first — the exact tree-sitter spans, through the one masker the
 tombstone's literal blanking shares ([opaque.rs:1-14](../../../cli/src/scan/opaque.rs#L1),
 [opaque.rs:27-38](../../../cli/src/scan/opaque.rs#L27)) — so a name inside a string or a comment is no
 reference (plan v2.30 step 5b item 30; it counted one until then). Word-boundedness is
 identifier-char adjacency on both sides
-[seams.rs:272-290](../../../cli/src/structure/seams.rs#L272). Names shorter than `NAME_FLOOR = 3` are
+[seams.rs:271-289](../../../cli/src/structure/seams.rs#L271). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
-[seams.rs:262](../../../cli/src/structure/seams.rs#L262). What the proxy measures is therefore a
+[seams.rs:261](../../../cli/src/structure/seams.rs#L261). What the proxy measures is therefore a
 word-bounded spelling of the unit's name in the neighbour's code — a same-named local or field
 counts as one, since no symbol table stands behind it; the advisory face is non-binding
 [size-advisory.md:100-105](../size-advisory.md#L100).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
-through a `BTreeSet` [seams.rs:115-131](../../../cli/src/structure/seams.rs#L115). A seam through a
+through a `BTreeSet` [seams.rs:122-138](../../../cli/src/structure/seams.rs#L122). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
 reference [Cost.hs:165-170](../../../core/app/CE/Structure/Cost.hs#L165).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent`, merges
 read by their first-parent diff as the churn window reads them, path-limited to the seam files)
-[seams.rs:179-193](../../../cli/src/structure/seams.rs#L179), then each commit's ledger rows are
+[seams.rs:185-190](../../../cli/src/structure/seams.rs#L185), then each commit's ledger rows are
 joined onto the *current* snapshot's units at key level; renamed units drop out honestly, and
 a tree without git history prices the leg at zero rather than failing the advisory
-[seams.rs:135-170](../../../cli/src/structure/seams.rs#L135). The window constant
+[seams.rs:142-177](../../../cli/src/structure/seams.rs#L142). The window constant
 `CHURN_WINDOW_DAYS` reads the churn family's own default `DEFAULT_DAYS = 14` — the §4.1 two-week
 anchor, and deliberately a **measurement constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-38](../../../cli/src/structure/seams.rs#L36), [churn/mod.rs:50-51](../../../cli/src/churn/mod.rs#L50),

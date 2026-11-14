@@ -66,7 +66,7 @@ clause the plan writes for every table `.ce/index.db` gains
 ([Terms.hs:1-6](../../../core/app/CE/Similar/Terms.hs#L1)).
 
 Query weights are integer multipliers — names ×3, callees ×2, everything else ×1 — so the
-score stays exact ([Cost.hs:50-56](../../../core/app/CE/Similar/Rank/Cost.hs#L50)). The whole term
+score stays exact ([Cost.hs:51-57](../../../core/app/CE/Similar/Rank/Cost.hs#L51)). The whole term
 road is declared once as `SIMILAR_REV` and sits in the index cache key: a change to any rule
 above wipes the bag tables with the rest of the index rather than ranking old bags against new
 queries ([mod.rs:37-47](../../../cli/src/similar/mod.rs#L37)).
@@ -108,7 +108,7 @@ are and folded into one integer fraction. A term's contribution is
     w · idf · 22 · tf · avg / (10 · tf · avg + 3 · avg + 9 · len)
 
 floored to 16-bit fixed point; the core's battery re-derives the fraction from `k1` and `b`
-([Cost.hs:30-33](../../../core/app/CE/Similar/Rank/Cost.hs#L30),
+([Cost.hs:31-34](../../../core/app/CE/Similar/Rank/Cost.hs#L31),
 [Math.hs:57-69](../../../core/app/CE/Similar/Rank/Math.hs#L57)). `idf = log2((N − df + ½) / (df + ½))`
 in 8-bit fixed point from an integer `log2` by squaring only, floored at zero
 ([Math.hs:13-38](../../../core/app/CE/Similar/Rank/Math.hs#L13),
@@ -120,7 +120,7 @@ The core returns the `K = 5` best candidates for a query, excluding the query's 
 ordered by score then identity ([Score.hs:80-92](../../../core/app/CE/Similar/Rank/Score.hs#L80)). A term in more than half the units — idf 0 — is neither score
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
 would cost the whole corpus per query, so the measuring side asks df first and fetches the list
-only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:77-85](../../../core/app/CE/Similar/Rank/Cost.hs#L77), [rank.rs:146-174](../../../cli/src/similar/rank.rs#L146)).
+only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:86-94](../../../core/app/CE/Similar/Rank/Cost.hs#L86), [rank.rs:146-174](../../../cli/src/similar/rank.rs#L146)).
 Shape equality is read for the K survivors only, by the measuring side, and neither it nor the
 role bit orders ([rank.rs:111-119](../../../cli/src/similar/rank.rs#L111)).
 The request is written once, against the `Postings` trait: the in-memory `Corpus` the instruments
@@ -130,7 +130,7 @@ run one road ([rank.rs:57-70](../../../cli/src/similar/rank.rs#L57),
 [reader.rs:7-10](../../../cli/src/similar/reader.rs#L7),
 [similar_replay.rs:247](../../../cli/tests/it/similar_replay.rs#L247)). Query weights ride in
 `1/wUnit` = 1/256, which is what lets a PPMI-scaled expansion keep a *fraction* of its
-parent's weight without a float ([Cost.hs:41-44](../../../core/app/CE/Similar/Rank/Cost.hs#L41)).
+parent's weight without a float ([Cost.hs:42-45](../../../core/app/CE/Similar/Rank/Cost.hs#L42)).
 
 ### 4. The associative view — positive PMI over this repository, opt-in
 
@@ -144,13 +144,13 @@ in at least `minCooc = 2` units and carries at least `minPpmi` = two bits of ass
 each spelled word term of the query appends its `topM = 3` best neighbours at weight
 `parent × min(ppmi, ppmiCap) / ppmiScale` — at most half the parent's weight — and a term the
 query already spells is never appended; the top m are taken before the query's own words are
-dropped, so a spelled neighbour still holds one of the m places and the word appends fewer ([Cost.hs:63-75](../../../core/app/CE/Similar/Rank/Cost.hs#L63),
+dropped, so a spelled neighbour still holds one of the m places and the word appends fewer ([Cost.hs:64-76](../../../core/app/CE/Similar/Rank/Cost.hs#L64),
 [Score.hs:31-61](../../../core/app/CE/Similar/Rank/Score.hs#L31)). A unit past `termCap = 96` distinct
 word terms contributes its first 96 in term order and is ledgered as capped; the cap has one
 owner, so the in-memory table and the persisted writer count the same words
 ([ppmi.rs:18-42](../../../cli/src/similar/ppmi.rs#L18)). One bound does the pruning for free:
 `n_ab ≤ n_b` bounds `PPMI(a, b)` by `log2(N / n_a)`, under two bits as soon as `4 · n_a > N`, so
-the measuring side never fetches such a word's pair rows ([Cost.hs:77-85](../../../core/app/CE/Similar/Rank/Cost.hs#L77), [rank.rs:121-144](../../../cli/src/similar/rank.rs#L121)).
+the measuring side never fetches such a word's pair rows ([Cost.hs:86-94](../../../core/app/CE/Similar/Rank/Cost.hs#L86), [rank.rs:121-144](../../../cli/src/similar/rank.rs#L121)).
 
 This is enough to let this repository's `fetch / load / retrieve` meet, and never enough to
 outvote what the unit itself spells. No corpus but this one is consulted and no word table is
@@ -209,7 +209,7 @@ A query is exactly one of three asks: `at` (`file:line`, the innermost unit hold
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
 whose words become name and doc evidence — no shape, no callee, so the core's role bit is false
 by construction) ([query.rs:16-53](../../../cli/src/similar/query.rs#L16),
-[query.rs:61-94](../../../cli/src/similar/query.rs#L61)). `judged` refreshes the index over the
+[query.rs:74-107](../../../cli/src/similar/query.rs#L74)). `judged` refreshes the index over the
 same content-hash gate every command uses, resolves the ask, ranks the bare arm — and the widened
 arm when asked, its rows not in the bare arm tagged `widened` — and rides one `similar/1`
 request per arm over one core link, the document asked over the same link ([face.rs:55-86](../../../cli/src/similar/face.rs#L55)).
@@ -229,7 +229,7 @@ request per arm over one core link, the document asked over the same link ([face
   carries the role bit: an advisor's line for the evaluation ledger, never a reason to block.
   No new unit, no role hit and nothing degraded = no key at all; the feed schema moved
   additively to `ce.observe/0.10.0` ([audit/similar.rs:1-10](../../../cli/src/audit/similar.rs#L1),
-  [hookio.rs:133](../../../cli/src/hookio.rs#L133)). The tombstone leg and this leg read the
+  [hookio.rs:137](../../../cli/src/hookio.rs#L137)). The tombstone leg and this leg read the
   session's changed pairs once, through one git batch (booklet 14 §1).
 
 The write-time hook does **not** run it: a PreToolUse budget does not hold a retrieval, and a

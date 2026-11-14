@@ -11,7 +11,7 @@ out; the integer form survives only as the test seam ([Request.hs:14-21](../../.
 language set enters the tree; the size-gate-only language arm is excluded, or the file
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
-has no language term at all ([judge.rs:95-100](../../../cli/src/structure/judge.rs#L95)) ([structure-axes.md:29-32](../structure-axes.md#L29)).
+has no language term at all ([judge.rs:98-103](../../../cli/src/structure/judge.rs#L98)) ([structure-axes.md:29-32](../structure-axes.md#L29)).
 This file keeps its original `-seven` name because that anchor is linked from outside the
 repository; the axis roster itself has been eight since proto 7.1.0 added modularity (S7).
 
@@ -190,7 +190,7 @@ Sources: predicates [Axes.hs:163-174](../../../core/app/CE/Structure/Axes.hs#L16
 [Cost.hs:58](../../../core/app/CE/Structure/Cost.hs#L58), [Cost.hs:65](../../../core/app/CE/Structure/Cost.hs#L65),
 [Cost.hs:70](../../../core/app/CE/Structure/Cost.hs#L70), [Cost.hs:104-105](../../../core/app/CE/Structure/Cost.hs#L104),
 [Cost.hs:92-93](../../../core/app/CE/Structure/Cost.hs#L92), [Cost.hs:98-99](../../../core/app/CE/Structure/Cost.hs#L98);
-knob codes [Knobs.hs:32-56](../../../core/app/CE/Structure/Knobs.hs#L32).
+knob codes [Knobs.hs:34-58](../../../core/app/CE/Structure/Knobs.hs#L34).
 
 Notes on the non-obvious ones:
 
@@ -316,8 +316,8 @@ give seven axes, charges `800+200+333`, `1000 - 13330 div 70 = 810`
 **Knob echo.** All 21 knobs (codes `0..20`) live in one authority table of
 `(code, getter, setter)` triples, so the effective fold and the reply's echo read the same rows
 and a knob cannot exist in one direction only
-([Knobs.hs:25-56](../../../core/app/CE/Structure/Knobs.hs#L25)); rows outside `0..20` or with value `< 1`
-are refused by name ([Knobs.hs:18-23](../../../core/app/CE/Structure/Knobs.hs#L18)). `ce.toml` is the
+([Knobs.hs:27-58](../../../core/app/CE/Structure/Knobs.hs#L27)); rows outside `0..20` or with value `< 1`
+are refused by name ([Knobs.hs:20-25](../../../core/app/CE/Structure/Knobs.hs#L20)). `ce.toml` is the
 source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cost.hs#L1)), and the reply
 echoes the full effective set ([Structure.hs:207](../../../core/app/CE/Structure.hs#L207)). Codes `12..18`
 (`seamSoft=300`, `seamHard=750`, `seamPMax=10` — a constant, no ce.toml key — `roiRefMilli=250`, `roiPhiMilli=500`,

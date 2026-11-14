@@ -77,8 +77,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 430,
-    "end": 431,
+    "line": 438,
+    "end": 439,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
@@ -329,10 +329,10 @@
     "end": 200,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 7] {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|659deda6c25737e8|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|50ec86a73d07a0c7|0": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 62,
-    "text": "const SCHEMA_VERSION: i64 = 17; // 9: trend rows carry their measuring toolchain"
+    "text": "const SCHEMA_VERSION: i64 = 17;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema/parser.rs|393a9b6adcd8c25e|0": {
     "target": "../../../cli/src/dedup/schema/parser.rs",
@@ -556,8 +556,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 243,
-    "end": 245,
+    "line": 250,
+    "end": 252,
     "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|b2fad6b56ef76b35|0": {
@@ -638,8 +638,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Go.hs|8d3bd939589ad9c9|0": {
     "target": "../../../core/app/CE/Lang/Go.hs",
-    "line": 64,
-    "end": 65,
+    "line": 72,
+    "end": 73,
     "text": "\"# `'` is Go's rune delimiter but rune_literal is a single token.\\n\\"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Haskell.hs|b56dac16e6c77bdc|0": {
@@ -1009,8 +1009,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 398,
-    "end": 415,
+    "line": 391,
+    "end": 408,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3/wire.rs|852d91320c904172|0": {
@@ -1324,7 +1324,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Document.hs|86fccee3895e299e|0": {
     "target": "../../../core/app/CE/Clone/Document.hs",
-    "line": 57,
+    "line": 55,
     "text": "schemaId = \"ce.clone-report/0.3.0\""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Prefilter.hs|1322cc43cc6e15a4|0": {
@@ -2474,8 +2474,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/judge.rs|71db14cfaff0abb0|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 95,
-    "end": 100,
+    "line": 98,
+    "end": 103,
     "text": "/// Judged languages only (plan v2.5): letting the scan-only arm in"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|16456a4d00b7fc23|0": {
@@ -2904,20 +2904,20 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|10231bf93fdd1d77|0": {
     "target": "../../../core/app/CE/Structure/Knobs.hs",
-    "line": 25,
-    "end": 56,
+    "line": 27,
+    "end": 58,
     "text": "-- | ONE knob authority: the effective fold and the reply echo both"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|b8cd9d1777488e72|0": {
     "target": "../../../core/app/CE/Structure/Knobs.hs",
-    "line": 32,
-    "end": 56,
+    "line": 34,
+    "end": 58,
     "text": "knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Knobs.hs|d4dea37347d410e5|0": {
     "target": "../../../core/app/CE/Structure/Knobs.hs",
-    "line": 18,
-    "end": 23,
+    "line": 20,
+    "end": 25,
     "text": "knobsOffence :: [[Integer]] -> Maybe String"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Modularity.hs|be377912ba516f3d|0": {
@@ -3119,8 +3119,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|b0a71c3df04991be|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 445,
-    "end": 460,
+    "line": 438,
+    "end": 453,
     "text": "/// The discrete clone-member set: every block's sides attributed to"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -3166,7 +3166,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Text/Check.hs|b8d4a19e3f16c153|0": {
     "target": "../../../core/app/CE/Text/Check.hs",
-    "line": 20,
+    "line": 18,
     "text": "\\failed\\t (failed: {})\\t（失败条件：{}）\\n\\"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|1673217720b81c48|0": {
@@ -3798,7 +3798,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|1fa1893fdb5031f6|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 389,
+    "line": 392,
     "text": "json!([lang, n.kind, roles])"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|2fa668f1a15fb7d1|0": {
@@ -3809,24 +3809,24 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|40386994ccd2e664|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 345,
+    "line": 348,
     "text": ".with_context(|| format!(\"edge endpoint {path} not a node — index skew\"))"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|4196898d654eacb5|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 303,
+    "line": 306,
     "text": "unres: lang_ledger(&sites),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|61ba16134787146c|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 331,
-    "end": 334,
+    "line": 334,
+    "end": 337,
     "text": "/// hid the rule from both. Both endpoints resolve through the dense"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 406,
-    "end": 409,
+    "line": 409,
+    "end": 412,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|6ef7187cdb7a96c3|0": {
@@ -3837,14 +3837,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|8e3fc2f6b82c9362|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 312,
-    "end": 325,
+    "line": 315,
+    "end": 328,
     "text": "/// Per-path site counts folded to the wire's per-language ledger —"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|98b60767f46f7620|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 357,
-    "end": 390,
+    "line": 360,
+    "end": 393,
     "text": "/// [lang, kind, roles] — only file nodes carry entry facts, with TWO"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|a612b2e0c056a92d|0": {
@@ -3855,14 +3855,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|b48e4a45d7fa65e9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 327,
-    "end": 338,
+    "line": 330,
+    "end": 341,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|d3ca37728df9536a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 468,
-    "end": 482,
+    "line": 471,
+    "end": 485,
     "text": "/// A degraded judgment is a visible event (A9f): one observe-feed"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
@@ -3885,7 +3885,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/gate.rs|11b7c5ebd08a5ff0|0": {
     "target": "../../../cli/src/graph/deadcode/gate.rs",
-    "line": 194,
+    "line": 192,
     "text": "pub fn unjudged(doc: &Value, check: bool) -> bool {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/reply.rs|2a266a7d4538cf76|0": {
@@ -3997,8 +3997,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|314b9bab069679ed|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 223,
-    "end": 227,
+    "line": 227,
+    "end": 231,
     "text": "// The sentinel is never walked, and the scan-only arm"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -4209,17 +4209,17 @@
     "end": 188,
     "text": "fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|8db1fe7ae025a171|0": {
-    "target": "../../../cli/src/graph/wire.rs",
-    "line": 234,
-    "end": 243,
-    "text": "/// A page — a Markdown or HTML document — as an edge target, the"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|9af47803f459c81d|0": {
     "target": "../../../cli/src/graph/wire.rs",
     "line": 98,
     "end": 111,
     "text": "/// One answered site's edge rows — its answer's, then its `also`"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|a7962f78a7c8b302|0": {
+    "target": "../../../cli/src/graph/wire.rs",
+    "line": 234,
+    "end": 243,
+    "text": "/// A page — a document language's file — as an edge target, the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|e47a7e60502158f5|0": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -4246,7 +4246,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/score/mod.rs|ade99e61311d08ec|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 320,
+    "line": 313,
     "text": "if let Some(reason) = &j.degraded {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
@@ -4715,32 +4715,32 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|321449288b91b1d9|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 69,
-    "end": 74,
+    "line": 68,
+    "end": 73,
     "text": "-- | The four verdicts by code 1..4 (CE.Graph.Dead)."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|513eb0e39ef810c0|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 172,
-    "end": 188,
+    "line": 171,
+    "end": 187,
     "text": "-- | The document; the advisory's three keys only when the road asked."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|9fa5dbbd2e972d2d|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 213,
-    "end": 220,
+    "line": 212,
+    "end": 219,
     "text": "-- | A dead file's row under the gate, root or dependent: its state by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|a97d079ede6dfb44|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 76,
-    "end": 79,
+    "line": 75,
+    "end": 78,
     "text": "-- | The liveness reason by code: 0 the unreferenced verdicts, 1 the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|fbc865ca6e99d3bd|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 253,
-    "end": 258,
+    "line": 252,
+    "end": 257,
     "text": "dead g row = case row of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Lines.hs|14ab6bc09aa3c1c5|0": {
@@ -4955,8 +4955,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CabalWalk.hs|d6d426dd7ff983db|0": {
     "target": "../../../core/app/CE/Resolve/CabalWalk.hs",
-    "line": 170,
-    "end": 175,
+    "line": 171,
+    "end": 176,
     "text": "-- | `import_commons`: each named common block pulled in where the walk"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Cargo.hs|536be0d9084be4da|0": {
@@ -5110,14 +5110,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/HtmlHead.hs|b77201a6a1385a89|0": {
     "target": "../../../core/app/CE/Resolve/HtmlHead.hs",
-    "line": 100,
-    "end": 103,
+    "line": 101,
+    "end": 104,
     "text": "decodeRefs :: String -> String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/HtmlHead.hs|ccf0e2bd50b8f252|0": {
     "target": "../../../core/app/CE/Resolve/HtmlHead.hs",
-    "line": 49,
-    "end": 57,
+    "line": 50,
+    "end": 58,
     "text": "selfUrl :: String -> Maybe String -> Maybe String -> [(String, String)] -> Maybe (String, String)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Java.hs|3831cb1e6c16f3c3|0": {
@@ -5519,7 +5519,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Text/Deadcode.hs|96eded45ceda569f|0": {
     "target": "../../../core/app/CE/Text/Deadcode.hs",
-    "line": 43,
+    "line": 42,
     "text": "\\check_blocked\\tdeadcode check: {} file(s) blocked ({}): {} — declare an entry or delete them\\tdeadcode check：{} 个文件被拦（{}）：{}——请声明入口或删除\\n\\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Verdict/Faces.hs|43864be36c5852e1|0": {
@@ -5560,11 +5560,11 @@
     "line": 243,
     "text": "| in_use / unused / unsure | 392 / 28 / 4 |"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|615f3f591132c947|0": {
-    "target": "../../../cli/src/churn/mod.rs",
-    "line": 166,
-    "end": 172,
-    "text": "&[\"log\", \"--since\", &since, \"--first-parent\", \"--format=%H\"],"
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/gitio.rs|b33d3f3233e4c560|0": {
+    "target": "../../../cli/src/churn/gitio.rs",
+    "line": 26,
+    "end": 31,
+    "text": "pub(crate) fn window_log(root: &Path, days: u32, tail: &[&str]) -> Result<String> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
     "target": "../../../cli/src/churn/mod.rs",
@@ -5574,8 +5574,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|daf5ed578a3c4511|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 270,
-    "end": 288,
+    "line": 266,
+    "end": 284,
     "text": "}\n\n/// Every pair at or over the floor, count-descending — NO rank cut"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/survival.rs|ca421eaa39e71c7e|0": {
@@ -5737,14 +5737,14 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|4606d9bb72d3fa37|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 579,
-    "end": 584,
+    "line": 572,
+    "end": 577,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 303,
-    "end": 319,
+    "line": 296,
+    "end": 312,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
@@ -5755,26 +5755,26 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 417,
-    "end": 443,
+    "line": 410,
+    "end": 436,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 548,
-    "end": 551,
+    "line": 541,
+    "end": 544,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|93ac992555aaab33|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 370,
-    "end": 388,
+    "line": 363,
+    "end": 381,
     "text": "/// The sim table off one snapshot: the two clone families' rows"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 398,
-    "end": 415,
+    "line": 391,
+    "end": 408,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a40a0820e026d366|0": {
@@ -6292,32 +6292,26 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|c3ae6102bc38c631|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 82,
-    "end": 93,
+    "line": 84,
+    "end": 95,
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|c9a2dca3a9d5dc47|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 170,
-    "end": 193,
+    "line": 173,
+    "end": 196,
     "text": "/// The knob rows the split-ROI advisory rides on, and only it (an"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
-    "target": "../../../cli/src/structure/seams.rs",
-    "line": 179,
-    "end": 193,
-    "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|115da39e5377117c|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 272,
-    "end": 290,
+    "line": 271,
+    "end": 289,
     "text": "/// Word-bounded containment: the name with no identifier character"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|16cddbf1ce3c8d52|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 242,
-    "end": 270,
+    "line": 241,
+    "end": 269,
     "text": "/// One mention edge per (from, to) unit pair where `to`'s bare name"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|1f1c9651d4bc18a4|0": {
@@ -6328,31 +6322,31 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2349130d2081cba4|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 232,
+    "line": 231,
     "text": "let end = (u.end_line as u64).min(total);"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2a9b86b0c06b2975|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2db015e295f57fae|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 40,
-    "end": 62,
-    "text": "/// Where a file's seams open and which class owns it (9.0.0): a file"
+    "line": 185,
+    "end": 190,
+    "text": "fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2e89520f8fc057f5|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 76,
-    "end": 81,
+    "line": 83,
+    "end": 88,
     "text": "for f in files {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|3eb1197a1630aff5|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 249,
-    "end": 270,
+    "line": 248,
+    "end": 269,
     "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, lang: Lang) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|51dde1bfb2cad0a0|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 135,
-    "end": 170,
+    "line": 142,
+    "end": 177,
     "text": "/// over the window — [fileId, a, b] rows, a < b, distinct. Ledger"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|943c2528ffb1772e|0": {
@@ -6363,20 +6357,26 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|a54c2b4d17ae3069|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 105,
-    "end": 133,
+    "line": 112,
+    "end": 140,
     "text": "/// span over two files)."
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|adcd3022195c7dcb|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 141,
-    "end": 170,
+    "line": 148,
+    "end": 177,
     "text": "if out.files.is_empty() {\nreturn;\n}\nlet ids: BTreeMap<&str, u64> = out"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|c0e48505a6024396|0": {
+    "target": "../../../cli/src/structure/seams.rs",
+    "line": 40,
+    "end": 70,
+    "text": "/// Where a file's seams open and which class owns it (9.0.0). The rule"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|d0ada7ad3365a2e6|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 115,
-    "end": 131,
+    "line": 122,
+    "end": 138,
     "text": ".collect();\nlet mut rows = BTreeSet::new();"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|d8f59404b36e4c06|0": {
@@ -6387,19 +6387,19 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|ee6577134b4b67bd|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 262,
+    "line": 261,
     "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|fe03c940e631e227|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 213,
-    "end": 227,
+    "line": 212,
+    "end": 226,
     "text": "fn top_level(all: &[units::Unit]) -> Vec<units::Unit> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/tests/it/structure_knobs.rs|b075ea1abb1b61a7|0": {
     "target": "../../../cli/tests/it/structure_knobs.rs",
-    "line": 57,
-    "end": 69,
+    "line": 62,
+    "end": 74,
     "text": "/// (12 lines, two units ending at lines 5 and 12) on the zone (5, 40]"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|eae3c96956615d0e|0": {
@@ -8006,42 +8006,42 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|0d1f767faaaa5e3c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 237,
-    "end": 247,
+    "line": 235,
+    "end": 245,
     "text": "let fired = (z.armed && tier != \"observe\" && !seen).then(|| {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|4108bde9296703a1|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 218,
-    "end": 220,
+    "line": 216,
+    "end": 218,
     "text": "// the B4 suppression consults the feed BEFORE this event lands in"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 220,
+    "line": 218,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|6195172eb09ae716|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 133,
-    "end": 146,
+    "line": 134,
+    "end": 147,
     "text": "if cap != 0 && lines > cap {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|6195172eb09ae716|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 133,
+    "line": 134,
     "text": "if cap != 0 && lines > cap {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|6195172eb09ae716|2": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 133,
-    "end": 153,
+    "line": 134,
+    "end": 154,
     "text": "if cap != 0 && lines > cap {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|8269a3f6f0b8d148|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 214,
-    "end": 216,
+    "line": 212,
+    "end": 214,
     "text": "let p = prior();\nlet grows = super::zone::grows(before_of(&p), lines);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|85c264a48810b65f|0": {
@@ -8052,14 +8052,14 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|a9cb8e99a2725c7d|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 159,
-    "end": 184,
+    "line": 157,
+    "end": 182,
     "text": "fn budget_line("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|b93b14eca8229ac2|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 234,
-    "end": 236,
+    "line": 232,
+    "end": 234,
     "text": "if z.armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|d97f710ba30c516a|0": {
@@ -8124,16 +8124,6 @@
     "end": 13,
     "text": "//! Every sentence the PreToolUse guard speaks, said by the core (plan"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|180bd57a8e471ac7|0": {
-    "target": "../../../cli/src/guard/zone.rs",
-    "line": 117,
-    "text": "pub const GROWTH_TIER: GrowthTier = GrowthTier::Class;"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|25669c62dfd1af89|0": {
-    "target": "../../../cli/src/guard/zone.rs",
-    "line": 148,
-    "text": "pub fn count_lines_in(mut r: impl std::io::Read) -> std::io::Result<usize> {"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|40ff14cbd35248aa|0": {
     "target": "../../../cli/src/guard/zone.rs",
     "line": 68,
@@ -8148,20 +8138,20 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|7bdaf810ec96b733|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 210,
-    "end": 216,
+    "line": 174,
+    "end": 180,
     "text": "pub fn fenced(root: &Path, cfg: Config) -> (Config, Fence) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|95d709fd980f0957|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 239,
-    "end": 252,
+    "line": 203,
+    "end": 216,
     "text": "/// The threshold table one root-relative path is measured against"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|b380312631d7e1f2|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 167,
-    "end": 179,
+    "line": 131,
+    "end": 143,
     "text": "pub fn envelope(doc: &Value) -> (Option<usize>, Option<(usize, usize)>) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|d6a82418326f82c8|0": {
@@ -8172,8 +8162,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|f33e149120cdb81d|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 123,
-    "end": 140,
+    "line": 109,
+    "end": 126,
     "text": "pub fn budget_kind(before: Result<usize, ()>, after: usize, cap: usize) -> Option<Budget> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/health.rs|cdac5031b8c8b34b|0": {
@@ -8183,36 +8173,36 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0b512b5851758714|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 130,
-    "end": 132,
+    "line": 134,
+    "end": 136,
     "text": "/// 0.2.0 adds `session_id`: without it the D2-2 session count and"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 255,
-    "end": 257,
+    "line": 259,
+    "end": 261,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 271,
-    "end": 283,
+    "line": 275,
+    "end": 287,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|a1d52c64cf762e74|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 133,
+    "line": 137,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.14.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 123,
-    "end": 126,
+    "line": 127,
+    "end": 130,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|cfd91ad7337d1de8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 128,
+    "line": 132,
     "text": "/// 0.4.0 adds the `budget` event (§4.2 step-2 per-rule firing records)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
@@ -8223,8 +8213,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 118,
-    "end": 121,
+    "line": 122,
+    "end": 125,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio/feed.rs|60695ac79bc4b813|0": {
@@ -8238,6 +8228,11 @@
     "line": 56,
     "end": 74,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/scan/metrics/size.rs|25669c62dfd1af89|0": {
+    "target": "../../../cli/src/scan/metrics/size.rs",
+    "line": 21,
+    "text": "pub fn count_lines_in(mut r: impl std::io::Read) -> std::io::Result<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../core/app/CE/Text/Guard.hs|17a27e5e4caa459b|0": {
     "target": "../../../core/app/CE/Text/Guard.hs",
@@ -8466,8 +8461,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 92,
-    "end": 124,
+    "line": 93,
+    "end": 125,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|6773fb712923dfe6|0": {
@@ -8537,24 +8532,24 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|18c3389725b3a802|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 47,
-    "end": 51,
+    "line": 49,
+    "end": 53,
     "text": "[ (cls == 3 && (w < 1 || w > 4), \"dead verdict outside 1..4\")"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 55,
-    "end": 61,
+    "line": 57,
+    "end": 63,
     "text": "-- | The target table's contract (7.2.0): aligned 1:1 with the fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|3a7a6d7d8fbe9e26|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 101,
+    "line": 103,
     "text": "linkedBattery :: RowsReq -> Maybe String"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|c291744c1d2cf21d|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 40,
+    "line": 42,
     "text": "| cls == 0 -> Just retiredClassZero"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|03de824997b99f52|0": {
@@ -8844,8 +8839,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|98606b8eb942289d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 291,
-    "end": 297,
+    "line": 294,
+    "end": 300,
     "text": "let (unmentioned, mounts) = match advisory {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|03c27f3f9717188e|0": {
@@ -9056,15 +9051,15 @@
     "end": 53,
     "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|c0ff25a93680a798|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|a4ad4908eabda6ab|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 40,
-    "end": 47,
-    "text": "// an HTML `#id` is an anchor like a heading (plan v2.30 step 5)"
+    "line": 41,
+    "end": 49,
+    "text": "// `#id`), never declarations"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|d826aab6108efd42|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 74,
+    "line": 75,
     "text": "fn single_token(rel: &str, name: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/rates.rs|92c605251b67836d|0": {
@@ -9122,32 +9117,32 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|6da1b50673a56044|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 113,
-    "end": 124,
+    "line": 115,
+    "end": 126,
     "text": "pub fn fold(token: &str) -> String {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|8ad4c5ba8e153340|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 91,
-    "end": 107,
+    "line": 93,
+    "end": 109,
     "text": "/// The `$` arm's table lookup: extension lower-cased before the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|b034c724c14b349d|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 96,
-    "end": 102,
+    "line": 98,
+    "end": 104,
     "text": "pub fn whole_run_only(rel: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|d54a6fd0f9d4f0a1|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 131,
-    "end": 148,
+    "line": 133,
+    "end": 150,
     "text": "/// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|df28ad3bc1b70341|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 71,
-    "end": 79,
+    "line": 73,
+    "end": 81,
     "text": "pub fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|ecc1d9e0d0ddabe9|0": {
@@ -9359,14 +9354,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|669fadcfcefa651d|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 185,
-    "end": 192,
+    "line": 184,
+    "end": 191,
     "text": "<> ( if flag req \"asked\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|8d7cbf89521eb4ca|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 276,
-    "end": 288,
+    "line": 275,
+    "end": 287,
     "text": "-- | One advisory row: the declaring file, the name, its line, the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Lines.hs|95bcd35b7d85e991|0": {
@@ -9401,8 +9396,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Text/Deadcode.hs|a890d2f6f80e7e6a|0": {
     "target": "../../../core/app/CE/Text/Deadcode.hs",
-    "line": 31,
-    "end": 33,
+    "line": 30,
+    "end": 32,
     "text": "\\advisory_dropped\\tadvisory: the core dropped the unmentioned table — more than {} candidate rows, none judged at symbol level\\t顾问：核已丢弃未提及表——候选行超过 {}，符号层一行未判\\n\\"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|205eabac10a9949f|0": {
@@ -9585,13 +9580,13 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 84,
-    "end": 103,
+    "line": 88,
+    "end": 107,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|a1d52c64cf762e74|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 133,
+    "line": 137,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.14.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio/feed.rs|6f2c810537010e09|0": {
@@ -9908,8 +9903,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|048b13f996806aa1|0": {
     "target": "../../../cli/src/tombstone/texts.rs",
-    "line": 56,
-    "end": 64,
+    "line": 58,
+    "end": 66,
     "text": "let judged: Vec<(&PathPair, Lang)> = pairs"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|619a8594180493f3|0": {
@@ -10124,7 +10119,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|a1d52c64cf762e74|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 133,
+    "line": 137,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.14.0\";"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|42203d6f2fb5a593|0": {
@@ -10210,8 +10205,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/query.rs|b1df876024bab412|0": {
     "target": "../../../cli/src/similar/query.rs",
-    "line": 61,
-    "end": 94,
+    "line": 74,
+    "end": 107,
     "text": "pub fn resolve(reader: &Reader<'_>, ask: &Ask) -> Result<Resolved> {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/rank.rs|0ad5dec1e9ac1712|0": {
@@ -10458,38 +10453,38 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|69fd0c812f2fb9cc|0": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 30,
-    "end": 33,
+    "line": 31,
+    "end": 34,
     "text": "-- | Okapi k1 and b (Robertson & Walker 1994's usual settings)."
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|9f935ceb300209c5|0": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 77,
-    "end": 85,
+    "line": 86,
+    "end": 94,
     "text": "-- | What the two zero rules reduce to, stated for the measuring side's"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|9f935ceb300209c5|1": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 77,
-    "end": 85,
+    "line": 86,
+    "end": 94,
     "text": "-- | What the two zero rules reduce to, stated for the measuring side's"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|a555cc1e593080d7|0": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 63,
-    "end": 75,
+    "line": 64,
+    "end": 76,
     "text": "-- | Neighbours appended per spelled word term; a neighbour counts only"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|b138d98e4f95467f|0": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 50,
-    "end": 56,
+    "line": 51,
+    "end": 57,
     "text": "-- | Query weight multiplier per channel: names ×3, callees ×2,"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Cost.hs|c23a5531822f2bed|0": {
     "target": "../../../core/app/CE/Similar/Rank/Cost.hs",
-    "line": 41,
-    "end": 44,
+    "line": 42,
+    "end": 45,
     "text": "-- | Query weights ride in 1/wUnit, so a PPMI-scaled expansion keeps a"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|0e52c59664b38bb0|0": {
@@ -10815,17 +10810,17 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|179260bdca83ea10|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 80,
+    "line": 83,
     "text": "pub struct Sink {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|8e9bc98f8ad96c9c|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 159,
+    "line": 162,
     "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -> Result<Facts> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|f9803ac8e916bbe8|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 45,
+    "line": 48,
     "text": "pub fn render(&self, sort: i64, v: i128) -> String {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|fe5603408107d945|0": {
@@ -10883,12 +10878,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|bb9e7a4e1ca99850|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 34,
+    "line": 25,
     "text": "const ADDED_KINDS: [&str; 2] = [\"asset\", \"prose\"];"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|f889b58f0a66303a|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 23,
+    "line": 14,
     "text": "pub fn sym(name: &str) -> u64 {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|1ec85f0c2e1aab5f|0": {
@@ -11139,68 +11134,68 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 170,
+    "line": 171,
     "text": "sortNode, sortDir, sortUnit, sortInt, sortSym, sortSet, sortOpen :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|361927163b0ab109|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 78,
-    "end": 82,
+    "line": 79,
+    "end": 83,
     "text": "tokenCap, factCap, derivedCap, proofCap :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|3aa3975185a2f5d2|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 110,
-    "end": 111,
+    "line": 111,
+    "end": 112,
     "text": "idbFloor :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|91acd145a1cd94ba|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 91,
-    "end": 98,
+    "line": 92,
+    "end": 99,
     "text": "forbidCap = 64"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 117,
+    "line": 118,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|1": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 117,
+    "line": 118,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|be12768b1912a4da|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 104,
+    "line": 105,
     "text": "packPrefix :: String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|e6c4bffed9f4a3e5|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 181,
-    "end": 185,
+    "line": 187,
+    "end": 191,
     "text": "-- never the core's, so it is not a contract refusal. 10 (v2.35 V7): a"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|f51cdd4278a67362|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 89,
+    "line": 90,
     "text": "layerCap, forbidCap :: Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 103,
+    "line": 105,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|a8c875d1ab83f2a3|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 181,
-    "end": 197,
+    "line": 183,
+    "end": 199,
     "text": "data Grouped = Grouped (Integer -> [Int]) [Integer] ((Integer, Integer) -> [Int]) [Integer]"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|e8d2a5abc1d0b176|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|fe52c0c47102882d|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 65,
-    "text": "errorNames :: [String]"
+    "line": 67,
+    "text": "errorTable :: [(Integer, String)]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|1ee3b4f0ad5be22f|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
@@ -12323,14 +12318,9 @@
     "line": 24,
     "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Answer> {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|597230b5a7fe0d02|0": {
-    "target": "../../../cli/src/arch/face.rs",
-    "line": 58,
-    "text": "fn spelled(root: &Path, path: &str) -> String {"
-  },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|65c7900bd31c9009|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 90,
+    "line": 84,
     "text": "fn request(t: &Built, r: &Reply) -> Request {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|73ad354fb7d6ab21|0": {
@@ -12385,6 +12375,11 @@
     "line": 260,
     "end": 261,
     "text": "tool!(\n\"architecture\","
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/scan/walk/typed.rs|00025c6db6718df8|0": {
+    "target": "../../../cli/src/scan/walk/typed.rs",
+    "line": 16,
+    "text": "pub fn typed(root: &Path, path: &str) -> String {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|5dfcc9f8b3436c6d|0": {
     "target": "../../../cli/src/structure/rows.rs",
@@ -12471,17 +12466,17 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|bff99090aeb3941c|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 121,
+    "line": 122,
     "text": "cluster :: (Integer -> Integer) -> Integer -> [Integer] -> Value"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|d12715bb27a944f3|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 95,
+    "line": 96,
     "text": "folded :: DocReq -> (Integer -> Integer) -> M.Map (Integer, Integer) [((Integer, Integer), Value)]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|f42099fe8c270b43|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 77,
+    "line": 78,
     "text": "[d, fanIn, fanOut, s] -> object [\"dir\" .= dir d, \"fanIn\" .= fanIn, \"fanOut\" .= fanOut, \"instability\" .= (if s >= 0 then toJSON s else Null)]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|6685d4ddea6452ac|0": {

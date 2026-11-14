@@ -250,7 +250,7 @@
     },
     {
       "id": "report:erase-log#schemaver",
-      "source": "cli/src/erase/model.rs (typed)",
+      "source": "core/app/CE/Erase/Document.hs (recordSchema)",
       "tier": "linked",
       "value": "ce.erase-log/0.1.0"
     },

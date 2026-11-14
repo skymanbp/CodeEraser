@@ -312,8 +312,8 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:84-103](../../../cli/src/hookio.rs#L84),
-[hookio.rs:133](../../../cli/src/hookio.rs#L133)). The feed is the FPR ledger's raw material
+[hookio.rs:88-107](../../../cli/src/hookio.rs#L88),
+[hookio.rs:137](../../../cli/src/hookio.rs#L137)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
@@ -349,7 +349,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
 - **Only judged languages are measured.** A pair whose after path is not a judged language is
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
-  ([texts.rs:56-64](../../../cli/src/tombstone/texts.rs#L56),
+  ([texts.rs:58-66](../../../cli/src/tombstone/texts.rs#L58),
   [guard/envelope.rs:57-62](../../../cli/src/guard/envelope.rs#L57)).
 - **Bounded reads under-count, never over-count — and stand a leg down.** Pairs past
   `PAIR_CAP`, and pairs with a side the batch or the bounded read refused, are counted back as

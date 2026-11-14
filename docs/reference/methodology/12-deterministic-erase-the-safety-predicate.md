@@ -26,7 +26,7 @@ Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
 row STANDS for its target ([wire.rs:97-113](../../../cli/src/erase/wire.rs#L97),
-[Erase.hs:55-61](../../../core/app/CE/Erase.hs#L55)). The client reads both
+[Erase.hs:57-63](../../../core/app/CE/Erase.hs#L57)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
 ([wire.rs:116-128](../../../cli/src/erase/wire.rs#L116)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
@@ -79,7 +79,7 @@ rows ([gather.rs:89-109](../../../cli/src/erase/gather.rs#L89)).
 
 The position stays frozen and is refused **by name** rather than folded into
 `unknown class`, so a client still sending it learns which road replaced it
-([Erase.hs:40](../../../core/app/CE/Erase.hs#L40), the text owned by [Retired.hs:30-31](../../../core/app/CE/Wire/Retired.hs#L30),
+([Erase.hs:42](../../../core/app/CE/Erase.hs#L42), the text owned by [Retired.hs:30-31](../../../core/app/CE/Wire/Retired.hs#L30),
 [Cost.hs:81](../../../core/app/CE/Erase/Cost.hs#L81)). Renumbering the
 survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
@@ -105,7 +105,7 @@ such links as the candidate, the path-lexicographically later one on equal
 counts; it then computes equality from the two inclusive line slices
 ([doc_rows.rs:13-85](../../../cli/src/erase/doc_rows.rs#L13)). Since release
 1.10.0 the candidate's count rides beside the rows as the `linked` table
-(`[row, links]` for each linked row, strictly ascending; [Erase.hs:101](../../../core/app/CE/Erase.hs#L101)).
+(`[row, links]` for each linked row, strictly ascending; [Erase.hs:103](../../../core/app/CE/Erase.hs#L103)).
 
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
@@ -157,7 +157,7 @@ for a partial-unit block is the coverage, not the liveness.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:114](../../../core/app/CE/Erase/Cost.hs#L114)) and as `reachable_by_name` past it (9.1.0, [Cost.hs:115](../../../core/app/CE/Erase/Cost.hs#L115)): the trust fact is named first because it says the graph could not even show the file unreferenced, which tells the reader more than the residual rule that holds for every whole-file row. Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:65-75](../../../core/app/CE/Erase/Cost.hs#L65)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger is refused by name ([gather.rs:126](../../../cli/src/erase/gather.rs#L126)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:114](../../../core/app/CE/Erase/Cost.hs#L114)) and as `reachable_by_name` past it (9.1.0, [Cost.hs:115](../../../core/app/CE/Erase/Cost.hs#L115)): the trust fact is named first because it says the graph could not even show the file unreferenced, which tells the reader more than the residual rule that holds for every whole-file row. Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:65-75](../../../core/app/CE/Erase/Cost.hs#L65)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:49-53](../../../core/app/CE/Erase.hs#L49)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger is refused by name ([gather.rs:126](../../../cli/src/erase/gather.rs#L126)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
 
 ### 3. The nine reason codes
 
@@ -236,7 +236,7 @@ Only after all four checks does the executor write targets and append the
 audit records ([apply.rs:38-43](../../../cli/src/erase/apply.rs#L38)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
-([mod.rs:92-124](../../../cli/src/erase/mod.rs#L92)).
+([mod.rs:93-125](../../../cli/src/erase/mod.rs#L93)).
 
 ### 6. No tuning surface
 
