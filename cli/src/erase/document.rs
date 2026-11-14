@@ -117,6 +117,12 @@ impl Sources {
     }
 }
 
+/// A row's optional span as its three wire columns: spanned, start, end.
+fn span_cols(span: Option<(i64, i64)>) -> [i128; 3] {
+    let (s, e) = span.unwrap_or((0, 0));
+    [i128::from(span.is_some()), i128::from(s), i128::from(e)]
+}
+
 /// The plan document, its lines and its veto, over `held` (the link
 /// the plan was judged over) when it is whole. Class and reason go by
 /// the codes the core answered (`Row::codes`).
@@ -124,21 +130,21 @@ pub fn answer(core: &str, held: Held, p: &Plan, diffs: &Diffs, run: Run) -> Resu
     let mut paths = Paths::default();
     let mut cands = Vec::with_capacity(p.rows.len());
     let mut sources = Sources::default();
-    for (i, r) in p.rows.iter().enumerate() {
-        let (spanned, (s, e)) = (r.span.is_some(), r.span.unwrap_or((0, 0)));
+    for r in &p.rows {
+        let [spanned, s, e] = span_cols(r.span);
         cands.push([
             r.codes.0 as i128,
             i128::from(paths.id(&r.path)),
-            i128::from(spanned),
-            i128::from(s),
-            i128::from(e),
+            spanned,
+            s,
+            e,
             i128::from(r.sites),
             i128::from(r.hash),
             i128::from(r.eraseable),
             i128::from(r.codes.1),
             1,
         ]);
-        sources.push(i, r, &mut paths);
+        sources.push(cands.len() - 1, r, &mut paths);
     }
     let kinds = p.counts.out_of_class.iter().map(|(k, n)| {
         let ok = *k == T1T2_NO_WHOLE_UNIT;
@@ -171,16 +177,10 @@ pub fn trail_answer(core: &str, l: &Log) -> Result<Answer> {
     let mut paths = Paths::default();
     let mut records = Vec::with_capacity(l.rows.len());
     for (i, r) in l.rows.iter().enumerate() {
-        let (spanned, (s, e)) = (r.span.is_some(), r.span.unwrap_or((0, 0)));
-        records.push([
-            i as i128,
-            i128::from(r.ts_ms),
-            code(class_names(), &r.class)?,
-            i128::from(paths.id(&r.path)),
-            i128::from(spanned),
-            i128::from(s),
-            i128::from(e),
-        ]);
+        let [spanned, s, e] = span_cols(r.span);
+        let path = i128::from(paths.id(&r.path));
+        let class = code(class_names(), &r.class)?;
+        records.push([i as i128, i128::from(r.ts_ms), class, path, spanned, s, e]);
     }
     let unreadable: Vec<[usize; 2]> = (l.unreadable.iter().enumerate())
         .map(|(k, (line, _))| [k, *line])

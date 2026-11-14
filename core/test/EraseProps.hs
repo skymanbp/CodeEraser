@@ -21,9 +21,11 @@ import CE.Erase.Cost (eraseRowCap, judgeLinked, judgeRow, keptRows, reasonNames)
 import Data.Aeson
 import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runLegs, setKey)
 
+-- | The linked-section leg (release 1.10.0) rides beside the older legs.
 battery :: IO Bool
-battery = runLegs names probes
+battery = runLegs (names <> [linkedName]) (probes <> [linkedFace])
  where
+  linkedName = "a linked section refuses as linked_section after the byte checks, and linked refusals name the offender"
   names =
     [ "the predicate matches the enumerated truth table, reasons included"
     , "a mixed request judges every row in order and conserves counts"
@@ -33,9 +35,8 @@ battery = runLegs names probes
     , "the target closure keeps an eraseable row, else the advisory about the file"
     , "kept rides on every judged reply, a request without targets is refused by name, and target refusals name the offender"
     , "no t1_twin or dead_file row is eraseable under any legal fact combination"
-    , "a linked section refuses as linked_section after the byte checks, and linked refusals name the offender"
     ]
-  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace, noFileLicence, linkedFace]
+  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace, noFileLicence]
 
 -- | Exact expected (eraseable, reason) per fact combination — the
 -- independent second derivation is this literal table, written from
