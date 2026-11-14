@@ -20,6 +20,8 @@ extentLegs =
   , ("extent 1c: an exact E whose numerator passes 2^64 (nineteen coprime c over the ceiling) leaves the reply as tenths", wide)
   , ("extent 2a T1: adding a file whose every line is named never raises the score", all junk trees)
   , ("extent 2b T2: deleting a file whose every line is named never lowers the score", all cleanup trees)
+  , ("extent 2c T1, clone 2 / docdup 1: adding a file only docdup names (1/2 a line) never raises the score while E/L <= 1/2; above, E/L falls and some score rises", halfCharged [1, 1, 2, 1, 0, 1, 1] docOnly const trees)
+  , ("extent 2d T2, clone 2 / dead 1: deleting a file only the dead axis names (1/2 a line) never lowers the score while E/L <= 1/2; above, E/L rises and some score falls", halfCharged [1, 1, 2, 1, 1, 1, 1] deadOnly (const id) trees)
   , ("extent 3 T3: one edit moves the score by at most (|a| + |b|) / L of the scale, +1", all proportion trees)
   , ("extent 4: full scale iff E = 0; k E >= L reads 0; 0 only when scale (L - k E) < L", all ends cases)
   , ("extent 5: a span, a dead flag, a cycle line, any higher c (across the ceiling, any span shape), a lower soft line never raise it", all monotone trees)
@@ -131,6 +133,34 @@ cleanup :: MTree -> Bool
 cleanup t = and [jScore (eq (without i t)) >= jScore (eq t) | (i, f) <- zip [0 ..] (tFiles t), fullyNamed f]
  where
   fullyNamed f = mPlaced f && not (mProse f) && mDead f && mScc f == Nothing
+
+-- | The two properties' condition: a line only axes of weight w name
+-- counts w / max w of a line (c), and adding lines of charge c lowers
+-- E/L iff c < E/L, deleting them raises it iff c < E/L; so with every
+-- counted weight equal (c = 1 >= E/L) both properties hold, and at
+-- c = 1/2 they hold exactly while E/L <= 1/2. For each tree t, the file
+-- f is added (small t, big t plus f); `at` picks the tree whose E/L
+-- decides: the small one when f is added, the big one when f is
+-- deleted. At or under 1/2 the big tree never scores above the small
+-- one; over it the big tree's E/L is below the small one's, and on some
+-- tree its score is above.
+halfCharged :: [Integer] -> MFile -> (MTree -> MTree -> MTree) -> [MTree] -> Bool
+halfCharged ws f at ts =
+  and [score b <= score s | (s, b, r) <- rows, r <= half]
+    && and [ratio b < ratio s | (s, b, r) <- rows, r > half]
+    && or [score b > score s | (s, b, r) <- rows, r > half]
+ where
+  half = 1 % 2
+  j = viaScored ws 10
+  score = jScore . j
+  ratio x = let v = j x in jE v / (jL v % 1)
+  rows = [(s, b, ratio (at s b)) | s <- ts, jL (j s) > 0, let b = withFile s f]
+
+-- | A one-line prose page a duplicate pair names (docdup alone, no size
+-- row), and a one-line unreferenced code file under every soft line.
+docOnly, deadOnly :: MFile
+docOnly = (blank 1) {mProse = True, mSpans = [(1, 1, 2)]}
+deadOnly = (blank 1) {mDead = True}
 
 -- | Single edits: a span added to a placed code file, its lines grown by 3.
 edits :: MTree -> [MTree]
