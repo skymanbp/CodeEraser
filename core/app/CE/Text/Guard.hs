@@ -12,7 +12,7 @@ catalogue :: Catalogue
 catalogue =
   table
     "duplicate\tce: content for {} duplicates {} indexed region(s): {}. Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.\tce：{} 的内容与 {} 处已索引区域重复：{}。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。\n\
-    \match\t{}:{}-{} ({} tokens)\n\
+    \match\t{}:{}-{} ({} tokens)\t{}:{}-{}（{} 个记号）\n\
     \over_budget\tce: this write leaves {} at {} lines, past the hard budget of {} (plan §4.1). Split the file instead of growing it.{}\tce：这次写入会让 {} 达到 {} 行，越过 {} 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。{}\n\
     \over_budget_cross\tce: this write takes {} from {} to {} lines, past the hard budget of {} (plan §4.1). Split the file instead of growing it.{}\tce：这次写入会让 {} 从 {} 行变成 {} 行，越过 {} 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。{}\n\
     \over_budget_new\tce: this write creates {} at {} lines, past the hard budget of {} (plan §4.1). Split it into smaller files.{}\tce：这次写入会新建 {}，共 {} 行，越过 {} 行的硬预算（计划 §4.1）。请把它拆成更小的文件。{}\n\

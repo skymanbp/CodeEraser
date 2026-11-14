@@ -101,8 +101,8 @@ baseline.days	改动窗口天数（省略 = 改动表保持为空）
 dedup	经 winnowing 指纹索引检测 T1/T2 克隆
 dedup.path	要索引的目录（默认当前目录）
 dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
-dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50；配合 --check 只准默认或更紧）
-dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭；配合 --check 只准默认或更紧）
+dedup.min_tokens	报告阈值（归一化记号数；默认 winnowing 保证阈值 50；配合 --check 只准默认或更紧）
+dedup.min_distinct	多样性地板：互异记号数更少的块被抑制（默认 7，实测校准；0 关闭；配合 --check 只准默认或更紧）
 dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决；判决降级则拒绝把门，退出 2）
 daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰启
 daemon.root	要服务的项目根
