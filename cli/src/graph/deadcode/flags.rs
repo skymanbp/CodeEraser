@@ -107,9 +107,7 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     if globs::selected(entries, path) {
         r |= ROLE_GLOB;
     }
-    if matches!(base, "README.md" | "CLAUDE.md")
-        || (path.starts_with("docs/") && matches!(base, "index.md" | "README.md"))
-    {
+    if doc_entry(path, base) {
         r |= ROLE_DOC;
     }
     if allow_claim(root, path) {
@@ -158,21 +156,27 @@ fn allow_claim(root: &Path, path: &str) -> bool {
         .is_ok_and(|text| crate::allow::allow_claim(&text, "ce:allow(deadcode)"))
 }
 
-/// Spec.hs is the cabal test-suite main-is convention (hspec/stack
-/// templates) — the test root nothing imports, like _test.go; the
-/// C-family `_test` files, Maven Surefire's test classes, busted's
-/// `_spec.lua` and testthat's `test-*.R` come from the table the
-/// convention word reads too (runner_test, plan v2.30). testthat's own
-/// directory is `tests/testthat/`, which the `tests/` rule reads.
+/// A documentation entry the liveness role keeps: a basename of the
+/// package's `doc_names` anywhere, or of a `doc_dirs` row under its
+/// directory (CE.Lang.Common.PathForms).
+fn doc_entry(path: &str, base: &str) -> bool {
+    let flags = &crate::tables::get().flags;
+    listed(flags.doc_names, base)
+        || flags
+            .doc_dirs
+            .iter()
+            .any(|&(dir, names)| path.starts_with(dir) && listed(names, base))
+}
+
+/// A test file: a basename a test runner discovers — the package's
+/// `runner_tests`, the one table the convention word reads too
+/// (runner_test) — or a path component of `test_dirs_role`. The
+/// directory row is this reader's own and narrower than the convention
+/// word's: a directory name is a project's habit, not a runner's rule
+/// (CE.Lang.Common.PathForms).
 fn is_test(path: &str, base: &str) -> bool {
-    base.ends_with("_test.go")
-        || runner_test(base)
-        || base.ends_with(".test.ts")
-        || (base.starts_with("test_") && base.ends_with(".py"))
-        || base == "Spec.hs"
-        || path.starts_with("tests/")
-        || path.contains("/tests/")
-        || path.contains("/__tests__/")
+    let dirs = crate::tables::get().flags.test_dirs_role;
+    runner_test(base) || path.split('/').rev().skip(1).any(|c| listed(dirs, c))
 }
 
 #[cfg(test)]

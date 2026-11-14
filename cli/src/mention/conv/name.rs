@@ -7,8 +7,8 @@
 //!
 //! Four sources, each a bit family:
 //!   - the PATH: `Test` by path component, package-root-qualified
-//!     directory, equal basename or pattern (`*` non-empty); `Ambient`
-//!     by the `.d.ts` family;
+//!     directory or file, or a runner's basename form; `Ambient` by the
+//!     `.d.ts` family (every row the package's, CE.Lang.Common.PathForms);
 //!   - the NAME × language: `Main` (Python/Haskell/C/C++/Java `main`),
 //!     `Protocol` (the framework names a loader spells for the author,
 //!     one table per language in protocol.rs);
@@ -20,43 +20,10 @@
 //! Every bit is an exemption (silence), the safe direction of the veto.
 
 use super::Conv;
-use super::protocol::protocol;
-use super::protocol::starred;
+use super::protocol::{listed, protocol, starred};
 use crate::scan::lang::Lang;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
-
-/// Path components that make a file a test file wherever they sit.
-const TEST_DIRS: [&str; 5] = ["test", "tests", "spec", "__tests__", "testdata"];
-/// Basename suffixes behind a non-empty stem (`starred`): the Go and
-/// Python `_test` files, hspec's `Spec.hs`.
-const TEST_SUFFIXES: [&str; 3] = ["_test.go", "_test.py", "Spec.hs"];
-
-/// The basenames a language's own test runner discovers, as `prefix *
-/// suffix` with the `*` non-empty (`starred`): the C-family `_test`
-/// convention (googletest's, Unity's) and Maven Surefire's default
-/// includes (`Test*.java`, `*Test.java`, `*Tests.java`,
-/// `*TestCase.java`; a bare `Test.java` earns nothing here, this
-/// file's non-empty star). The one table both test readers share — the
-/// dead-code role (graph/deadcode/flags.rs) and this category's path
-/// half: the two lists judge different things elsewhere, and agree on
-/// these by construction (plan v2.30, booklet §8). Lua: busted's
-/// `_spec` and the `_test` of luaunit and its kin; R: testthat's
-/// `test-` / `test_` files, which it finds under either extension case.
-const RUNNER_TESTS: &str = "\
-* _test.c
-* _test.cc
-* _test.cpp
-Test * .java
-* Test.java
-* Tests.java
-* TestCase.java
-* _spec.lua
-* _test.lua
-test- * .R
-test_ * .R
-test- * .r
-test_ * .r";
 
 /// The path-derived bits of every file, memoized per file, with the
 /// package-root stats memoized per DIRECTORY (one `Cargo.toml` stat
@@ -85,10 +52,8 @@ impl PathWords {
         if self.test_file(rel) {
             word |= Conv::Test.bit();
         }
-        if [".d.ts", ".d.mts", ".d.cts"]
-            .iter()
-            .any(|s| rel.ends_with(s))
-        {
+        let ambient = crate::tables::get().flags.ambient_suffixes;
+        if ambient.iter().any(|s| rel.ends_with(s)) {
             word |= Conv::Ambient.bit();
         }
         self.words.insert(rel.to_string(), word);
@@ -103,47 +68,42 @@ impl PathWords {
             .or_insert_with(|| root.join(dir).join("Cargo.toml").is_file())
     }
 
-    /// §3.2 bit 1, the path half: a component in TEST_DIRS; a
-    /// `benches`/`examples` component whose parent is a Cargo package
-    /// root; `conftest.py` / `Spec.hs` anywhere and `build.rs` as a
-    /// package root's direct child (the equal group); and the pattern
-    /// group with `*` non-empty — `_test.go` itself is a file the Go
-    /// toolchain ignores and earns nothing.
+    /// §3.2 bit 1, the path half, from the package's rows
+    /// (CE.Lang.Common.PathForms): a component in `test_dirs_word`; a
+    /// `cargo_dirs` component whose parent is a Cargo package root; a
+    /// `cargo_files` name as a package root's direct child; and a
+    /// basename a test runner discovers (`runner_tests`, the table the
+    /// liveness role reads too). The directory rows are this reader's
+    /// own: the liveness role keeps a narrower `test_dirs_role`, because
+    /// a directory name is a project's habit, not a runner's rule.
     fn test_file(&mut self, rel: &str) -> bool {
+        let flags = &crate::tables::get().flags;
         let comps: Vec<&str> = rel.split('/').collect();
         let (base, dirs) = comps.split_last().expect("a path has a basename");
         for (i, c) in dirs.iter().enumerate() {
-            if TEST_DIRS.contains(c) {
+            if listed(flags.test_dirs_word, c) {
                 return true;
             }
-            if matches!(*c, "benches" | "examples") && self.is_pkg_root(&dirs[..i].join("/")) {
+            if listed(flags.cargo_dirs, c) && self.is_pkg_root(&dirs[..i].join("/")) {
                 return true;
             }
         }
-        matches!(*base, "conftest.py" | "Spec.hs")
-            || (*base == "build.rs" && self.is_pkg_root(&dirs.join("/")))
-            || TEST_SUFFIXES.iter().any(|s| starred(base, "", s))
-            || runner_test(base)
-            || starred(base, "test_", ".py")
-            || infixed(base, ".test.")
-            || infixed(base, ".spec.")
+        (listed(flags.cargo_files, base) && self.is_pkg_root(&dirs.join("/"))) || runner_test(base)
     }
 }
 
-/// A basename the language's own test runner discovers (RUNNER_TESTS).
+/// A basename a language's own test runner discovers: a row of the
+/// package's `runner_tests` — `prefix * suffix` with the star non-empty
+/// (`starred`), or the whole basename.
 pub(crate) fn runner_test(base: &str) -> bool {
-    RUNNER_TESTS.lines().any(|row| {
-        let (prefix, suffix) = row.split_once('*').expect("a `prefix * suffix` row");
-        starred(base, prefix.trim(), suffix.trim())
-    })
-}
-
-/// `*<mid>*` with both stars non-empty — at ANY occurrence, so a
-/// basename opening with the infix (`.test.helper.test.ts`) still
-/// matches on its later one.
-fn infixed(base: &str, mid: &str) -> bool {
-    base.match_indices(mid)
-        .any(|(at, _)| at > 0 && at + mid.len() < base.len())
+    crate::tables::get()
+        .flags
+        .runner_tests
+        .iter()
+        .any(|row| match row.split_once('*') {
+            Some((prefix, suffix)) => starred(base, prefix.trim(), suffix.trim()),
+            None => base == *row,
+        })
 }
 
 /// The name × key bits of one declaration: `Main`, `Protocol`, and

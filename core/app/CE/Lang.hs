@@ -20,6 +20,7 @@ import qualified CE.Lang.Common.Boot3 as Boot3
 import qualified CE.Lang.Common.Graph as Graph
 import qualified CE.Lang.Common.Ladder as Ladder
 import qualified CE.Lang.Common.Ladder2 as Ladder2
+import qualified CE.Lang.Common.PathForms as PathForms
 import qualified CE.Lang.Common.Prose as Prose
 import qualified CE.Lang.Common.Protocol as Protocol
 import qualified CE.Lang.Cpp as Cpp
@@ -94,7 +95,7 @@ common :: Value
 common =
   decoded "common" $
     Common.outputs <> Common.languages <> Common.languages2 <> Common.walk
-      <> Graph.fourclass <> Graph.fourclass2 <> Graph.keys <> Graph.flags <> Graph.flags2 <> Graph.compdb
+      <> Graph.fourclass <> Graph.fourclass2 <> Graph.keys <> Graph.flags <> Graph.flags2 <> PathForms.flags3 <> Graph.compdb
       <> Graph.calls <> Graph.store <> Prose.tombstone <> Prose.tombstone2 <> Prose.docdup
       <> Protocol.protocol <> Protocol.protocol2 <> Protocol.protocol3
       <> Ladder.java <> Ladder.java2 <> Ladder.java3 <> Ladder.ts

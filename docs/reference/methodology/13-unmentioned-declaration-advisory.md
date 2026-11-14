@@ -170,13 +170,17 @@ index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign expo
 `Registration` for a Python decorator (the registrar table), any TS decorator and any Java annotation
 ([conv/mod.rs:235-244](../../../cli/src/mention/conv/mod.rs#L235)); `Member`; `DefaultExport`; `Ambient`; Rust
 `cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:100-109](../../../cli/src/mention/conv/mod.rs#L100)).
-The name-table half is computed at wire time from the path, the name and the key: a test
-file by path component, a `benches`/`examples` component only under a Cargo package
-root, `conftest.py`/`Spec.hs`/`build.rs` and the `*_test.go` / `test_*.py` / `.test.` /
-`.spec.` patterns and the basenames each newer language's own test runner discovers
-([conv/name.rs:30](../../../cli/src/mention/conv/name.rs#L30),
-[conv/name.rs:35-59](../../../cli/src/mention/conv/name.rs#L35),
-[conv/name.rs:112-130](../../../cli/src/mention/conv/name.rs#L112)); the `main` of Python,
+The name-table half is computed at wire time from the path, the name and the key, its path
+rows the core's definition package (release 1.10.0): a test file by a path component of
+`flags.test_dirs_word`, a `flags.cargo_dirs` component (`benches`, `examples`) only under a
+Cargo package root, `build.rs` only as a package root's own child, and a basename a test
+runner discovers — `flags.runner_tests`, the one table the liveness role reads too, each
+form as its runner documents it (Go's `*_test.go`, pytest's `test_*.py` / `*_test.py` /
+`conftest.py`, Jest's and Vitest's `*.test.*` / `*.spec.*` on the TypeScript family's
+extensions, hspec-discover's `*Spec.hs`, and the rows of the newer languages' runners)
+([conv/name.rs:79-93](../../../cli/src/mention/conv/name.rs#L79),
+[conv/name.rs:95-106](../../../cli/src/mention/conv/name.rs#L95),
+[PathForms.hs:11-64](../../../core/app/CE/Lang/Common/PathForms.hs#L11)); the `main` of Python,
 Haskell, C, C++ and Java ([conv/name.rs:151-167](../../../cli/src/mention/conv/name.rs#L151));
 the framework `Protocol` names a loader spells for the author — Python unittest/xunit/
 pluggy/Django hooks, TS file-form × export-name rows, Haskell `Paths_*` and hspec, and the

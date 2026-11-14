@@ -95,8 +95,15 @@ leaked! {
     Keys { config_names: Names, twin_exts: Rows }
     /// One tool convention: its name and where its file sits.
     Convention { name: Text, position: crate::graph::deadcode::Position }
-    /// The entry-file names and directories, and the tool conventions.
-    Flags { entry_names: Names, entry_dirs: Rows, entry_conventions: &'static [Convention] }
+    /// The entry-file names and directories, the tool conventions, and
+    /// the path forms the liveness role and the convention word read
+    /// (release 1.10.0, CE.Lang.Common.PathForms): the runner-test
+    /// basenames both take, each reader's test directories, the Cargo
+    /// rows, the doc entries and the ambient suffixes.
+    Flags { entry_names: Names, entry_dirs: Rows, entry_conventions: &'static [Convention],
+            runner_tests: Names, test_dirs_role: Names, test_dirs_word: Names,
+            cargo_dirs: Names, cargo_files: Names, doc_names: Names, doc_dirs: Rows,
+            ambient_suffixes: Names }
     /// The tombstone reading's vocabularies and numbers, and the site
     /// kinds' names by wire code.
     Tombstone { negations: Names, keywords: Names, en_prefix: Names, en_suffix: Names,
