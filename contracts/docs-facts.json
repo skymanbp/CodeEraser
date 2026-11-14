@@ -37,6 +37,12 @@
       "value": "4"
     },
     {
+      "id": "count:default_axes#word",
+      "source": "cli/src/score/knobs.rs::AXES minus the definition package's limits.score_opt_in",
+      "tier": "linked",
+      "value": "6"
+    },
+    {
       "id": "count:erase_classes#word",
       "source": "cli/src/erase/model.rs::CLASS_NAMES (live names)",
       "tier": "linked",
