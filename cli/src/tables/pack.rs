@@ -128,6 +128,11 @@ leaked! {
     DocCheck { failed: Names, reasons: Names }
     /// A degrading family's catalogue entry (7.9.0): its reasons by code.
     DocReasons { reasons: Names }
+    /// The scan document's catalogue entry: its held conditions in the
+    /// core's canonical order (CE.Scan `conditionNames`) — a condition
+    /// is sent by its place here, and the judgment's names are ordered
+    /// by it.
+    DocScan { conditions: Names }
     /// The erase document's catalogue entry: its class and reason names
     /// by their frozen codes (CE.Erase.Cost) — the trail writer names a
     /// class by them and the trail reader codes one back (release 1.10.0:
@@ -137,7 +142,7 @@ leaked! {
     /// (7.8.0): the schema ids and empty documents are the core's
     /// statement and never bound here.
     DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
-                 merge: DocReasons, erase: DocErase }
+                 merge: DocReasons, erase: DocErase, scan: DocScan }
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }
@@ -160,13 +165,17 @@ leaked! {
 /// The report documents' catalogue: the entries this side reads,
 /// whether each family's `--format json` face prints its document
 /// indented (`pretty`, 7.10.0, plan v2.32 step 5 ruling R5) — a
-/// catalogue fact, never a table here — and the churn entry's pairing
+/// catalogue fact, never a table here — the churn entry's pairing
 /// cap, which the measurement uses and the console names
-/// (`cochangeFileCap`).
+/// (`cochangeFileCap`), and the erase trail entry's two words: where
+/// the trail lives (`log`, root-relative) and the record schema
+/// (`record`) the writer stamps and the reader holds every line to.
 pub struct DocCatalogue {
     entries: DocEntries,
     pretty: HashMap<String, bool>,
     pub cochange_file_cap: usize,
+    pub trail_log: &'static str,
+    pub trail_record: &'static str,
 }
 
 impl std::ops::Deref for DocCatalogue {
@@ -192,6 +201,8 @@ pub struct DocCatalogueOwned {
     entries: <DocEntries as Leak>::Owned,
     pretty: HashMap<String, bool>,
     cochange_file_cap: usize,
+    trail_log: String,
+    trail_record: String,
 }
 
 impl TryFrom<serde_json::Value> for DocCatalogueOwned {
@@ -211,7 +222,14 @@ impl TryFrom<serde_json::Value> for DocCatalogueOwned {
                 "document.churn: no cochangeFileCap",
             ));
         };
+        let word = |key: &str| {
+            v["erase-trail"][key].as_str().map(String::from).ok_or_else(|| {
+                serde::de::Error::custom(format!("document.erase-trail: no {key}"))
+            })
+        };
         Ok(DocCatalogueOwned {
+            trail_log: word("log")?,
+            trail_record: word("record")?,
             entries: serde_json::from_value(v)?,
             pretty,
             cochange_file_cap,
@@ -226,6 +244,8 @@ impl Leak for DocCatalogue {
             entries: DocEntries::leak(owned.entries),
             pretty: owned.pretty,
             cochange_file_cap: owned.cochange_file_cap,
+            trail_log: Leak::leak(owned.trail_log),
+            trail_record: Leak::leak(owned.trail_record),
         }
     }
 }

@@ -11,8 +11,12 @@ use crate::scan::spec::NameStyle;
 
 /// Go test-function families where the toolchain itself accepts or
 /// requires underscores (go vet "tests": TestType_Method subtables,
-/// Example_suffix package examples).
-const GO_TEST_PREFIXES: &[&str] = &["Test", "Benchmark", "Example", "Fuzz"];
+/// Example_suffix package examples): the Go row's `test_prefixes` in
+/// the definition package (CE.Lang.Go). The fact is stated under every
+/// language; the core gates the exemption on Go's own code.
+fn go_test_prefixes() -> &'static [&'static str] {
+    crate::scan::spec::spec(Lang::Go).test_prefixes
+}
 
 /// The five naming facts as one scan.request `naming` row:
 /// [lang, style, upper, under, test]. Sentinel names like
@@ -52,7 +56,7 @@ fn style_code(style: NameStyle) -> i64 {
 /// this, and it exempted every mixedCaps language, not just Go.
 /// Both defects die with the judgment's move to the core.
 fn test_shape(core: &str) -> bool {
-    GO_TEST_PREFIXES.iter().any(|p| {
+    go_test_prefixes().iter().any(|p| {
         core.strip_prefix(p)
             .is_some_and(|rest| !rest.starts_with(char::is_lowercase))
     })

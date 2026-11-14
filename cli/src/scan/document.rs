@@ -15,9 +15,12 @@ use anyhow::{Context, Result};
 use serde_json::Value;
 
 /// The held conditions in the core's canonical order (CE.Scan
-/// `conditionNames`, the scan/1 vocabulary wire.rs checks replies
-/// against); a condition is sent by its place here.
-pub(super) const CONDITIONS: [&str; 3] = ["hard_line", "knobs_digest", "degraded"];
+/// `conditionNames`, the scan document's catalogue entry; the scan/1
+/// vocabulary wire.rs checks replies against); a condition is sent by
+/// its place here.
+pub(super) fn conditions() -> &'static [&'static str] {
+    crate::tables::get().document.scan.conditions
+}
 
 /// The scan document, its lines and its veto for a settled tree, over
 /// the link it was judged over when `held` is whole.
@@ -61,7 +64,7 @@ pub fn answer(core: &str, s: &Settled, held: document::Held) -> Result<Answer> {
     let failed: Vec<[usize; 1]> = s
         .failed
         .iter()
-        .filter_map(|n| CONDITIONS.iter().position(|c| c == n).map(|i| [i]))
+        .filter_map(|n| conditions().iter().position(|c| c == n).map(|i| [i]))
         .collect();
     let req = Request::new("scan")
         .range("files", files.len())

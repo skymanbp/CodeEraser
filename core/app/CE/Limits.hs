@@ -25,7 +25,10 @@
 -- cover/1's row ceiling, the T1/T2 run set is split between pairs by it;
 -- and `score_opt_in`, the axes that weigh 0 unless a project names their
 -- weight (the dead-file amendment), which the knob digest's shipped
--- weight table reads.
+-- weight table reads. Release 1.10.0 added `trend_defaults`, the trend
+-- family's two knobs at their defaults (CE.Trend.Cost's knob table, the
+-- digest's effective default), moved the co-occurrence term cap into
+-- `similar`, and dropped six ceilings no reader took.
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -41,7 +44,6 @@ import qualified CE.Merge.Cost as Merge
 import CE.Protocol.Version (maxLineBytes)
 import qualified CE.Scan.Cost as Scan
 import qualified CE.Similar.Bags as Bags
-import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
 import qualified CE.Structure.Cost as Structure
 import qualified CE.Trend.Cost as Trend
@@ -58,9 +60,6 @@ limits =
     , "candidates"
         .= object
           [ "unit_cap" .= Candidates.candidateUnitCap
-          , "sig_cap" .= Candidates.candidateSigCap
-          , "print_cap" .= Candidates.candidatePrintCap
-          , "near_cap" .= Candidates.candidateNearCap
           , "lsh_perms" .= perms
           , "lsh_bands" .= bands
           , "lsh_rows" .= rows
@@ -71,7 +70,6 @@ limits =
           , "jaccard_den" .= Docdup.jaccardDen
           , "doc_set_cap" .= Docdup.docSetCap
           , "doc_seq_cap" .= Docdup.docSeqCap
-          , "doc_corpus_cap" .= Docdup.docCorpusCap
           , "doc_pair_cap" .= Docdup.docPairCap
           ]
     , "dedup" .= object ["min_distinct" .= Dedup.minDistinct, "hot_cap" .= Dedup.hotCap]
@@ -80,11 +78,13 @@ limits =
     , "zone" .= object ["warn_permille" .= Verdict.zoneWarnPermille, "ask_permille" .= Verdict.zoneAskPermille]
     , "score_defaults" .= defaultsEcho
     , "score_opt_in" .= Verdict.optInAxes
+    , "trend_defaults" .= object ["min_points" .= knob 0, "decline_floor_micro" .= knob 1]
     , "caps" .= caps
     , "similar" .= similar
     ]
  where
   (perms, bands, rows) = Candidates.lshShape
+  knob c = lookup c Trend.knobTable
 
 -- | The clone object, in its two halves. What the T3 judgment decides by:
 -- the similarity threshold as a ratio and the smallest unit it judges —
@@ -121,13 +121,11 @@ caps =
     , "cover_rows" .= Dedup.coverRowCap
     ]
 
--- | The similar family's ceilings and the ranking's constants.
+-- | The ranking's constants and the co-occurrence term cap.
 similar :: Value
 similar =
   object
-    [ "similar_cap" .= Similar.similarCap
-    , "rank_cap" .= Rank.rankCap
-    , "k1" .= ratio Rank.k1
+    [ "k1" .= ratio Rank.k1
     , "b" .= ratio Rank.b
     , "idf_frac_bits" .= Rank.idfFracBits
     , "score_frac_bits" .= Rank.scoreFracBits
@@ -137,6 +135,7 @@ similar =
     , "min_ppmi" .= Rank.minPpmi
     , "ppmi_cap" .= Rank.ppmiCap
     , "ppmi_scale" .= Rank.ppmiScale
+    , "term_cap" .= Rank.termCap
     , "scored_df_ratio" .= Rank.scoredDfRatio
     , "neighbour_df_ratio" .= Rank.neighbourDfRatio
     ]

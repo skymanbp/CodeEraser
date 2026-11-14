@@ -141,13 +141,14 @@ pub(crate) struct TrendCfg {
 }
 
 impl TrendCfg {
-    /// The core's own defaults as declared values (`CE.Trend.Cost`
-    /// minPoints 3, floor 0): the digest's effective default, pinned
-    /// live by core_wire's mirror gate against the trend echo.
+    /// The core's own defaults as declared values (the package's
+    /// `limits.trend_defaults`, `CE.Trend.Cost`'s knob table): the
+    /// digest's effective default.
     pub(crate) fn core() -> Self {
+        let d = &crate::tables::get().limits.trend_defaults;
         Self {
-            min_points: Some(3),
-            decline_floor_micro: Some(0),
+            min_points: Some(d.min_points),
+            decline_floor_micro: Some(d.decline_floor_micro),
         }
     }
 }

@@ -12,7 +12,7 @@
 //! ever touched; the log is part of the contract, so unlike the
 //! observe feed its failures are errors, never swallowed telemetry.
 
-use crate::erase::model::{LOG_SCHEMA, Plan, Row};
+use crate::erase::model::{Plan, Row, log_rel, log_schema};
 use anyhow::{Context, Result, ensure};
 use std::path::Path;
 
@@ -161,7 +161,7 @@ fn write_target(root: &Path, chunk: &[&Row]) -> Result<()> {
 /// contract's audit trail, not telemetry.
 fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
     use std::io::Write;
-    let path = root.join(super::log::LOG_REL);
+    let path = root.join(log_rel());
     if let Some(dir) = path.parent() {
         crate::root::make_state_dir(dir)?;
     }
@@ -170,7 +170,7 @@ fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
         .map(|d| d.as_millis() as u64)
         .unwrap_or(0);
     let line = serde_json::json!({
-        "schema": LOG_SCHEMA,
+        "schema": log_schema(),
         "ts_ms": ts_ms,
         "class": r.class,
         "path": r.path,

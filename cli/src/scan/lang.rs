@@ -215,6 +215,13 @@ impl Lang {
         self.row().prose_only
     }
 
+    /// A document language (the package's `document` column: Markdown,
+    /// HTML): its units are anchors and headings, not declarations, and
+    /// a page names other pages and its own sections.
+    pub fn document(self) -> bool {
+        self.row().document
+    }
+
     /// Grammar for AST-backed languages; None = grammar-less (Markdown,
     /// plain text, the scan-only arm), the wire sentinel (never walked) or a plan
     /// v2.30 reserved code whose grammar lands with its own step.
@@ -234,14 +241,14 @@ impl Lang {
     }
 
     /// The T1/T2/T3 population (plan v2.30 §2): a grammar to tokenize
-    /// with AND a code language. HTML parses — docdup segments, the
-    /// reference ladder, section anchors — but never fingerprints: its
-    /// leaves carry no identifiers, so any two pages would hash into
-    /// one clone pair. The index refresh, the guard's clone probe and
+    /// with AND not a document language. HTML parses — docdup segments,
+    /// the reference ladder, section anchors — but never fingerprints: a
+    /// document's leaves carry no identifiers, so any two pages would
+    /// hash into one clone pair. The index refresh, the guard's clone probe and
     /// the unit cache read this; every other grammar consumer keeps
     /// reading `grammar()`.
     pub fn fingerprints(self) -> bool {
-        self.grammar().is_some() && self != Self::Html
+        self.grammar().is_some() && !self.document()
     }
 
     pub fn name(self) -> &'static str {

@@ -13,22 +13,21 @@ leaked! {
                   work_cap: u64 }
     /// The candidates family's ceilings and the MinHash/LSH shape
     /// (CE.Candidates.Cost).
-    CandidateLimits { unit_cap: usize, sig_cap: usize, print_cap: usize, near_cap: usize,
-                      lsh_perms: usize, lsh_bands: usize, lsh_rows: usize }
+    CandidateLimits { unit_cap: usize, lsh_perms: usize, lsh_bands: usize, lsh_rows: usize }
     /// The docdup judgment's ratio and ceilings (CE.Docdup.Cost).
     DocdupLimits { jaccard_num: u64, jaccard_den: u64, doc_set_cap: usize, doc_seq_cap: usize,
-                   doc_corpus_cap: usize, doc_pair_cap: usize }
+                   doc_pair_cap: usize }
     /// The T1/T2 report's diversity floor and the hot-group cap every
     /// hash-group walk chains by (CE.Dedup.Cost).
     DedupLimits { min_distinct: usize, hot_cap: usize }
-    /// The similar family's table ceiling (CE.Similar.Cost) and the
-    /// ranking's constants (CE.Similar.Rank.Cost): the frozen eval docs
-    /// echo them; the measuring side fetches by the two ratios and the
-    /// co-occurrence floor and computes nothing else with them.
-    SimilarLimits { similar_cap: usize, rank_cap: usize, k1: (i64, i64), b: (i64, i64),
+    /// The ranking's constants (CE.Similar.Rank.Cost): the frozen eval
+    /// docs echo them; the measuring side fetches by the two ratios and
+    /// the co-occurrence floor, and cuts a unit's co-occurring words at
+    /// `term_cap`, and computes nothing else with them.
+    SimilarLimits { k1: (i64, i64), b: (i64, i64),
                     idf_frac_bits: i64, score_frac_bits: i64, w_unit: i64, top_m: usize,
                     min_cooc: u64, min_ppmi: i64, ppmi_cap: i64, ppmi_scale: i64,
-                    scored_df_ratio: u64, neighbour_df_ratio: u64 }
+                    term_cap: usize, scored_df_ratio: u64, neighbour_df_ratio: u64 }
     /// The L1 judgment's request ceilings (CE.FourClass.Moves.Cost).
     MovesLimits { line_cap: usize, unit_cap: usize }
     /// The request ceilings the scan, flow, merge, structure and arch
@@ -52,6 +51,9 @@ leaked! {
     /// The zone's two tier lines, per mille of the (S, H] span
     /// (CE.Verdict.Cost `zoneWarnPermille` / `zoneAskPermille`).
     ZoneLimits { warn_permille: usize, ask_permille: usize }
+    /// The trend family's two knobs at their defaults (CE.Trend.Cost's
+    /// knob table): the knob digest's effective default.
+    TrendDefaults { min_points: u32, decline_floor_micro: u64 }
     /// The numbers requests are laid out by and candidates selected with
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
@@ -59,7 +61,7 @@ leaked! {
              graph: GraphLimits, zone: ZoneLimits, score_defaults: ScoreDefaults,
              // the dead-file amendment (plan v2.35): the axes that weigh 0
              // unless a project names their weight (CE.Verdict.Cost.optInAxes)
-             score_opt_in: &'static [usize] }
+             score_opt_in: &'static [usize], trend_defaults: TrendDefaults }
 }
 
 /// Each verdict knob's core default, by its wire name (the degraded

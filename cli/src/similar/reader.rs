@@ -13,7 +13,7 @@
 
 use super::bag::UnitBag;
 use super::corpus::Doc;
-use super::ppmi::{Cooc, TERM_CAP};
+use super::ppmi::{Cooc, term_cap};
 use super::rank::Postings;
 use super::store::bags_where;
 use super::terms::Channel;
@@ -255,7 +255,7 @@ impl Cooc for Reader<'_> {
         let mut n: HashMap<u64, u32> = HashMap::new();
         for (_, mut words) in units {
             words.sort_unstable();
-            words.truncate(TERM_CAP);
+            words.truncate(term_cap());
             if !words.contains(&a) {
                 continue;
             }

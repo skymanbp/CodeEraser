@@ -2,7 +2,9 @@
 -- the 300-line wall, the CE.Verdict.Knobs precedent): ONE authority
 -- table — (code, getter, setter) — so the effective fold and the
 -- reply's echo read the SAME rows and a knob cannot exist in one
--- direction only (the weights lesson, designed in).
+-- direction only (the weights lesson, designed in). The measuring side
+-- produces codes 12 and 13 only (the seam soft and hard lines); every
+-- other code is reached by the batteries alone.
 module CE.Structure.Knobs
   ( knobsOffence
   , knobTable

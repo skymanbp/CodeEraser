@@ -231,15 +231,12 @@ fn edge_kind(kind: &str, dst: &str) -> i64 {
     }
 }
 
-/// A page — a Markdown or HTML document — as an edge target, the
+/// A page — a document language's file — as an edge target, the
 /// doc→doc kind (`.markdown` labels like `.md`: the walker's own
 /// extension table answers). md::is_md_path stays the one answer for
 /// Markdown itself, which anchor validation asks.
 fn doc_page(dst: &str) -> bool {
-    matches!(
-        Lang::from_path(Path::new(dst)),
-        Some(Lang::Markdown | Lang::Html)
-    )
+    Lang::from_path(Path::new(dst)).is_some_and(Lang::document)
 }
 
 #[cfg(test)]

@@ -73,7 +73,7 @@ data ScanSpec = ScanSpec
   , scCocNestingKinds, scIfKinds, scCocFlatKinds, scCocNestOnlyKinds :: Kinds
   , scCocOperators, scCocJumpKinds, scLabelKinds, scCommentKinds, scLiteralDelims :: Kinds
   , scCallKinds, scCallNameKinds, scCallMemberKinds, scCallSelfWords :: Kinds
-  , scCallMemberScopes, scOwnerKinds, scCallImportKinds, scImportKinds :: Kinds
+  , scCallMemberScopes, scOwnerKinds, scCallImportKinds, scImportKinds, scTestPrefixes :: Kinds
   , scFnRequiredFields, scOpaqueFields :: Pairs
   , scNameStyle :: NameStyle
   , scCallFields :: (String, Maybe String)

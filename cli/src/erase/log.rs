@@ -8,14 +8,10 @@
 //! The document and the console lines are the core's
 //! (erase/document.rs `trail_answer`, CE.Erase.Document `trailDoc`).
 
-use crate::erase::model::{LOG_SCHEMA, class_names};
+use crate::erase::model::{class_names, log_rel, log_schema};
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use std::path::Path;
-
-/// Where apply.rs appends, root-relative (append_log; the core's
-/// `logRel` names the same place in the document).
-pub(super) const LOG_REL: &str = ".ce/erase-log.ndjson";
 
 /// One record exactly as apply.rs writes it — the same eight fields,
 /// read strictly: a writer that drifted is a NAMED unreadable line,
@@ -46,7 +42,7 @@ pub struct Log {
 /// Read the whole trail. A missing file is an empty, absent log (no
 /// apply ever ran here); any other read failure is an error.
 pub fn read(root: &Path) -> Result<Log> {
-    let path = root.join(LOG_REL);
+    let path = root.join(log_rel());
     let text = match std::fs::read_to_string(&path) {
         Ok(t) => t,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Log::default()),
@@ -71,8 +67,8 @@ pub fn read(root: &Path) -> Result<Log> {
 /// class it read (booklet §13 item 42).
 fn record(line: &str) -> std::result::Result<Record, String> {
     let r: Record = serde_json::from_str(line).map_err(|e| e.to_string())?;
-    if r.schema != LOG_SCHEMA {
-        return Err(format!("schema {:?} is not {LOG_SCHEMA}", r.schema));
+    if r.schema != log_schema() {
+        return Err(format!("schema {:?} is not {}", r.schema, log_schema()));
     }
     if !class_names().contains(&r.class.as_str()) {
         return Err(format!("class {:?} is not an erase class", r.class));

@@ -37,8 +37,9 @@ use std::path::Path;
 /// file `rel`, or None when the declaration is out of the domain.
 pub fn mention_name(rel: &str, key: &str) -> Option<String> {
     let lang = Lang::judged_path(Path::new(rel))?;
-    // an HTML `#id` is an anchor like a heading (plan v2.30 step 5)
-    if matches!(lang, Lang::Markdown | Lang::Html) {
+    // a document language's units are anchors (a heading, an HTML
+    // `#id`), never declarations
+    if lang.document() {
         return None;
     }
     let bare = match lang {

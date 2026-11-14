@@ -16,13 +16,16 @@ use anyhow::Result;
 use std::collections::{BTreeSet, HashMap};
 
 /// Distinct word terms of one unit entering the pair count; a unit
-/// past the cap contributes its first TERM_CAP terms in term order
-/// (deterministic) and is ledgered in `capped_units`.
-pub const TERM_CAP: usize = 96;
+/// past the cap contributes its first `term_cap()` terms in term order
+/// (deterministic) and is ledgered in `capped_units`. The core's
+/// constant (`CE.Similar.Rank.Cost.termCap`), read from the package.
+pub fn term_cap() -> usize {
+    crate::tables::get().limits.similar.term_cap
+}
 
 /// The word terms of one unit that enter the pair count: its distinct
 /// word-channel terms in term order (the bag is a BTreeMap, so every
-/// pair (a, b) drawn from the list has a < b), cut at TERM_CAP; the
+/// pair (a, b) drawn from the list has a < b), cut at `term_cap()`; the
 /// flag says the cut happened. The ONE owner of the cap — the
 /// in-memory table and the persisted writer count the same words.
 pub fn capped_words(bag: &UnitBag) -> (Vec<u64>, bool) {
@@ -32,8 +35,8 @@ pub fn capped_words(bag: &UnitBag) -> (Vec<u64>, bool) {
         .filter(|(_, (ch, _))| ch.is_words())
         .map(|(term, _)| *term)
         .collect();
-    let capped = words.len() > TERM_CAP;
-    words.truncate(TERM_CAP);
+    let capped = words.len() > term_cap();
+    words.truncate(term_cap());
     (words, capped)
 }
 

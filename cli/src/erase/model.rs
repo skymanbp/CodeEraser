@@ -9,9 +9,18 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 /// The audit trail's record schema — apply.rs writes it, log.rs reads
-/// it back (plan v2.29 step 9, O50). Bump-log: 0.1.0 = the M9 batch-3
-/// landing shape.
-pub const LOG_SCHEMA: &str = "ce.erase-log/0.1.0";
+/// it back (plan v2.29 step 9, O50): the core's spelling
+/// (CE.Erase.Document `recordSchema`), read from the erase trail's
+/// catalogue entry in the definition package since release 1.10.0.
+pub fn log_schema() -> &'static str {
+    crate::tables::get().document.trail_record
+}
+
+/// Where apply.rs appends and log.rs reads, root-relative: the core's
+/// `logRel`, from the same catalogue entry.
+pub fn log_rel() -> &'static str {
+    crate::tables::get().document.trail_log
+}
 
 /// The class names by their frozen codes (the wire's `class` field,
 /// erase/1) — the core's table (CE.Erase.Cost `classNames`, read from

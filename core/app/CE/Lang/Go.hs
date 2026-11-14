@@ -57,7 +57,15 @@ scan =
   \coc_jump_kinds = ['continue_statement', 'break_statement', 'goto_statement']\n\
   \label_kinds = ['label_name']\n\
   \comment_kinds = ['comment']\n\
-  \name_style = 'mixed_caps'\n"
+  \name_style = 'mixed_caps'\n\
+  \# The four function families `go test` runs, each `func <Family>Xxx`\n\
+  \# \"where Xxx does not start with a lowercase letter\" (the Go testing\n\
+  \# package's documentation, https://pkg.go.dev/testing: TestXxx,\n\
+  \# BenchmarkXxx, ExampleXxx with Example_suffix, FuzzXxx). A name of one\n\
+  \# of them may carry an underscore: the measuring side reads the shape,\n\
+  \# CE.Scan.Cost.conforms exempts Go's by that bit. Moved here from\n\
+  \# cli/src/scan/metrics/naming.rs in release 1.10.0.\n\
+  \test_prefixes = ['Test', 'Benchmark', 'Example', 'Fuzz']\n"
 
 scan2 :: String
 scan2 =

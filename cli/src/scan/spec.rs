@@ -123,6 +123,10 @@ pub struct LangSpec {
     pub comment_kinds: Kinds,
     /// Readability: function-name convention (plan §4.1 naming item).
     pub name_style: NameStyle,
+    /// The function families a language's test runner calls by a name
+    /// prefix (Go's four, the testing package's documentation); empty
+    /// for every other language. naming.rs reads Go's row.
+    pub test_prefixes: Kinds,
     /// Dedup: anonymous string-delimiter tokens that count as literal
     /// pieces. Per-language because `'` is a QUOTE only where the
     /// grammar lexes char/string content separately — in Rust `'` is

@@ -170,10 +170,10 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::
     }
     // the canonical order is the core's (CE.Scan conds), not the
     // set's; a name outside the vocabulary is a wire drift
-    j.failed = super::document::CONDITIONS
-        .into_iter()
-        .filter(|n| held.contains(*n))
-        .map(String::from)
+    j.failed = super::document::conditions()
+        .iter()
+        .filter(|n| held.contains(**n))
+        .map(|n| n.to_string())
         .collect();
     ensure!(
         j.failed.len() == held.len(),

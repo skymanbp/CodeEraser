@@ -32,6 +32,8 @@ use std::path::Path;
 /// The `assets`, `md` and `html` keys of a request whose batch holds
 /// Markdown or HTML sites; each file read once per sweep (the memo).
 pub fn add(body: &mut Value, scope: &Scope, sites: &[(Lang, &Site)]) {
+    // the two languages this function builds keys for, by name: not
+    // "a document language" (a third one would need keys of its own)
     if !sites
         .iter()
         .any(|(lang, _)| matches!(lang, Lang::Markdown | Lang::Html))

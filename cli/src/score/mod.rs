@@ -284,18 +284,11 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
         .iter()
         .enumerate()
         .filter_map(|(i, path)| {
-            // a Markdown or HTML page (plan v2.30 step 5) or a plain-
-            // text file (step 5b-8): the files the docdup axis counts
-            // over
-            matches!(
-                crate::scan::lang::Lang::from_path(Path::new(path)),
-                Some(
-                    crate::scan::lang::Lang::Markdown
-                        | crate::scan::lang::Lang::Html
-                        | crate::scan::lang::Lang::Text
-                )
-            )
-            .then_some(i as i64)
+            // a document language's page or a prose-only file: the
+            // files the docdup axis counts over
+            crate::scan::lang::Lang::from_path(Path::new(path))
+                .is_some_and(|l| l.document() || l.prose_only())
+                .then_some(i as i64)
         })
         .collect()
 }

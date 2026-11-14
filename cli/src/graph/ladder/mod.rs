@@ -192,16 +192,16 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
 /// `from M import …`, proto 9.1.0) — or is empty when no site carries
 /// any. An empty specifier is refused here by name before any ladder
 /// sees it — a bare-package rung or a package-root lookup would otherwise
-/// read `""` as a name; Markdown and HTML keep their own reading of an
-/// empty target (the document itself; the HTML rungs tell a page
-/// reference from an asset fetch of nothing).
+/// read `""` as a name; a document language keeps its own reading of an
+/// empty target (the page itself; the HTML rungs tell a page reference
+/// from an asset fetch of nothing).
 pub fn resolve_all_also(
     sites: &[(Lang, &Site)],
     names: &[&[String]],
     scope: &Scope,
 ) -> Result<Vec<(Outcome, Also)>, String> {
     let empty = |lang: Lang, site: &Site| {
-        site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html)
+        site.spec.is_empty() && !lang.document()
     };
     let held = |(lang, site): &(Lang, &Site)| !empty(*lang, site) && super::resolve::in_core(*lang);
     let core: Vec<(Lang, &Site)> = sites.iter().filter(|s| held(s)).copied().collect();

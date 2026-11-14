@@ -145,7 +145,7 @@ each spelled word term of the query appends its `topM = 3` best neighbours at we
 `parent × min(ppmi, ppmiCap) / ppmiScale` — at most half the parent's weight — and a term the
 query already spells is never appended; the top m are taken before the query's own words are
 dropped, so a spelled neighbour still holds one of the m places and the word appends fewer ([Cost.hs:63-75](../../../core/app/CE/Similar/Rank/Cost.hs#L63),
-[Score.hs:31-61](../../../core/app/CE/Similar/Rank/Score.hs#L31)). A unit past `TERM_CAP = 96` distinct
+[Score.hs:31-61](../../../core/app/CE/Similar/Rank/Score.hs#L31)). A unit past `termCap = 96` distinct
 word terms contributes its first 96 in term order and is ledgered as capped; the cap has one
 owner, so the in-memory table and the persisted writer count the same words
 ([ppmi.rs:18-42](../../../cli/src/similar/ppmi.rs#L18)). One bound does the pruning for free:

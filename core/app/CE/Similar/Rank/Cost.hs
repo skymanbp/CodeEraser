@@ -20,6 +20,7 @@ module CE.Similar.Rank.Cost (
   minPpmi,
   ppmiCap,
   ppmiScale,
+  termCap,
   scoredDfRatio,
   neighbourDfRatio,
   rankCap,
@@ -73,6 +74,14 @@ minPpmi, ppmiCap, ppmiScale :: Integer
 minPpmi = 2 * 2 ^ idfFracBits
 ppmiCap = 4 * 2 ^ idfFracBits
 ppmiScale = 8 * 2 ^ idfFracBits
+
+-- | How many of a unit's distinct word terms (in term order) enter the
+-- co-occurrence count; the rest of a longer unit is cut and ledgered.
+-- The measuring side counts the pairs (cli/src/similar/ppmi.rs) and
+-- reads the cap from the package; it lived there as its own literal
+-- until release 1.10.0.
+termCap :: Integer
+termCap = 96
 
 -- | What the two zero rules reduce to, stated for the measuring side's
 -- fetch: a term scores only if n > scoredDfRatio · df (a positive idf
