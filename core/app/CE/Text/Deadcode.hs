@@ -3,8 +3,10 @@
 -- the reason and trust words (cli/src/graph/deadcode/why.rs,
 -- cli/src/graph/deadcode.rs `conf_word`) and the `--check` lines
 -- (cli/src/main_cmds.rs `deadcode_cmd`). The verdict and advisory code
--- names and the advisory readings print in English under both
--- languages (they are the document's words).
+-- names print in English under both languages (they are the document's
+-- words); the advisory's reading prints in the console's language, by
+-- code (`adv_<code>`; the document keeps CE.Graph.Document's English
+-- reading as its machine word).
 module CE.Text.Deadcode (catalogue) where
 
 import CE.Text (Catalogue, table)
@@ -28,6 +30,10 @@ catalogue =
     \aggregate\taggregate: {}  {}  (reported, never a file verdict — decision 4)\t聚合件：{}  {}（仅报告，不作文件判决 — 决议 4）\n\
     \advisory_dropped\tadvisory: the core dropped the unmentioned table — more than {} candidate rows, none judged at symbol level\t顾问：核已丢弃未提及表——候选行超过 {}，符号层一行未判\n\
     \advisory\tadvisory: {}:{}  {}  {}  ({})\t顾问：{}:{}  {}  {}（{}）\n\
+    \adv_public_unmentioned\tno other file spells this exported name\t无他文件拼写这个导出名\n\
+    \adv_private_unmentioned\tno other file spells it; reachable only inside its own package\t无他文件拼写其名；只在本包内可及\n\
+    \adv_restricted_unmentioned\tno other file spells it; visible to its crate alone\t无他文件拼写其名；只对本 crate 可见\n\
+    \adv_reexported_unmentioned\tno other file spells it; a façade re-exports it\t无他文件拼写其名；由门面再导出\n\
     \advisory_census\tadvisory: {} unmentioned declaration(s) in {} file(s) — {} public, {} private, {} restricted, {} reexported; no other file spells them (an advisory, never a verdict)\t顾问：{} 个未提及声明分布于 {} 个文件——公开 {}、私有 {}、受限 {}、再导出 {}；无他文件拼写其名（仅建议，永不判决）\n\
     \advisory_cut\tadvisory: the candidate table was cut at the producer's {}-row cap — the rows above are a prefix, the same prefix every run\t顾问：候选表已在生产者侧 {} 行上限截断——以上各行是前缀，每次运行同一前缀\n\
     \summary\tdeadcode: {} nodes, {} kept edges, {} unreferenced, {} aggregate reports, {} unresolved sites (verdicts assume none lands in-corpus)\t死码：{} 节点，{} 保留边，{} 无引用，{} 聚合报告，{} 未解析调用点（判决假设它们皆不落语料内）\n\

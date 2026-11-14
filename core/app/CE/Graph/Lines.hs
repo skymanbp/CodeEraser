@@ -24,6 +24,7 @@
 -- and a word on every row would tell nothing (the document keeps
 -- `state` and its count); the summary then counts the files by state.
 -- A blocking dependent is marked by its state word like a blocking root.
+-- The advisory's reading prints by its code from the text table.
 module CE.Graph.Lines (lines', veto) where
 
 import CE.Document.Read
@@ -97,7 +98,7 @@ advisoryLines say doc
   | key "unmentioned" doc == Null = []
   | bool "unmentioned_dropped" doc = [say "advisory_dropped" [N unmentionedCap]]
   | otherwise =
-      [say "advisory" [R (key "name" a), N (int "line" a), R (key "symbol" a), W (txt "code" a), W (txt "why" a)] | a <- rowsA]
+      [say "advisory" [R (key "name" a), N (int "line" a), R (key "symbol" a), W (txt "code" a), P (say ("adv_" <> txt "code" a) [])] | a <- rowsA]
         <> [say "advisory_census" ([N (count rowsA), N (toInteger (S.size (S.fromList (map (key "name") rowsA))))] <> map by advisoryNames)]
         <> [say "advisory_cut" [N unmentionedCap] | bool "unmentioned_cut" doc]
  where
