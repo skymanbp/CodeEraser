@@ -52,29 +52,56 @@ case $0 in */*) here=${0%/*} ;; *) here=. ;; esac
 manifest="${CE_MANIFEST_FILE:-$here/manifest.env}"
 . "$manifest"
 data="${CLAUDE_PLUGIN_DATA:-}"
-# THE DATA FOLDER MUST BE THIS PLUGIN'S OWN. Claude Code sets
-# CLAUDE_PLUGIN_DATA for this plugin's hooks and MCP server, a folder
-# named after the plugin's id, `<plugin>-<marketplace>` (the plugins
-# reference, https://docs.claude.com/en/docs/claude-code/plugins-reference,
-# on persistent data; the installed folders read that way, this plugin's
-# `codeeraser-codeeraser`). A command run through the Bash tool does not get that:
-# its shell carries whatever an earlier hook exported, which can be another
-# plugin's folder. So the folder counts as ours only when its last path
-# segment (after a trailing separator, either separator: the value may be a
-# native Windows path) is the plugin's name or begins with it and `-`. A
-# folder that is not ours is never read from or written into: exactly one
-# folder of ours beside it is used instead (said once on stderr, on the
-# slow path only); none or several leave no data folder at all (the PATH
-# legs below, as when the variable is unset). Builtins only: the fast path
-# still forks nothing.
+# THE DATA FOLDER MUST BE THIS PLUGIN'S OWN. What the reference says
+# (https://code.claude.com/docs/en/plugins-reference, section
+# "Environment variables"): `${CLAUDE_PLUGIN_DATA}` is
+# `~/.claude/plugins/data/<id>/`, "created on first reference and kept
+# across plugin updates"; "`<id>` is the plugin identifier with every
+# character other than a letter, digit, `_`, or `-` replaced by `-`"; the
+# variables are exported to hook commands, MCP stdio servers and LSP
+# servers, and "aren't present in the environment of commands Claude runs
+# through the Bash tool, in the main session or in a subagent". The page
+# does not spell the identifier out: `claude plugin install` takes
+# `<plugin>@<marketplace>`, and this plugin's installed folder reads
+# `codeeraser-codeeraser`. What was observed (2026-11-14), against that
+# last sentence: a Bash-tool shell held this variable with ANOTHER
+# plugin's folder as its value. That is why the starter checks the name
+# instead of trusting the variable: the folder counts as ours only when
+# its last path segment (after a trailing separator, either separator:
+# the value may be a native Windows path) is the plugin's name or begins
+# with it and `-`. A folder that is not ours is never read from or
+# written into: exactly one folder of ours beside it is used instead
+# (said once on stderr, on the slow path only); none or several leave no
+# data folder at all (the PATH legs below, as when the variable is
+# unset). Builtins only: the fast path still forks nothing.
 plugin=codeeraser
 borrowed=""
 leaf() { l=${1%/}; l=${l%\\}; l=${l##*/}; l=${l##*\\}; }
+# A Windows path (a drive letter and a colon, or two backslashes) with
+# every backslash as `/`: pathname expansion splits a pattern on `/`
+# only, so the search below finds nothing beside a native path. Any
+# other value is left as spelled (on a POSIX system a backslash is a
+# name character). Builtins only: POSIX sh has no ${v//a/b}.
+slashed() {
+    sl=$1
+    case $sl in
+        [A-Za-z]:* | '\\'*) ;;
+        *) return 0 ;;
+    esac
+    sl_out=""
+    while :; do
+        case $sl in
+            *\\*) sl_out=$sl_out${sl%%\\*}/; sl=${sl#*\\} ;;
+            *) sl=$sl_out$sl; return 0 ;;
+        esac
+    done
+}
 leaf "$data"
 case "$l" in
     "$plugin" | "$plugin"-* | "") ;;
     *)
-        parent=${data%/}; parent=${parent%\\}; parent=${parent%"$l"}
+        slashed "$data"
+        parent=${sl%/}; parent=${parent%\\}; parent=${parent%"$l"}
         found=""
         # a bare name has no parent to look beside (never the cwd)
         [ -n "$parent" ] && for cand in "$parent$plugin" "$parent$plugin"-*; do

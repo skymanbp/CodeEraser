@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its twenty-one states with the just-built
+# drives plugin/bin/ce.sh through its twenty-two states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -46,6 +46,8 @@
 #                  it, the PATH leg answers as with no data folder
 #  20 own suffix : this plugin's folder under another marketplace suffix
 #                  is its own: the download lands in it, as state 1
+#  21 native path: state 18 with the value spelled as a native Windows
+#                  path (backslashes): the folder of ours is still found
 # Every other state's data folder is `codeeraser-<n>`: the starter uses a
 # folder only when its name is the plugin's or begins with it and `-`.
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh> <path-to-built-ce-core>
@@ -471,4 +473,31 @@ out=$(CE_MANIFEST_FILE="$work/manifest1.env" CE_BOOTSTRAP_BASE_URL="file://$work
 [ "$out" = "$want" ] || fail 20 "the own-suffixed folder did not serve: '$out'"
 [ -f "$work/codeeraser-other-market/$payload" ] || fail 20 "the download did not land in the own folder"
 
-echo "bootstrap_e2e: PASS (21 states, key=$key)"
+# --- state 21: state 18 with the value in native Windows form
+# (`cygpath -w`, backslashes; native paths reach the starter on Windows).
+# Pathname expansion splits a pattern on `/` only, so the search beside
+# the folder must see the separators as `/`. Runs wherever cygpath
+# exists; on MINGW / MSYS / CYGWIN without it the state FAILS (a skip on
+# the one platform it is about would prove nothing); elsewhere it says
+# it does not apply ---------------------------------------------------
+if command -v cygpath >/dev/null 2>&1; then
+    mkdir -p "$work/pd21/other-plugin" "$work/pd21/codeeraser-mkt"
+    echo keep >"$work/pd21/other-plugin/theirs.txt"
+    cp "$CE_BIN" "$work/pd21/codeeraser-mkt/$payload"
+    native21=$(cygpath -w "$work/pd21/other-plugin")
+    before21=$(ls -la "$work/pd21/other-plugin"; sha_of "$work/pd21/other-plugin/theirs.txt")
+    out=$(CE_MANIFEST_FILE="$work/manifest1.env" CE_AIRGAPPED=1 \
+          CLAUDE_PLUGIN_DATA="$native21" sh "$STARTER" --version 2>"$work/err21") || true
+    [ "$out" = "$want" ] || fail 21 "the own folder's copy did not answer for '$native21': '$out' $(cat "$work/err21")"
+    grep -q "another plugin's folder" "$work/err21" || fail 21 "the swap was not said: $(cat "$work/err21")"
+    after21=$(ls -la "$work/pd21/other-plugin"; sha_of "$work/pd21/other-plugin/theirs.txt")
+    [ "$before21" = "$after21" ] || fail 21 "the other plugin's folder changed"
+    [ -f "$work/pd21/codeeraser-mkt/bound-0.0.0-test.env" ] || fail 21 "the own folder was not stamped"
+else
+    case "$(uname -s)" in
+        MINGW* | MSYS* | CYGWIN*) fail 21 "cygpath is missing on $(uname -s): the native-path state cannot run" ;;
+        *) echo "bootstrap_e2e: state 21 (native Windows path) does not apply on $(uname -s)" ;;
+    esac
+fi
+
+echo "bootstrap_e2e: PASS (22 states, key=$key)"
