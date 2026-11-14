@@ -47,7 +47,7 @@ impl Probed {
 pub(super) fn probed(root: &Path, env: &Envelope, applied: Option<&Applied>) -> Probed {
     let started = std::time::Instant::now();
     let content = probed_text(env);
-    let matches = novel_matches(root, env, content);
+    let matches = novel_matches(root, env, content, applied);
     let credit = matches
         .as_deref()
         .filter(|ms| !ms.is_empty())
@@ -71,39 +71,115 @@ fn probed_text(env: &Envelope) -> &str {
 /// The rule denies NEW duplication only (K step 11 root fix): the
 /// FPR replay measured the whole-content probe denying full-file
 /// rewrites of files that already carry budgeted blocks. Write
-/// replaces the on-disk file, Edit replaces `old_string` — a match
-/// whose source region overlaps a match the REPLACED content already
-/// had is carried forward, not written anew. The baseline probe runs
-/// only when the first probe matched (no unbounded read for a clean
-/// write), and a degraded baseline subtracts nothing: allowance must
-/// never ride an unanswered question, the same discipline as
-/// probe_matches' array check. None = degraded, as before.
-fn novel_matches(root: &Path, env: &Envelope, content: &str) -> Option<Vec<serde_json::Value>> {
+/// replaces the on-disk file (its text off `Applied`, read once per
+/// hook call), Edit replaces `old_string` — what the REPLACED content
+/// already matched is carried forward, not written anew, counted with
+/// multiplicity (`novel`). The baseline probe runs only when the first
+/// probe matched (no read at all for a clean write), and an unreadable
+/// or degraded baseline subtracts nothing: allowance must never ride an
+/// unanswered question, the same discipline as probe_matches' array
+/// check. None = degraded, as before.
+fn novel_matches(
+    root: &Path,
+    env: &Envelope,
+    content: &str,
+    applied: Option<&Applied>,
+) -> Option<Vec<serde_json::Value>> {
     let file_path = &env.tool_input.file_path;
     let matches = probe_matches(root, file_path, content)?;
     if matches.is_empty() {
         return Some(matches);
     }
     let replaced = if env.tool_name == "Write" {
-        std::fs::read_to_string(file_path).unwrap_or_default()
+        applied.and_then(|a| a.prior_text(env)).unwrap_or_default()
     } else {
-        env.tool_input.old_string.clone()
+        env.tool_input.old_string.as_str()
     };
     if replaced.is_empty() {
         return Some(matches);
     }
-    let base = probe_matches(root, file_path, &replaced).unwrap_or_default();
-    Some(matches.into_iter().filter(|m| !carried(m, &base)).collect())
+    let base = probe_matches(root, file_path, replaced).unwrap_or_default();
+    Some(novel(matches, &base))
 }
 
-/// Same source file, overlapping source region: the replaced content
-/// already matched it, so the new content merely carries it.
-fn carried(m: &serde_json::Value, base: &[serde_json::Value]) -> bool {
-    let span = |v: &serde_json::Value| (v["start_line"].as_u64(), v["end_line"].as_u64());
-    let (ms, me) = span(m);
-    base.iter().any(|b| {
-        let (bs, be) = span(b);
-        b["file"] == m["file"] && bs <= me && ms <= be
+/// A match's place for `subtract`: its source file, first and last
+/// source line, and how many copies of that region it stands for.
+pub type Region = (String, u64, u64, u64);
+
+/// Subtraction with multiplicity, by source line, counted in UNITS: a
+/// match stands for `copies` units on its region (the probe's count of
+/// disjoint copies in the probed text). cover(l) = the sum of `copies`
+/// over the replaced text's matches covering source line l (same source
+/// file). The new text's matches are walked in the order the probe
+/// returned them, and each match's units one after another, keeping
+/// used(l): a unit is CARRIED iff some line of the region has
+/// used(l) < cover(l), and then adds 1 to used(l) on every line of the
+/// region; any other unit is NOVEL. A match is novel iff one of its
+/// units is, and is kept once (the deny names source regions).
+///   (P1) with one copy everywhere and at most one new match per
+///        replaced one on every line this is the older "any overlap
+///        carries" rule: a copy the probe split in two after an
+///        insertion inside it is still carried;
+///   (P2) n identical copies over a replaced text that held k of them
+///        are carried iff n <= k;
+///   (P3) a second copy whose run ends elsewhere (another length on the
+///        same source lines) is a second match and finds every line
+///        used up: novel.
+/// A match whose region or count is unanswered (`region` answers None,
+/// or a count below 1) is novel on the new side and adds no cover on
+/// the replaced side: an allowance never rides an unanswered question.
+/// Generic over the match's shape so the standing false-block replay
+/// (the tests' fpr_replay) reads this rule, not a copy of it.
+pub fn subtract<T>(matches: Vec<T>, base: &[T], region: impl Fn(&T) -> Option<Region>) -> Vec<T> {
+    use std::collections::HashMap;
+    // a match's lines, keyed by source file, and its unit count
+    let place = |m: &T| -> Option<(Vec<(String, u64)>, u64)> {
+        let (f, s, e, copies) = region(m).filter(|r| r.3 >= 1)?;
+        Some(((s..=e).map(|l| (f.clone(), l)).collect(), copies))
+    };
+    let mut cover: HashMap<(String, u64), u64> = HashMap::new();
+    for (keys, copies) in base.iter().filter_map(&place) {
+        for k in keys {
+            *cover.entry(k).or_default() += copies;
+        }
+    }
+    let mut used: HashMap<(String, u64), u64> = HashMap::new();
+    let mut out = Vec::new();
+    for m in matches {
+        let carried = place(&m)
+            .is_some_and(|(keys, copies)| (0..copies).all(|_| take_unit(&keys, &cover, &mut used)));
+        if !carried {
+            out.push(m);
+        }
+    }
+    out
+}
+
+/// One unit over `keys`: carried iff some line still has used < cover,
+/// and then it uses one on every line; false = a novel unit.
+fn take_unit(
+    keys: &[(String, u64)],
+    cover: &std::collections::HashMap<(String, u64), u64>,
+    used: &mut std::collections::HashMap<(String, u64), u64>,
+) -> bool {
+    let free =
+        |k: &(String, u64)| used.get(k).copied().unwrap_or(0) < cover.get(k).copied().unwrap_or(0);
+    if !keys.iter().any(free) {
+        return false;
+    }
+    for k in keys {
+        *used.entry(k.clone()).or_default() += 1;
+    }
+    true
+}
+
+/// The probe reply's matches through `subtract`: the source file is
+/// the match's `file`, the region its `start_line`..=`end_line`, the
+/// unit count its `copies` (absent or not a positive integer: None).
+fn novel(matches: Vec<serde_json::Value>, base: &[serde_json::Value]) -> Vec<serde_json::Value> {
+    subtract(matches, base, |v| {
+        let (s, e) = (v["start_line"].as_u64()?, v["end_line"].as_u64()?);
+        Some((v["file"].to_string(), s, e, v["copies"].as_u64()?))
     })
 }
 
@@ -186,3 +262,7 @@ pub(super) fn line(
     }
     line
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/guard/probe.rs"]
+mod tests;

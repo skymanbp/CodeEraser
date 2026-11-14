@@ -95,6 +95,7 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 [CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
 （写入让文件长过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for` 读 `scan::classes::Classes::thresholds_for`，`ce scan` 送每行的类号（`Classes::class_of`）、由核按 `gradeOverrides` 分级——两面读的是同一张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
+重复写入只拦新引入的部分：被替换的内容（Write 是盘上的原文件、Edit 是 `old_string`）里已有的副本照放；1.10.0 起按份数扣减——探针按来源段报出新内容里不相交的份数，被替换内容里有几份就免几份，在已带着一份副本的文件里再写进第二份照拦（此前第二份蹭第一份的放行）。规则与三条性质见方法学册 09，重放读数见 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)。
 分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
 这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`；v2.35 按钩子自己的总体、只在变长时出档复冻，自仓 184/9707 = 1.8955 %、requests 5/448 = 1.1160 %，两份都超 1 %，默认不变。硬预算自己的台账在同页「硬预算的台账」节。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
 观察档数据在 `<project>/.ce/observe.ndjson`（`.ce/` 里缺 `.gitignore` 时 ce 写一份内容为 `*` 的，整个目录不进版本库；已有的不改），
@@ -108,7 +109,7 @@ FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格
 `similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
 `flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
 核的定义包读不到（没有核、核的协议 major 与本构建不同）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
-feed 0.14.0 起加性出现：`budget` 行的 `before_lines` 与 `kind`（`crossing` 越线 / `growth` 增长）或 `carried: true`（已超线而不变长，放行），写前行数读不到时 `before_unread` 加一个 `degraded` 戳；`zone` 行的 `before_lines` 与不变长时的 `carried`；`probe` 行的 `unapplied`（Edit 套不上：`absent` / `unreadable` / `no_match` / `ambiguous`，`unreadable` 另带 `apply.degraded`）与 `relocated`（多少条匹配是搬移、按 HEAD 与写后树的计数由核 `relocate/1` 判），没有搬移信用时 `relocation` 写明原因；`settled` 行的 `reindex`（重量失败时）；
+feed 0.14.0 起加性出现：`budget` 行的 `before_lines` 与 `kind`（`crossing` 越线 / `growth` 增长）或 `carried: true`（已超线而不变长，放行），写前行数读不到时 `before_unread` 加一个 `degraded` 戳；`zone` 行的 `before_lines` 与不变长时的 `carried`；`probe` 行的 `unapplied`（Edit 套不上：`absent` / `unreadable` / `no_match` / `ambiguous`，`unreadable` 另带 `apply.degraded`）与 `relocated`（多少条匹配是搬移、按 HEAD 与写后树的计数由核 `relocate/1` 判），没有搬移信用时 `relocation` 写明原因；`settled` 行的 `reindex`（重量失败时）；读不成 JSON 的钩子信封、或没写工作目录的信封不判决，照样落一行 `degraded` 并写明原因（此前静默放行）；
 `session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

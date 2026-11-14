@@ -19,6 +19,11 @@ mod speech;
 mod tombstone;
 pub mod zone;
 
+// the duplicate class's subtraction, read by the standing false-block
+// replay too (cli/tests/it/fpr_replay.rs), so the instrument measures
+// the product's rule and keeps no copy of it
+pub use probe::{Region, subtract};
+
 use crate::config::Config;
 use envelope::Envelope;
 use speech::{Fence, Said};

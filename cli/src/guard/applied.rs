@@ -15,15 +15,41 @@
 //! probe line carries the reason.
 
 use super::envelope::Envelope;
-use std::path::Path;
 
 /// The text the write leaves, and — for an Edit — the line count the
 /// file had before it, off the same read (a Write's before side is
-/// counted only when a rule needs it: `before_lines`).
+/// read only when a rule needs it, and then once: `prior`).
 pub(super) struct Applied {
     pub text: String,
     /// Some for an Edit (the read it was applied to), None for a Write.
     pub before: Option<usize>,
+    /// A Write's target as it is on disk, read on first need by the
+    /// size classes (`before_lines`) or the duplicate class's
+    /// subtraction (`prior_text`), never twice in one hook call.
+    prior: std::cell::OnceCell<Result<Vec<u8>, std::io::ErrorKind>>,
+}
+
+impl Applied {
+    /// A Write's target bytes as they are on disk (read once), or the
+    /// I/O error kind (`NotFound` = the Write creates the file).
+    fn prior(&self, env: &Envelope) -> Result<&[u8], std::io::ErrorKind> {
+        let read = || std::fs::read(&env.tool_input.file_path).map_err(|e| e.kind());
+        self.prior
+            .get_or_init(read)
+            .as_deref()
+            .map_err(|kind| *kind)
+    }
+
+    /// The text a Write replaces, for the duplicate class's
+    /// subtraction: None when there is none to read — absent, an I/O
+    /// failure, bytes that are not UTF-8 — and an unreadable before
+    /// side subtracts nothing (H14: the probe read the disk again and
+    /// read an unreadable file as empty, the size classes as an error).
+    pub(super) fn prior_text(&self, env: &Envelope) -> Option<&str> {
+        self.prior(env)
+            .ok()
+            .and_then(|b| std::str::from_utf8(b).ok())
+    }
 }
 
 /// Why an Edit has no resulting text.
@@ -59,6 +85,7 @@ pub(super) fn apply(env: &Envelope) -> Result<Applied, Unapplied> {
         return Ok(Applied {
             text: t.content.clone(),
             before: None,
+            prior: std::cell::OnceCell::new(),
         });
     }
     let raw = std::fs::read_to_string(&t.file_path).map_err(|e| match e.kind() {
@@ -83,13 +110,14 @@ pub(super) fn apply(env: &Envelope) -> Result<Applied, Unapplied> {
     Ok(Applied {
         text,
         before: Some(before),
+        prior: std::cell::OnceCell::new(),
     })
 }
 
 /// The target's line count before this write: the Edit's own read, or
-/// for a Write a streaming count of the file on disk — `None` when it
-/// does not exist (absent is not empty: the sentence says "creates"),
-/// the I/O error otherwise.
+/// for a Write the count of the file on disk off the one read `prior`
+/// keeps — `None` when it does not exist (absent is not empty: the
+/// sentence says "creates"), the I/O error otherwise.
 pub(super) fn before_lines(
     env: &Envelope,
     applied: &Applied,
@@ -97,16 +125,13 @@ pub(super) fn before_lines(
     if let Some(n) = applied.before {
         return Ok(Some(n));
     }
-    match count_lines(Path::new(&env.tool_input.file_path)) {
-        Ok(n) => Ok(Some(n)),
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
-        Err(e) => Err(e.kind()),
+    match applied.prior(env) {
+        Ok(bytes) => super::zone::count_lines_in(bytes)
+            .map(Some)
+            .map_err(|e| e.kind()),
+        Err(std::io::ErrorKind::NotFound) => Ok(None),
+        Err(kind) => Err(kind),
     }
-}
-
-/// A file's line count from its bytes, streamed (zone::count_lines_in).
-fn count_lines(path: &Path) -> std::io::Result<usize> {
-    super::zone::count_lines_in(std::fs::File::open(path)?)
 }
 
 #[cfg(test)]

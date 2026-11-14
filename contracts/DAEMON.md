@@ -30,7 +30,8 @@
   纪律不变。
 - 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.4.0<!--/ce-->**：
   2.4.0 = 加性 `relocate{rows}` 请求与 `relocate_report{reply}` 应答、加性 `reindex{file_path}` 请求与 `reindex_report{report}` 应答，
-  `probe_report.matches` 每条加性 `at`（片段一侧的起始 token）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
+  `probe_report.matches` 每条加性 `at`（片段一侧的起始 token；有多份副本时取第一份的起点）与 `copies`（片段里这一段源码的副本数：
+  延伸后恰为同一段源码的起点里两两不相交的最多几份，1.10.0；钩子按副本数做减法）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
   数出每条匹配的 `[occHead, occNow]` 整数行，daemon 原样送核（relocate/1）；`reindex` 是 PostToolUse 腿请正在跑的 daemon 把刚落盘的一个文件在共享索引里重量一次
   ——只量指纹语言、作用域内、本项目自己的文件，只在索引存在且是当前这一代时，从不建索引；2.4.0 客户端遇 2.3.0 daemon 同走 §2 回执校验的 stale 路〕；
   2.3.0 = 加性 `document{body}` 请求与 `document_report{reply}` 应答〔计划 v2.32 步 5；`body` 是钩子拼好的整份

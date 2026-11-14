@@ -42,7 +42,10 @@ use std::path::Path;
 /// the PostToolUse leg re-measures the file that landed in the shared
 /// index (GD7) and, when that fails, writes a `settled` line carrying
 /// `reindex.degraded` (a settled line without an ask behind it is that
-/// record alone). Every prior key keeps its shape.
+/// record alone). An envelope the hook cannot read leaves the same
+/// `degraded` / `reason` line the inert hook writes, in the feed of the
+/// project the hook runs in: over the cap, not JSON, a cwd that is not
+/// a native path, or no cwd at all. Every prior key keeps its shape.
 ///
 /// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
 /// unreadable definition package writes one line — `probe` /
@@ -160,11 +163,13 @@ pub fn gated_envelope<T: serde::de::DeserializeOwned>(
     }
 }
 
-/// Why an envelope did not reach its hook. Unreadable or unparseable
-/// stdin is not a hook call at all; an envelope over the cap IS one —
-/// the largest Writes — and the hook passes it untraced no more
-/// (v2.35 G4, R3-13): the refusal is named and the gate writes it to
-/// the feed (inert.rs). Both keep the fail-open exit 0.
+/// Why an envelope did not reach its hook. Unreadable stdin is not a
+/// hook call at all; an envelope over the cap IS one — the largest
+/// Writes — and so is input that is not JSON (Claude Code sent
+/// something the hook cannot read): neither passes untraced (v2.35
+/// G4, R3-13; release 1.10.0 for the second): the refusal is named and
+/// the gate writes it to the feed (inert.rs). All keep the fail-open
+/// exit 0.
 pub(crate) enum Intake {
     Ignored,
     Refused(String),
@@ -190,7 +195,8 @@ fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Re
         let why = format!("hook envelope over the {ENVELOPE_CAP}-byte cap — not judged");
         return Err(Intake::Refused(why));
     }
-    serde_json::from_slice(&raw).map_err(|_| Intake::Ignored)
+    serde_json::from_slice(&raw)
+        .map_err(|_| Intake::Refused("hook envelope is not JSON — not judged".to_string()))
 }
 
 /// The observe feed, root-relative: the one spelling every reader and

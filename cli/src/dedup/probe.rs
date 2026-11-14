@@ -30,8 +30,16 @@ pub struct Match {
     pub distinct: usize,
     /// Where the run starts in the PROBED content's token stream (v2.35
     /// GD4, additive): the hook's relocation stage counts that very run
-    /// in HEAD and in the tree the write leaves.
+    /// in HEAD and in the tree the write leaves. With several copies, the
+    /// first one's start (every copy holds the same token sequence).
     pub at: usize,
+    /// How many copies of this source run the PROBED content holds:
+    /// the most pairwise disjoint [start, start + tokens) intervals
+    /// among the starts whose maximal extension is exactly this run
+    /// (release 1.10.0, additive in daemon 2.4.0). The guard subtracts
+    /// in these units, so a second copy written beside a carried one is
+    /// new duplication.
+    pub copies: usize,
 }
 
 /// What is about to be written: destination (excluded from matching —
@@ -115,7 +123,10 @@ fn load_candidate_streams(root: &Path, files: &BTreeSet<String>) -> Result<Strea
 }
 
 /// Extend every (snippet anchor, indexed instance) hash pair and keep
-/// verified maximal runs above the filter; dedupe by file-side span.
+/// verified maximal runs above the filter: ONE match per file-side run
+/// `(file, b0, len)`, pushed at its first hit, carrying the set of
+/// probed-side starts whose extension is exactly that run as `copies`
+/// (`disjoint`) and its smallest start as `at`.
 fn collect_matches(
     snippet: &[tokens::Token],
     fps: &[winnow::Fingerprint],
@@ -127,7 +138,8 @@ fn collect_matches(
     for inst in instances {
         by_hash.entry(inst.hash).or_default().push(inst);
     }
-    let mut runs: BTreeSet<(String, usize, usize)> = BTreeSet::new();
+    // each run's place in `out` and its probed-side starts
+    let mut runs: BTreeMap<(String, usize, usize), (usize, BTreeSet<usize>)> = BTreeMap::new();
     let mut out = Vec::new();
     for fp in fps {
         for inst in by_hash.get(&fp.hash).map(Vec::as_slice).unwrap_or(&[]) {
@@ -144,22 +156,45 @@ fn collect_matches(
                 .map(|t| t.hash)
                 .collect::<BTreeSet<_>>()
                 .len();
-            if len < f.min_tokens
-                || distinct < f.min_distinct
-                || !runs.insert((inst.file.clone(), b0, len))
-            {
+            if len < f.min_tokens || distinct < f.min_distinct {
                 continue;
             }
-            out.push(Match {
-                file: inst.file.clone(),
-                start_line: stream[b0].start_line,
-                end_line: stream[b0 + len - 1].end_line,
-                tokens: len,
-                distinct,
-                at: a0,
-            });
+            let (_, starts) = runs
+                .entry((inst.file.clone(), b0, len))
+                .or_insert_with(|| (out.len(), BTreeSet::new()));
+            if starts.insert(a0) && starts.len() == 1 {
+                out.push(Match {
+                    file: inst.file.clone(),
+                    start_line: stream[b0].start_line,
+                    end_line: stream[b0 + len - 1].end_line,
+                    tokens: len,
+                    distinct,
+                    at: a0,
+                    copies: 1,
+                });
+            }
         }
+    }
+    for ((_, _, len), (i, starts)) in &runs {
+        out[*i].at = starts.first().copied().unwrap_or(out[*i].at);
+        out[*i].copies = disjoint(starts, *len);
     }
     out.sort_by(|x, y| y.tokens.cmp(&x.tokens).then(x.file.cmp(&y.file)));
     out
+}
+
+/// The most pairwise disjoint intervals [a, a + len) among `starts`:
+/// one length, so taking them greedily in ascending start (a start
+/// once it is at least the last taken start + len) is a largest
+/// disjoint family — overlapping starts in periodic text count once.
+fn disjoint(starts: &BTreeSet<usize>, len: usize) -> usize {
+    let mut last: Option<usize> = None;
+    let mut n = 0;
+    for &a in starts {
+        if last.is_none_or(|l| a >= l + len) {
+            last = Some(a);
+            n += 1;
+        }
+    }
+    n
 }

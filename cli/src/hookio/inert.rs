@@ -37,8 +37,14 @@ pub fn gate<T: serde::de::DeserializeOwned>(
         return Gate::Shut;
     };
     let (got, cwd) = base(&env);
-    if got != event || cwd.is_empty() {
+    // another event's envelope is not this hook's call: silence; this
+    // event's envelope with no cwd is, and says so (it went quiet with
+    // no trace until release 1.10.0)
+    if got != event {
         return Gate::Shut;
+    }
+    if cwd.is_empty() {
+        return untraced(event, "hook envelope names no cwd — not judged");
     }
     // a POSIX-form cwd on Windows (`/d/x`) names no directory here: the
     // ascent fell to an unanchored path and the hook went quiet with no
