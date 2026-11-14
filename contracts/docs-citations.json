@@ -10579,12 +10579,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 313,
+    "line": 318,
     "text": "cargo run --locked -- rules tests --core \"$CORE_BIN\"\n\n# The churn axis (score axis 5) needs the git-subprocess walk —"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|b46f1feeefefbbc0|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 285,
+    "line": 290,
     "text": "cargo run --locked -- rules .. --core \"$CORE_BIN\"\n\n# The test suite is a READER of this tree (plan v2.18 step #12):\n# its files feed the graph's edges and the advisory's mention\n# universe above and are measured by nobody there. What measures\n# them is the submodule's own ce.toml + baseline — the same seven\n# gates, rooted at cli/tests (root resolution stops at its\n# ce.toml). 978 at the split, floor 975: the same bite; 987 once\n# the crate's unit tests rode in as unit/ (step #13), floor 983;\n# 983 once the clone axis re-denominated (v2.29 step 8), floor 979;\n# 953 once the T3 near-miss pairs entered the sim table (v2.30 step\n# 5b-9), floor 949 — then routine test additions read 948 twice\n# (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point\n# over a floor meant to fire on collapse; re-anchored at 945, five\n# under 950, the main tree's bite (2026-10-13). The extent law\n# (v2.35) reads 961; the floor re-anchors at 961, the margin it had\n# on main before the law (945 over 945).\n- name: Dogfood the test suite (its own ce.toml + baseline)"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|0abbb9a52b13c833|0": {
