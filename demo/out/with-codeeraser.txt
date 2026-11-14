@@ -43,7 +43,7 @@ dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | ex
 $ ce deadcode . --check
 unreferenced (born): docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
 unreferenced (orphaned): invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
-deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s): 0 standing, 1 orphaned, 1 born), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
-deadcode check: 2 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml [deadcode] block = ["orphaned", "born"] and a committed baseline
+deadcode: 11 nodes, 16 kept edges, 2 unreferenced (2 root(s); by state 0 standing, 1 orphaned, 1 born), 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
+deadcode check: 2 unreferenced file(s) listed, not blocked — a project blocks new ones with ce.toml [deadcode] block = ["orphaned", "born"] and a ce-baseline.json from ce baseline
 $ ce erase . --check
 erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)
