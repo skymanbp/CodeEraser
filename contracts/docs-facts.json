@@ -44,15 +44,15 @@
     },
     {
       "id": "count:erase_classes#word",
-      "source": "cli/src/erase/model.rs::CLASS_NAMES (live names)",
+      "source": "the definition package's document.erase.classes (CE.Erase.Cost classNames, live names)",
       "tier": "linked",
       "value": "3"
     },
     {
       "id": "count:erase_reasons#word",
-      "source": "cli/src/erase/model.rs::REASON_NAMES",
+      "source": "the definition package's document.erase.reasons (CE.Erase.Cost reasonNames)",
       "tier": "linked",
-      "value": "8"
+      "value": "9"
     },
     {
       "debt": "a Haskell list read by line; promote = the names on the hello wire",
@@ -78,7 +78,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "411"
+      "value": "412"
     },
     {
       "id": "count:grammars#word",
@@ -258,7 +258,7 @@
       "id": "report:erase-plan#schemaver",
       "source": "core/app/CE/Erase/Document.hs (schemaId)",
       "tier": "linked",
-      "value": "ce.erase-plan/0.4.0"
+      "value": "ce.erase-plan/0.5.0"
     },
     {
       "id": "report:erase-trail#schemaver",
