@@ -114,7 +114,7 @@ fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
 
 /// A graph/1 reply key read in the shape this ce reads; absent or in
 /// another shape it is wire skew (corelink::skew), the key and what this
-/// side reads it for named (release 1.10.0, item H40).
+/// side reads it for named (release 1.10.0).
 pub(super) fn keyed<T: serde::de::DeserializeOwned>(
     reply: &Value,
     key: &str,

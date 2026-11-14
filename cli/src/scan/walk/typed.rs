@@ -1,5 +1,5 @@
 //! A path a user typed, spelled the way the index spells one (release
-//! 1.10.0, item H33). Every face argument that names an indexed file —
+//! 1.10.0). Every face argument that names an indexed file —
 //! `ce similar --at`, `ce arch --impact`, their MCP arguments and GUI
 //! inputs — and the declared directories of `[graph] search_roots` read
 //! through this one function, so `./a.rs`, `.//a.rs`, `a\b.rs` and the

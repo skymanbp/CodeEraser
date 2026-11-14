@@ -43,8 +43,9 @@ impl Applied {
     /// The text a Write replaces, for the duplicate class's
     /// subtraction: None when there is none to read — absent, an I/O
     /// failure, bytes that are not UTF-8 — and an unreadable before
-    /// side subtracts nothing (H14: the probe read the disk again and
-    /// read an unreadable file as empty, the size classes as an error).
+    /// side subtracts nothing (before release 1.10.0 the probe read the
+    /// disk again and read an unreadable file as empty, the size classes
+    /// as an error).
     pub(super) fn prior_text(&self, env: &Envelope) -> Option<&str> {
         self.prior(env)
             .ok()

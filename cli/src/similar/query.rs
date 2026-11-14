@@ -39,7 +39,7 @@ impl Ask {
 
     /// The ask with its path spelled as the index spells one
     /// (`walk::typed`): every face's `at` names the same seat however it
-    /// was typed (release 1.10.0, item H33).
+    /// was typed (release 1.10.0).
     pub fn typed(&self, root: &std::path::Path) -> Ask {
         match self {
             Ask::At { path, line } => Ask::At {
