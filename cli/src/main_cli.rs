@@ -110,12 +110,12 @@ pub(crate) enum Cmd {
         db: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
-        /// Exit 1 when an unreferenced root is in a state
-        /// `[deadcode] block` names or the judgment degraded (a gate
-        /// that could not judge never passes), exit 2 when a block is
-        /// declared and no committed baseline records a comparison
-        /// point; with nothing declared an unreferenced file is listed
-        /// and fails nothing
+        /// Exit 1 when an unreferenced file is in a state
+        /// `[deadcode] block` names (the files that block are the roots
+        /// of those files) or the judgment degraded (a gate that could
+        /// not judge never passes), exit 2 when a block is declared and
+        /// ce-baseline.json holds no comparison point; with nothing
+        /// declared an unreferenced file is listed and fails nothing
         #[arg(long)]
         check: bool,
     },

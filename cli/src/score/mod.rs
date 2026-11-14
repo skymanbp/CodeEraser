@@ -322,9 +322,9 @@ fn judged_positions(
     }
     anyhow::ensure!(
         !j.gated.unanswered,
-        "[deadcode] block is declared and no committed baseline records which files were \
-         unreferenced — nothing to compare, refusing to judge; write one from the project root: \
-         CE_ACCEPT_BASELINE=1 ce baseline ."
+        "[deadcode] block is declared and ce-baseline.json holds no comparison point — nothing \
+         to compare, refusing to judge; from the project root run CE_ACCEPT_BASELINE=1 ce \
+         baseline . and commit the file"
     );
     let dead = match &w.gate {
         Some(g) => wire::Dead {
