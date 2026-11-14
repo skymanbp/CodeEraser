@@ -24,7 +24,7 @@ import ReferenceResolveGen
 import WireHarness (field, refusedBy, runLegs, setKey)
 
 battery :: IO Bool
-battery = runLegs names probes
+battery = runLegs (names <> ownNames) (probes <> ownPackage <> [queryLinks])
  where
   names =
     [ "resolve: reversing the sites reverses the answers"
@@ -44,13 +44,6 @@ battery = runLegs names probes
     , "resolve: the cap counts the request's text"
     , "resolve: a dynamic site is refused as dynamic though its spec names a walked file, and draws no also row"
     , "resolve: package.json main / bin / exports patterns and pyproject entry points name their walked files as entries"
-    , "resolve: an executable naming its own package in build-depends reaches the package's library"
-    , "resolve: a test suite naming its own package in build-depends reaches the package's library"
-    , "resolve: an internal import inside the library still answers from the library's own roots"
-    , "resolve: a PackageImports import naming the own package reaches its library"
-    , "resolve: an own package's hidden other-modules stay out of the depended rung"
-    , "resolve: an exposed module of the own library whose file is absent answers out of scope, External without the self-dependency"
-    , "resolve: a Markdown link's target is what precedes `?` and `#`"
     ]
   probes =
     [ all reversible (take 40 cases)
@@ -71,8 +64,6 @@ battery = runLegs names probes
     , dynamicRefused
     , entriesNamed
     ]
-      <> ownPackage
-      <> [queryLinks]
   base = request firstCase
   -- one site `[lang, kind, file, "x"]` in place of the base request's sites
   siteRefused :: Integer -> Integer -> Integer -> String -> Bool
@@ -167,6 +158,18 @@ entriesNamed = (askCore req >>= replyKey "entries") == Just want
   libPkg = "{\"exports\": {\"./feat-*\": \"./src/feat-*.ts\"}}"
   py = object ["project" .= object ["scripts" .= object ["app" .= ("app.cli:main" :: String)], "entry-points" .= object ["g" .= object ["p" .= ("app.plug" :: String)]]]]
   req = siteRequest langTs files [] (const ["ts" .= object ["packages" .= ["lib/package.json", "package.json", "web/package.json" :: String], "facts" .= [pkg "lib/package.json" libPkg, pkg "package.json" rootPkg, pkg "web/package.json" webPkg]], "py" .= object ["pyproject" .= py]])
+
+-- | The release 1.10.0 legs' names, in ownPackage's order, then queryLinks.
+ownNames :: [String]
+ownNames =
+  [ "resolve: an executable naming its own package in build-depends reaches the package's library"
+  , "resolve: a test suite naming its own package in build-depends reaches the package's library"
+  , "resolve: an internal import inside the library still answers from the library's own roots"
+  , "resolve: a PackageImports import naming the own package reaches its library"
+  , "resolve: an own package's hidden other-modules stay out of the depended rung"
+  , "resolve: an exposed module of the own library whose file is absent answers out of scope, External without the self-dependency"
+  , "resolve: a Markdown link's target is what precedes `?` and `#`"
+  ]
 
 -- | The own-package rule (release 1.10.0): one cabal holding a library
 -- (`hs-source-dirs: src`, exposing Lib and Data.List, hiding Hidden), an

@@ -146,19 +146,9 @@ fn collect_matches(
             let Some(stream) = streams.get(&inst.file) else {
                 continue;
             };
-            let Some((a0, b0, len)) =
-                pairs::extend(snippet, fp.start, stream, inst.start_tok, false)
-            else {
+            let Some((a0, b0, len, distinct)) = verified(snippet, fp.start, stream, inst, f) else {
                 continue;
             };
-            let distinct = snippet[a0..a0 + len]
-                .iter()
-                .map(|t| t.hash)
-                .collect::<BTreeSet<_>>()
-                .len();
-            if len < f.min_tokens || distinct < f.min_distinct {
-                continue;
-            }
             let (_, starts) = runs
                 .entry((inst.file.clone(), b0, len))
                 .or_insert_with(|| (out.len(), BTreeSet::new()));
@@ -181,6 +171,25 @@ fn collect_matches(
     }
     out.sort_by(|x, y| y.tokens.cmp(&x.tokens).then(x.file.cmp(&y.file)));
     out
+}
+
+/// One hash pair's maximal verified run, kept only above the filter:
+/// the probed-side start, the file-side start, the length and the
+/// run's distinct token count.
+fn verified(
+    snippet: &[tokens::Token],
+    at: usize,
+    stream: &[tokens::Token],
+    inst: &super::index::Instance,
+    f: Filter,
+) -> Option<(usize, usize, usize, usize)> {
+    let (a0, b0, len) = pairs::extend(snippet, at, stream, inst.start_tok, false)?;
+    let distinct = snippet[a0..a0 + len]
+        .iter()
+        .map(|t| t.hash)
+        .collect::<BTreeSet<_>>()
+        .len();
+    (len >= f.min_tokens && distinct >= f.min_distinct).then_some((a0, b0, len, distinct))
 }
 
 /// The most pairwise disjoint intervals [a, a + len) among `starts`:

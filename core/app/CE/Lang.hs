@@ -95,7 +95,7 @@ common :: Value
 common =
   decoded "common" $
     Common.outputs <> Common.languages <> Common.languages2 <> Common.walk
-      <> Graph.fourclass <> Graph.fourclass2 <> Graph.keys <> Graph.flags <> Graph.flags2 <> PathForms.flags3 <> Graph.compdb
+      <> Graph.fourclass <> Graph.fourclass2 <> Graph.keys <> Graph.flags <> Graph.flags2 <> PathForms.flags3 <> PathForms.flags4 <> Graph.compdb
       <> Graph.calls <> Graph.store <> Prose.tombstone <> Prose.tombstone2 <> Prose.docdup
       <> Protocol.protocol <> Protocol.protocol2 <> Protocol.protocol3
       <> Ladder.java <> Ladder.java2 <> Ladder.java3 <> Ladder.ts

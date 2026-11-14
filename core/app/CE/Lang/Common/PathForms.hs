@@ -49,8 +49,13 @@ flags3 =
   \  'Test * .java', '* Test.java', '* Tests.java', '* TestCase.java',\n\
   \  '* _spec.lua', '* _test.lua',\n\
   \  'test- * .R', 'test_ * .R', 'test- * .r', 'test_ * .r',\n\
-  \]\n\
-  \# Directory names are a project's habit, not a runner's rule, and the\n\
+  \]\n"
+
+-- | The rows each reader keeps for itself: the two test-directory rows,
+-- the Cargo rows, the doc entries and the ambient suffixes.
+flags4 :: String
+flags4 =
+  "# Directory names are a project's habit, not a runner's rule, and the\n\
   \# two readers judge them differently, so each has its own row; a\n\
   \# project whose runner reads another directory declares it in\n\
   \# `[graph] entry_globs`. The liveness role's: a path component named\n\

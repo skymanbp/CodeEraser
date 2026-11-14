@@ -14,6 +14,7 @@
 //! `super::` web as the import cycle it was).
 
 mod apply;
+mod doc_rows;
 pub mod document;
 pub mod gather;
 pub mod log;

@@ -7,7 +7,6 @@
 //! are FOUND; byte identity licenses only a doc span's erasure.
 
 use crate::erase::model::{Candidate, Source};
-use crate::erase::section::{self, Links};
 use crate::graph::deadcode::{self, Advisory};
 use crate::scan::lang::Lang;
 use crate::score::anchor::{UnitSpans, units_by_path};
@@ -39,7 +38,9 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     drop(idx);
     let mut cache = TextCache::new(root);
     let mut cands = dead_candidates(&dead, &lang_unres)?;
-    cands.extend(doc_candidates(&segs, &dups, &links, &mut cache)?);
+    cands.extend(super::doc_rows::doc_candidates(
+        &segs, &dups, &links, &mut cache,
+    )?);
     let mut out_of_class = BTreeMap::new();
     // the copy's dead VERDICT, not a death bit (7.0.0): the core's
     // publicDeadVerdicts bar reaches the twin road through this code
@@ -139,80 +140,6 @@ fn dead_candidates(
         .collect()
 }
 
-/// Verbatim doc duplicates: for every core-reported pair, the side
-/// whose section FEWER links land on is the candidate (release 1.10.0,
-/// erase/section.rs: a linked section is referenced), and on equal
-/// counts the path-lexicographically later occurrence, as before
-/// (erase.md: the survivor is chosen deterministically, never judged
-/// "better"). The candidate's count rides to the core, which refuses a
-/// linked candidate as `linked_section`.
-fn doc_candidates(
-    segs: &[crate::docdup::judge::candidates::SegRow],
-    dups: &[(usize, usize, crate::docdup::judge::Doc)],
-    links: &Links,
-    cache: &mut TextCache,
-) -> Result<Vec<Candidate>> {
-    let mut out = Vec::new();
-    for (a, b, m) in dups {
-        let key = |i: usize| (segs[i].path.as_str(), segs[i].start_line);
-        let mut linked = |i: usize| -> Result<i64> {
-            let s = &segs[i];
-            Ok(section::links_to(
-                links,
-                &s.path,
-                cache.text(&s.path)?,
-                s.start_line,
-            ))
-        };
-        let (la, lb) = (linked(*a)?, linked(*b)?);
-        let a_first = key(*a) <= key(*b);
-        let (keep, gone, n) = match la.cmp(&lb) {
-            std::cmp::Ordering::Less => (*b, *a, la),
-            std::cmp::Ordering::Greater => (*a, *b, lb),
-            _ if a_first => (*a, *b, lb),
-            _ => (*b, *a, la),
-        };
-        out.push(doc_candidate(&segs[keep], &segs[gone], m, n, cache)?);
-    }
-    Ok(out)
-}
-
-/// One verbatim doc candidate: `t` erased in favour of `s`, its
-/// section linked from `linked` places.
-fn doc_candidate(
-    s: &crate::docdup::judge::candidates::SegRow,
-    t: &crate::docdup::judge::candidates::SegRow,
-    m: &crate::docdup::judge::Doc,
-    linked: i64,
-    cache: &mut TextCache,
-) -> Result<Candidate> {
-    let eq = cache.slice(&s.path, s.start_line, s.end_line)?
-        == cache.slice(&t.path, t.start_line, t.end_line)?;
-    let mut provenance = format!(
-        "docdup: twin of {}:{}-{} (J {}/{}, verbatim {} words)",
-        s.path, s.start_line, s.end_line, m.inter, m.union, m.verbatim
-    );
-    if linked > 0 {
-        provenance += &format!("; section linked from {linked} places");
-    }
-    Ok(Candidate {
-        class: 1,
-        facts: [m.verbatim as i64, s.words, t.words, i64::from(eq)],
-        path: t.path.clone(),
-        span: Some((t.start_line, t.end_line)),
-        provenance,
-        source: Source::Doc {
-            twin: s.path.clone(),
-            span: (s.start_line, s.end_line),
-            jaccard: (m.inter as i64, m.union as i64),
-            verbatim: m.verbatim as i64,
-            linked,
-        },
-        // a doc twin's licence is byte equality, never liveness
-        sites: 0,
-    })
-}
-
 /// Whole-unit T1 twins: a dedup block side that covers at least one
 /// ENTIRE cached unit, byte-identical across sides. The candidate
 /// targets the dead side's FILE (unit-tier liveness is not unlocked —
@@ -231,18 +158,7 @@ fn twin_candidates(
 ) -> Result<Vec<Candidate>> {
     let mut out = Vec::new();
     for blk in blocks {
-        // the copy under sentence is the DEAD side when exactly one
-        // is; with neither dead, side b stands in so the advisory
-        // still names a concrete file (the row refuses either way)
-        let a = (&blk.a_file, blk.a_start, blk.a_end);
-        let b = (&blk.b_file, blk.b_start, blk.b_end);
-        let ((tf, ts, te), (of, os, oe)) = if dead_codes.contains_key(blk.a_file.as_str())
-            && !dead_codes.contains_key(blk.b_file.as_str())
-        {
-            (a, b)
-        } else {
-            (b, a)
-        };
+        let ((tf, ts, te), (of, os, oe)) = sides(blk, dead_codes);
         let covered = covered_units(units, tf, ts, te);
         if covered.is_empty() {
             *out_of_class
@@ -272,16 +188,40 @@ fn twin_candidates(
                 "dedup: T1 block twin at {of}:{os}-{oe} ({} tokens), covers unit {}",
                 blk.tokens, covered[0]
             ),
-            source: Source::Twin {
-                twin: of.clone(),
-                span: (os as i64, oe as i64),
-                tokens: blk.tokens as i64,
-                unit: covered[0].clone(),
-            },
+            source: twin_source(blk, (of, os, oe), &covered[0]),
             sites: lang_count(lang_unres, tf),
         });
     }
     Ok(out)
+}
+
+/// A block's two sides as (the copy under sentence, its twin): the DEAD
+/// side when exactly one is; with neither dead, side b stands in so the
+/// advisory still names a concrete file (the row refuses either way).
+type Side<'a> = (&'a String, usize, usize);
+fn sides<'a>(
+    blk: &'a crate::dedup::pairs::Block,
+    dead_codes: &BTreeMap<&str, i64>,
+) -> (Side<'a>, Side<'a>) {
+    let a = (&blk.a_file, blk.a_start, blk.a_end);
+    let b = (&blk.b_file, blk.b_start, blk.b_end);
+    if dead_codes.contains_key(blk.a_file.as_str()) && !dead_codes.contains_key(blk.b_file.as_str())
+    {
+        (a, b)
+    } else {
+        (b, a)
+    }
+}
+
+/// The twin row's provenance facts: the twin's span, the block's
+/// tokens, the first covered unit.
+fn twin_source(blk: &crate::dedup::pairs::Block, (of, os, oe): Side, unit: &str) -> Source {
+    Source::Twin {
+        twin: of.clone(),
+        span: (os as i64, oe as i64),
+        tokens: blk.tokens as i64,
+        unit: unit.to_string(),
+    }
 }
 
 /// Unit keys fully inside [start, end] on `path` (1-based inclusive).
