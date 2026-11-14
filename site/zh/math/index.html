@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=13">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/theme.css?v=14">
+<link rel="stylesheet" href="/style.css?v=14">
 </head>
 <body>
 <div class="wrap">
@@ -54,9 +54,9 @@
 
 <div class="fam formula">
   <h3 id="m-winnowing"><span class="n">01</span>窗口取指纹</h3>
-  <p class="job">判两个文件共享哪些归一化 token 串，指纹取每个窗口的最小值。</p>
+  <p class="job">判两个文件共享哪些归一化记号串，指纹取每个窗口的最小值。</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre>
-  <p class="note rule">no-miss 下界（Schleimer 等人 SIGMOD'03，作为正确性契约）：长度至少 <code>t</code> 的公共串含 <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，两份拷贝必选出它的同一个最小值。覆盖规则：按文件对，多样的段在前、长的在前，一段只有在某一侧有 <code>t</code> 个自己的 token 才进报告。</p>
+  <p class="note rule">no-miss 下界（Schleimer 等人 SIGMOD'03，作为正确性契约）：长度至少 <code>t</code> 的公共串含 <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，两份拷贝必选出它的同一个最小值。覆盖规则：按文件对，多样的段在前、长的在前，一段只有在某一侧有 <code>t</code> 个自己的记号才进报告。</p>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>
@@ -174,7 +174,7 @@ E_f   = min(n, max(T, n - S, churn))                     -- T = 发现点名的�
 
 <div class="fam formula">
   <h3 id="m-ratchet"><span class="n">05</span>棘轮</h3>
-  <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴的分数对着一份只准收紧的基线把门。</p>
+  <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴的分数（默认计<!--ce:count:default_axes#word-->六<!--/ce-->个，无引用轴只在 <code>[score.weights] deadcode</code> 点名时才计）对着一份只准收紧的基线把门。</p>
   <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- 复杂度行用 tolAbsCoc
 
 added   = current \ baseline        -- 非空 <span class="op">=&gt;</span> fail
@@ -209,7 +209,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + roiPhiMilli
 
 viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1，不做除法即判</pre>
-  <p class="note rule"><code>p</code> 凸且 <code>p(0) = 0</code>，故超可加，所以收益——算在<em>与判决家族同一条</em>曲线上（直接 import，不重推）——从不为负。</p>
+  <p class="note rule"><code>p</code> 凸且 <code>p(0) = 0</code>，故超可加，所以收益——算在拆分建议自己的凸曲线上（<code>CE.Structure.Zone</code>，协议 10.0.0 之前也是分数的尺寸收费）——从不为负。</p>
   <ul class="consts">
     <li><b>seamSoft S</b> 300</li>
     <li><b>seamHard H</b> 750</li>

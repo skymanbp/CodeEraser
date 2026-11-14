@@ -256,7 +256,7 @@ rect.c-bg-rect { fill: var(--bg); }
         <path data-edge-from="windows" data-edge-to="trend" data-edge-label="窗口 · diff" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="边 · 提及" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;249,613" d="M 162 613 L 249 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="analysis" data-edge-label="单元 · 边" data-edge-key="6" data-edge-id="refs-analysis" data-composition-points="162,613;230,613;230,727;249,727" d="M 162 613 L 230 613 L 230 727 L 249 727" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="score" data-edge-to="gate" data-edge-label="分数 · 位" data-edge-key="7" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
+        <path data-edge-from="score" data-edge-to="gate" data-edge-label="分数 · 位" data-edge-key="7" data-edge-id="score-gate" data-composition-points="377,157;466,157" d="M 377 157 L 466 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
         <path data-edge-from="clones" data-edge-to="reports" data-edge-label="行" data-edge-key="8" data-edge-id="clones-reports" data-composition-points="381,271;422.5,271;422.5,385;468,385" d="M 381 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="docdup" data-edge-to="reports" data-edge-label="行" data-edge-key="9" data-edge-id="docdup-reports" data-composition-points="377,385;468,385" d="M 377 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="trend" data-edge-to="reports" data-edge-label="行" data-edge-key="10" data-edge-id="trend-reports" data-composition-points="377,499;422.5,499;422.5,385;468,385" d="M 377 499 L 422.5 499 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
@@ -275,14 +275,14 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">后序 AST · 单元 shingle</text>
         </g>
 
-        <g id="node-tokens" data-node-id="tokens" data-node-label="token 指纹与词袋事实" tabindex="0" role="button" aria-label="聚焦 token 指纹与词袋事实, winnow k=25 w=26 · 词袋事实, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="winnow k=25 w=26 · 词袋事实" data-node-context="01 / 度量 · Rust">
-          <title>token 指纹与词袋事实 · winnow k=25 w=26 · 词袋事实 · 01 / 度量 · Rust</title>
+        <g id="node-tokens" data-node-id="tokens" data-node-label="记号指纹与词袋事实" tabindex="0" role="button" aria-label="聚焦 记号指纹与词袋事实, winnow k=25 w=26 · 词袋事实, 01 / 度量 · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="winnow k=25 w=26 · 词袋事实" data-node-context="01 / 度量 · Rust">
+          <title>记号指纹与词袋事实 · winnow k=25 w=26 · 词袋事实 · 01 / 度量 · Rust</title>
           <rect x="38" y="242" width="124" height="58" rx="6" class="c-mask" />
           <rect x="38" y="242" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(44 248) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
-          <text x="100" y="263" class="t-primary" font-size="9.6" font-weight="600" text-anchor="middle">token 指纹与词袋事实</text>
+          <text x="100" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">记号指纹与词袋事实</text>
           <text x="100" y="279" class="t-muted" font-size="7" text-anchor="middle">winnow k=25 w=26 · 词袋事实</text>
         </g>
 
@@ -391,16 +391,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="745" class="t-backend" font-size="7" text-anchor="middle">flow/1 · merge/1 · arch/1</text>
         </g>
 
-        <g id="node-gate" data-node-id="gate" data-node-label="门" tabindex="0" role="button" aria-label="聚焦 门, 退出码 · 六个 fail 条件, 03 / 交付" aria-pressed="false" data-node-kind="security" data-node-sublabel="退出码 · 六个 fail 条件" data-node-context="03 / 交付">
-          <title>门 · 退出码 · 六个 fail 条件 · 03 / 交付</title>
-          <rect x="468" y="128" width="124" height="58" rx="6" class="c-mask" />
-          <rect x="468" y="128" width="124" height="58" rx="6" class="c-security" stroke-width="1.5" />
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(474 134) scale(0.6875)">
+        <g id="node-gate" data-node-id="gate" data-node-label="门" tabindex="0" role="button" aria-label="聚焦 门, 退出码 · 七个 fail 条件, 03 / 交付" aria-pressed="false" data-node-kind="security" data-node-sublabel="退出码 · 七个 fail 条件" data-node-context="03 / 交付">
+          <title>门 · 退出码 · 七个 fail 条件 · 03 / 交付</title>
+          <rect x="466" y="128" width="128" height="58" rx="6" class="c-mask" />
+          <rect x="466" y="128" width="128" height="58" rx="6" class="c-security" stroke-width="1.5" />
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(472 134) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z" />
             <path d="m5.8 8 1.5 1.5 3-3" />
           </g>
           <text x="530" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">门</text>
-          <text x="530" y="165" class="t-muted" font-size="7" text-anchor="middle">退出码 · 六个 fail 条件</text>
+          <text x="530" y="165" class="t-muted" font-size="7" text-anchor="middle">退出码 · 七个 fail 条件</text>
         </g>
 
         <g id="node-reports" data-node-id="reports" data-node-label="报告与顾问" tabindex="0" role="button" aria-label="聚焦 报告与顾问, 每家族一种 schema · 顾问, 03 / 交付" aria-pressed="false" data-node-kind="database" data-node-sublabel="每家族一种 schema · 顾问" data-node-context="03 / 交付">
@@ -445,8 +445,8 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="205" y="660" class="t-muted" font-size="8" text-anchor="middle">单元 · 边</text>
         </g>
         <g data-edge-from="score" data-edge-to="gate" data-edge-label="分数 · 位" data-edge-key="7" data-edge-id="score-gate">
-          <rect x="394.45" y="136" width="56.1" height="16" rx="4" class="c-mask" />
-          <text x="422.5" y="147" class="t-security" font-size="8" text-anchor="middle">分数 · 位</text>
+          <rect x="393.45" y="136" width="56.1" height="16" rx="4" class="c-mask" />
+          <text x="421.5" y="147" class="t-security" font-size="8" text-anchor="middle">分数 · 位</text>
         </g>
         <g data-edge-from="clones" data-edge-to="reports" data-edge-label="行" data-edge-key="8" data-edge-id="clones-reports">
           <rect x="382" y="260" width="34" height="16" rx="4" class="c-mask" />

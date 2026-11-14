@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=13">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/theme.css?v=14">
+<link rel="stylesheet" href="/style.css?v=14">
 <link rel="stylesheet" href="/viewer.css?v=4">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -97,7 +97,7 @@
     <figcaption>同一份判决的树状视角：子树问题上卷进热轨，每行点名判轴。</figcaption>
   </figure>
   <figure class="shot" id="shot-candidates" role="tabpanel" aria-labelledby="tab-candidates">
-    <div class="stage"><img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI：删除候选浏览器，列出相似文件对与块/token 计数" loading="lazy"></div>
+    <div class="stage"><img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI：删除候选浏览器，列出相似文件对与块/记号计数" loading="lazy"></div>
     <figcaption>删除候选：相似度 × 图位置 × 变动史，即 <code>ce join</code> 打印的那批行。</figcaption>
   </figure>
 </div>
@@ -105,7 +105,7 @@
 <div class="eyebrow">判决</div>
 <h2>判决家族</h2>
 <div class="grid cmds">
-  <div class="card wide"><h3>ce check</h3><p>总门：<!--ce:count:axes#word-->七<!--/ce-->轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p><a class="go" href="/zh/how/#f05">05 · 评分与棘轮</a></div>
+  <div class="card wide"><h3>ce check</h3><p>总门：<!--ce:count:axes#word-->七<!--/ce-->轴合成 0–1000 分（默认计<!--ce:count:default_axes#word-->六<!--/ce-->个，无引用轴只在 <code>[score.weights] deadcode</code> 点名时才计），对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p><a class="go" href="/zh/how/#f05">05 · 评分与棘轮</a></div>
   <div class="card"><h3>ce dedup</h3><p>winnowing 指纹的 T1/T2 克隆检测，克隆块预算只准往下棘。</p><a class="go" href="/zh/how/#f01">01 · T1/T2 克隆</a></div>
   <div class="card"><h3>ce clone</h3><p>T3 近似克隆，改名换形的拷贝一并抓，由 Haskell 核按树编辑距离判决。</p><a class="go" href="/zh/how/#f02">02 · T3 近似克隆</a></div>
   <div class="card"><h3>ce deadcode</h3><p>缓存引用图上的存活性：入口到不了的文件列为无引用，放在它所随的根之下，默认什么都不拦；项目用 <code>[deadcode] block</code> 拦新出现的无引用文件，依附与根一样。旁边的未提及声明顾问永不把门翻红。</p><a class="go" href="/zh/how/#f06">06 · 死代码</a></div>
@@ -128,9 +128,9 @@
 <h2 id="math">数学</h2>
 <p class="cap">对实测事实的整数或精确有理数算术；每条规则钉在实现它的源码行上。</p>
 <div class="math">
-<div class="eq"><a class="eq-name" href="/zh/math/#m-winnowing"><b>01</b>窗口取指纹</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre></div>
+<div class="eq"><a class="eq-name" href="/zh/math/#m-winnowing"><b>01</b>窗口取指纹</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre></div>
 <div class="eq"><a class="eq-name" href="/zh/math/#m-ted"><b>02</b>树编辑距离</a><pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre></div>
-<div class="eq"><a class="eq-name" href="/zh/math/#m-score"><b>05</b>分数与棘轮</a><pre>score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+<div class="eq"><a class="eq-name" href="/zh/math/#m-score"><b>05</b>分数与棘轮</a><pre>score   = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
 tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/zh/math/">全部十六条规则 →</a></p>

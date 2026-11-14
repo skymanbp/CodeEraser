@@ -185,18 +185,18 @@ header.site nav a:last-child[href$="/releases/latest"]:hover { border-color: var
 .cta-note { font-size: var(--fs-sm); color: var(--muted); }
 .cta-note a { color: var(--text-2); }
 
-.lede, .page-head { padding: clamp(56px, 7vw, 96px) 0 0; }
-.lede .eyebrow, .page-head .eyebrow { margin: 0 0 var(--s-2); }
-.lede h1, .page-head h1 { font-size: var(--fs-h1); line-height: 1.08; max-width: 18em; }
-.lede p, .page-head p { color: var(--text-2); margin-top: var(--s-2); max-width: var(--measure); }
-.lede > p:first-of-type, .page-head > p:first-of-type { font-size: var(--fs-lead); line-height: 1.55; color: var(--text); max-width: var(--measure-lead); margin-top: var(--s-3); }
-:lang(zh) :is(.lede, .page-head) > p:first-of-type { line-height: 1.8; }
+.lede { padding: clamp(56px, 7vw, 96px) 0 0; }
+.lede .eyebrow { margin: 0 0 var(--s-2); }
+.lede h1 { font-size: var(--fs-h1); line-height: 1.08; max-width: 18em; }
+.lede p { color: var(--text-2); margin-top: var(--s-2); max-width: var(--measure); }
+.lede > p:first-of-type { font-size: var(--fs-lead); line-height: 1.55; color: var(--text); max-width: var(--measure-lead); margin-top: var(--s-3); }
+:lang(zh) .lede > p:first-of-type { line-height: 1.8; }
 .lede p em { color: var(--paper); font-style: normal; font-weight: 600; }
 .lede p strong { color: var(--text); font-weight: 600; }
 .lede p code { color: var(--text); font-size: 0.92em; }
 
 /* a framed figure straight after a page's opener keeps a block's breath */
-:is(.lede, .page-head) + :is(.arch, .term, .installs) { margin-top: var(--s-5); }
+.lede + :is(.arch, .term, .installs) { margin-top: var(--s-5); }
 
 /* Folded prose: the long form under a short one, opened on demand.
    Native <details>, so no script and every word stays in the page;

@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=13">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/theme.css?v=14">
+<link rel="stylesheet" href="/style.css?v=14">
 <link rel="stylesheet" href="/viewer.css?v=4">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -106,7 +106,7 @@ note: 0 blocks collapsed into existing members, 395 intra-file pairs off the sim
 <div class="eyebrow">Judgment</div>
 <h2>Judgment families</h2>
 <div class="grid cmds">
-  <div class="card wide"><h3>ce check</h3><p>The gate: one 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p><a class="go" href="/how/#f05">05 · scoring and ratchet</a></div>
+  <div class="card wide"><h3>ce check</h3><p>The gate: one 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes (<!--ce:count:default_axes#word-->six<!--/ce--> count by default, the unreferenced axis only when <code>[score.weights] deadcode</code> names it), a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p><a class="go" href="/how/#f05">05 · scoring and ratchet</a></div>
   <div class="card"><h3>ce dedup</h3><p>T1/T2 clones by winnowing fingerprints, under a clone-block budget that only ratchets down.</p><a class="go" href="/how/#f01">01 · T1/T2 clones</a></div>
   <div class="card"><h3>ce clone</h3><p>T3 near-clones, renamed and reshaped copies included, judged by tree edit distance in the Haskell core.</p><a class="go" href="/how/#f02">02 · T3 near-miss clones</a></div>
   <div class="card"><h3>ce deadcode</h3><p>Liveness on the cached reference graph: a file no entry reaches is listed as unreferenced, under the root it falls with, and fails nothing by default; a project blocks new unreferenced files with <code>[deadcode] block</code>, a dependent as much as a root. An unmentioned-declaration advisory beside it never reddens a gate.</p><a class="go" href="/how/#f06">06 · dead code</a></div>
@@ -131,7 +131,7 @@ note: 0 blocks collapsed into existing members, 395 intra-file pairs off the sim
 <div class="math">
 <div class="eq"><a class="eq-name" href="/math/#m-winnowing"><b>01</b>Winnowing</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre></div>
 <div class="eq"><a class="eq-name" href="/math/#m-ted"><b>02</b>Tree edit distance</a><pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre></div>
-<div class="eq"><a class="eq-name" href="/math/#m-score"><b>05</b>The score and the ratchet</a><pre>score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+<div class="eq"><a class="eq-name" href="/math/#m-score"><b>05</b>The score and the ratchet</a><pre>score   = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
 tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/math/">All sixteen rules →</a></p>

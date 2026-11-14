@@ -40,7 +40,7 @@
     {"id": "trend", "type": "backend", "label": "Change verdicts", "sublabel": "Theil–Sen · join · conjunction", "stage": 1, "row": 3, "width": 124, "tag": "trend/2 · audit/1 · tombstone/1"},
     {"id": "liveness", "type": "backend", "label": "Liveness & erase", "sublabel": "ladders · SCC · four-way · rules", "stage": 1, "row": 4, "width": 132, "tag": "graph/1 · erase/1 · query/1"},
     {"id": "analysis", "type": "backend", "label": "Flow, merge & arch", "sublabel": "CFG · anti-unify · layers", "stage": 1, "row": 4, "yOffset": 114, "width": 132, "tag": "flow/1 · merge/1 · arch/1"},
-    {"id": "gate", "type": "security", "label": "Gate", "sublabel": "exit code · six fail conditions", "stage": 2, "row": 0, "width": 124},
+    {"id": "gate", "type": "security", "label": "Gate", "sublabel": "exit code · seven fail conditions", "stage": 2, "row": 0, "width": 128},
     {"id": "reports", "type": "database", "label": "Reports & advisory", "sublabel": "per-family schema · advisory", "stage": 2, "row": 2, "width": 124}
   ],
   "flows": [

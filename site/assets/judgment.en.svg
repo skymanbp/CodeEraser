@@ -256,7 +256,7 @@ rect.c-bg-rect { fill: var(--bg); }
         <path data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · diffs" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;249,613" d="M 162 613 L 249 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="refs" data-edge-to="analysis" data-edge-label="units · edges" data-edge-key="6" data-edge-id="refs-analysis" data-composition-points="162,613;230,613;230,727;249,727" d="M 162 613 L 230 613 L 230 727 L 249 727" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="7" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
+        <path data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="7" data-edge-id="score-gate" data-composition-points="377,157;466,157" d="M 377 157 L 466 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
         <path data-edge-from="clones" data-edge-to="reports" data-edge-label="rows" data-edge-key="8" data-edge-id="clones-reports" data-composition-points="381,271;422.5,271;422.5,385;468,385" d="M 381 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="docdup" data-edge-to="reports" data-edge-label="rows" data-edge-key="9" data-edge-id="docdup-reports" data-composition-points="377,385;468,385" d="M 377 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="trend" data-edge-to="reports" data-edge-label="rows" data-edge-key="10" data-edge-id="trend-reports" data-composition-points="377,499;422.5,499;422.5,385;468,385" d="M 377 499 L 422.5 499 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
@@ -391,16 +391,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="745" class="t-backend" font-size="7" text-anchor="middle">flow/1 · merge/1 · arch/1</text>
         </g>
 
-        <g id="node-gate" data-node-id="gate" data-node-label="Gate" tabindex="0" role="button" aria-label="Focus Gate, exit code · six fail conditions, 03 / Deliver" aria-pressed="false" data-node-kind="security" data-node-sublabel="exit code · six fail conditions" data-node-context="03 / Deliver">
-          <title>Gate · exit code · six fail conditions · 03 / Deliver</title>
-          <rect x="468" y="128" width="124" height="58" rx="6" class="c-mask" />
-          <rect x="468" y="128" width="124" height="58" rx="6" class="c-security" stroke-width="1.5" />
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(474 134) scale(0.6875)">
+        <g id="node-gate" data-node-id="gate" data-node-label="Gate" tabindex="0" role="button" aria-label="Focus Gate, exit code · seven fail conditions, 03 / Deliver" aria-pressed="false" data-node-kind="security" data-node-sublabel="exit code · seven fail conditions" data-node-context="03 / Deliver">
+          <title>Gate · exit code · seven fail conditions · 03 / Deliver</title>
+          <rect x="466" y="128" width="128" height="58" rx="6" class="c-mask" />
+          <rect x="466" y="128" width="128" height="58" rx="6" class="c-security" stroke-width="1.5" />
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(472 134) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z" />
             <path d="m5.8 8 1.5 1.5 3-3" />
           </g>
           <text x="530" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Gate</text>
-          <text x="530" y="165" class="t-muted" font-size="6.2" text-anchor="middle">exit code · six fail conditions</text>
+          <text x="530" y="165" class="t-muted" font-size="6" text-anchor="middle">exit code · seven fail conditions</text>
         </g>
 
         <g id="node-reports" data-node-id="reports" data-node-label="Reports &amp; advisory" tabindex="0" role="button" aria-label="Focus Reports &amp; advisory, per-family schema · advisory, 03 / Deliver" aria-pressed="false" data-node-kind="database" data-node-sublabel="per-family schema · advisory" data-node-context="03 / Deliver">
@@ -445,8 +445,8 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="205" y="660" class="t-muted" font-size="8" text-anchor="middle">units · edges</text>
         </g>
         <g data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="7" data-edge-id="score-gate">
-          <rect x="387.1" y="136" width="70.8" height="16" rx="4" class="c-mask" />
-          <text x="422.5" y="147" class="t-security" font-size="8" text-anchor="middle">score · bits</text>
+          <rect x="386.1" y="136" width="70.8" height="16" rx="4" class="c-mask" />
+          <text x="421.5" y="147" class="t-security" font-size="8" text-anchor="middle">score · bits</text>
         </g>
         <g data-edge-from="clones" data-edge-to="reports" data-edge-label="rows" data-edge-key="8" data-edge-id="clones-reports">
           <rect x="382" y="260" width="34" height="16" rx="4" class="c-mask" />

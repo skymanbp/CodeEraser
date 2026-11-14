@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820" role="img"
-     aria-label="CodeEraser 方法学：泳道一度量事实（token 指纹 k=25 w=26、AST 树、引用图、git 窗口、LOC 多重集、文档 shingle），泳道二用精确的整数与有理数公式判决它们（winnowing 保证 t=50、TSED 85/100、Jaccard 80/100、软线 S=clamp(中位数×r^k,[200,500])、软区凸罚、存活性闭包、卡方散度、Theil-Sen 成对斜率中位数、分数折叠），泳道三按棘轮、dedup 预算、fail-under 地板、规则包围栏（整份解析 ce.toml 的 knobs 摘要）、来源守卫（被排除项藏起的基线文件）与 FPR 档位阶梯把门">
+     aria-label="CodeEraser 方法学：泳道一度量事实（记号指纹 k=25 w=26、AST 树、引用图、git 窗口、LOC 多重集、文档 shingle），泳道二用精确的整数与有理数公式判决它们（winnowing 保证 t=50、TSED 85/100、Jaccard 80/100、软线 S=clamp(中位数×r^k,[200,500])、发现点名的行的范围、存活性闭包、卡方散度、Theil-Sen 成对斜率中位数、范围律分数），泳道三按棘轮、dedup 预算、fail-under 地板、规则包围栏（整份解析 ce.toml 的 knobs 摘要）、来源守卫（被排除项藏起的基线文件）与 FPR 档位阶梯把门">
   <title>CodeEraser 方法学</title>
   <!-- Self-painted ground, same vocabulary as architecture.svg: the diagram
        carries its own dark panel so it reads identically on GitHub light/dark
@@ -36,7 +36,7 @@
       </g>
 
       <g font-size="11.5" fill="#cdd6e4">
-        <text x="58" y="168">token 指纹</text>
+        <text x="58" y="168">记号指纹</text>
         <text x="58" y="264">AST 树，后序</text>
         <text x="58" y="360">引用图</text>
         <text x="58" y="456">git 窗口</text>
@@ -88,22 +88,22 @@
         <text x="422" y="231">T3 克隆判决——TSED</text>
         <text x="422" y="295">文档重复——LSH 32 × 4 · 精确 Jaccard</text>
         <text x="422" y="359">软线——对数空间的中位数 m 与乘性 MAD r</text>
-        <text x="422" y="423">尺寸罚——凸软区</text>
+        <text x="422" y="423">范围——发现点名的行</text>
         <text x="422" y="487">死码存活性</text>
         <text x="422" y="551">结构熵与散度</text>
         <text x="422" y="615">分数轨迹——Theil-Sen</text>
-        <text x="422" y="679">折叠——一个 0..1000 分数</text>
+        <text x="422" y="679">范围律——一个 0..1000 分数</text>
       </g>
       <g font-size="10.5" fill="#57c7a8">
         <text x="422" y="187">t = window + kgram - 1 = 26 + 25 - 1 = 50</text>
         <text x="422" y="251">(max(n1,n2) - ted) * 100 &gt;= 85 * max(n1,n2)</text>
         <text x="422" y="315">inter * 100 &gt;= 80 * union  ||  run &gt;= 50 词</text>
         <text x="422" y="379">S = clamp(floor(m * r^k), [200, 500]),  k = 2</text>
-        <text x="422" y="443">p(x) = 10*((x-S)/(750-S))^2，x ∈ (S, 750]；750 以上线性</text>
+        <text x="422" y="443">E_f = min(lines, max(T, lines - S, churn excess))</text>
         <text x="422" y="507">reach = 自 flags .&amp;. 126 != 0 出发的闭包</text>
         <text x="422" y="571">1 - sum (c/N)^2   ·   sum (p - q)^2 / q</text>
         <text x="422" y="635">slope = median { (sj - si) / (tj - ti) }</text>
-        <text x="422" y="699">max 0 (1000 - sum(w*p*10) `div` (10 * sum(w)))</text>
+        <text x="422" y="699">max 0 (floor (1000 * (1 - k * E / L)))</text>
       </g>
     </g>
 

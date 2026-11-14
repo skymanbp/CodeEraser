@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=13">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/theme.css?v=14">
+<link rel="stylesheet" href="/style.css?v=14">
 <link rel="stylesheet" href="/viewer.css?v=4">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -74,7 +74,7 @@
 </figure>
 
 <h2 id="families">The <!--ce:count:booklets#word-->nineteen<!--/ce--> judgment families</h2>
-<details class="more intro"><summary>Three counts of “family”</summary><p class="note">Three counts ship across this site. <b><!--ce:count:booklets#word-->nineteen<!--/ce--></b> booklets, one per judgment whose math earns a derivation: families 01–15 here, 16 on from the analysis track on <a href="/how/analysis/">a page of their own</a>. <b><!--ce:count:families#word-->sixteen<!--/ce--></b> judgment capabilities on the wire (the stack diagram's count, beside the handshake <code>hello</code>, the definition package <code>tables/1</code>, the report documents <code>document/1</code> and six stage capabilities the families call: <code>resolve/1</code>, <code>candidates/1</code>, <code>rank/1</code>, <code>docpairs/1</code>, <code>moves/1</code>, <code>bags/1</code>; the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request). <b><!--ce:count:mcp_tools#word-->twenty-one<!--/ce--></b> read-only MCP tools follow the report surfaces, not the wire: <code>churn</code> and <code>graph --sites</code>, <code>erase</code> (its dry-run plan only), <code>doctor</code> (machine state), <code>erase_log</code> (the applied-erase trail), <code>update_check</code> (this build against the latest release), <code>similar_units</code> (<code>ce similar</code>'s advisory document over <code>similar/1</code>), <code>query</code> and <code>rules</code> over <code>query/1</code> (<a href="/how/analysis/#f16">its own page</a>), and <code>flow</code>, <code>merge_suggestions</code> and <code>architecture</code> over <code>flow/1</code>, <code>merge/1</code> and <code>arch/1</code>.</p></details>
+<details class="more intro"><summary>Three counts of “family”</summary><p class="note">Three counts ship across this site. <b><!--ce:count:booklets#word-->nineteen<!--/ce--></b> booklets, one per judgment whose math earns a derivation: families 01–15 here, 16 on from the analysis track on <a href="/how/analysis/">a page of their own</a>. <b><!--ce:count:families#word-->sixteen<!--/ce--></b> judgment capabilities on the wire (the stack diagram's count, beside the handshake <code>hello</code>, the definition package <code>tables/1</code>, the report documents <code>document/1</code> and <!--ce:count:stages#word-->eight<!--/ce--> stage capabilities the families and the write-time probe call: <code>resolve/1</code>, <code>candidates/1</code>, <code>rank/1</code>, <code>docpairs/1</code>, <code>moves/1</code>, <code>bags/1</code>, <code>relocate/1</code>, <code>cover/1</code>; the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request). <b><!--ce:count:mcp_tools#word-->twenty-one<!--/ce--></b> read-only MCP tools follow the report surfaces, not the wire: <code>churn</code> and <code>graph --sites</code>, <code>erase</code> (its dry-run plan only), <code>doctor</code> (machine state), <code>erase_log</code> (the applied-erase trail), <code>update_check</code> (this build against the latest release), <code>similar_units</code> (<code>ce similar</code>'s advisory document over <code>similar/1</code>), <code>query</code> and <code>rules</code> over <code>query/1</code> (<a href="/how/analysis/#f16">its own page</a>), and <code>flow</code>, <code>merge_suggestions</code> and <code>architecture</code> over <code>flow/1</code>, <code>merge/1</code> and <code>arch/1</code>.</p></details>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
@@ -111,9 +111,9 @@ clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85</
   <p class="note rule"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
   relabel = 0 on matching kind codes, else 1), always integral, so the comparison is an exact
   cross-multiplication decidable both ways: at <code>max = 100</code>, <code>ted 15</code> is a clone
-  and <code>ted 16</code> is not. Two O(1) prefilters, <code>q · tsedDen &lt; tsedNum · max</code> for
-  <code>q ∈ {min(n1,n2), I}</code> with <code>I = Σ_label min(c1, c2)</code>, cut pairs before any TED
-  runs; they are admissible because they use the <em>same</em> 85/100.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Since 1.8.0 verified pairs ride <code>ce check</code>'s clone axis and
+  and <code>ted 16</code> is not. Three admissible bounds come first: two O(1) tests, <code>q · tsedDen &lt; tsedNum · max</code> for
+  <code>q ∈ {min(n1,n2), I}</code> with <code>I = Σ_label min(c1, c2)</code>, then the edit distance between the
+  trees' label sequences; a pair that passes all three has its distance computed only up to the clone ceiling. They are admissible because they use the <em>same</em> 85/100.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Since 1.8.0 verified pairs ride <code>ce check</code>'s clone axis and
   <code>ce join</code>'s similarity leg as sim kind 1, each verdict cached under the two trees' content
   keys until the proto or a knob changes.</p>
   <ul class="consts">
@@ -194,9 +194,9 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
 <div class="fam">
   <h3 id="f05"><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
   <p class="job">Reads the share of the tree's lines that the <!--ce:count:axes#word-->seven<!--/ce--> axes' findings
-  name as one 0–1000 score, and gates it against a banked baseline that may only tighten.</p>
+  name as one 0–1000 score (<!--ce:count:default_axes#word-->six<!--/ce--> count by default, the unreferenced axis only when <code>[score.weights] deadcode</code> names it), and gates it against a banked baseline that may only tighten.</p>
   <pre>score = max 0 (floor (scoreScale * (1 - k * E / L)))   -- k = violCost / violCostNeutral
-L     = sum of every file's lines
+L     = the lines of every file a family reads (sized files, the scan-only arm included; prose-only files)
 E_f   = min(n, max(T, n - S, churn))                     -- one file of n lines
 E     = sum_j (r_j - r_j+1) * E(axes with w_i/max w &gt;= r_j)   -- weights by layers</pre>
   <pre>m = gmedian(x)                                 -- log-space median: √(x_lo·x_hi) when the count is even
@@ -341,8 +341,8 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + roiPhiMilli
 
 viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
-  <p class="note rule">Benefit is the graded-zone penalty a split returns, on the <em>same</em>
-  convex curve the verdict family uses (imported, not re-derived); <code>p</code> is convex with
+  <p class="note rule">Benefit is the graded-zone penalty a split returns, on the advisory's own
+  convex curve (<code>CE.Structure.Zone</code>, the score's size charge until protocol 10.0.0); <code>p</code> is convex with
   <code>p(0) = 0</code>, hence superadditive, so the bracket is non-negative. The best seam is the exact
   rational argmax over ROI, compared by cross-multiplied <code>b % c</code>; <code>n</code> top-level
   units give <code>n - 1</code> seams. Long-and-cohesive gets an exemption <em>with numbers
@@ -462,9 +462,9 @@ permille = (lines - S) * 1000 / (H - S)
   <strong>≤ 1 mis-block in 500 real normal edits</strong>, <code>N=1</code> demonstrations disallowed.
   M4: <strong>FPR ≤ 1% over 500 real normal edits</strong> on a set pre-registered before
   implementation, ≥ 200 edit samples, ≥ 50% from real agent transcripts, sampled only from observe-mode
-  and pre-guard sessions so the guard cannot certify itself. Two classes have paid: T1/T2 exact duplicate
-  write, and a write that grows a file past its hard line (750 by default, or the file's
-  <code>[[rules.class]]</code> line), so the hook denies exactly where the CI wall fails.
+  and pre-guard sessions so the guard cannot certify itself. Two classes default to deny: T1/T2 exact duplicate
+  write, which earned it with the record below, and a write that grows a file past its hard line (750 by default, or the file's
+  <code>[[rules.class]]</code> line), deny since 1.0 without a record of its own until release 1.10.0 added one (this repository: 5 refusals in 9,707 write events, every one a crossing, 0.0515 %; the other seven corpora: 0 % to 28.1250 % counting every refusal), so the hook denies exactly where the CI wall fails.
   <em>Every other rule stays at observe for want of its own record.</em></p>
   <p class="note"><strong>Since CodeEraser 1.2.0 the duplicate-write rule charges novel
   duplication only</strong>: the K-round replay of 2,761 real edit events (this repository's history plus the
@@ -479,8 +479,8 @@ permille = (lines - S) * 1000 / (H - S)
   <code>t = 50</code> and <code>min_distinct = 7</code>: <strong>630 events, 35 blocks, 0 false after
   arbitration → 0.00 per 500</strong> (M3), the 35 blocks remediated as the clone-block budget stepped
   251 → 211 → 209 → 205 → 202. The standing instrument (<code>cli/tests/it/fpr_replay.rs</code>,
-  2026-09-05): requests 365 events / 0 intercepts; 3164 self-repo events with 178 landed introductions
-  and 79 write-first mid-states.</p>
+  2026-11-14): requests 365 events / 0 intercepts; 5932 self-repo events with 171 landed introductions
+  and 105 write-first mid-states.</p>
   <p class="note">The graded zone reads <code>S</code> and <code>H</code> off the hard
   budget's per-file table. <code>[guard] zone_tiers</code> is <strong>off by default</strong>: its
   pre-registered rule armed only if <em>every</em> corpus read ≤ 1 %, and the first run read self

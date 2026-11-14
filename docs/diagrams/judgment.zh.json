@@ -30,7 +30,7 @@
   ],
   "nodes": [
     {"id": "units", "type": "backend", "label": "语法单元", "sublabel": "后序 AST · 单元 shingle", "stage": 0, "row": 0, "width": 124},
-    {"id": "tokens", "type": "backend", "label": "token 指纹与词袋事实", "sublabel": "winnow k=25 w=26 · 词袋事实", "stage": 0, "row": 1, "width": 124},
+    {"id": "tokens", "type": "backend", "label": "记号指纹与词袋事实", "sublabel": "winnow k=25 w=26 · 词袋事实", "stage": 0, "row": 1, "width": 124},
     {"id": "shingles", "type": "backend", "label": "文档 shingle", "sublabel": "5 词 shingle 集", "stage": 0, "row": 2, "width": 124},
     {"id": "windows", "type": "backend", "label": "git 窗口与 diff", "sublabel": "变动 · 分数点 · 被删名字", "stage": 0, "row": 3, "width": 124},
     {"id": "refs", "type": "backend", "label": "引用图", "sublabel": "站点 · 提及", "stage": 0, "row": 4, "width": 124},
@@ -40,7 +40,7 @@
     {"id": "trend", "type": "backend", "label": "改动判决", "sublabel": "Theil–Sen · 联判格 · 合取", "stage": 1, "row": 3, "width": 124, "tag": "trend/2 · audit/1 · tombstone/1"},
     {"id": "liveness", "type": "backend", "label": "存活性与擦除", "sublabel": "解析阶梯 · SCC · 四态 · 规则", "stage": 1, "row": 4, "width": 132, "tag": "graph/1 · erase/1 · query/1"},
     {"id": "analysis", "type": "backend", "label": "控制流、合并与架构", "sublabel": "CFG · 反合一 · 分层", "stage": 1, "row": 4, "yOffset": 114, "width": 132, "tag": "flow/1 · merge/1 · arch/1"},
-    {"id": "gate", "type": "security", "label": "门", "sublabel": "退出码 · 六个 fail 条件", "stage": 2, "row": 0, "width": 124},
+    {"id": "gate", "type": "security", "label": "门", "sublabel": "退出码 · 七个 fail 条件", "stage": 2, "row": 0, "width": 128},
     {"id": "reports", "type": "database", "label": "报告与顾问", "sublabel": "每家族一种 schema · 顾问", "stage": 2, "row": 2, "width": 124}
   ],
   "flows": [

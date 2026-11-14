@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=13">
-<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/theme.css?v=14">
+<link rel="stylesheet" href="/style.css?v=14">
 </head>
 <body>
 <div class="wrap">
@@ -174,7 +174,7 @@ E_f   = min(n, max(T, n - S, churn))                     -- T = the lines a find
 
 <div class="fam formula">
   <h3 id="m-ratchet"><span class="n">05</span>The ratchet</h3>
-  <p class="job">Gates the score of <!--ce:count:axes#word-->seven<!--/ce--> axes against a banked baseline that may only tighten.</p>
+  <p class="job">Gates the score of <!--ce:count:axes#word-->seven<!--/ce--> axes (<!--ce:count:default_axes#word-->six<!--/ce--> count by default, the unreferenced axis only when <code>[score.weights] deadcode</code> names it) against a banked baseline that may only tighten.</p>
   <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
@@ -209,7 +209,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + roiPhiMilli
 
 viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
-  <p class="note rule"><code>p</code> is convex with <code>p(0) = 0</code>, hence superadditive, so the benefit, computed on the verdict family's <em>same</em> curve (imported, not re-derived), is never negative.</p>
+  <p class="note rule"><code>p</code> is convex with <code>p(0) = 0</code>, hence superadditive, so the benefit, computed on the advisory's own convex curve (<code>CE.Structure.Zone</code>, the score's size charge until protocol 10.0.0), is never negative.</p>
   <ul class="consts">
     <li><b>seamSoft S</b> 300</li>
     <li><b>seamHard H</b> 750</li>

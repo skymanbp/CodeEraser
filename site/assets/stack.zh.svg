@@ -36,7 +36,7 @@
         <text x="66" y="202">Java · Lua · R · Markdown（无语法树）· HTML（不算指纹）</text>
         <text x="66" y="224">仅扫描：JS · CSS · Vue · Svelte · Shell · YAML · 纯散文：TXT</text>
 
-        <text x="616" y="185">归一化 token 指纹 → SQLite WAL</text>
+        <text x="616" y="185">归一化记号指纹 → SQLite WAL</text>
         <text x="616" y="202">逐文件按内容哈希增量失效</text>
         <text x="616" y="224">多写手收敛缓存；daemon 只是加速</text>
 

@@ -32,18 +32,15 @@
   display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
   column-gap: 40px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--line);
 }
-.install .k, .board th, table.ladder th, .toc .k, dl.routes-full dt, footer.site .k {
+.install .k, .board th, table.ladder th, .toc .k, footer.site .k {
   font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
 }
-:lang(zh) :is(.install .k, dl.routes-full dt, footer.site .k) { letter-spacing: 0.04em; font-family: var(--sans); }
+:lang(zh) :is(.install .k, footer.site .k) { letter-spacing: 0.04em; font-family: var(--sans); }
 /* min-width:0 lets the value cell shrink so overflow-x can act */
 .install code { font-size: 0.9rem; color: var(--text); overflow-x: auto; min-width: 0; }
 .install code a { color: var(--paper); }
 .installs + .cap, .installs + p { margin-top: var(--s-2); }
-dl.routes-full { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 32px; margin: 4px 0 12px; font-size: var(--fs-sm); color: var(--muted); }
-dl.routes-full dt { padding-top: 2px; }
-dl.routes-full dd { font-family: var(--mono); color: var(--text); max-width: var(--measure); }
 
 /* Framed blocks — the terminal, the diagrams, the screenshots — share
    one frame: ink ground, one hairline, one radius, one soft lift, and
@@ -163,7 +160,7 @@ ul.consts li b { color: var(--paper); font-weight: 600; margin-right: 2px; }
 .eq pre { white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
 .eq p { font-size: var(--fs-sm); color: var(--muted); }
 .more-link { margin-top: var(--s-3); }
-.more-link a, a.onward { font-weight: 600; text-decoration: none; }
+.more-link a { font-weight: 600; text-decoration: none; }
 /* the stack page: one hairline row per layer, what mathematics lives there */
 dl.layers { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 40px; border-top: 1px solid var(--panel-edge); }
 dl.layers dt, dl.layers dd { padding: 15px 0; border-bottom: 1px solid var(--line); }
@@ -223,10 +220,8 @@ footer.site .legal { margin-top: var(--s-5); padding-top: var(--s-3); border-top
   .hero { padding-top: 32px; }
   .hero .mark { width: 48px; height: 48px; border-radius: 12px; }
   /* a key beside its value no longer fits: key over value */
-  .installs, .install, .toc, .toc .row, dl.routes-full, dl.layers { grid-template-columns: minmax(0, 1fr); }
+  .installs, .install, .toc, .toc .row, dl.layers { grid-template-columns: minmax(0, 1fr); }
   .install { row-gap: 4px; }
-  dl.routes-full { row-gap: 2px; }
-  dl.routes-full dd { margin-bottom: 10px; }
   dl.layers dt { border-bottom: 0; padding-bottom: 0; }
   .card.band { padding: 22px; }
   .fam.formula { padding: 22px 18px; }
