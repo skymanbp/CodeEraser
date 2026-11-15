@@ -354,7 +354,7 @@ The test suite carries three of its own, rooted at `cli/tests`: no unreferenced 
 tree and the unit tree never read each other ([ce.rules:7-13](../../../cli/tests/ce.rules#L7)).
 CI runs `ce rules` as the seventh dogfood gate on both roots, beside scan, the dedup ratchet,
 the check floor, deadcode, docdup and erase
-([ci.yml:290](../../../.github/workflows/ci.yml#L290), [ci.yml:318](../../../.github/workflows/ci.yml#L318)).
+([ci.yml:291](../../../.github/workflows/ci.yml#L291), [ci.yml:319](../../../.github/workflows/ci.yml#L319)).
 
 ### 11. The built-in rule pack
 
