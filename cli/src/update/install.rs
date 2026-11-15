@@ -11,9 +11,9 @@ pub enum Kind {
     /// Placed by hand (or by this updater): nothing else keeps a
     /// ledger of it, so the updater may replace it.
     Manual = 0,
-    /// The installer bundle's sidecar: the GUI app beside it stays
-    /// at its version until the new installer runs, and the
-    /// document says so.
+    /// The installer bundle's sidecar, recognised by the GUI app's
+    /// program ([`BUNDLE_APP`]) beside it: that app stays at its
+    /// version until the new installer runs, and the document says so.
     Bundle = 1,
     /// `cargo install`'s bin dir — cargo's ledger, cargo's update.
     Cargo = 2,
@@ -58,12 +58,21 @@ pub fn classify(exe: &Path, plugin_data: Option<&Path>) -> Kind {
     {
         return Kind::Cargo;
     }
-    let bundled = ["CodeEraser.exe", "CodeEraser", "codeeraser"];
-    if bundled.iter().any(|b| dir.join(b).is_file()) {
+    // the bundle's main program sits beside us under the GUI crate's
+    // package name, with or without the Windows extension
+    let app = [BUNDLE_APP.to_string(), format!("{BUNDLE_APP}.exe")];
+    if app.iter().any(|b| dir.join(b).is_file()) {
         return Kind::Bundle;
     }
     Kind::Manual
 }
+
+/// The installer bundle's main program: Tauri names it after the GUI
+/// crate's package (`gui/src-tauri/Cargo.toml` `[package] name`, and
+/// `tauri.conf.json` sets no `mainBinaryName`). An `it` leg ties this
+/// string to that file and the AppImage check of the release build to
+/// the program it ships.
+pub const BUNDLE_APP: &str = "ce-gui";
 
 fn same_dir(a: &Path, b: &Path) -> bool {
     match (a.canonicalize(), b.canonicalize()) {

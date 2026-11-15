@@ -268,6 +268,12 @@ jobs:
             echo "expected one GUI binary in usr/bin besides ce and ce-core, found: ${GUI:-none}"
             ls -l "$APPIMAGE_ROOT/usr/bin"; exit 1
           fi
+          # `ce update` knows a bundle by this program beside ce
+          # (BUNDLE_APP in cli/src/update/install.rs = the package name)
+          WANT=$(awk -F'"' '/^\[/{s=$0} s=="[package]" && /^name *=/{print $2; exit}' gui/src-tauri/Cargo.toml)
+          if [ -z "$WANT" ] || [ "$(basename "$GUI")" != "$WANT" ]; then
+            echo "::error::GUI binary $(basename "$GUI") is not the GUI package name '$WANT'"; exit 1
+          fi
           bad=0
           for b in "cli/target/release/ce" "$CORE" "$GUI"; do
             [ -f "$b" ] || { echo "::error::missing $b"; bad=1; continue; }

@@ -22,9 +22,12 @@ for this install; follow it exactly and do not substitute another:
   Never run `ce update --yes` here: the starter would refuse a binary its
   manifest does not pin.
 - **cargo install**: `cargo install codeeraser`.
-- **placed by hand / installer sidecar**: `ce update --yes` replaces `ce` and
-  `ce-core` in place, verified against the release commit's pins; add
-  `--installer` to also save the verified GUI installer and print its path.
+- **placed by hand**: `ce update --yes` replaces `ce` and `ce-core` in place,
+  verified against the release commit's pins; add `--installer` to also save
+  the verified GUI installer and print its path.
+- **installer sidecar** (the desktop app `ce-gui` sits beside `ce`):
+  `ce update --yes --installer` replaces `ce` and `ce-core` the same way and
+  saves the verified installer, which updates the app itself when it runs.
 
 Report the current and latest versions, the verdict, and the action in one short
 message. Do not download anything yourself.
