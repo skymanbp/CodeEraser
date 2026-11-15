@@ -51,7 +51,7 @@
    （键集恰好是花名册、每枚 pin 是 64 位十六进制且与 draft 报的那枚相等、两个版本行等于本次
    tag；判据只读终态，故原样重跑、或补跑 `--bless`，都不再被拒），再跑 `scripts/packaging.js` 重生成 `packaging/`
    下的 Homebrew 公式与 winget 清单（它们是清单的投影，随 pin 同提交）——不再手抄
-   （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.10.0`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.10.0`<!--/ce-->），后者须以
+   （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.10.1`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.10.1`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
    release.yml verify-publish 腿）。**同一个提交里还有 docs-facts 一行**：
    `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
@@ -173,4 +173,4 @@
   `bootstrap_e2e.sh`，CI 三平台常驻）。
 - air-gapped 手动放置路保留（空 pin 回归按构造成立）；非空 pin 的手放：
   `CLAUDE_PLUGIN_DATA/ce-<版本>-<平台>` 与 pin 相符即按已验证执行并落戳，不相符
-  具名拒绝、不执行、不落戳（`bootstrap_e2e.sh` 状态 15 / 16）。
+  具名拒绝、不执行、不落戳（`bootstrap_e2e.sh` 状态 15 / 16）。核走同一个 pin，放在 `CLAUDE_PLUGIN_DATA/ce-core-<版本>-<平台>`（1.10.1 起；此前名字不带版本号）：与 pin 相符即按已验证使用，不相符具名拒绝并删掉（`bootstrap_e2e.sh` 状态 25 / 7）。
