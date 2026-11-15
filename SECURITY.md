@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---|---|
-| 1.9.x | yes |
-| < 1.9 | no: upgrade first |
+| 1.10.x | yes |
+| < 1.10 | no: upgrade first |
 
 ## Reporting a vulnerability
 
