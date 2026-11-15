@@ -23,13 +23,14 @@ pub fn plugin_data() -> Option<PathBuf> {
 }
 
 /// The rule over one value, pure (the unit legs drive it): one
-/// trailing separator dropped, either separator splits (the value may
-/// be a native Windows path), an unset or empty value names nothing.
+/// trailing separator dropped, either separator (the value may be a
+/// native Windows path); a value whose last segment is then empty
+/// (separators alone, or a second trailing separator) names no folder,
+/// as an unset or empty value names nothing.
 pub fn own(value: Option<&OsStr>) -> Option<PathBuf> {
     let value = value?;
     let text = value.to_string_lossy();
-    let trimmed = text.strip_suffix('/').unwrap_or(&text);
-    let trimmed = trimmed.strip_suffix('\\').unwrap_or(trimmed);
+    let trimmed = text.strip_suffix(['/', '\\']).unwrap_or(&text);
     let leaf = trimmed.rsplit(['/', '\\']).next().unwrap_or(trimmed);
     let name = plugin_name();
     let ours = leaf == name

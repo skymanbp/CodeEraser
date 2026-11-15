@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its twenty-four states with the just-built
+# drives plugin/bin/ce.sh through its twenty-five states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -52,6 +52,10 @@
 #                  the ce the starter execs is given our folder
 #  23 handed none: with another plugin's folder alone, the ce the starter
 #                  execs sees the variable unset
+#  24 empty leaf : another plugin's folder spelled with two trailing
+#                  separators names no folder: a folder of ours beside it
+#                  is not picked, a stamp planted in it is not followed,
+#                  and the exec'd ce sees the variable unset
 # Every other state's data folder is `codeeraser-<n>`: the starter uses a
 # folder only when its name is the plugin's or begins with it and `-`.
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh> <path-to-built-ce-core>
@@ -523,5 +527,23 @@ mkdir -p "$work/pd23/other-plugin"
 out=$(PATH="$work/stub:$PATH" CE_MANIFEST_FILE="$work/manifest0.env" \
       CLAUDE_PLUGIN_DATA="$work/pd23/other-plugin" sh "$STARTER" --version 2>/dev/null)
 [ "$out" = "(unset)" ] || fail 23 "the exec'd ce was handed '$out', not an unset variable"
+# 24: two trailing separators leave an empty leaf after the one dropped:
+# the value names no folder, as if unset. A folder of ours beside it is
+# not picked, and a stamp planted in the named folder (pointing at a
+# second stub) is not read: the PATH stub answers, the folder unchanged
+mkdir -p "$work/pd24/other-plugin" "$work/pd24/codeeraser-mkt" "$work/stub24"
+cat >"$work/stub24/ce" <<'EOF'
+#!/bin/sh
+echo "stamp followed"
+EOF
+chmod +x "$work/stub24/ce"
+printf 'BOUND_CE=%s\nBOUND_CORE=\n' "$work/stub24/ce" >"$work/pd24/other-plugin/bound-0.0.0-test.env"
+before24=$(ls -la "$work/pd24/other-plugin" "$work/pd24/codeeraser-mkt")
+out=$(PATH="$work/stub:$PATH" CE_MANIFEST_FILE="$work/manifest0.env" \
+      CLAUDE_PLUGIN_DATA="$work/pd24/other-plugin//" sh "$STARTER" --version 2>"$work/err24")
+[ "$out" = "(unset)" ] || fail 24 "the exec'd ce was handed '$out', not an unset variable"
+if [ -s "$work/err24" ]; then fail 24 "a value naming no folder was spoken of: $(cat "$work/err24")"; fi
+after24=$(ls -la "$work/pd24/other-plugin" "$work/pd24/codeeraser-mkt")
+[ "$before24" = "$after24" ] || fail 24 "a folder beside or under the value changed"
 
-echo "bootstrap_e2e: PASS (24 states, key=$key)"
+echo "bootstrap_e2e: PASS (25 states, key=$key)"

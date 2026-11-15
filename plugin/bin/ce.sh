@@ -67,18 +67,18 @@ data="${CLAUDE_PLUGIN_DATA:-}"
 # last sentence: a Bash-tool shell held this variable with ANOTHER
 # plugin's folder as its value. That is why the starter checks the name
 # instead of trusting the variable: the folder counts as ours only when
-# its last path segment (after a trailing separator, either separator:
-# the value may be a native Windows path) is the plugin's name or begins
-# with it and `-`. A folder that is not ours is never read from or
-# written into: exactly one folder of ours beside it is used instead
-# (said once on stderr, on the slow path only); none or several leave no
-# data folder at all (the PATH legs below, as when the variable is
-# unset). The `ce` exec'd below is handed the same answer: the variable
-# set to that one folder of ours, or unset (ce applies the same name
+# its last path segment (one trailing separator dropped, either one: the value
+# may be a native Windows path) is the plugin's name or begins with it and `-`;
+# a value whose last segment is then empty names no folder and reads as unset,
+# nothing searched beside it or said. A folder not ours is never read from or
+# written into: exactly one folder of ours beside it is used instead (said once
+# on stderr, slow path only); none or several leave no data folder (the PATH
+# legs below, as when unset). The `ce` exec'd below is handed the same answer:
+# the variable set to that folder of ours, or unset (ce applies the same name
 # rule to what it reads). Builtins only: the fast path still forks nothing.
 plugin=codeeraser
 borrowed=""
-leaf() { l=${1%/}; l=${l%\\}; l=${l##*/}; l=${l##*\\}; }
+leaf() { l=$1; case $l in */ | *\\) l=${l%?} ;; esac; l=${l##*/}; l=${l##*\\}; }
 # A Windows path (a drive letter and a colon, or two backslashes) with
 # every backslash as `/`: pathname expansion splits a pattern on `/`
 # only, so the search below finds nothing beside a native path. Any
@@ -100,7 +100,8 @@ slashed() {
 }
 leaf "$data"
 case "$l" in
-    "$plugin" | "$plugin"-* | "") ;;
+    "$plugin" | "$plugin"-*) ;;
+    "") [ -n "$data" ] && { data=""; unset CLAUDE_PLUGIN_DATA; } ;;
     *)
         slashed "$data"
         parent=${sl%/}; parent=${parent%\\}; parent=${parent%"$l"}
