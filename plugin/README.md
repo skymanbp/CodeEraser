@@ -70,7 +70,7 @@ or begin with `codeeraser-`. The plugins reference (https://code.claude.com/docs
 `~/.claude/plugins/data/<id>/`, with `<id>` the plugin identifier where every character other than a letter, digit, `_` or `-` is replaced by `-`;
 `claude plugin install` takes the identifier as `<plugin>@<marketplace>`, and this plugin's installed folder is `codeeraser-codeeraser`.
 A command run through the Bash tool (such as `/codeeraser:update`) may carry another plugin's folder: the starter then uses exactly one folder
-of this plugin's beside it (saying so in one stderr line), and treats the variable as unset when there is none or more than one; another plugin's folder is never read or written.
+of this plugin's beside it (saying so in one stderr line), and treats the variable as unset when there is none or more than one; the `ce` it runs is handed that decision (the variable set to that folder, or unset). `ce` applies the same rule wherever it reads the variable (the update-check cache, the install kind `ce update` reports, the files `ce eject` lists): another plugin's folder counts as no folder (the cache goes to the OS temp directory), and `ce` does not look beside it. Another plugin's folder is never read or written.
 A source install (`cargo install codeeraser` or `--path cli`) still works.
 
 **Windows prerequisite: `sh` must be on the Windows PATH.** The four hooks and `.mcp.json` all start with a bare `sh`

@@ -128,7 +128,8 @@ fn targets(root: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
     if baseline.exists() {
         out.push(baseline);
     }
-    if let Ok(data) = std::env::var("CLAUDE_PLUGIN_DATA")
+    // the plugin's own data folder only: another plugin's is never listed
+    if let Some(data) = crate::setup::data::plugin_data()
         && let Ok(entries) = std::fs::read_dir(&data)
     {
         // is_file: a DIRECTORY is never a starter artifact, and --yes

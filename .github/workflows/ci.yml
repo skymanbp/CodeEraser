@@ -551,7 +551,9 @@ jobs:
         shell: bash
         run: |
           . plugin/bin/manifest.env
-          data="$RUNNER_TEMP/plugin-data"
+          # the folder as Claude Code names it (plugins/data/<id>): the
+          # starter uses a data folder only when it is this plugin's own
+          data="$RUNNER_TEMP/plugins/data/codeeraser-codeeraser"
           out=$(CLAUDE_PLUGIN_DATA="$data" sh plugin/bin/ce.sh --version 2>"$RUNNER_TEMP/starter.err")
           err=$(cat "$RUNNER_TEMP/starter.err")
           [ -z "$err" ] || { echo "the verified leg was not silent: $err"; exit 1; }

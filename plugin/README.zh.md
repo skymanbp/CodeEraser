@@ -68,7 +68,7 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 副本与戳只放在本插件自己的数据目录里：`CLAUDE_PLUGIN_DATA` 的末段须是插件名 `codeeraser`
 或以 `codeeraser-` 开头。插件参考页（https://code.claude.com/docs/en/plugins-reference，「Environment variables」节）说这个目录是 `~/.claude/plugins/data/<id>/`，`<id>` 是插件标识符里字母、数字、`_`、`-` 以外的每个字符都换成 `-`；`claude plugin install` 收的标识符是 `<插件>@<市场>`，本插件装好的目录是 `codeeraser-codeeraser`。
 经 Bash 工具跑的命令（如 `/codeeraser:update`）可能带着别的插件的目录：那时只用它旁边恰好一个
-属于本插件的目录（在 stderr 说一行），一个都没有或不止一个就当这个变量没设；别的插件的目录从不读写。
+属于本插件的目录（在 stderr 说一行），一个都没有或不止一个就当这个变量没设；它执行的 `ce` 拿到的是这个判定（变量改成那个目录，或撤掉）。`ce` 自己读这个变量的地方（更新检查的缓存、`ce update` 报的安装方式、`ce eject` 列的文件）走同一条规则：别的插件的目录当作没有目录（缓存落到系统临时目录），也不在它旁边另找。别的插件的目录从不读写。
 源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
 **Windows 前置：`sh` 要在 Windows PATH 上。** 四个钩子与 `.mcp.json` 都以裸 `sh`

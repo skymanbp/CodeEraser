@@ -30,7 +30,7 @@ pub struct Install {
 impl Install {
     pub fn detect() -> Self {
         let exe = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("ce"));
-        let data = std::env::var_os("CLAUDE_PLUGIN_DATA").map(PathBuf::from);
+        let data = crate::setup::data::plugin_data();
         let kind = classify(&exe, data.as_deref());
         Self { exe, kind }
     }
@@ -44,7 +44,7 @@ pub fn classify(exe: &Path, plugin_data: Option<&Path>) -> Kind {
         return Kind::Plugin;
     }
     // ce.sh names its bound copies `ce-<version>-<key><ext>`: a
-    // copy so named outside CLAUDE_PLUGIN_DATA is still the
+    // copy so named outside the plugin's data folder is still the
     // starter's (a session without the env var set)
     let name = exe.file_name().map(|n| n.to_string_lossy().to_string());
     if name.is_some_and(|n| n.starts_with("ce-") && n.contains(env!("CARGO_PKG_VERSION"))) {

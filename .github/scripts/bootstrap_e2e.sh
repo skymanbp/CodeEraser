@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its twenty-two states with the just-built
+# drives plugin/bin/ce.sh through its twenty-four states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -48,6 +48,10 @@
 #                  is its own: the download lands in it, as state 1
 #  21 native path: state 18 with the value spelled as a native Windows
 #                  path (backslashes): the folder of ours is still found
+#  22 handed on : with another plugin's folder and one of ours beside it,
+#                  the ce the starter execs is given our folder
+#  23 handed none: with another plugin's folder alone, the ce the starter
+#                  execs sees the variable unset
 # Every other state's data folder is `codeeraser-<n>`: the starter uses a
 # folder only when its name is the plugin's or begins with it and `-`.
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh> <path-to-built-ce-core>
@@ -500,4 +504,24 @@ else
     esac
 fi
 
-echo "bootstrap_e2e: PASS (22 states, key=$key)"
+# --- states 22 and 23: what the starter execs reads the folder the
+# starter decided on, not the raw variable. A stub `ce` on PATH prints
+# the CLAUDE_PLUGIN_DATA it was given (empty pins: the PATH leg) ------
+mkdir -p "$work/stub"
+cat >"$work/stub/ce" <<'EOF'
+#!/bin/sh
+printf '%s\n' "${CLAUDE_PLUGIN_DATA-(unset)}"
+EOF
+chmod +x "$work/stub/ce"
+# 22: another plugin's folder with exactly one folder of ours beside it
+mkdir -p "$work/pd22/other-plugin" "$work/pd22/codeeraser-mkt"
+out=$(PATH="$work/stub:$PATH" CE_MANIFEST_FILE="$work/manifest0.env" \
+      CLAUDE_PLUGIN_DATA="$work/pd22/other-plugin" sh "$STARTER" --version 2>/dev/null)
+[ "$out" = "$work/pd22/codeeraser-mkt" ] || fail 22 "the exec'd ce was handed '$out', not this plugin's own folder"
+# 23: another plugin's folder alone: the exec'd ce sees no folder at all
+mkdir -p "$work/pd23/other-plugin"
+out=$(PATH="$work/stub:$PATH" CE_MANIFEST_FILE="$work/manifest0.env" \
+      CLAUDE_PLUGIN_DATA="$work/pd23/other-plugin" sh "$STARTER" --version 2>/dev/null)
+[ "$out" = "(unset)" ] || fail 23 "the exec'd ce was handed '$out', not an unset variable"
+
+echo "bootstrap_e2e: PASS (24 states, key=$key)"

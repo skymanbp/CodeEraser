@@ -19,6 +19,7 @@
 //! instead of wiring the wrong home.
 
 pub mod claude;
+pub mod data;
 pub mod env;
 
 use serde_json::{Value, json};

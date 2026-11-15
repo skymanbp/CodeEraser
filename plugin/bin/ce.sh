@@ -73,7 +73,9 @@ data="${CLAUDE_PLUGIN_DATA:-}"
 # written into: exactly one folder of ours beside it is used instead
 # (said once on stderr, on the slow path only); none or several leave no
 # data folder at all (the PATH legs below, as when the variable is
-# unset). Builtins only: the fast path still forks nothing.
+# unset). The `ce` exec'd below is handed the same answer: the variable
+# set to that one folder of ours, or unset (ce applies the same name
+# rule to what it reads). Builtins only: the fast path still forks nothing.
 plugin=codeeraser
 borrowed=""
 leaf() { l=${1%/}; l=${l%\\}; l=${l##*/}; l=${l##*\\}; }
@@ -111,6 +113,13 @@ case "$l" in
         done
         borrowed=$data
         data=$found
+        # what the starter execs reads this decision, not the raw value
+        if [ -n "$found" ]; then
+            CLAUDE_PLUGIN_DATA=$found
+            export CLAUDE_PLUGIN_DATA
+        else
+            unset CLAUDE_PLUGIN_DATA
+        fi
         ;;
 esac
 # The version names the stamp and the artifacts; an unset, empty or

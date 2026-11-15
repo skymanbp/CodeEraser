@@ -11,13 +11,13 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 const TTL: Duration = Duration::from_secs(24 * 60 * 60);
 
-/// Where the cached document lives: the plugin's data dir when the
-/// starter set one (the machine-wide place the plugin already owns),
-/// the OS temp dir otherwise. Never under the project — the answer
-/// is about this binary, not that tree.
+/// Where the cached document lives: the plugin's own data dir when
+/// the environment names it (the machine-wide place the plugin
+/// already owns; another plugin's folder is never written into), the
+/// OS temp dir otherwise. Never under the project — the answer is
+/// about this binary, not that tree.
 fn cache_path() -> PathBuf {
-    std::env::var_os("CLAUDE_PLUGIN_DATA")
-        .map(PathBuf::from)
+    crate::setup::data::plugin_data()
         .unwrap_or_else(std::env::temp_dir)
         .join("codeeraser-update-check.json")
 }
