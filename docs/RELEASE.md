@@ -67,7 +67,10 @@
    ci.yml 的 `packaging-live`，需要 Homebrew 与 pipx 的机器）。`packaging-live` 本身**装不了
    还没发布的 draft**——公式里的 url 是公开发布 URL，此刻 draft 的资产还是 404；它是**公开渠道**
    验收：每周一随周程，publish 之后再手动 dispatch 一次（§3）——没有那一跑，两个 README 与官网
-   两首页的 `brew install` 就是没有任何读者验过的承诺。
+   两首页的 `brew install` 就是没有任何读者验过的承诺。`starter-https` 同理：它按清单的
+   `CE_MANIFEST_VERSION` 从 `CE_BASE_URL` 下真资产，所以从版本号提交到 publish 之间，手动 dispatch 的
+   ci.yml 上 `starter-https` 与 `packaging-live`（两个平台）按构造是红的（404）；版本号提交的车道 CI
+   以其余各项全绿、这三份日志只有 404 为落地门（v1.10.0 实录：run 43678596869）。
 2. Release notes **先于 tag** 写到 draft 上：`gh release edit vX.Y.Z --notes-file <notes.md>`
    ——功能面 + 分数迁移声明（如适用）+ 未签名明示（代码签名/公证裁定不做——
    2026-08-19，SHA256 链为永久信任锚；ADR-007/R1 立场）。tag 腿拒发仍带占位句
