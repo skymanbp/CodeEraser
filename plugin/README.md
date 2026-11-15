@@ -62,9 +62,16 @@ a verified local copy → a download from GitHub Releases checked against the SH
 <!--ce:count:binaries#word-->fifteen<!--/ce--> across <!--ce:count:platforms#word-->five<!--/ce--> targets; the starter takes the first two, and a manifest before v1.7.0 pins only the first three targets) → PATH as the fallback. Verification is once per session: the verified
 paths are recorded in `CLAUDE_PLUGIN_DATA/bound-<manifest version>.env`, and later hooks of the session exec them directly;
 the core the stamp records is the file that is really on disk (on Windows, Git Bash's `command -v` answers the path without `.exe`; the starter adds it before binding);
-a new manifest or binary re-verifies, and SessionStart's `health` verifies in every session. A copy placed by hand at
-`CLAUDE_PLUGIN_DATA/ce-<manifest version>-<platform>` goes through the same pin: a match runs as verified and is stamped,
-a mismatch is refused by name and not run (`CE_AIRGAPPED=1` never downloads and chooses only between the hand-placed copy and PATH).
+a new manifest or binary re-verifies, and SessionStart's `health` verifies in every session. Each plugin version keeps its own
+pair and stamp, named as the release assets are: `ce-<manifest version>-<platform>` and `ce-core-<manifest version>-<platform>`
+beside `bound-<manifest version>.env`, so two versions open at once (an update while an older session still runs) never replace
+each other's files; the plain `ce-core` the starters up to 1.10.0 placed is no longer read or written. At each SessionStart the
+starter removes another version's stamp that no session start has rewritten for 14 days, the pair of a version that is not its own
+and keeps no stamp once the files are 14 days old, and the plain `ce-core` once no stamp binds it (that last part only when the
+manifest pins a core for this platform); with `CE_AIRGAPPED=1` it removes nothing. A copy placed by hand at
+`CLAUDE_PLUGIN_DATA/ce-<manifest version>-<platform>` (the core at `ce-core-<manifest version>-<platform>`) goes through the same pin:
+a match runs as verified and is stamped, a mismatch is refused by name and not run (a mismatching core is also removed;
+`CE_AIRGAPPED=1` never downloads and chooses only between the hand-placed copy and PATH).
 Copies and stamps live only in this plugin's own data folder: the last segment of `CLAUDE_PLUGIN_DATA` must be the plugin's name `codeeraser`
 or begin with `codeeraser-`. The plugins reference (https://code.claude.com/docs/en/plugins-reference, section "Environment variables") gives the folder as
 `~/.claude/plugins/data/<id>/`, with `<id>` the plugin identifier where every character other than a letter, digit, `_` or `-` is replaced by `-`;

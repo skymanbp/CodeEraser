@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its twenty-five states with the just-built
+# drives plugin/bin/ce.sh through its twenty-eight states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -8,12 +8,13 @@
 #   1 fresh      : pin + source -> download, verify, place, exec
 #   2 warm       : source deleted -> cached verified copy answers
 #   3 tampered   : wrong pin -> exit 1, loud refusal, nothing placed
-#   4 core along : pinned ce-core placed as a plain sibling in data
+#   4 core along : pinned ce-core placed in data under its versioned
+#                  asset name `ce-core-<ver>-<key>`
 #   5 bad core   : tampered ce-core refused as loudly as a tampered ce
 #   6 quiet fail : a failed download falls back to PATH and keeps its
 #                  notice OFF stdout (the hook stream is JSON only)
-#   7 stale core : a MISMATCHING ce-core already on disk is refused and
-#                  REMOVED, not left behind for ce's resolver
+#   7 stale core : a mismatching core at this version's own name is
+#                  refused and removed
 #   8 core bind  : with a pin in force ce is BOUND to the pinned core
 #                  path, never free to fall through to a PATH ce-core
 #   9 path reuse : a PATH ce that MATCHES the pin answers with nothing
@@ -56,6 +57,18 @@
 #                  separators names no folder: a folder of ours beside it
 #                  is not picked, a stamp planted in it is not followed,
 #                  and the exec'd ce sees the variable unset
+#  25 coexist    : two plugin versions share one data folder: Y places its
+#                  core at its own name, X's core and stamp stay as they
+#                  were, and X re-verifies with no transport at all
+#  26 plain core : the unversioned `ce-core` of a starter up to 1.10.0 that
+#                  does not match this pin is left in place, and ce is
+#                  bound to the versioned path, never to it
+#  27 sweep      : a `health` run removes another version's stamp and pair
+#                  untouched for 14 days, keeps a version with a fresh
+#                  stamp, and removes the plain core once no stamp binds
+#                  it; a non-`health` command sweeps nothing, an
+#                  air-gapped `health` run removes nothing, and with no
+#                  core pin the plain core stays
 # Every other state's data folder is `codeeraser-<n>`: the starter uses a
 # folder only when its name is the plugin's or begins with it and `-`.
 # Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh> <path-to-built-ce-core>
@@ -164,10 +177,10 @@ case "$err" in *"SHA256 mismatch"*) ;; *) fail 3 "refusal not loud: $err" ;; esa
 left=$(ls "$work/codeeraser-3" 2>/dev/null | grep -c '\.download' || true)
 [ "$left" = "0" ] || fail 3 "tmp download not cleaned ($left left)"
 
-# --- state 4: core rides along — pinned ce-core lands as a plain
-# sibling in the data dir (exactly where ce's resolver probes); the
-# payload is ce itself standing in for ce-core (any executable works,
-# only placement + verification are under test) --------------------------
+# --- state 4: core rides along — pinned ce-core lands in the data dir
+# under the release asset's name, one per version (ce is bound to it by
+# CE_CORE_BIN); the payload is ce itself standing in for ce-core (any
+# executable works, only placement + verification are under test) ------
 corepayload="ce-core-0.0.0-test-$key$ext"
 cp "$CE_BIN" "$work/src/$corepayload"
 corepin=$(sha_of "$work/src/$corepayload")
@@ -181,8 +194,9 @@ out=$(CE_MANIFEST_FILE="$work/manifest4.env" \
       CE_BOOTSTRAP_BASE_URL="file://$work/src" \
       CLAUDE_PLUGIN_DATA="$work/codeeraser-4" sh "$STARTER" --version)
 [ "$out" = "$want" ] || fail 4 "ce with core leg answered '$out' not '$want'"
-[ -f "$work/codeeraser-4/ce-core$ext" ] || fail 4 "verified ce-core not placed as plain sibling"
-[ "$(sha_of "$work/codeeraser-4/ce-core$ext")" = "$corepin" ] || fail 4 "placed ce-core sha drifted"
+[ -f "$work/codeeraser-4/$corepayload" ] || fail 4 "verified ce-core not placed at $corepayload"
+[ "$(sha_of "$work/codeeraser-4/$corepayload")" = "$corepin" ] || fail 4 "placed ce-core sha drifted"
+[ ! -e "$work/codeeraser-4/ce-core$ext" ] || fail 4 "a plain ce-core was placed"
 
 # --- state 5: a tampered core DOWNLOAD refuses the artifact loudly and
 # then DEGRADES (audit #419): exit 1 here used to take every hook down
@@ -204,7 +218,7 @@ err=$(cat "$work/err5")
 [ "$rc" -eq 0 ] || fail 5 "the guard must survive a bad core download (rc=$rc)"
 [ "$out" = "$want" ] || fail 5 "ce did not run degraded: $out"
 case "$err" in *"REFUSING downloaded ce-core"*) ;; *) fail 5 "core refusal not loud: $err" ;; esac
-[ ! -f "$work/codeeraser-5/ce-core$ext" ] || fail 5 "tampered ce-core was placed"
+[ ! -f "$work/codeeraser-5/$corepayload" ] || fail 5 "tampered ce-core was placed"
 
 # --- state 6: a failed download degrades to PATH, and its notice
 # stays OFF stdout. The starter always exec's into a hook whose stdout
@@ -226,12 +240,12 @@ out=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest6.env" \
       CLAUDE_PLUGIN_DATA="$work/codeeraser-6" sh "$STARTER" --version 2>/dev/null)
 [ "$out" = "$want" ] || fail 6 "stdout carried more than the payload's own output: '$out'"
 
-# --- state 7: a MISMATCHING ce-core already on disk is refused AND
-# removed — the download leg always refused a bad core, but a bad one
-# already placed survived every early return and stayed exactly where
-# ce's resolver probes for a plain `ce-core` sibling ----------------
+# --- state 7: a mismatching core at this version's own name is refused
+# and removed — the download leg always refused a bad core, but a bad
+# one already placed survived every early return and stayed exactly
+# where the next run would bind it ------------------------------------
 mkdir -p "$work/codeeraser-7"
-cp "$CE_BIN" "$work/codeeraser-7/ce-core$ext"   # content does not match the pin below
+cp "$CE_BIN" "$work/codeeraser-7/$corepayload"   # content does not match the pin below
 rm -f "$work/src/$corepayload"           # and the download leg cannot replace it
 cat >"$work/manifest7.env" <<EOF
 CE_MANIFEST_VERSION="0.0.0-test"
@@ -243,7 +257,7 @@ err=$(PATH="$work/pathbin:$PATH" CE_MANIFEST_FILE="$work/manifest7.env" \
       CE_BOOTSTRAP_BASE_URL="file://$work/src" \
       CLAUDE_PLUGIN_DATA="$work/codeeraser-7" sh "$STARTER" --version 2>&1 >/dev/null) || true
 case "$err" in *"REFUSING on-disk ce-core"*) ;; *) fail 7 "stale core not refused: $err" ;; esac
-[ ! -f "$work/codeeraser-7/ce-core$ext" ] || fail 7 "mismatching ce-core left in place"
+[ ! -f "$work/codeeraser-7/$corepayload" ] || fail 7 "mismatching ce-core left in place"
 
 # --- state 8: with a core pin in force, ce is BOUND to the pinned
 # path. Removing a bad core (state 7) or failing to fetch one used to
@@ -258,7 +272,7 @@ out=$(PATH="$work/pathcore:$PATH" CE_MANIFEST_FILE="$work/manifest7.env" \
       CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$work/codeeraser-8" \
       sh "$STARTER" doctor . 2>&1) || true
 case "$out" in
-    *"codeeraser-8/ce-core"*) ;;
+    *"codeeraser-8/ce-core-0.0.0-test-$key"*) ;;
     *) fail 8 "ce resolved a core other than the pinned path: $out" ;;
 esac
 
@@ -300,7 +314,7 @@ out=$(PATH="$work/pathcore10:$PATH" CE_MANIFEST_FILE="$work/manifest10.env" \
       CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$work/codeeraser-10" \
       sh "$STARTER" doctor . 2>&1) || true
 # Read exactly like state 8, inverted: when the bind target is the
-# absent data-dir core, doctor says "cannot start <data>/ce-core".
+# absent data-dir core, doctor says "cannot start <data>/ce-core-<ver>-<key>".
 # Its ABSENCE is the proof the PATH core was bound instead — the
 # stand-in core is ce itself, so a successful spawn prints ce's own
 # output and never names a path.
@@ -311,7 +325,7 @@ case "$out" in
     *handshake*) ;;
     *) fail 10 "doctor never reached the core section: $out" ;;
 esac
-[ ! -f "$work/codeeraser-10/ce-core$ext" ] || fail 10 "a core was placed despite a verified PATH one"
+[ ! -f "$work/codeeraser-10/$corepayload" ] || fail 10 "a core was placed despite a verified PATH one"
 
 # --- state 11: the bound stamp's fast path hashes NOTHING. State 1's
 # verified download left `bound-<version>.env` in codeeraser-1; with a
@@ -546,4 +560,122 @@ if [ -s "$work/err24" ]; then fail 24 "a value naming no folder was spoken of: $
 after24=$(ls -la "$work/pd24/other-plugin" "$work/pd24/codeeraser-mkt")
 [ "$before24" = "$after24" ] || fail 24 "a folder beside or under the value changed"
 
-echo "bootstrap_e2e: PASS (25 states, key=$key)"
+# --- state 25: two plugin versions open at once share the data folder
+# (every update with an older session still running). Version X
+# (0.0.0-test, manifest4) places its pair and stamp; a run of version Y
+# (0.0.1-test, another core pin) places Y's core at Y's own name and
+# leaves X's core and stamp as they were; X then re-verifies with the
+# transport gone: its own core answers, nothing is fetched. Until 1.10.0
+# both versions wrote one `ce-core`, and each removed the other's -------
+mkdir -p "$work/src25" "$work/codeeraser-25"
+cp "$CE_BIN" "$work/src25/$payload"
+cp "$CE_BIN" "$work/src25/$corepayload"
+cp "$CE_BIN" "$work/src25/ce-0.0.1-test-$key$ext"
+echo "the core of 0.0.1-test" >"$work/src25/ce-core-0.0.1-test-$key$ext"
+corepinY=$(sha_of "$work/src25/ce-core-0.0.1-test-$key$ext")
+cat >"$work/manifest25.env" <<EOF
+CE_MANIFEST_VERSION="0.0.1-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="$pin"
+CE_SHA256_${envkey}_CECORE="$corepinY"
+EOF
+d25="$work/codeeraser-25"
+out=$(CE_MANIFEST_FILE="$work/manifest4.env" CE_BOOTSTRAP_BASE_URL="file://$work/src25" \
+      CLAUDE_PLUGIN_DATA="$d25" sh "$STARTER" --version)
+[ "$out" = "$want" ] && [ -f "$d25/$corepayload" ] && [ -f "$d25/bound-0.0.0-test.env" ] \
+    || fail 25 "version X did not place its core and stamp: '$out' $(ls "$d25")"
+stampX=$(cat "$d25/bound-0.0.0-test.env")
+out=$(CE_MANIFEST_FILE="$work/manifest25.env" CE_BOOTSTRAP_BASE_URL="file://$work/src25" \
+      CLAUDE_PLUGIN_DATA="$d25" sh "$STARTER" --version 2>"$work/err25")
+[ "$out" = "$want" ] || fail 25 "version Y did not answer: '$out' $(cat "$work/err25")"
+[ "$(sha_of "$d25/ce-core-0.0.1-test-$key$ext")" = "$corepinY" ] || fail 25 "Y's core is not at Y's name"
+[ "$(sha_of "$d25/$corepayload")" = "$corepin" ] || fail 25 "Y's run changed or removed X's core"
+[ "$(cat "$d25/bound-0.0.0-test.env")" = "$stampX" ] || fail 25 "Y's run changed X's stamp"
+[ ! -s "$work/err25" ] || fail 25 "Y's run refused something: $(cat "$work/err25")"
+# the stamp is removed so X walks the slow path; a stamp comes back only
+# when every pinned leg verified, and with no transport only X's own
+# core on disk can have verified
+rm "$d25/bound-0.0.0-test.env"
+out=$(CE_MANIFEST_FILE="$work/manifest4.env" CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+      CLAUDE_PLUGIN_DATA="$d25" sh "$STARTER" --version 2>"$work/err25b")
+[ "$out" = "$want" ] || fail 25 "X did not answer again: '$out' $(cat "$work/err25b")"
+bound=$(sed -n 's/^BOUND_CORE=//p' "$d25/bound-0.0.0-test.env" 2>/dev/null || true)
+[ "$bound" = "$d25/$corepayload" ] || fail 25 "X re-verified to '$bound', not its own core: $(cat "$work/err25b")"
+
+# --- state 26: the plain `ce-core` a starter up to 1.10.0 placed does not
+# match this version's pin: it is that version's, so it stays where it is
+# (no refusal, no removal), and ce is bound to this version's own path,
+# never to it - air-gapped with no versioned core, doctor names the
+# versioned path as the core it could not start ----------------------
+d26="$work/codeeraser-26"
+mkdir -p "$d26"
+cp "$CE_BIN" "$d26/$payload"
+echo "an older version's core" >"$d26/ce-core$ext"
+chmod +x "$d26/ce-core$ext"
+plain26=$(sha_of "$d26/ce-core$ext")
+out=$(CE_MANIFEST_FILE="$work/manifest7.env" CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$d26" \
+      sh "$STARTER" doctor . 2>&1) || true
+case "$out" in
+    *"codeeraser-26/ce-core-0.0.0-test-$key"*) ;;
+    *) fail 26 "ce was not bound to the versioned core path: $out" ;;
+esac
+case "$out" in *"REFUSING on-disk ce-core"*) fail 26 "the plain core was refused: $out" ;; esac
+[ "$(sha_of "$d26/ce-core$ext" 2>/dev/null)" = "$plain26" ] || fail 26 "the plain core was touched"
+
+# --- state 27: the sweep, on `health` only. Another version (0.0.9-old)
+# whose stamp and pair nobody touched since 2020 goes; a version with a
+# fresh stamp (0.0.8-live) keeps its old pair; the plain core stays while
+# a stamp binds it and goes once none does. Two rules hold it back: an
+# air-gapped run removes nothing (nothing removed could be fetched back),
+# and with no core pin the plain core stays (ce's resolver still reads it).
+# The transport cannot serve: the verified pair on disk answers, and a
+# sweep run fetches nothing --------------------------------------------
+d27="$work/codeeraser-27"
+mkdir -p "$d27"
+cp "$CE_BIN" "$d27/$payload"
+cp "$CE_BIN" "$d27/$corepayload"
+for v in 0.0.9-old 0.0.8-live; do
+    : >"$d27/ce-$v-$key$ext"
+    : >"$d27/ce-core-$v-$key$ext"
+    touch -t 202001010000 "$d27/ce-$v-$key$ext" "$d27/ce-core-$v-$key$ext"
+done
+printf 'BOUND_CE=%s\nBOUND_CORE=%s\n' "$d27/ce-0.0.9-old-$key$ext" "$d27/ce-core-0.0.9-old-$key$ext" \
+    >"$d27/bound-0.0.9-old.env"
+touch -t 202001010000 "$d27/bound-0.0.9-old.env"
+: >"$d27/ce-core$ext"
+printf 'BOUND_CE=%s\nBOUND_CORE=%s\n' "$d27/ce-0.0.8-live-$key$ext" "$d27/ce-core$ext" >"$d27/bound-0.0.8-live.env"
+left27() { ls "$d27" | tr '\n' ' '; }
+stale27="bound-0.0.9-old.env ce-0.0.9-old-$key$ext ce-core-0.0.9-old-$key$ext"
+sweep27() { # $1 = manifest, $2 = CE_AIRGAPPED (empty = off), the rest = the command
+    m27=$1; a27=$2; shift 2
+    CE_MANIFEST_FILE="$m27" CE_AIRGAPPED="$a27" CE_BOOTSTRAP_BASE_URL="file://$work/gone" \
+        CLAUDE_PLUGIN_DATA="$d27" sh "$STARTER" "$@" >/dev/null 2>&1 || true
+}
+sweep27 "$work/manifest4.env" "" --version
+for f in $stale27 "ce-core$ext"; do
+    [ -e "$d27/$f" ] || fail 27 "a non-health command swept $f: $(left27)"
+done
+sweep27 "$work/manifest4.env" 1 health --hook
+for f in $stale27 "ce-core$ext"; do
+    [ -e "$d27/$f" ] || fail 27 "an air-gapped health run removed $f: $(left27)"
+done
+sweep27 "$work/manifest4.env" "" health --hook
+for f in $stale27; do
+    [ ! -e "$d27/$f" ] || fail 27 "health kept the stale $f: $(left27)"
+done
+for f in bound-0.0.8-live.env "ce-0.0.8-live-$key$ext" "ce-core-0.0.8-live-$key$ext" "ce-core$ext" \
+    bound-0.0.0-test.env "$payload" "$corepayload"; do
+    [ -e "$d27/$f" ] || fail 27 "health removed $f: $(left27)"
+done
+grep -q "^BOUND_CORE=$d27/$corepayload\$" "$d27/bound-0.0.0-test.env" \
+    || fail 27 "the sweep run did not re-verify its own pair: $(cat "$d27/bound-0.0.0-test.env")"
+# no stamp binds the plain core now; under a manifest pinning ce and no
+# core (manifest1) it stays, under one pinning a core (manifest4) it goes
+printf 'BOUND_CE=%s\nBOUND_CORE=\n' "$d27/ce-0.0.8-live-$key$ext" >"$d27/bound-0.0.8-live.env"
+sweep27 "$work/manifest1.env" "" health --hook
+[ -e "$d27/ce-core$ext" ] || fail 27 "with no core pin the sweep removed the plain core: $(left27)"
+sweep27 "$work/manifest4.env" "" health --hook
+[ ! -e "$d27/ce-core$ext" ] || fail 27 "the plain core no stamp binds was kept: $(left27)"
+[ -e "$d27/ce-0.0.8-live-$key$ext" ] || fail 27 "the live version's ce went with the plain core"
+
+echo "bootstrap_e2e: PASS (28 states, key=$key)"

@@ -252,6 +252,7 @@ run_path_ce() {
 }
 
 key=$(plat_key)
+first="${1:-}"
 ext=""
 case "$key" in x86_64-windows) ext=".exe" ;; esac
 pin=$(pin_for CE)
@@ -260,9 +261,14 @@ bound_core=""
 # stamp may record. ensure_core clears it on each of its degrades.
 core_ok=1
 
-# ce-core rides the same pin flow (from v0.2.0): placed as a plain
-# `ce-core` sibling in the data dir — exactly where ce's resolver
-# probes — BEFORE ce execs. EVERY core failure degrades, none dies:
+# ce-core rides the same pin flow (from v0.2.0), placed BEFORE ce execs
+# and named like its release asset and like ce, `ce-core-<ver>-<key>`:
+# two plugin versions open at once (an update with an older session
+# still running) each keep their own verified core instead of removing
+# and re-fetching each other's. CE_CORE_BIN binds ce to it. The plain
+# `ce-core` the starters up to 1.10.0 placed is theirs: never read,
+# placed or removed here (sweep takes it once no stamp binds it).
+# EVERY core failure degrades, none dies:
 # hooks never need the core (judgment families report their own
 # handshake miss), so killing the starter over it takes the guard
 # down for a component the guard does not use. A pin mismatch still
@@ -271,7 +277,7 @@ core_ok=1
 ensure_core() {
     corepin=$(pin_for CECORE)
     if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
-    coretgt="$data/ce-core$ext"
+    coretgt="$data/ce-core-$ver-$key$ext"
     # Same rule as ce below: a PATH ce-core that MATCHES the pin is the
     # artifact the download would place (the installer leaves one), so
     # it BECOMES the bind target. Unmatched PATH cores stay refused —
@@ -297,10 +303,10 @@ ensure_core() {
         if [ "$(sha_of "$coretgt")" = "$corepin" ]; then
             return 0
         fi
-        # A MISMATCHING copy already on disk is the same artifact the
-        # download path refuses outright, so it gets the same answer:
-        # removed here, before any return can leave it in place for
-        # ce's resolver to pick up as a plain sibling. The old code
+        # A MISMATCHING copy at this version's own name is the same
+        # artifact the download path refuses outright, so it gets the
+        # same answer: removed here, before any return can leave it in
+        # place for a later run to bind. The old code
         # only rejected a bad DOWNLOAD, so one prior file write pinned
         # an attacker's core into every later session.
         echo "codeeraser: REFUSING on-disk ce-core — SHA256 mismatch, removing $coretgt" >&2
@@ -336,7 +342,35 @@ bind() { # $1 = the verified ce about to exec
     [ -n "$data" ] && [ -n "$stamp" ] && [ "$core_ok" = 1 ] || return 0
     mkdir -p "$data" 2>/dev/null || return 0
     stamptmp="$stamp.$$"
-    printf "BOUND_CE=%s\nBOUND_CORE=%s\n" "$1" "$bound_core" > "$stamptmp" && mv -f "$stamptmp" "$stamp"
+    # never air-gapped: nothing it removes could be fetched back, and the operator owns the folder
+    printf "BOUND_CE=%s\nBOUND_CORE=%s\n" "$1" "$bound_core" > "$stamptmp" && mv -f "$stamptmp" "$stamp" \
+        && [ "$first" = health ] && [ -z "${CE_AIRGAPPED:-}" ] && sweep
+}
+
+# Other versions' files in the shared data dir, swept once per session
+# start (bind, on `health`), silent on every failure. Every session
+# start of a version rewrites its stamp, so a stamp's age is the time
+# since that version last opened a session; 14 days outlasts any one.
+keep_days=14
+sweep() {
+    find "$data" -maxdepth 1 -type f -name 'bound-*.env' ! -name "bound-$ver.env" \
+        -mtime +$keep_days -exec rm -f {} + 2>/dev/null
+    # binaries of a version that is not this one and keeps no stamp (a
+    # file a running process holds is tried again at the next sweep)
+    find "$data" -maxdepth 1 -type f \( -name "ce-[0-9]*-$key$ext" -o -name "ce-core-[0-9]*-$key$ext" \) \
+        -mtime +$keep_days 2>/dev/null | while IFS= read -r f; do
+        v=${f##*/}; v=${v#ce-}; v=${v#core-}; v=${v%-"$key$ext"}
+        [ "$v" = "$ver" ] || [ -f "$data/bound-$v.env" ] || rm -f "$f" 2>/dev/null
+    done
+    # the plain core of the starters up to 1.10.0, once no stamp binds it;
+    # only while this version binds its own core (with no core pin ce's
+    # resolver still reads a plain sibling, and it may be the operator's)
+    [ -n "$corepin" ] && [ -f "$data/ce-core$ext" ] || return 0
+    for s in "$data"/bound-*.env; do
+        l2=""; [ -f "$s" ] && { IFS= read -r l1; IFS= read -r l2; } <"$s"
+        [ -n "${l2#BOUND_CORE=}" ] && [ "${l2#BOUND_CORE=}" -ef "$data/ce-core$ext" ] && return 0
+    done
+    rm -f "$data/ce-core$ext" 2>/dev/null
 }
 
 # No pin or no data dir: the download path is not configured — PATH ce.

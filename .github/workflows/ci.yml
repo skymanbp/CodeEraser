@@ -137,9 +137,10 @@ jobs:
           cargo clippy --locked --all-targets -- -D warnings
           cargo fmt --check
 
-      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, eighteen
-      # states (PATH fallback / fresh verified download / warm cache /
-      # tampered refusal / pinned ce-core sibling placement / tampered
+      # M7-P1 + v0.2.0 core legs: the ADR-007 bootstrap chain, the states
+      # its header table lists (PATH fallback / fresh verified download / warm cache /
+      # tampered refusal / pinned ce-core placed under its versioned asset
+      # name, one per plugin version sharing the data folder / tampered
       # core refusal / failed-download degrade to PATH / mismatching
       # on-disk core refused / ce bound to the pinned path / pin-identical
       # PATH ce reused / pin-identical PATH ce-core reused / the four
@@ -559,7 +560,9 @@ jobs:
           [ -z "$err" ] || { echo "the verified leg was not silent: $err"; exit 1; }
           [ "$out" = "ce $CE_MANIFEST_VERSION" ] || { echo "starter answered '$out', the manifest says $CE_MANIFEST_VERSION"; exit 1; }
           [ -f "$data/bound-$CE_MANIFEST_VERSION.env" ] || { echo "the verified leg left no stamp"; exit 1; }
-          [ -x "$data/ce-core" ] || { echo "the pinned ce-core was not placed"; exit 1; }
+          # the starter names the core like its release asset: ce-core-<version>-<key>
+          core="$data/ce-core-$CE_MANIFEST_VERSION-$(uname -m)-linux"
+          [ -x "$core" ] || { echo "the pinned ce-core was not placed at $core"; ls -l "$data"; exit 1; }
           CLAUDE_PLUGIN_DATA="$data" sh plugin/bin/ce.sh doctor . | tee "$RUNNER_TEMP/doctor.out"
           grep -q "handshake: OK" "$RUNNER_TEMP/doctor.out" || { echo "doctor did not reach the downloaded core"; exit 1; }
 

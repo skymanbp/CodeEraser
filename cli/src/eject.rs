@@ -207,13 +207,18 @@ fn strays(anchor: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
     found
 }
 
-/// Ours = `ce-core[.exe]` or `ce-<version>-…` (versions open with a
+/// Ours = `ce-core[.exe]` (the starter's core up to 1.10.0),
+/// `ce-<version>-…` or `ce-core-<version>-…` (versions open with a
 /// DIGIT); `starts_with("ce-")` also ate a neighbour's `ce-cache`.
 fn ours(name: &str) -> bool {
     let Some(tail) = name.strip_prefix("ce-") else {
         return false;
     };
-    tail == "core" || tail.starts_with("core.") || tail.starts_with(|c: char| c.is_ascii_digit())
+    let versioned = |t: &str| t.starts_with(|c: char| c.is_ascii_digit());
+    tail == "core"
+        || tail.starts_with("core.")
+        || versioned(tail)
+        || tail.strip_prefix("core-").is_some_and(versioned)
 }
 
 /// Remove one target with a bounded teardown wait: the daemon just

@@ -62,9 +62,13 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 共<!--ce:count:platforms#word-->五<!--/ce-->目标<!--ce:count:binaries#word-->十五<!--/ce-->枚；启动器只取前两枚，v1.7.0 前的清单只钉前三个目标）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
 路径记在 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，同会话后续 hook 直接 exec；
 戳里记的核是磁盘上真有的那个文件（Windows 上 Git Bash 的 `command -v` 答的路径不带 `.exe`，启动器补上再绑定）；
-清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
-`CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，
-不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
+清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。每个插件版本各留自己的一对二进制和一个戳，
+按发布资产的名字命名：`ce-<清单版本>-<平台>`、`ce-core-<清单版本>-<平台>` 与 `bound-<清单版本>.env`，
+所以两个版本同时开着（更新时还有旧会话在跑）也不会互相替换对方的文件；1.10.0 及以前的启动器放的不带版本的 `ce-core` 不再读写。
+每次 SessionStart 启动器删掉 14 天没有会话改写过的别的版本的戳、不是自己版本又没有戳的那一对（文件满 14 天时），
+以及没有任何戳绑定的不带版本的 `ce-core`（最后这一项只在清单为本平台钉了核时才删）；`CE_AIRGAPPED=1` 时什么都不删。手放到
+`CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>`（核放到 `ce-core-<清单版本>-<平台>`）的副本走同一道 pin：相符即按已验证执行并落戳，
+不相符具名拒绝、不执行（不相符的核同时删掉；`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
 副本与戳只放在本插件自己的数据目录里：`CLAUDE_PLUGIN_DATA` 的末段须是插件名 `codeeraser`
 或以 `codeeraser-` 开头。插件参考页（https://code.claude.com/docs/en/plugins-reference，「Environment variables」节）说这个目录是 `~/.claude/plugins/data/<id>/`，`<id>` 是插件标识符里字母、数字、`_`、`-` 以外的每个字符都换成 `-`；`claude plugin install` 收的标识符是 `<插件>@<市场>`，本插件装好的目录是 `codeeraser-codeeraser`。
 经 Bash 工具跑的命令（如 `/codeeraser:update`）可能带着别的插件的目录：那时只用它旁边恰好一个
