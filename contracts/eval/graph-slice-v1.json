@@ -382,8 +382,9 @@
     {
       "lang": "rs",
       "path": "cli/src/scan/metrics/size.rs",
-      "sha256": "47c47c24eed7dbbb661033828e5e04bd28cd669a01a13daedf8b9db3ef3fccd4",
+      "sha256": "a863df51ab754196c388a8a0bd3a9759e10b06603ab8904357aa775d3b0db21a",
       "sites": {
+        "mod_decl": 1,
         "use": 2
       }
     },
@@ -1183,11 +1184,11 @@
       "md/url": 5,
       "py/import": 21,
       "py/import_from": 50,
-      "rs/mod_decl": 135,
+      "rs/mod_decl": 136,
       "rs/use": 421,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 707
+    "total_sites": 708
   }
 }

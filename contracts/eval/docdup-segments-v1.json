@@ -634,13 +634,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 2
+        "below_floor": 5
       },
-      "live": 0,
+      "live": 1,
       "path": "cli/src/scan/metrics/size.rs",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
-      "sha256": "47c47c24eed7dbbb661033828e5e04bd28cd669a01a13daedf8b9db3ef3fccd4"
+      "seg_sha256": "92b8e60590d8df3bcd228ba6986475e3e9f648d6904866900286fd36c86bc0e7",
+      "segs_by": {
+        "comment_block": 1
+      },
+      "sha256": "a863df51ab754196c388a8a0bd3a9759e10b06603ab8904357aa775d3b0db21a"
     },
     {
       "exempt_by": {},
@@ -1950,17 +1952,17 @@
     "exempt_by": {
       "license_header": 5
     },
-    "files_with_segments": 95,
+    "files_with_segments": 96,
     "ledger": {
-      "below_floor": 1562,
+      "below_floor": 1565,
       "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,
       "skeleton_line": 60
     },
-    "live": 262,
+    "live": 263,
     "segs_by": {
-      "comment_block": 187,
+      "comment_block": 188,
       "docstring": 16,
       "md_para": 64
     }

@@ -599,16 +599,16 @@
     },
     {
       "bands": {
-        "below_floor": 1,
+        "below_floor": 4,
         "l": 0,
         "m": 2,
-        "s": 0
+        "s": 3
       },
       "lang": "rs",
       "path": "cli/src/scan/metrics/size.rs",
-      "sha256": "47c47c24eed7dbbb661033828e5e04bd28cd669a01a13daedf8b9db3ef3fccd4",
-      "symbols": 3,
-      "units": 3
+      "sha256": "a863df51ab754196c388a8a0bd3a9759e10b06603ab8904357aa775d3b0db21a",
+      "symbols": 9,
+      "units": 9
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 623,
+      "rs/below_floor": 626,
       "rs/l": 132,
       "rs/m": 505,
-      "rs/s": 606,
+      "rs/s": 609,
       "ts/below_floor": 17,
       "ts/l": 6,
       "ts/m": 1,
@@ -1894,16 +1894,16 @@
       "go": 92,
       "md": 123,
       "py": 126,
-      "rs": 1866,
+      "rs": 1872,
       "ts": 32
     },
-    "total_symbols": 2239,
-    "total_units": 2116,
+    "total_symbols": 2245,
+    "total_units": 2122,
     "units_by": {
       "go": 92,
       "md": 0,
       "py": 126,
-      "rs": 1866,
+      "rs": 1872,
       "ts": 32
     }
   }
