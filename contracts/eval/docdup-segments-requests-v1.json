@@ -209,13 +209,15 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 17,
-        "fenced_code_line": 32
+        "below_floor": 16,
+        "skeleton_line": 1
       },
-      "live": 0,
+      "live": 1,
       "path": "src/requests/__init__.py",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "a5d91992a5e241334b17ec9f27b09c7a856323977b531d2e9229b68b5b9773b2",
+      "segs_by": {
+        "docstring": 1
+      },
       "sha256": "80534322a1a3167d8775829ee220a6acf4fe455f3f778c4b8e94bcf7fadfa0b5"
     },
     {
@@ -249,7 +251,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 13,
-        "fenced_code_line": 6
+        "skeleton_line": 1
       },
       "live": 1,
       "path": "src/requests/_types.py",
@@ -264,8 +266,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 28,
-        "fenced_code_line": 5,
-        "skeleton_line": 51
+        "skeleton_line": 52
       },
       "live": 8,
       "path": "src/requests/adapters.py",
@@ -280,8 +281,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 9,
-        "fenced_code_line": 7,
-        "skeleton_line": 52
+        "skeleton_line": 53
       },
       "live": 1,
       "path": "src/requests/api.py",
@@ -296,8 +296,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 26,
-        "fenced_code_line": 4,
-        "skeleton_line": 2
+        "skeleton_line": 3
       },
       "live": 1,
       "path": "src/requests/auth.py",
@@ -311,13 +310,15 @@
       "exempt_by": {},
       "lang": "py",
       "ledger": {
-        "below_floor": 2,
-        "fenced_code_line": 9
+        "below_floor": 1,
+        "skeleton_line": 1
       },
-      "live": 0,
+      "live": 1,
       "path": "src/requests/certs.py",
-      "seg_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "segs_by": {},
+      "seg_sha256": "7a05c31fcdd7ee7d5b437762253a23006c5fb4c9c2be9a81396a66e7bd1fdbe9",
+      "segs_by": {
+        "docstring": 1
+      },
       "sha256": "fd9c6b83359cef90ff6c4eeeab8dcc2388da382ebca7d00a499b3c0b434a87e4"
     },
     {
@@ -325,8 +326,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 17,
-        "fenced_code_line": 6,
-        "skeleton_line": 8
+        "skeleton_line": 9
       },
       "live": 0,
       "path": "src/requests/compat.py",
@@ -339,8 +339,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 60,
-        "fenced_code_line": 6,
-        "skeleton_line": 22
+        "skeleton_line": 23
       },
       "live": 2,
       "path": "src/requests/cookies.py",
@@ -355,7 +354,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 29,
-        "fenced_code_line": 4
+        "skeleton_line": 1
       },
       "live": 1,
       "path": "src/requests/exceptions.py",
@@ -384,7 +383,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 3,
-        "fenced_code_line": 9
+        "skeleton_line": 1
       },
       "live": 0,
       "path": "src/requests/hooks.py",
@@ -397,8 +396,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 110,
-        "fenced_code_line": 4,
-        "skeleton_line": 12
+        "skeleton_line": 13
       },
       "live": 12,
       "path": "src/requests/models.py",
@@ -426,8 +424,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 95,
-        "fenced_code_line": 5,
-        "skeleton_line": 50
+        "skeleton_line": 51
       },
       "live": 5,
       "path": "src/requests/sessions.py",
@@ -458,7 +455,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 10,
-        "fenced_code_line": 4
+        "skeleton_line": 1
       },
       "live": 1,
       "path": "src/requests/structures.py",
@@ -473,8 +470,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 99,
-        "fenced_code_line": 5,
-        "skeleton_line": 46
+        "skeleton_line": 47
       },
       "live": 5,
       "path": "src/requests/utils.py",
@@ -716,17 +712,17 @@
   },
   "summary": {
     "exempt_by": {},
-    "files_with_segments": 20,
+    "files_with_segments": 22,
     "ledger": {
-      "below_floor": 1412,
-      "fenced_code_line": 111,
+      "below_floor": 1410,
+      "fenced_code_line": 5,
       "indented_code_lines": 279,
-      "skeleton_line": 246
+      "skeleton_line": 260
     },
-    "live": 98,
+    "live": 100,
     "segs_by": {
       "comment_block": 9,
-      "docstring": 34,
+      "docstring": 36,
       "md_para": 55
     }
   }

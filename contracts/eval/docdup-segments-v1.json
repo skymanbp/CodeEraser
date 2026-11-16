@@ -1492,8 +1492,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 110,
-        "fenced_code_line": 4,
-        "skeleton_line": 12
+        "skeleton_line": 13
       },
       "live": 12,
       "path": "contracts/fixtures/crosscheck/python/src__requests__models.py",
@@ -1524,7 +1523,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 10,
-        "fenced_code_line": 4
+        "skeleton_line": 1
       },
       "live": 1,
       "path": "contracts/fixtures/crosscheck/python/src__requests__structures.py",
@@ -1539,8 +1538,7 @@
       "lang": "py",
       "ledger": {
         "below_floor": 99,
-        "fenced_code_line": 5,
-        "skeleton_line": 46
+        "skeleton_line": 47
       },
       "live": 5,
       "path": "contracts/fixtures/crosscheck/python/src__requests__utils.py",
@@ -1955,10 +1953,10 @@
     "files_with_segments": 96,
     "ledger": {
       "below_floor": 1569,
-      "fenced_code_line": 52,
+      "fenced_code_line": 39,
       "html_line": 2,
       "indented_code_lines": 12,
-      "skeleton_line": 60
+      "skeleton_line": 63
     },
     "live": 263,
     "segs_by": {
