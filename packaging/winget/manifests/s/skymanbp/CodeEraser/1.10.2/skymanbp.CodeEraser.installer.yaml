@@ -17,6 +17,6 @@ ProductCode: CodeEraser
 Installers:
 - Architecture: x64
   InstallerUrl: https://github.com/skymanbp/CodeEraser/releases/download/v1.10.2/CodeEraser-1.10.2-x86_64-windows-setup.exe
-  InstallerSha256: 82479DBBD2D75C35A1AFEA1CD273880AA94B165E8220CCF08631130710F58025
+  InstallerSha256: 1DA2729AEE7C94A2D4D1CDFCE8954CAF1D9C25BFDC730F52CB7F5801198BDA8C
 ManifestType: installer
 ManifestVersion: 1.10.0
