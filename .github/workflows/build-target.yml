@@ -284,6 +284,62 @@ jobs:
           done
           [ "$bad" = 0 ] || { printf '%s\n' "$LIST"; exit 1; }
           echo "installer lists $GUI_APP.exe, ce.exe and ce-core.exe"
+      # a silent upgrade while running processes hold ce.exe and ce-core.exe:
+      # the real installer must exit 0, replace both files and keep the GUI
+      # program, and a later install with no holder must leave no *.old twin
+      - name: Run the Windows installer over held sidecars
+        if: endsWith(inputs.key, '-windows')
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = @(Get-ChildItem gui/src-tauri/target/release/bundle/nsis/*-setup.exe)
+          if ($setup.Count -ne 1) { Write-Output "::error::expected one *-setup.exe in bundle/nsis, found $($setup.Count)"; exit 1 }
+          $setup = $setup[0].FullName
+          $dir = Join-Path $env:RUNNER_TEMP 'ce-held'
+          $ce = (Resolve-Path "gui/src-tauri/binaries/ce-$env:TARGET_TRIPLE.exe").Path
+          $core = (Resolve-Path "gui/src-tauri/binaries/ce-core-$env:TARGET_TRIPLE.exe").Path
+          function Install([string]$what) {
+            # /D= is the last argument and takes no quotes
+            $p = Start-Process -FilePath $setup -ArgumentList @('/S', "/D=$dir") -Wait -PassThru
+            Write-Host "$what install exit code $($p.ExitCode)"
+            return $p.ExitCode
+          }
+          function Sha([string]$f) { if (Test-Path $f) { (Get-FileHash -Algorithm SHA256 $f).Hash.ToLower() } else { 'missing' } }
+          function Hold([string]$exe, [string]$arg) {
+            $i = New-Object System.Diagnostics.ProcessStartInfo
+            $i.FileName = $exe
+            $i.Arguments = $arg
+            $i.UseShellExecute = $false
+            $i.RedirectStandardInput = $true
+            return [System.Diagnostics.Process]::Start($i)
+          }
+          $bad = 0
+          if ((Install 'first') -ne 0) { Write-Output '::error::the first install did not exit 0'; exit 1 }
+          # each slot now holds bytes that differ from the bundle's
+          Copy-Item $ce (Join-Path $dir 'ce-core.exe') -Force
+          Copy-Item $core (Join-Path $dir 'ce.exe') -Force
+          # ce's bytes serve MCP on stdin, the core's bytes wait on stdin
+          $h1 = Hold (Join-Path $dir 'ce-core.exe') 'mcp'
+          $h2 = Hold (Join-Path $dir 'ce.exe') ''
+          Start-Sleep -Seconds 3
+          if ($h1.HasExited -or $h2.HasExited) { Write-Output "::error::a holder exited before the install (ce-core.exe $($h1.HasExited), ce.exe $($h2.HasExited))"; exit 1 }
+          if ((Install 'second') -ne 0) { Write-Output '::error::the install over held sidecars did not exit 0'; $bad = 1 }
+          foreach ($pair in @(@('ce.exe', $ce), @('ce-core.exe', $core))) {
+            $got = Sha (Join-Path $dir $pair[0]); $want = Sha $pair[1]
+            if ($got -ne $want) { Write-Output "::error::$($pair[0]) not replaced: installed $got, staged $want"; $bad = 1 }
+            else { Write-Output "$($pair[0]) replaced: $got" }
+          }
+          if ($h1.HasExited -or $h2.HasExited) { Write-Output "::error::a holder died during the install (ce-core.exe $($h1.HasExited), ce.exe $($h2.HasExited))"; $bad = 1 }
+          if (-not (Test-Path (Join-Path $dir "$env:GUI_APP.exe"))) { Write-Output "::error::$env:GUI_APP.exe missing after the install"; $bad = 1 }
+          foreach ($h in @($h1, $h2)) {
+            $h.StandardInput.Close()
+            if (-not $h.WaitForExit(30000)) { Write-Output "::warning::holder $($h.Id) did not exit after its stdin closed; stopping it"; $h.Kill(); $h.WaitForExit() }
+          }
+          if ((Install 'third') -ne 0) { Write-Output '::error::the install with no holder did not exit 0'; $bad = 1 }
+          $twins = @(Get-ChildItem -Path $dir -Filter '*.old' -File | ForEach-Object Name)
+          if ($twins.Count -ne 0) { Write-Output "::error::twins left after the install with no holder: $($twins -join ', ')"; $bad = 1 }
+          Get-ChildItem -Path $dir -File | Format-Table Name, Length -AutoSize | Out-String | Write-Output
+          exit $bad
       # the launcher's mode as the user receives it: the type-2 runtime
       # extracts itself (no FUSE on the runner) and every file that only
       # its owner may run or that others may not read is named
