@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 8,
+    "docdup_rev": 9,
     "exempt": [
       "live",
       "license_header",
@@ -280,15 +280,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 9
+        "below_floor": 13
       },
       "live": 4,
       "path": "cli/src/dedup/tokens.rs",
-      "seg_sha256": "d7f81d985802bc3a337834aed9845d03debdcc8673e9be1c05046c79de2c1138",
+      "seg_sha256": "691f0dcd87cc2f5e5f03828ea98345dd499d6db648a81d06ad7a61ec6d61c4b3",
       "segs_by": {
         "comment_block": 4
       },
-      "sha256": "e795e7a342224ebd7d20d3924fdd24674987a761866c9cf18206955ae29a52a8"
+      "sha256": "5a9b0e1ef9fa17546c83cea2ddbe868adb0979bc7c3e26315a53f551563ebee1"
     },
     {
       "exempt_by": {},
@@ -1929,8 +1929,8 @@
     }
   ],
   "generated_from": {
-    "ce": "1.7.4",
-    "commit": "cbfeaeb7510180f55dfd4d8d8a8e29fc46eceb57",
+    "ce": "1.10.1",
+    "commit": "e0e458aa45978c05811ec85e25211b875f1f5507",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1954,7 +1954,7 @@
     },
     "files_with_segments": 96,
     "ledger": {
-      "below_floor": 1565,
+      "below_floor": 1569,
       "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,

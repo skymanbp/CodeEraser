@@ -248,16 +248,16 @@
     },
     {
       "bands": {
-        "below_floor": 8,
+        "below_floor": 12,
         "l": 1,
-        "m": 4,
-        "s": 5
+        "m": 5,
+        "s": 7
       },
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "e795e7a342224ebd7d20d3924fdd24674987a761866c9cf18206955ae29a52a8",
-      "symbols": 18,
-      "units": 18
+      "sha256": "5a9b0e1ef9fa17546c83cea2ddbe868adb0979bc7c3e26315a53f551563ebee1",
+      "symbols": 25,
+      "units": 25
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 626,
+      "rs/below_floor": 630,
       "rs/l": 132,
-      "rs/m": 505,
-      "rs/s": 609,
+      "rs/m": 506,
+      "rs/s": 611,
       "ts/below_floor": 17,
       "ts/l": 6,
       "ts/m": 1,
@@ -1894,16 +1894,16 @@
       "go": 92,
       "md": 123,
       "py": 126,
-      "rs": 1872,
+      "rs": 1879,
       "ts": 32
     },
-    "total_symbols": 2245,
-    "total_units": 2122,
+    "total_symbols": 2252,
+    "total_units": 2129,
     "units_by": {
       "go": 92,
       "md": 0,
       "py": 126,
-      "rs": 1872,
+      "rs": 1879,
       "ts": 32
     }
   }

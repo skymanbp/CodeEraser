@@ -158,9 +158,9 @@
     {
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "e795e7a342224ebd7d20d3924fdd24674987a761866c9cf18206955ae29a52a8",
+      "sha256": "5a9b0e1ef9fa17546c83cea2ddbe868adb0979bc7c3e26315a53f551563ebee1",
       "sites": {
-        "use": 6
+        "use": 7
       }
     },
     {
@@ -1185,10 +1185,10 @@
       "py/import": 21,
       "py/import_from": 50,
       "rs/mod_decl": 136,
-      "rs/use": 421,
+      "rs/use": 422,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 708
+    "total_sites": 709
   }
 }
