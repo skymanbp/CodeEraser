@@ -185,9 +185,7 @@ fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {
                 comments.push(node);
                 continue;
             }
-            if hosts.contains(&node.kind())
-                && let Some(s) = docstring_node(node)
-            {
+            if let Some(s) = spec::docstring(node, hosts, comment_kinds) {
                 segs.push(node_seg(KIND_DOCSTRING, s, text));
             }
             stack.extend(ast::children(node).into_iter().rev());
@@ -197,19 +195,6 @@ fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {
         segs.sort_by_key(|s| (s.start_line, s.kind));
         segs
     })
-}
-
-/// The docstring string of a host node: the body's first named child
-/// is a bare-string expression statement (module bodies ARE the
-/// node; function/class bodies sit in the `body` field).
-fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {
-    let body = match host.kind() {
-        "module" => host,
-        _ => host.child_by_field_name("body")?,
-    };
-    let stmt = body.named_child(0)?;
-    let s = stmt.named_child(0)?;
-    (stmt.kind() == "expression_statement" && s.kind() == "string").then_some(s)
 }
 
 /// Contiguous same-column comment nodes merge into one block (design

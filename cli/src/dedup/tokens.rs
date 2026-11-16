@@ -2,12 +2,14 @@
 //! literals → LIT (pieces of ONE literal node collapse into one, and
 //! a string, char or user-defined literal node is one token whole —
 //! `whole_literal`), comments and the import family skipped as whole
-//! subtrees (`skipped`), everything else kept as its kind text. Classification rules derive from leaf-kind AST probes
+//! subtrees (`skipped`), a docstring holding no code skipped like a
+//! comment (rev 6), everything else kept as its kind text. Classification rules derive from leaf-kind AST probes
 //! of all four grammars, not guesses. Known M2 stances (documented,
 //! deliberate): booleans/None are NOT collapsed (their identity is
 //! usually semantic, unlike numbers/strings); Go `blank_identifier`
 //! normalizes to ID like any identifier.
 
+use crate::docdup::spec::{doc_spec, docstring};
 use crate::scan::ast;
 use crate::scan::lang::Lang;
 use crate::scan::loads;
@@ -30,7 +32,15 @@ use tree_sitter::Node;
 /// package's `[scan] import_kinds` declarations and `[scan] loads`
 /// statements are skipped whole like a comment, so a run may continue
 /// across an import one side lacks.
-pub const TOKENIZER_REV: i64 = 5;
+/// 6: a docstring gives no token (the node docdup reads as one,
+/// `docdup::spec::docstring`: the body's first statement past any
+/// comment, when a bare string; here only one whose string holds no
+/// code): it was one LIT spanning every line of the docstring, so at
+/// a file head it joined the statements below the imports into one
+/// run and the block named lines it never compared; code equal but
+/// for a docstring on one side now matches. Every other language's
+/// stream is unchanged.
+pub const TOKENIZER_REV: i64 = 6;
 
 /// One normalized token, carrying its source span for report mapping.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -68,11 +78,14 @@ pub fn stream(src: &[u8], lang: Lang) -> Result<Vec<Token>> {
 /// lines ballooned the previous LIT's span).
 pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {
     let spec = crate::scan::spec::spec(lang);
+    let hosts = doc_spec(lang).docstring_hosts;
     let mut out: Vec<Token> = Vec::new();
     let mut lit_parent: Option<usize> = None;
+    // the docstrings of the hosts walked so far, each skipped when met
+    let mut docstrings: Vec<usize> = Vec::new();
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if skipped(node, spec) {
+        if skipped(node, spec) || met(&mut docstrings, node) {
             continue; // lit_parent intentionally unchanged
         }
         if whole_literal(node, spec) {
@@ -81,16 +94,13 @@ pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {
             continue;
         }
         if node.child_count() > 0 {
-            // a statement list's load statements are name plumbing too
-            // (scan/loads.rs); read where the parent is in hand, so the
-            // walk never asks a node for its parent
-            let lists = spec.loads.statement_lists.contains(&node.kind());
-            stack.extend(
-                ast::children(node)
-                    .into_iter()
-                    .rev()
-                    .filter(|c| !(lists && loads::is_load(*c, src, lang, spec))),
-            );
+            // a host's docstring and a statement list's load statements
+            // are read where the host is in hand, so the walk never
+            // asks a node for its parent
+            let doc =
+                docstring(node, hosts, spec.comment_kinds).filter(|s| literal_pieces(*s, spec));
+            docstrings.extend(doc.map(|s| s.id()));
+            push_children(&mut stack, node, src, lang, spec);
             continue;
         }
         match classify(node.kind(), spec) {
@@ -119,6 +129,31 @@ pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {
 /// discard package and import statements the same way).
 fn skipped(node: Node<'_>, spec: &LangSpec) -> bool {
     spec.comment_kinds.contains(&node.kind()) || loads::import_declaration(node, spec)
+}
+
+/// Whether `node` is a docstring its host put on the list; a docstring
+/// is met once, so it leaves the list.
+fn met(docstrings: &mut Vec<usize>, node: Node<'_>) -> bool {
+    let at = docstrings.iter().position(|id| *id == node.id());
+    at.map(|i| docstrings.swap_remove(i)).is_some()
+}
+
+/// Push `node`'s children, last first; a statement list's load
+/// statements are name plumbing too (scan/loads.rs) and stay off.
+fn push_children<'t>(
+    stack: &mut Vec<Node<'t>>,
+    node: Node<'t>,
+    src: &[u8],
+    lang: Lang,
+    spec: &LangSpec,
+) {
+    let lists = spec.loads.statement_lists.contains(&node.kind());
+    stack.extend(
+        ast::children(node)
+            .into_iter()
+            .rev()
+            .filter(|c| !(lists && loads::is_load(*c, src, lang, spec))),
+    );
 }
 
 fn token(class: &Class, kind: &str, node: Node<'_>) -> Token {
@@ -154,12 +189,15 @@ fn extend_last(out: &mut [Token], node: Node<'_>) {
 /// with a same-parent neighbour is what it was.
 fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {
     let kind = node.kind();
-    if node.child_count() == 0
-        || !(kind.ends_with("string_literal")
+    node.child_count() > 0
+        && (kind.ends_with("string_literal")
             || matches!(kind, "char_literal" | "user_defined_literal"))
-    {
-        return false;
-    }
+        && literal_pieces(node, spec)
+}
+
+/// Every named descendant of `node` is a literal piece: the string
+/// holds no code (a whole literal's test, and a docstring's).
+fn literal_pieces(node: Node<'_>, spec: &LangSpec) -> bool {
     let mut stack = ast::named_children(node);
     while let Some(piece) = stack.pop() {
         if !is_literal(piece.kind(), spec) {
