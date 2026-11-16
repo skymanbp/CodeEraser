@@ -51,7 +51,7 @@
    （键集恰好是花名册、每枚 pin 是 64 位十六进制且与 draft 报的那枚相等、两个版本行等于本次
    tag；判据只读终态，故原样重跑、或补跑 `--bless`，都不再被拒），再跑 `scripts/packaging.js` 重生成 `packaging/`
    下的 Homebrew 公式与 winget 清单（它们是清单的投影，随 pin 同提交）——不再手抄
-   （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.10.2`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.10.2`<!--/ce-->），后者须以
+   （tag 腿两者都断言：前者 == 去 v 的版本号（tag <!--ce:ver:ce#v-->`v1.10.3`<!--/ce--> ⇒ <!--ce:ver:ce#v-->`1.10.3`<!--/ce-->），后者须以
    `/download/<tag>` 结尾，忘翻即拒绝 publish、不再静默 404——
    release.yml verify-publish 腿）。**同一个提交里还有 docs-facts 一行**：
    `contracts/docs-facts.json` 的 `ver:pin#v` 是从 `CE_MANIFEST_VERSION` 派生的
@@ -168,7 +168,7 @@
   `ce update --yes` 落位后 `ce doctor` 握手同版；插件装机走 `/plugin update codeeraser`。
 - **Windows 安装包与被占着的程序**：1.10.2 及以前的安装包在静默模式下遇到被进程占着的
   `ce.exe` / `ce-core.exe` 会跳过不换、照样退 0——用这些安装包升级之前先停掉占着文件的进程，
-  装完按文件核对版本与 sha256。下一版起安装包先把被占的文件改名让开（`gui/src-tauri/windows/hooks.nsh`
+  装完按文件核对版本与 sha256。1.10.3 起安装包先把被占的文件改名让开（`gui/src-tauri/windows/hooks.nsh`
   的 `NSIS_HOOK_PREINSTALL`），发版构建在 Windows 上会在两个被占的程序上真跑安装包（`build-target.yml` 的 `Run the Windows installer over held sidecars` 一步）。
 - 记账：CLAUDE.md 状态行（本地项目卡，2026-08-23 起不入库）+ ccm 发版记录。
 
