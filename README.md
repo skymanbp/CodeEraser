@@ -27,7 +27,7 @@ LLM-assisted codebases drift the same way: the same function written twice, the 
 | duplicate clone blocks left behind | 4 | **0** |
 | duplicated doc segments | 1 | **0** |
 | removals still owed | 1 | **0** |
-| check score | 726 | **1000** |
+| check score | 752 | **1000** |
 
 One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.
 <!-- scoreboard:end -->
@@ -41,7 +41,7 @@ A scripted agent replays one seven-step task (*discounts, a compact report, CSV 
 
 ```console
 $ Write invoicer/discount.py
-✗ ce: content for <work>/invoicer/discount.py duplicates 1 indexed region(s): invoicer/money.py:1-18 (83 tokens). Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.
+✗ ce: content for <work>/invoicer/discount.py duplicates 1 indexed region(s): invoicer/money.py:6-18 (80 tokens). Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.
 ```
 
 **One line, two mouths.** `ce.toml` puts `invoicer/**` on `file_lines_fail = 40`. The write-time guard refuses the write that would cross it, and `ce scan` grades the same tree against the same number — one declaration, read by the hook and by CI.
@@ -64,7 +64,7 @@ The full table, both transcripts and the JSON behind them are in [`demo/README.m
 
 <sub>Zoom and pan this diagram at [codeeraser.dev/how/#verdict](https://codeeraser.dev/how/#verdict).</sub>
 
-- **Write-time clone guard:** normalized tokens winnowed at k = 25, w = 26, so any shared run of 50+ tokens is caught; import and load statements (the package clause and a Haskell module header among them) give no token, and a report keeps a run only with 50 tokens of its own (the core's coverage rule); only *novel* duplication is charged ([FPR-REPLAY](docs/FPR-REPLAY.md)).
+- **Write-time clone guard:** normalized tokens winnowed at k = 25, w = 26, so any shared run of 50+ tokens is caught; import and load statements (the package clause and a Haskell module header among them) and a Python docstring that holds no code give no token, and a report keeps a run only with 50 tokens of its own (the core's coverage rule); only *novel* duplication is charged ([FPR-REPLAY](docs/FPR-REPLAY.md)).
 - **Near-miss (T3) clones:** candidates from MinHash/LSH, judged in the core by tree edit distance at TSED ≥ 0.85.
 - **Documentation duplication that survives rewording:** 5-word shingles, Jaccard ≥ 0.80 or a 50-word verbatim run.
 - **Liveness:** per-language resolution ladders feed a reference graph; a four-way verdict comes back with a confidence code, and each unreferenced file is listed under the root it falls with.
@@ -169,13 +169,13 @@ PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; 
 - **Languages.** AST judgment uses the <!--ce:count:grammars#word-->twelve<!--/ce--> grammars above; Markdown and HTML are judged by the documentation and graph rules, `.txt` by documentation duplication only; T4 clones are not promised.
 - **Advice, never a verdict.** Symbol-level liveness, `ce similar`, `ce merge` and `ce arch` never fail a gate; a guard class stays `observe` until it has its own false-positive record.
 - **Lines, not findings.** The score counts the lines some finding names, each line once however many findings name it: one long duplicated file weighs more than many short ones, and a second finding on lines already named does not lower it further. With the unreferenced axis off (the default), an unreferenced file is an ordinary clean file: deleting one shrinks L and can lower the score; `[score.weights] deadcode = 1` counts its lines as findings again.
-- **A span is first token to last.** A clone block's printed span runs from its first token's line to its last, so it can name the comment and import lines between them, which carry no token (a head declaration never starts or ends a span); the score counts those lines like any other line the block names.
+- **A span is first token to last.** A clone block's printed span runs from its first token's line to its last, so it can name the comment, docstring and import lines between them, which carry no token (a head declaration never starts or ends a span); the score counts those lines like any other line the block names.
 - **Lines not drawn.** `cognitive_fail` defaults to 0 (complexity only warns), and `ce structure` has no score floor.
 - **What the text names.** Liveness reads the references a file spells. A load whose target is computed (`require(prefix .. name)`, `import("./lib/" + name)`) or a star import whose `__all__` is not all literal draws no edge for what it does not spell: the file stays unreferenced and its language cannot vouch for it. Unreferenced is not unused, so the default lists such a file and fails nothing; a project that wants new ones blocked declares `[deadcode] block` and commits a baseline. Nor is it a deletion licence: a file nothing references may still be run by name or found by a tool's convention (the eight conventions the dead-file exam passed, among them `setup.py`, Sphinx's `conf.py`, `package-info.java` and a Next.js `app/` page, are entries; a convention the product does not list is not), so `ce erase` deletes no whole file and erases only byte-identical documentation spans. Entry points declared in `setup.cfg` or a non-root `pyproject.toml` are not read, and [booklet 06](docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md) lists the other reference forms and entry families the graph does not read (a file reached only by `include!`, a script run by its path, a worker loaded by `new URL(...)`, among others), each with its remedy: `[graph] entry_globs`, or `ce:allow(deadcode) -- <why>` in the file.
 - **Distribution.** A release builds <!--ce:count:platforms#word-->five<!--/ce--> targets; `ce setup` wires nothing from an elevated account that is not the logged-in user (exit 13); judging this repository needs the `cli/tests` submodule seated.
 - **One wire line.** A request line to the core is at most <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> bytes; larger requests split into batches, and an oversized item is refused by name, never truncated.
 
-Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 and 1.9.2 are comparable with 1.9.0), v1.9.x → v1.10.0 (the score became the share of lines no finding names, and the unreferenced axis weighs 0 unless named; 1.10.1 is comparable with 1.10.0); the reasons are in [CHANGELOG](CHANGELOG.md).
+Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 and 1.9.2 are comparable with 1.9.0), v1.9.x → v1.10.0 (the score became the share of lines no finding names, and the unreferenced axis weighs 0 unless named; 1.10.1 is comparable with 1.10.0), v1.10.1 → v1.10.2 (Python: docstrings give no clone token and are read past a leading comment and under a tilde title underline); the reasons are in [CHANGELOG](CHANGELOG.md).
 
 ## Documentation
 

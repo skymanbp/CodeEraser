@@ -339,135 +339,159 @@
     "line": 56,
     "text": "pub(super) fn invalidate(tx: &Transaction<'_>, epoch: i64) -> Result<()> {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|0cb5cce63c4a5f5b|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 33,
-    "text": "pub const TOKENIZER_REV: i64 = 5;"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 173,
-    "end": 181,
+    "line": 211,
+    "end": 219,
     "text": "fn classify(kind: &str, spec: &LangSpec) -> Class {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|227629f256b666bf|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 128,
+    "line": 163,
     "text": "Class::Text => kind.as_bytes(),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|310ac55b91af4a11|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 191,
-    "end": 208,
+    "line": 229,
+    "end": 246,
     "text": "pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|357cceadf966478e|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 69,
-    "end": 113,
+    "line": 79,
+    "end": 123,
     "text": "pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|3cd7baf5c7a4584c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 83,
-    "end": 95,
+    "line": 96,
+    "end": 108,
+    "text": "if node.child_count() > 0 {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|3cd7baf5c7a4584c|1": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 96,
+    "end": 104,
     "text": "if node.child_count() > 0 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4043b6bdd581b062|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 155,
-    "end": 171,
+    "line": 190,
+    "end": 206,
     "text": "fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4043b6bdd581b062|1": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 155,
-    "end": 171,
+    "line": 190,
+    "end": 206,
     "text": "fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4501e13fb2478c99|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 35,
+    "end": 42,
+    "text": "/// 6: a docstring gives no token (the node docdup reads as one,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|471c40c0b6619ae4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 43,
+    "line": 53,
     "text": "const ID_MARK: &[u8] = b\"\\x01ID\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 212,
-    "end": 214,
+    "line": 250,
+    "end": 252,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4d032b82895954e2|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 97,
-    "end": 105,
+    "line": 107,
+    "end": 115,
     "text": "Class::Lit => {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|504e1857b50781a4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 44,
+    "line": 54,
     "text": "const LIT_MARK: &[u8] = b\"\\x02LIT\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|5105ac07c75a2849|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 177,
+    "line": 215,
     "text": "if is_literal(kind, spec) {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|5a0dc8ca32888cfc|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 134,
+    "end": 139,
+    "text": "/// Whether `node` is a docstring its host put on the list; a docstring"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|5b402ee46131614b|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 231,
-    "end": 237,
+    "line": 269,
+    "end": 275,
     "text": "fn fnv1a_from(mut h: u64, bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|65c85db61f029727|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 174,
+    "line": 212,
     "text": "if kind.ends_with(\"identifier\") {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|6b59d2da04b0a563|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 7,
-    "end": 9,
+    "line": 8,
+    "end": 10,
     "text": "//! deliberate): booleans/None are NOT collapsed (their identity is"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|6bce3d8b19539170|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 43,
+    "text": "pub const TOKENIZER_REV: i64 = 6;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|9acfb64892039b8c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 78,
-    "end": 95,
+    "line": 91,
+    "end": 108,
     "text": "if whole_literal(node, spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b533a5573df87dff|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 187,
-    "end": 190,
+    "line": 225,
+    "end": 228,
     "text": "/// `kind` is a LEAF kind (composite kinds like Go `composite_literal`"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 36,
-    "end": 41,
+    "line": 46,
+    "end": 51,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|c4add18ddef5107c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 115,
-    "end": 122,
+    "line": 125,
+    "end": 132,
     "text": "/// A comment, or a declaration of the import family"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d79f5ced4fa0d091|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 137,
-    "end": 141,
+    "line": 172,
+    "end": 176,
     "text": "fn extend_last(out: &mut [Token], node: Node<'_>) {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|efa8f2a3fdbd43e0|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 198,
+    "end": 208,
+    "text": "/// Every named descendant of `node` is a literal piece: the string"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|f13e91d15cb652f1|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 180,
+    "line": 218,
     "text": "Class::Text\n}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|fe121ccd12aa646f|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 120,
-    "end": 122,
+    "line": 130,
+    "end": 132,
     "text": "fn skipped(node: Node<'_>, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|194a15fa0825a2b6|0": {
@@ -547,6 +571,12 @@
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 64,
     "text": "let windows = grams.len().saturating_sub(p.window - 1).max(1);"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/docdup/spec.rs|b040cbe0685f820c|0": {
+    "target": "../../../cli/src/docdup/spec.rs",
+    "line": 55,
+    "end": 75,
+    "text": "/// The docstring string of a node whose kind is one of `hosts` (the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/ast.rs|932b8014a06eb291|0": {
     "target": "../../../cli/src/scan/ast.rs",
@@ -1657,14 +1687,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 212,
-    "end": 214,
+    "line": 250,
+    "end": 252,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/tokens.rs|5b402ee46131614b|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 231,
-    "end": 237,
+    "line": 269,
+    "end": 275,
     "text": "fn fnv1a_from(mut h: u64, bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/winnow.rs|61828f98f0a3db21|0": {
@@ -1692,8 +1722,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|052a14feff0411b1|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 90,
-    "end": 93,
+    "line": 94,
+    "end": 97,
     "text": "if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|0cd72ba5f01c342c|0": {
@@ -1710,8 +1740,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|31906d7fe45733c4|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 113,
-    "end": 116,
+    "line": 129,
+    "end": 132,
     "text": "fn fence_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|5621b762259badab|0": {
@@ -1726,6 +1756,12 @@
     "end": 7,
     "text": "//! the four routes are structurally zero here and say so where the"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|5b2177f94b9fa2fb|0": {
+    "target": "../../../cli/src/docdup/exempt.rs",
+    "line": 144,
+    "end": 148,
+    "text": "fn title_underline(text: &str, above: usize) -> bool {"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|94024abd2596c8dc|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
     "line": 43,
@@ -1734,19 +1770,25 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|a41860374884b65f|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 102,
+    "line": 116,
     "text": "} else if line.text.trim().chars().count() > cap {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|af692af8415a028b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 123,
-    "end": 135,
+    "line": 164,
+    "end": 176,
     "text": "fn skeleton_line(text: &str) -> bool {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|b36f97117519b4e0|0": {
+    "target": "../../../cli/src/docdup/exempt.rs",
+    "line": 97,
+    "end": 103,
+    "text": "}\nlet width = bare_text(&line.text).chars().count();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|b7e6e8d95e21e27b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 94,
-    "end": 99,
+    "line": 104,
+    "end": 112,
     "text": "let opens = fence_line(&line.text);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|ba371dd84f0cee25|0": {
@@ -1871,25 +1913,25 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|18db33163c95b3ca|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 131,
+    "line": 138,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|2e7a6f0c5e19a7b5|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 46,
-    "end": 51,
+    "line": 53,
+    "end": 58,
     "text": "/// `docdup.kind_names` / exempt::EXEMPT_*; `shingles` = sorted deduped shingle u64s LE."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|5b2baab9f1a15e55|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 88,
-    "end": 91,
+    "line": 95,
+    "end": 98,
     "text": "if words.len() < spec::table().min_doc_tokens {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|a6960b0205c782d5|0": {
     "target": "../../../cli/src/docdup/mod.rs",
     "line": 22,
-    "end": 31,
+    "end": 49,
     "text": "/// Bump when segment-extraction semantics change: it sits in the meta"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|acb33abf44d7bee6|0": {
@@ -1914,10 +1956,16 @@
     "end": 8,
     "text": "//! nothing but `md::masked_content_lines` (F3/RM8): a judge seeing"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|163eac0297a2b1e7|0": {
+    "target": "../../../cli/src/docdup/segments.rs",
+    "line": 188,
+    "end": 190,
+    "text": "if let Some(s) = spec::docstring(node, hosts, comment_kinds) {"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 222,
-    "end": 240,
+    "line": 207,
+    "end": 225,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1f459f53925fc5db|0": {
@@ -1932,16 +1980,10 @@
     "end": 81,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|596723b90d527bf0|0": {
-    "target": "../../../cli/src/docdup/segments.rs",
-    "line": 205,
-    "end": 213,
-    "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
-  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|af4198dae65b1993|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 242,
-    "end": 249,
+    "line": 227,
+    "end": 234,
     "text": "fn last_row(node: Node<'_>) -> usize {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
@@ -2012,20 +2054,26 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 29,
-    "end": 32,
+    "line": 31,
+    "end": 34,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|1": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 29,
-    "end": 33,
+    "line": 31,
+    "end": 35,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|b040cbe0685f820c|0": {
+    "target": "../../../cli/src/docdup/spec.rs",
+    "line": 55,
+    "end": 75,
+    "text": "/// The docstring string of a node whose kind is one of `hosts` (the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|f5c2efa037e4bd0c|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 37,
-    "end": 46,
+    "line": 39,
+    "end": 48,
     "text": "/// Only Python has a docstring convention (module/function/class body"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/graph/md.rs|1a6861d272727d30|0": {
@@ -8351,8 +8399,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|a8aa8afee5378e73|0": {
     "target": "../../FPR-REPLAY.md",
-    "line": 583,
-    "end": 591,
+    "line": 585,
+    "end": 593,
     "text": "### 历史复现（退役期 2026-08-18～2026-09-05）"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|b1b24aa6a3e43c6e|0": {
@@ -9556,8 +9604,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 222,
-    "end": 249,
+    "line": 207,
+    "end": 234,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/envelope.rs|bd53382139d2df00|0": {

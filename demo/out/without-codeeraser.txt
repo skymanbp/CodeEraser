@@ -24,11 +24,11 @@ session over: 7 of 7 writes landed
 nothing refuses anything: the turn ends here
 the tree, measured (the CI face):
 $ ce check .
-check score 726/1000 | findings on 104.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 231 docdup 42 unreferenced 263 (off) churn 0 cycle 0 | 3 candidates
+check score 752/1000 | findings on 94.0 of 380 lines | per 1000 lines: size 0 complexity 0 clone 205 docdup 42 unreferenced 263 (off) churn 0 cycle 0 | 3 candidates
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
 note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table
 $ ce dedup . --check
-dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (83 tokens)
+dup invoicer/discount.py:6-18 <-> invoicer/money.py:6-18 (80 tokens)
 dup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)
 dup invoicer/report.py:28-31 <-> invoicer/report.py:52-55 (55 tokens)
 dup web/api.ts:22-33 <-> web/format.ts:4-15 (114 tokens)

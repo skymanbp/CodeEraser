@@ -452,7 +452,7 @@
       "id": "ver:docdup_rev#digits",
       "source": "cli/src/docdup/mod.rs::DOCDUP_REV",
       "tier": "linked",
-      "value": "8"
+      "value": "9"
     },
     {
       "id": "ver:graph_rev#digits",
@@ -495,7 +495,7 @@
       "id": "ver:tokenizer_rev#digits",
       "source": "cli/src/dedup/tokens.rs::TOKENIZER_REV",
       "tier": "linked",
-      "value": "5"
+      "value": "6"
     }
   ],
   "schema": "ce.docs-facts/0.1.0",

@@ -86,7 +86,7 @@
   its contents, so both copies select it: at least one shared fingerprint, always, the Schleimer et al.
   SIGMOD'03 no-miss bound held as a correctness contract. The rolling hash is Rabin-Karp,
   <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes. Import and load statements give no
-  token, like comments; so do a package clause and a Haskell module header. Which verified runs are reported is the core's coverage rule: per file pair, diverse
+  token, like comments; so do a package clause, a Haskell module header and a Python docstring that holds no code. Which verified runs are reported is the core's coverage rule: per file pair, diverse
   runs first, longest first, each kept only with <code>t</code> tokens of its own on some side.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
@@ -96,7 +96,7 @@
     <li><b>hotCap</b> 64</li>
     <li><b>minDistinct</b> 7</li>
     <li><b>near-miss band</b> 25 &lt;= len &lt; 50</li>
-    <li><b>TOKENIZER_REV</b> 5</li>
+    <li><b>TOKENIZER_REV</b> 6</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
   </ul></details>
 </div>
@@ -140,7 +140,7 @@ dupVerdictWith (num, den, vfloor) inter union run
   <em>or</em> a verbatim run of at least 50 words. The core computes <code>inter</code> and
   <code>union</code> itself from the ascending deduped shingle sets, so raw counts cross the wire, never
   a ratio. MinHash/LSH is an RNG-free coarse filter (the permutation index is the salt); a run of
-  <code>R</code> shingles spans <code>R + k - 1</code> words.</p><details class="more"><summary>Derivation and constants</summary>
+  <code>R</code> shingles spans <code>R + k - 1</code> words. A docstring is a Python body's first statement past any comment, when that statement is a bare string; a <code>~</code> line under a title, at least as long as the title, is a skeleton row, not a code fence.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>jaccardNum</b> 80</li>
     <li><b>jaccardDen</b> 100</li>
@@ -151,7 +151,7 @@ dupVerdictWith (num, den, vfloor) inter union run
     <li><b>licHeadLines</b> 5</li>
     <li><b>docSetCap</b> 8192</li>
     <li><b>docPairCap</b> 4096</li>
-    <li><b>DOCDUP_REV</b> 8</li>
+    <li><b>DOCDUP_REV</b> 9</li>
   </ul></details>
 </div>
 

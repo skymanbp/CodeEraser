@@ -50,10 +50,10 @@ user_version=2 门控重建；报告项 = 已验证精确归一化公共段 ≥ 
 - **召回 15/17（默认 t=50）**，两条 miss 归因关闭（性质与第一轮不同，
   第一轮的 pair 层缺陷已被重构消灭，2364 条已命中）：
   1. `models.py __bool__ <-> __nonzero__`：函数体 = 9 行 docstring +
-     `return self.ok`，LIT 折叠后每函数仅 ≈12 token < k=25，**锚点
-     原理性不存在**（任何报告阈值都不可见）。这是 T2 归一化的刻意
-     语义：docstring 重复属 `docdup` 域（计划 §4.1，M5），不是代码
-     克隆热路径的目标物。M2 收口评审时按此口径仲裁。
+     `return self.ok`，LIT 折叠后每函数仅 ≈12 token < k=25（`TOKENIZER_REV` 6 起 docstring
+     不出 token，只剩 `return self.ok` 那几个），**锚点原理性不存在**（任何报告阈值都
+     不可见）。这是 T2 归一化的刻意语义：docstring 重复属 `docdup` 域（计划 §4.1，M5），
+     不是代码克隆热路径的目标物。M2 收口评审时按此口径仲裁。
   2. `walk.rs 1224 <-> 1249`：首 token `mut` 断链后极大公共段 47
      token，差 3 到线。`--min-tokens 40` 实测召回 **16/17**——能力
      在，默认档更严；根因 = jscpd 的 min-tokens 50 用其细粒度 token
@@ -104,7 +104,7 @@ stale_skipped。处置全表在 git 历史：docs/reviews/2026-08-07-m2-dedup-at
 | 仓 | jscpd 集 | 原始召回 | 排除（逐条实读归因） | 排除后 |
 |---|---|---|---|---|
 | cobra | 109 | **106/109 = 97.2%（原始已过 95% 门）** | 3：测试双闭包共段手数 ≈46 token 差 4 到线（测度类）；bash/psh 补全脚本文本嵌于 Go 反引号字符串（字面量内容域，机制同 docstring——超出计划例举清单，特此显式注记） | 106/106 |
-| requests | 20 | 14/20 = 70% | 6：全部为纯 docstring 文本段互拷（api.py post/put/patch 三连、sessions 参数段、models `__bool__`/`__nonzero__`），LIT 折叠后 ≈15 token < k，实读铁证 | 14/14 |
+| requests | 20 | 14/20 = 70% | 6：全部为纯 docstring 文本段互拷（api.py post/put/patch 三连、sessions 参数段、models `__bool__`/`__nonzero__`），LIT 折叠后 ≈15 token < k（`TOKENIZER_REV` 6 起 docstring 不出 token），实读铁证 | 14/14 |
 | 钉定 fixtures | 17 | 15/17 | 2（前节） | 15/15 |
 
 **多样性下限产品化（min_distinct=7 默认，schema 0.4.0）**：三语料

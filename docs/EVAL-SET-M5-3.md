@@ -82,10 +82,12 @@ ripgrep / cobra 没有这三种语言，零行。graph-slice 五册零新漂移�
 
 **第四道 epoch 边界（2026-11-12，车道 v235_imports）**：T1/T2 的 token 流换 epoch——`TOKENIZER_REV` 4→5，各语言 `[scan] import_kinds` / `loads` 表点名的导入与加载语句和注释一样不出 token；报告哪些已核实的段由核的覆盖规则（`cover/1`）定。本族的候选池取自这条流（S1 = 25..50 token 的近段、S3 = 指纹组），按第一道边界的拍板不部分重冻：候选、样本、精度与五审计员的判决原样留在旧 epoch，重生成要整族连审计一起重立。活门 `self_universe_tracks_units` 要求 self 宇宙与当下行喉一致，本车道改了两个冻结行的文件，故 self 三册按名续冻这两行（`CE_REFREEZE`）：`cli/src/dedup/tokens.rs` 多出车道加的两个单元（16→18，bands below_floor 7→8 / s 4→5；graph-slice 的 `use` 站点 5→6、docdup 段宇宙 below_floor 7→9），`cli/tests/it/dedup_pairs.rs` 只换 sha、字段不动；候选册 `admitted_by_lang` rs 1242→1243 手改同增，`pairs_sha256` 与 `pool_digests` 不动。四份外部宇宙的行由单元探测器出、不读 token 流，按拍板整族不重冻、本车道未重导；graph-slice 与 docdup 段宇宙五册的门照绿（`eval_graph`、`eval_docdup_universe`）。
 
+**第五道 epoch 边界（2026-11-16，1.10.2 文档字符串车道）**：T1/T2 的 token 流再换 epoch——`TOKENIZER_REV` 5→6，字符串里没有代码的 Python 文档字符串（docdup 读作一段的那个结点：模块、函数或类的体里越过注释后的第一条语句、是裸字符串时）和注释一样不出 token。按第一道边界的拍板不部分重冻：候选、样本、精度与五审计员的判决原样留在旧 epoch。本车道改了一个冻结行的文件，self 三册按名续冻这一行（`CE_REFREEZE=cli/src/dedup/tokens.rs`）：t3 宇宙 `tokens.rs` 单元 18→25（s 5→7、m 4→5、below_floor 8→12；rs 单元 1872→1879），graph-slice 的 `use` 站点 6→7（rs/use 421→422、total_sites 708→709），docdup 段宇宙 below_floor 9→13 与 seg_sha256；候选册 `admitted_by_lang` rs 1246→1249、`units_admitted` 1407→1410 手改同增，`pairs_sha256` 与 `pool_digests` 不动。四份外部宇宙的行由单元探测器出、不读 token 流，按拍板整族不重冻、本车道未重导；门照绿（`eval_graph`、`eval_t3_universe`、`eval_t3_candidates`）。
+
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
-`051a730` 工作树，rev 6 于 `d4b7f1f`、rev 7 于 `a5ac21f`、rev 8 于 `cbfeaeb` 工作树（5b-8 落码中）重生成，DOCDUP_REV **8**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
+`051a730` 工作树，rev 6 于 `d4b7f1f`、rev 7 于 `a5ac21f`、rev 8 于 `cbfeaeb` 工作树（5b-8 落码中）、rev 9 于 `e0e458aa` 与 `a80a1edb` 工作树重生成，DOCDUP_REV **9**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
 （2026-08-21，M9 批 1）；rev 4→5 = `///` 合段修复（2026-09-04，计划 v2.28）——两次都按
 EVAL-SET.md 复活协议重冻结：3→4 五语料逐文件字段与 summary 零漂移；4→5 Rust 树的段几何
 整体变了（self 114→259、ripgrep 251→568；self 有八行 2026-09-04 曾按名改签，重冻结按兄弟锚
@@ -104,8 +106,8 @@ kind 表；self 精度档的 `segments` 回声 259→260 不是本次的移动�
 内容列）：五份段宇宙 770 行按冻结 sha 用当下的行喉重导——逐文件字段零漂移（self 141 / requests 50 / ripgrep 133 /
 cobra 53 / zod 393：冻结语料里没有列表项内缩进代码成段的文档），只变常量回声与 `generated_from`；精度档五份的
 判决行与 D1 在重物化的冻结树上跑完整产品判决逐格相同后只改签常量，self 的 universe 回声 segments 260→262 /
-judged 80→83 是同批 `tokens.rs` 具名续冻多出的两段 live 注释段；oracle 与普查不动；rev 7→8 = 纯文本 `.txt` 进语料成第五种段 `text_para`（2026-09-27，步 5b-8）：冻结语料的走查范围是 go/md/py/rs/ts、不含 txt，五份段宇宙 770 行按冻结 sha 重导零漂移、五份精度档在重物化的冻结树上跑完整产品判决逐格相同，两处只改常量回声（kinds 五个、`docdup_rev` 8）与 `generated_from`；oracle 与普查不动；门 `eval_docdup_universe`）：
-live 段 self 260 / requests 98 / ripgrep 568 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
+judged 80→83 是同批 `tokens.rs` 具名续冻多出的两段 live 注释段；oracle 与普查不动；rev 7→8 = 纯文本 `.txt` 进语料成第五种段 `text_para`（2026-09-27，步 5b-8）：冻结语料的走查范围是 go/md/py/rs/ts、不含 txt，五份段宇宙 770 行按冻结 sha 重导零漂移、五份精度档在重物化的冻结树上跑完整产品判决逐格相同，两处只改常量回声（kinds 五个、`docdup_rev` 8）与 `generated_from`；oracle 与普查不动；rev 8→9 = Python 文档字符串读模块、函数或类的体里越过注释后的第一条语句、`~` 标题下划线是骨架行而不是永不关闭的围栏（2026-11-16，1.10.2 文档字符串车道；`docdup/spec.rs` `docstring`、`docdup/exempt.rs` `title_underline`）：五份段宇宙 770 行按冻结 sha 重导，只动 Python 的行——requests 14 行（`src/requests/` 十四个模块文档字符串都在 `~` 下划线之下，其中 `__init__.py` 与 `certs.py` 两行又是注释在前的文档字符串：这两行先在 `e0e458aa` 读出、落在准入地板之下，再在 `a80a1edb` 读出下划线以下的散文、各成一段 live 文档字符串，live 98→100），self 三行夹具（`src__requests__{models,structures,utils}.py`，只动 ledger）与 `tokens.rs` 一行（按名续冻，见第五道 epoch 边界），ripgrep / cobra / zod 零行；两份动了行的段宇宙 `generated_from` 记 `a80a1edb`，其余三份与五份精度档记 `e0e458aa`；oracle、普查与五份精度档只改常量回声；门 `eval_docdup_universe`）：
+live 段（rev 9）self 263 / requests 100 / ripgrep 568 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 
 **oracle**（`docdup-oracle-*-v1.json`，`ce.eval-docdup-oracle/1.0.0`；原门
