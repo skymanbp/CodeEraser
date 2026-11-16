@@ -226,6 +226,53 @@ jobs:
             [ "$attempt" = 1 ] || exit 1
             echo "::warning::cargo tauri build failed on attempt $attempt; retrying once (DMG bundling flaked on run 34021025544 attempt 1)"
           done
+      # `ce update` knows a desktop bundle by the GUI program beside ce
+      # (BUNDLE_APP in cli/src/update/install.rs = this package name):
+      # read once here, asserted below on every bundle kind
+      - name: Read the GUI program name
+        shell: bash
+        run: |
+          GUI_APP=$(awk -F'"' '/^\[/{s=$0} s=="[package]" && /^name *=/{print $2; exit}' gui/src-tauri/Cargo.toml)
+          [ -n "$GUI_APP" ] || { echo "::error::no [package] name in gui/src-tauri/Cargo.toml"; exit 1; }
+          echo "GUI_APP=$GUI_APP" >> "$GITHUB_ENV"
+      # the macOS app as `ce update` reads it: the GUI program
+      # (BUNDLE_APP in cli/src/update/install.rs) beside ce and ce-core
+      - name: Check the macOS app's programs
+        if: endsWith(inputs.key, '-macos')
+        shell: bash
+        run: |
+          set -- gui/src-tauri/target/release/bundle/macos/*.app
+          if [ "$#" -ne 1 ] || [ ! -d "$1" ]; then
+            echo "::error::expected one .app in bundle/macos, found $#: $*"
+            ls -l gui/src-tauri/target/release/bundle/macos; exit 1
+          fi
+          D="$1/Contents/MacOS"
+          bad=0
+          for f in "$GUI_APP" ce ce-core; do
+            if [ ! -f "$D/$f" ] || [ -L "$D/$f" ]; then echo "::error::no regular file $D/$f"; bad=1; fi
+          done
+          ls -l "$D"
+          exit "$bad"
+      # the Windows installer as `ce update` reads the install: the GUI
+      # program (BUNDLE_APP in cli/src/update/install.rs) beside ce.exe
+      # and ce-core.exe, each matched as a whole name in 7-Zip's listing
+      - name: Check the Windows installer's programs
+        if: endsWith(inputs.key, '-windows')
+        shell: bash
+        run: |
+          set -- gui/src-tauri/target/release/bundle/nsis/*-setup.exe
+          if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+            echo "::error::expected one *-setup.exe in bundle/nsis, found $#: $*"; exit 1
+          fi
+          command -v 7z >/dev/null || { echo "::error::7z not found, the installer cannot be listed"; exit 1; }
+          LIST=$(7z l "$1") || { echo "::error::7z l $1 failed"; exit 1; }
+          bad=0
+          for f in "$GUI_APP.exe" ce.exe ce-core.exe; do
+            printf '%s\n' "$LIST" | awk -v want="$f" '{ sub(/\r$/, "") } $NF == want { hit = 1 } END { exit !hit }' \
+              || { echo "::error::$1 does not list $f"; bad=1; }
+          done
+          [ "$bad" = 0 ] || { printf '%s\n' "$LIST"; exit 1; }
+          echo "installer lists $GUI_APP.exe, ce.exe and ce-core.exe"
       # the launcher's mode as the user receives it: the type-2 runtime
       # extracts itself (no FUSE on the runner) and every file that only
       # its owner may run or that others may not read is named
@@ -269,10 +316,9 @@ jobs:
             ls -l "$APPIMAGE_ROOT/usr/bin"; exit 1
           fi
           # `ce update` knows a bundle by this program beside ce
-          # (BUNDLE_APP in cli/src/update/install.rs = the package name)
-          WANT=$(awk -F'"' '/^\[/{s=$0} s=="[package]" && /^name *=/{print $2; exit}' gui/src-tauri/Cargo.toml)
-          if [ -z "$WANT" ] || [ "$(basename "$GUI")" != "$WANT" ]; then
-            echo "::error::GUI binary $(basename "$GUI") is not the GUI package name '$WANT'"; exit 1
+          # (BUNDLE_APP in cli/src/update/install.rs = GUI_APP)
+          if [ -z "$GUI_APP" ] || [ "$(basename "$GUI")" != "$GUI_APP" ]; then
+            echo "::error::GUI binary $(basename "$GUI") is not the GUI package name '$GUI_APP'"; exit 1
           fi
           bad=0
           for b in "cli/target/release/ce" "$CORE" "$GUI"; do

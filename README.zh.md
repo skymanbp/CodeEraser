@@ -164,7 +164,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-PreToolUse 塑造行为，不是安全墙（shell 写入绕过它；CI 是兜底，在 `[guard] mode = "deny"` 下 Stop 审计也是）。钩子遇内部错误、或钩子信封超过 4 MiB（最大的那些写入不经判决就通过）时失败开放，并记录降级。
+PreToolUse 塑造行为，不是安全墙（shell 写入绕过它；CI 是兜底，在 `[guard] mode = "deny"` 下 Stop 审计也是）。探针按索引当下的样子比对、自己不刷新索引：在 Write / Edit 之外新建或改动的文件（shell 命令、编辑器、`git`），要到下一次整轮运行（`ce dedup`、Stop 审计）之后才会成为重复的来源。钩子遇内部错误、或钩子信封超过 4 MiB（最大的那些写入不经判决就通过）时失败开放，并记录降级。
 
 - **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown 与 HTML 由文档与图规则判决，`.txt` 只判文档重复；不承诺 T4 克隆。
 - **只当顾问，永不是判决。** 符号层存活性、`ce similar`、`ce merge` 与 `ce arch` 从不让门变红；守卫类拿出自己的误报记录之前一律停在 `observe`。

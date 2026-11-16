@@ -164,7 +164,7 @@ Every capability reaches the CLI, the GUI and the plugin with its MCP server, or
 
 ## Known limits
 
-PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; CI is the backstop, and the Stop audit too under `[guard] mode = "deny"`). Hooks fail open on internal errors and on a hook envelope over 4 MiB (the largest writes pass unjudged), and record the degradation.
+PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; CI is the backstop, and the Stop audit too under `[guard] mode = "deny"`). The probe matches a write against the index as it stands and does not refresh it: a file created or changed outside Write/Edit (a shell command, an editor, `git`) becomes a duplicate source at the next whole run (`ce dedup`, the Stop audit). Hooks fail open on internal errors and on a hook envelope over 4 MiB (the largest writes pass unjudged), and record the degradation.
 
 - **Languages.** AST judgment uses the <!--ce:count:grammars#word-->twelve<!--/ce--> grammars above; Markdown and HTML are judged by the documentation and graph rules, `.txt` by documentation duplication only; T4 clones are not promised.
 - **Advice, never a verdict.** Symbol-level liveness, `ce similar`, `ce merge` and `ce arch` never fail a gate; a guard class stays `observe` until it has its own false-positive record.

@@ -95,3 +95,7 @@ impl Leak for DocCatalogue {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/tables/catalogue.rs"]
+mod tests;
