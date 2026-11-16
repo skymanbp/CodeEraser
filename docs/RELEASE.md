@@ -131,7 +131,9 @@
   四枚 pin 而无人要；AUR 要维护者账户与第三方仓里的 PKGBUILD；Linuxbrew 已覆盖 Linux 包管理）。
 - **npm 指针**：`npm/`（入库：package.json + README，只转发 Releases、无
   二进制；版本随六处一致门走）——`cd npm && npm publish`。账户 2FA 需用户在
-  交互终端完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。
+  交互终端完成 passkey/OTP，非交互 shell 里 publish 必 EOTP。发起前先
+  `npm whoami`：登录还有效时只需 publish 那一条一次性链接，不必再走登录
+  那一条（v1.10.1 实录）。
 - **官网**：Cloudflare Pages **手动部署**（无 GitHub 集成——推 main
   不上线）。`node scripts/deploy_site.js` 一次跑完整链：`.secret`
   里是造币母 token（无 Pages 权限，验证 active 但 /accounts 为空是
