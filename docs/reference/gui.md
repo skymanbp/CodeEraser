@@ -131,4 +131,5 @@ fmt, the three webview gates `lens_invariant.js` / `i18n_gate.js` /
 `hub_projection.js` — the last pins that the diagnostics hub's
 five-column projection keeps the advisory row's symbol (K44) — and
 `installer_wiring.js`, which pins the Claude Code wiring above
-against renames and moves).
+against renames and moves, and that the installer renames a held
+`ce` / `ce-core` aside before it copies the new ones).

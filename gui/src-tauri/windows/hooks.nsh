@@ -24,7 +24,8 @@
 ; compares that account with the console user and refuses by name
 ; (exit 13) when they differ instead of wiring the wrong home.
 ;
-; Two rules this file learned the hard way (review 2026-08-21, both
+; Three rules this file learned the hard way (the first two from the
+; review of 2026-08-21, the third measured on 2026-11-16, all three
 ; reproduced first-party against a real machine):
 ;
 ;   1. NEVER interpolate $INSTDIR into PowerShell script text. An
@@ -44,8 +45,64 @@
 ;      instead: WM_WININICHANGE (0x1A) to HWND_BROADCAST (0xFFFF).
 ;      Literals, not header symbols, so include order cannot silence
 ;      the broadcast.
+;
+;   3. NEVER let the template copy ce.exe / ce-core.exe over a file a
+;      process holds. The bundler asks "is the app running" only for
+;      the GUI program; the external binaries are a plain `File /a`,
+;      and a silent install over a running copy (the daemon of any
+;      open Claude Code session may hold either) exited 0 and left the
+;      old bytes in place (2026-11-16, per-user probe of that template
+;      line). PREINSTALL renames each of them aside first, which is
+;      what the updater relies on too (cli/src/update/apply.rs). The
+;      twin name carries one GetTickCount reading per install: the
+;      twin of an earlier upgrade may still be mapped by a session
+;      that is still open, and a fixed name could not be reused. The
+;      twin is copied back to the real name at once, so the name never
+;      goes missing if the installer stops before its own copy.
+;      Twins are swept at the end of every install and at uninstall;
+;      one a process still maps stays until the next sweep.
+
+; The retired twins of earlier runs: this installer's <name>.<tick>.old
+; and the updater's <name>.old. Best effort; a mapped twin stays.
+!macro CE_SWEEP_RETIRED
+  Delete "$INSTDIR\ce.*.old"
+  Delete "$INSTDIR\ce-core.*.old"
+  Delete "$INSTDIR\ce.old"
+  Delete "$INSTDIR\ce-core.old"
+  ClearErrors
+!macroend
+
+; Rename $INSTDIR\<NAME>.exe aside (rule 3) and copy it back; a rename
+; that fails changes nothing, a copy that fails is undone. $R9 holds
+; the tick PREINSTALL read.
+!macro CE_RETIRE_SIDECAR NAME ID
+  IfFileExists "$INSTDIR\${NAME}.exe" 0 ce_retire_${ID}_done
+  ClearErrors
+  Rename "$INSTDIR\${NAME}.exe" "$INSTDIR\${NAME}.$R9.old"
+  IfErrors ce_retire_${ID}_done
+  CopyFiles /SILENT "$INSTDIR\${NAME}.$R9.old" "$INSTDIR\${NAME}.exe"
+  IfErrors 0 ce_retire_${ID}_done
+  Rename "$INSTDIR\${NAME}.$R9.old" "$INSTDIR\${NAME}.exe"
+  ce_retire_${ID}_done:
+  ClearErrors
+!macroend
+
+; Called by the template after SetOutPath $INSTDIR, before it copies
+; files: every external binary is retired, on every install (one path,
+; exercised by every upgrade, not only when a probe says it is held).
+!macro NSIS_HOOK_PREINSTALL
+  Push $R9
+  ; the DWORD reads as a negative int after 24.8 days of uptime: %u
+  System::Call 'kernel32::GetTickCount()i.R9'
+  IntFmt $R9 "%u" $R9
+  !insertmacro CE_SWEEP_RETIRED
+  !insertmacro CE_RETIRE_SIDECAR ce ce
+  !insertmacro CE_RETIRE_SIDECAR ce-core core
+  Pop $R9
+!macroend
 
 !macro NSIS_HOOK_POSTINSTALL
+  !insertmacro CE_SWEEP_RETIRED
   StrCpy $0 "$INSTDIR"
   System::Call 'kernel32::SetEnvironmentVariable(t "CE_INSTDIR", t r0)i.r1'
   nsExec::ExecToLog "powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command $\"$$d=$$env:CE_INSTDIR; if (-not $$d) { exit 3 }; $$k=[Microsoft.Win32.Registry]::LocalMachine.OpenSubKey('SYSTEM\CurrentControlSet\Control\Session Manager\Environment',$$true); $$t=$$k.GetValueKind('Path'); $$p=$$k.GetValue('Path','',[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames); if (($$p -split ';') -notcontains $$d) { $$k.SetValue('Path',($$p.TrimEnd(';')+';'+$$d),$$t) }; $$k.Close()$\""
@@ -76,7 +133,8 @@
   ; Runs BEFORE file removal so the marker and ce.exe are still on
   ; disk; `ce setup --unwire` keys on the same marker and deletes it,
   ; the Delete below covers the exit-13 refusal (the directory is
-  ; about to go either way).
+  ; about to go either way). The sweep runs first, marker or not.
+  !insertmacro CE_SWEEP_RETIRED
   IfFileExists "$INSTDIR\claude-plugin-wired" 0 ceppu_done
   nsExec::ExecToLog '"$INSTDIR\ce.exe" setup --unwire'
   Pop $2

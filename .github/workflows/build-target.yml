@@ -315,19 +315,28 @@ jobs:
           }
           $bad = 0
           if ((Install 'first') -ne 0) { Write-Output '::error::the first install did not exit 0'; exit 1 }
-          # each slot now holds bytes that differ from the bundle's
+          # the references are what a clean install writes
+          $want = @{ 'ce.exe' = (Sha (Join-Path $dir 'ce.exe')); 'ce-core.exe' = (Sha (Join-Path $dir 'ce-core.exe')) }
+          foreach ($pair in @(@('ce.exe', $ce), @('ce-core.exe', $core))) {
+            if ($want[$pair[0]] -eq 'missing') { Write-Output "::error::$($pair[0]) missing after the clean install"; exit 1 }
+            Write-Output "$($pair[0]) clean install $($want[$pair[0]]), staged $(Sha $pair[1])"
+          }
+          # crosswise, so each slot holds bytes that differ from its reference
           Copy-Item $ce (Join-Path $dir 'ce-core.exe') -Force
           Copy-Item $core (Join-Path $dir 'ce.exe') -Force
+          foreach ($n in @('ce.exe', 'ce-core.exe')) {
+            if ((Sha (Join-Path $dir $n)) -eq $want[$n]) { Write-Output "::error::the swapped $n equals its reference; the step would prove nothing"; exit 1 }
+          }
           # ce's bytes serve MCP on stdin, the core's bytes wait on stdin
           $h1 = Hold (Join-Path $dir 'ce-core.exe') 'mcp'
           $h2 = Hold (Join-Path $dir 'ce.exe') ''
           Start-Sleep -Seconds 3
           if ($h1.HasExited -or $h2.HasExited) { Write-Output "::error::a holder exited before the install (ce-core.exe $($h1.HasExited), ce.exe $($h2.HasExited))"; exit 1 }
           if ((Install 'second') -ne 0) { Write-Output '::error::the install over held sidecars did not exit 0'; $bad = 1 }
-          foreach ($pair in @(@('ce.exe', $ce), @('ce-core.exe', $core))) {
-            $got = Sha (Join-Path $dir $pair[0]); $want = Sha $pair[1]
-            if ($got -ne $want) { Write-Output "::error::$($pair[0]) not replaced: installed $got, staged $want"; $bad = 1 }
-            else { Write-Output "$($pair[0]) replaced: $got" }
+          foreach ($n in @('ce.exe', 'ce-core.exe')) {
+            $got = Sha (Join-Path $dir $n)
+            if ($got -ne $want[$n]) { Write-Output "::error::$n not replaced: installed $got, clean install $($want[$n])"; $bad = 1 }
+            else { Write-Output "$n replaced: $got" }
           }
           if ($h1.HasExited -or $h2.HasExited) { Write-Output "::error::a holder died during the install (ce-core.exe $($h1.HasExited), ce.exe $($h2.HasExited))"; $bad = 1 }
           if (-not (Test-Path (Join-Path $dir "$env:GUI_APP.exe"))) { Write-Output "::error::$env:GUI_APP.exe missing after the install"; $bad = 1 }

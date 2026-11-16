@@ -166,6 +166,10 @@
   `plugin/bin/manifest.env`——本 runbook「pin 提交先于 tag」的既有序正是它的信任锚，
   无需另发任何东西。publish 后在任一旧版装机上 `ce update` 应退 1 并报新版本；
   `ce update --yes` 落位后 `ce doctor` 握手同版；插件装机走 `/plugin update codeeraser`。
+- **Windows 安装包与被占着的程序**：1.10.2 及以前的安装包在静默模式下遇到被进程占着的
+  `ce.exe` / `ce-core.exe` 会跳过不换、照样退 0——用这些安装包升级之前先停掉占着文件的进程，
+  装完按文件核对版本与 sha256。下一版起安装包先把被占的文件改名让开（`gui/src-tauri/windows/hooks.nsh`
+  的 `NSIS_HOOK_PREINSTALL`），发版构建在 Windows 上会在两个被占的程序上真跑安装包（`build-target.yml` 的 `Run the Windows installer over held sidecars` 一步）。
 - 记账：CLAUDE.md 状态行（本地项目卡，2026-08-23 起不入库）+ ccm 发版记录。
 
 ## 4. 回归口径

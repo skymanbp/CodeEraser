@@ -4,7 +4,8 @@
 //! ask for. Placement is two renames (target → `.old`, download →
 //! target), which is what replaces a running executable on Windows
 //! and is atomic per file everywhere; the `.old` twins are swept on
-//! the next apply, when nothing runs them any more.
+//! the next apply, when nothing runs them any more, together with the
+//! twins the Windows installer leaves (`retired_twin`).
 
 use super::manifest::Pins;
 use super::version::Platform;
@@ -207,14 +208,30 @@ fn place(tmp: &Path, target: &Path) -> Result<Placed> {
     })
 }
 
-/// Remove the `.old` twins a previous apply could not delete while
-/// they ran. Counted, so the report can say what it cleaned.
+/// Remove the `.old` twins a previous apply or install could not
+/// delete while they ran. Counted, so the report can say what it
+/// cleaned.
 fn sweep_old(dir: &Path) -> usize {
-    ["ce.old", "ce-core.old"]
-        .iter()
-        .map(|n| dir.join(n))
+    std::fs::read_dir(dir)
+        .into_iter()
+        .flatten()
+        .flatten()
+        .filter(|e| e.file_name().to_str().is_some_and(retired_twin))
+        .map(|e| e.path())
         .filter(|p| p.is_file() && std::fs::remove_file(p).is_ok())
         .count()
+}
+
+/// A retired copy of `ce` or `ce-core`: the updater's `<name>.old`
+/// (`place` above, the extension replaced) or the Windows installer's
+/// `<name>.<digits>.old` (gui/src-tauri/windows/hooks.nsh, one tick
+/// reading per install). Nothing else in the directory is swept.
+pub fn retired_twin(name: &str) -> bool {
+    let stem = name.strip_suffix(".old").unwrap_or_default();
+    // no tick: the updater's <name>.old; the default passes the digit test
+    let (bin, tick) = stem.split_once('.').unwrap_or((stem, "0"));
+    let digits = !tick.is_empty() && tick.bytes().all(|c| c.is_ascii_digit());
+    matches!(bin, "ce" | "ce-core") && digits
 }
 
 fn save_installer(pins: &Pins, plat: &Platform) -> Result<PathBuf> {
