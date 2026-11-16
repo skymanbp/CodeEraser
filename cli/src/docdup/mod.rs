@@ -24,7 +24,10 @@ use rusqlite::Transaction;
 /// docstring is the body's first statement, comments before it
 /// skipped (spec.rs docstring): a Python file opening with a comment
 /// line, and a body whose docstring follows one, now has its docstring
-/// segment. 8 = plain
+/// segment; and a title underline (a `~` line at least as long as the
+/// line above it, exempt.rs title_underline) is a skeleton row, not a
+/// fence that never closes, so a docstring in the title-and-underline
+/// style keeps its prose. 8 = plain
 /// text (`.txt`, `Lang::Text`) enters the corpus as a fifth segment
 /// kind `text_para` (segments.rs text_paragraphs, plan v2.30 step
 /// 5b-8): every document holding one gains rows, no other kind's

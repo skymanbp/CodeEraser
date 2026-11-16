@@ -72,7 +72,8 @@ fn allow_has_why(seg: &RawSeg) -> bool {
 }
 
 /// Line-level strip for comment/docstring segments: skeleton rows
-/// (plan :75 — the Google/Sphinx/JSDoc section vocabulary), fenced
+/// (plan :75 — the Google/Sphinx/JSDoc section vocabulary, and a
+/// title underline, `title_underline`, which opens no fence), fenced
 /// code regions (```/~~~ toggling, fence lines included — the F3
 /// "the judge sees prose" contract extended to documentation text
 /// wherever it lives) and overlong data/regex lines (`doc_line_cap`).
@@ -85,10 +86,19 @@ fn allow_has_why(seg: &RawSeg) -> bool {
 pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLine> {
     let mut keep = Vec::new();
     let mut fenced = false;
+    // the bare width of the line above; 0 when it was blank or shed by
+    // a fence
+    let mut above = 0;
     let cap = table().doc_line_cap;
     for line in &seg.lines {
         if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {
             keep.push(line);
+            continue;
+        }
+        let width = bare_text(&line.text).chars().count();
+        if !fenced && title_underline(&line.text, above) {
+            ledger.skeleton_line += 1;
+            above = width;
             continue;
         }
         let opens = fence_line(&line.text);
@@ -97,7 +107,11 @@ pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLi
             // everything after ``` is code until proven otherwise
             ledger.fenced_code_line += 1;
             fenced = fenced != opens; // XOR: toggle on fence lines
-        } else if skeleton_line(&line.text) {
+            above = 0;
+            continue;
+        }
+        above = width;
+        if skeleton_line(&line.text) {
             ledger.skeleton_line += 1;
         } else if line.text.trim().chars().count() > cap {
             ledger.overlong_line += 1;
@@ -110,21 +124,45 @@ pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLi
 
 /// A fence marker line, matched after stripping the comment
 /// decoration prefix (rustdoc `/// ```rust`, block-comment indents).
+/// Asked only of a line that is not a title underline: outside a fence
+/// `title_underline` reads first.
 fn fence_line(text: &str) -> bool {
     let bare = text.trim().trim_start_matches(['#', '/', '*', '!', ' ']);
     bare.starts_with("```") || bare.starts_with("~~~")
 }
 
-/// A skeleton line, matched after stripping the comment decoration
-/// prefix (`#`, `//`, `*`, `/*`, `!`, quotes for docstring openers,
-/// roxygen's `#'`), and after the separator rule a leading `--` run,
-/// the Lua and Haskell comment marker: a single `-` is a list bullet,
-/// and `- Note: ...` is prose, not a template row.
-fn skeleton_line(text: &str) -> bool {
-    let bare = text
-        .trim()
+/// A title underline (DOCDUP_REV 9): outside a fence, a line whose
+/// bare text is only `~`, three or more, and at least as many
+/// characters as the bare text of the line directly above it, that line
+/// non-empty (`above` > 0). It is a skeleton row and opens no fence: a
+/// docstring in the `requests.api` / `~~~~~~~~~~~~` style kept nothing
+/// after its title while the underline read as an unclosed fence. A
+/// tilde line shorter than the line above, or under a blank line, is a
+/// fence marker as before; so is one inside a fence. Stated limit: a
+/// tilde fence marker at least as long as the text line above it reads
+/// as an underline.
+fn title_underline(text: &str, above: usize) -> bool {
+    let bare = bare_text(text);
+    let width = bare.chars().count();
+    above > 0 && width >= 3 && width >= above && bare.chars().all(|c| c == '~')
+}
+
+/// A line's bare text: the comment decoration prefix stripped (`#`,
+/// `//`, `*`, `/*`, `!`, quotes for docstring openers, roxygen's `#'`)
+/// and the end trimmed — what `skeleton_line` and `title_underline`
+/// read.
+fn bare_text(text: &str) -> &str {
+    text.trim()
         .trim_start_matches(['#', '/', '*', '!', '"', '\'', ' '])
-        .trim_end();
+        .trim_end()
+}
+
+/// A skeleton line, matched on the bare text (`bare_text`), and after
+/// the separator rule a leading `--` run, the Lua and Haskell comment
+/// marker: a single `-` is a list bullet, and `- Note: ...` is prose,
+/// not a template row.
+fn skeleton_line(text: &str) -> bool {
+    let bare = bare_text(text);
     if !bare.is_empty() && bare.chars().all(|c| c == '-') && bare.len() >= 3 {
         return true;
     }
