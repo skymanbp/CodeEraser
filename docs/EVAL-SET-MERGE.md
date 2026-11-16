@@ -358,7 +358,12 @@ no token (`TOKENIZER_REV` 5: import and load statements, the package clause and 
 export list, the module mount, the re-export), and which verified runs are reported is the core's coverage rule
 (`cover/1`). Nothing in the merge family moved; the set was measured again on the same five trees and the sample
 drawn again by the same rule (`eval_merge_parts::GENERATIONS` gains generation 3; the batches take the domain
-`merge-batches-v3`; the reading rules are generation 2's, `"readings": 2`).
+`merge-batches-v3`; the reading rules are generation 2's, `"readings": 2`). `TOKENIZER_REV` 6 (docstring lane,
+1.10.2: a Python docstring that holds no code gives no token) moved only the requests section, re-frozen by the
+leg's own regenerate: three t1t2 rows (`adapters.py` 128-150 / 634-657 -> 128-136 / 634-642, holes 1 -> 0;
+`models.py` member spans 327-335 / 428-436 -> 327-337 / 428-439; `test_testserver.py` holes 2 -> 1), holes
+1084 -> 1080, nodes 15438 -> 15418, suggestions 132 and feasible 69 as before; `merge-sample-v3.json` is
+byte-identical, so no audited row moved.
 
 - **The frozen set** (`contracts/eval/merge-suggestions-v3.json`):
 
