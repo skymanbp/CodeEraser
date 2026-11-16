@@ -235,23 +235,34 @@ jobs:
           GUI_APP=$(awk -F'"' '/^\[/{s=$0} s=="[package]" && /^name *=/{print $2; exit}' gui/src-tauri/Cargo.toml)
           [ -n "$GUI_APP" ] || { echo "::error::no [package] name in gui/src-tauri/Cargo.toml"; exit 1; }
           echo "GUI_APP=$GUI_APP" >> "$GITHUB_ENV"
-      # the macOS app as `ce update` reads it: the GUI program
-      # (BUNDLE_APP in cli/src/update/install.rs) beside ce and ce-core
+      # the macOS app as `ce update` reads it, read out of the disk image
+      # (the bundler removes bundle/macos/*.app once the .dmg is built): the
+      # GUI program (BUNDLE_APP in cli/src/update/install.rs) beside ce and
+      # ce-core
       - name: Check the macOS app's programs
         if: endsWith(inputs.key, '-macos')
         shell: bash
         run: |
-          set -- gui/src-tauri/target/release/bundle/macos/*.app
-          if [ "$#" -ne 1 ] || [ ! -d "$1" ]; then
-            echo "::error::expected one .app in bundle/macos, found $#: $*"
-            ls -l gui/src-tauri/target/release/bundle/macos; exit 1
+          set -- gui/src-tauri/target/release/bundle/dmg/*.dmg
+          if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+            echo "::error::expected one .dmg in bundle/dmg, found $#: $*"; exit 1
           fi
-          D="$1/Contents/MacOS"
+          MNT="$RUNNER_TEMP/ce-dmg"
+          mkdir -p "$MNT"
+          hdiutil attach "$1" -nobrowse -readonly -mountpoint "$MNT" >/dev/null \
+            || { echo "::error::hdiutil could not attach $1"; exit 1; }
           bad=0
-          for f in "$GUI_APP" ce ce-core; do
-            if [ ! -f "$D/$f" ] || [ -L "$D/$f" ]; then echo "::error::no regular file $D/$f"; bad=1; fi
-          done
-          ls -l "$D"
+          set -- "$MNT"/*.app
+          if [ "$#" -ne 1 ] || [ ! -d "$1" ]; then
+            echo "::error::expected one .app in the disk image, found $#: $*"; bad=1
+          else
+            D="$1/Contents/MacOS"
+            for f in "$GUI_APP" ce ce-core; do
+              if [ ! -f "$D/$f" ] || [ -L "$D/$f" ]; then echo "::error::no regular file $D/$f"; bad=1; fi
+            done
+            ls -l "$D"
+          fi
+          hdiutil detach "$MNT" >/dev/null || echo "::warning::hdiutil could not detach $MNT"
           exit "$bad"
       # the Windows installer as `ce update` reads the install: the GUI
       # program (BUNDLE_APP in cli/src/update/install.rs) beside ce.exe
