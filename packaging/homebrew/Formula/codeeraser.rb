@@ -8,21 +8,21 @@ class Codeeraser < Formula
   on_macos do
     on_arm do
       url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-1.10.3-aarch64-macos"
-      sha256 "39f096e87416838764b12baa46e7dc87cac8a44b3e16497a2af40abd8e7f939f"
+      sha256 "1e6026ec4bb91d224ed6b31b32bbb6c7fa0be87cc1708c16269f3c0547750777"
     end
     on_intel do
       url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-1.10.3-x86_64-macos"
-      sha256 "dffa82939409057ca74ea2e70a29f62ff00b4cef8f1d3be3843a401786fc75b7"
+      sha256 "bf870a3c76a67b616d25c9dbe9b5a3ea4d7809d198bbd1e87602b9bb1edd8f15"
     end
   end
   on_linux do
     on_intel do
       url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-1.10.3-x86_64-linux"
-      sha256 "889d4c48b8598a1caad28dc9dc8055bd0f16df59f1b8e7dfa426a42d003a56a1"
+      sha256 "4586d0d336e37f8e00e1d8afa9e593055c30a69e9247bca1de37175016e30f58"
     end
     on_arm do
       url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-1.10.3-aarch64-linux"
-      sha256 "8e0415a48644a180a8f89548c2099651100a00a221c4f0f289315d1f31bde657"
+      sha256 "cf8d7f7a34402aec428fabb96c13cc0ed0ea997e0a86ccf54ffd7627807b2662"
     end
   end
 
@@ -30,21 +30,21 @@ class Codeeraser < Formula
     on_macos do
       on_arm do
         url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-core-1.10.3-aarch64-macos"
-        sha256 "aac8ce44390ad8d9bb3dac1a7f8d55174d7cf7e2d6273917f9f9527a620b1b3f"
+        sha256 "e723c31f64b0f3a23006334c6dcff1c80e3c7f0f65ad525076e72a308cce332f"
       end
       on_intel do
         url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-core-1.10.3-x86_64-macos"
-        sha256 "3942d88af24ba47d139c7d6a7c9ebf743b40038e37c93eb27399d9e95a3d8118"
+        sha256 "14230e2198eb2dc2b3823e6623458504c9c5c73034b327424546094c9c035605"
       end
     end
     on_linux do
       on_intel do
         url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-core-1.10.3-x86_64-linux"
-        sha256 "18d99d05f7150227354a350e5415bd5549dac520b067b79ca486efb530668e03"
+        sha256 "88e0427451bb79166e220fca4b25ecdfae953f3feba81ceb63d727ec4f3e5a3d"
       end
       on_arm do
         url "https://github.com/skymanbp/CodeEraser/releases/download/v1.10.3/ce-core-1.10.3-aarch64-linux"
-        sha256 "bbec089f21714ab2705f4333f61ddcabbb346e76ec376503c7241de322dc2293"
+        sha256 "a042e25b5614e6d0555ebd29ab9ac5bd79ba59a767a949f6fbf181073177570a"
       end
     end
   end
