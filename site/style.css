@@ -56,12 +56,6 @@
 .term .bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); }
 .term pre { padding: 20px 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.84rem; line-height: 1.8; color: var(--muted); }
 .hero .term pre { font-size: 0.72rem; padding: 20px 22px; white-space: pre-wrap; overflow-wrap: anywhere; }
-/* wide enough for the roast's longest line: one line per line, the column sized by the pre
-   alone (a zero-width caption fills whatever the pre decides) */
-@media (min-width: 900px) {
-  .hero .term pre { font-size: 0.8rem; white-space: pre; overflow-wrap: normal; }
-  .hero .term .cap { width: 0; min-width: 100%; }
-}
 .term .p { color: var(--teal); }
 .term .s { color: var(--paper); font-weight: 600; }
 .term .r { color: var(--accent); }

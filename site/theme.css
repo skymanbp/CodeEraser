@@ -161,9 +161,10 @@ header.site nav a:last-child[href$="/releases/latest"]:hover { border-color: var
   -webkit-mask-image: radial-gradient(ellipse 55% 70% at 50% 35%, #000 20%, transparent 75%);
   mask-image: radial-gradient(ellipse 55% 70% at 50% 35%, #000 20%, transparent 75%);
 }
-/* beside the pitch only when the terminal's longest line fits unwrapped (see style.css) */
+/* beside the pitch from 1280 px in fixed shares: the terminal wraps its lines (style.css),
+   so neither column is sized by how long the measured roast line happens to be */
 @media (min-width: 1280px) {
-  .hero { grid-template-columns: minmax(0, 1fr) auto; }
+  .hero { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
 .hero .mark { display: block; width: 64px; height: 64px; border-radius: 16px; margin-bottom: var(--s-3); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06); }
 .hero h1 { font-size: var(--fs-hero); line-height: 0.98; letter-spacing: -0.045em; }
